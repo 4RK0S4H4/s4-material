@@ -6,8 +6,15 @@
    Store shape: { pages: { [id]: { title, url, answers: { [qid]: { v, label, extra? } }, note, updated } }, history: [{ at, text }] } */
 (function () {
   var KEY = 's4-orion-review', HISTORY_MAX = 20;
-  function load() { try { var s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && s.pages) { s.history = s.history || []; return s; } } catch (e) {} return { pages: {}, history: [] }; }
-  function save(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} }
+  /* Some browsers (in-app viewers, private modes, sandboxed frames) block localStorage. Answers then live in memory
+     for this tab: everything still works and copies, it just isn't kept after the tab closes. */
+  var mem = { pages: {}, history: [] }, persistent = true;
+  function load() {
+    try { var s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && s.pages) { s.history = s.history || []; mem = s; } return JSON.parse(JSON.stringify(mem)); }
+    catch (e) { persistent = false; return JSON.parse(JSON.stringify(mem)); }
+  }
+  function save(s) { mem = JSON.parse(JSON.stringify(s)); try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) { persistent = false; } }
+  var NOT_SAVED = 'This browser blocks saving, so answers last only while this tab is open. Copy them before you leave.';
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   var REGISTRY = {};   /* question definitions for pages loaded in this tab, so counts are exact */
 
@@ -119,7 +126,7 @@
         fs.querySelector('.rv-extra').textContent = a && a.extra ? a.extra : '';
       });
       if (document.activeElement !== note) note.value = pg.note || '';
-      var n = Object.keys(pg.answers).length; status.textContent = n + ' of ' + cfg.questions.length + ' answered' + (pg.updated ? ' · saved' : '');
+      var n = Object.keys(pg.answers).length; status.textContent = n + ' of ' + cfg.questions.length + ' answered' + (persistent ? (pg.updated ? ' · saved' : '') : '. ' + NOT_SAVED);
       renderFab();
     }
     window.addEventListener('storage', function (e) { if (e.key === KEY) render(); });
@@ -141,7 +148,7 @@
         var p = s.pages[d.id], n = p ? Object.keys(p.answers || {}).length : 0;
         return '<div class="rv-item"><a href="' + esc(d.href) + '">' + esc(d.title) + '</a><span class="rv-status">' + (n ? n + ' of ' + d.questions.length + ' answered' : 'Not started') + '</span></div>';
       }).join('');
-      var t = allText(s); pre.hidden = !t; pre.textContent = t;
+      var t = allText(s); pre.hidden = !t; pre.textContent = t; if (!persistent) status.textContent = 'This browser blocks saving, so answers can’t carry over between demo pages here. Open the site in Safari or Chrome to keep them.';
       hist.innerHTML = s.history.length ? s.history.map(function (h, i) { return '<div class="rv-item"><span class="rv-status" style="margin:0">' + new Date(h.at).toLocaleString() + '</span><pre class="rv-pre">' + esc(h.text) + '</pre><div class="rv-acts"><button class="rv-btn" type="button" data-h="' + i + '">Copy Again</button></div></div>'; }).join('') : '<p class="rv-status">Nothing copied yet.</p>';
       hist.querySelectorAll('[data-h]').forEach(function (b) { b.onclick = function () { copy(load().history[+b.dataset.h].text, b); }; });
     }
