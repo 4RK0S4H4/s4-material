@@ -6,8 +6,8 @@
 <title>S4 Orion</title>
 <style>
 @font-face{font-family:Inter;font-weight:100 900;font-display:swap;src:url(explore/lib/inter-variable.woff2) format("woff2")}
-:root{color-scheme:light dark;--bg:#f9f9f9;--fg:#1b1b1b;--fg2:#474747;--card:#ffffff;--line:#c6c6c6;--chip:#e8e8e8}
-@media (prefers-color-scheme:dark){:root{--bg:#131313;--fg:#e2e2e2;--fg2:#c6c6c6;--card:#2a2a2a;--line:#474747;--chip:#353535}}
+:root{color-scheme:light dark;--bg:#f9f9f9;--fg:#1b1b1b;--fg2:#474747;--card:#ffffff;--line:#c6c6c6;--chip:#e8e8e8;--md-sys-color-surface-container-low:#f3f3f3;--md-sys-color-surface-container-lowest:#fff;--md-sys-color-on-surface:#1b1b1b;--md-sys-color-on-surface-variant:#474747;--md-sys-color-outline-variant:#c6c6c6;--md-sys-color-secondary-container:#d4d4d4;--md-sys-color-on-secondary-container:#1b1b1b;--md-sys-color-primary:#000;--md-sys-color-on-primary:#e2e2e2}
+@media (prefers-color-scheme:dark){:root{--bg:#131313;--fg:#e2e2e2;--fg2:#c6c6c6;--card:#2a2a2a;--line:#474747;--chip:#353535;--md-sys-color-surface-container-low:#1b1b1b;--md-sys-color-surface-container-lowest:#2a2a2a;--md-sys-color-on-surface:#e2e2e2;--md-sys-color-on-surface-variant:#c6c6c6;--md-sys-color-outline-variant:#474747;--md-sys-color-secondary-container:#474747;--md-sys-color-on-secondary-container:#e2e2e2;--md-sys-color-primary:#fff;--md-sys-color-on-primary:#1b1b1b}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/24px Inter,system-ui,sans-serif;letter-spacing:.5px}
 main{max-width:960px;margin:0 auto;padding:56px 24px 64px;display:flex;flex-direction:column;gap:40px}
@@ -43,6 +43,8 @@ footer a{color:inherit}
     </div>
   </section>
 
+  <section id="answers" aria-label="Your answers"></section>
+
   <section>
     <h2>Reference</h2>
     <div class="grid">
@@ -55,5 +57,8 @@ footer a{color:inherit}
 
   <footer>Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0) · Material Color Utilities (Apache 2.0)</footer>
 </main>
+<script src="explore/lib/questions.js"></script>
+<script src="explore/lib/review.js"></script>
+<script>S4Review.hub(document.getElementById('answers'));</script>
 </body>
 </html>

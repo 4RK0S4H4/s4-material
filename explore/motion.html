@@ -105,7 +105,7 @@ svg.i [opacity]{opacity:.8}
   <button class="btn" id="playAll">Play All</button>
 </div>
 <main class="page">
-  <p class="intro">Pick a feel on the right, then play with the demos (or press Play All). Every movement uses one of six springs: three <b>spatial</b> (things that move or resize: fast, default, slow) and three <b>effects</b> (fades and color, never bouncy). Tune stiffness, bounce and speed below the options; the curve shows the result. Tell me the letter, or the tuned numbers, and whether you want Origin on.</p>
+  <p class="intro">Pick a feel on the right, then play with the demos (or press Play All). Every movement uses one of six springs: three <b>spatial</b> (things that move or resize: fast, default, slow) and three <b>effects</b> (fades and color, never bouncy). Tune stiffness, bounce and speed below the options; the curve shows the result. Then answer under <b>Your Answers</b> at the bottom (or use the button in the corner); “My Tuned Values” saves exactly what you set here.</p>
   <section class="stage" id="stage">
     <div class="demo"><h3>Press</h3><p>Buttons square off as you press (fast spatial).</p><div class="area"><button class="btn">Save</button><button class="btn tonal">Export</button><button class="btn big">New Bill</button></div></div>
     <div class="demo"><h3>Navigation</h3><p>The indicator travels to the new destination (default spatial).</p><div class="area"><div class="nav" id="nav"><span class="ind"></span></div></div></div>
@@ -233,5 +233,10 @@ reduce.addEventListener?.('change',compute);
 apply();
 </script>
 <footer style="max-width:1500px;margin:0 auto;padding:0 24px 32px;font-size:12px;color:var(--md-sys-color-on-surface-variant)"><a href="../" style="color:inherit">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0) · Material Color Utilities (Apache 2.0)</footer>
+<script src="lib/questions.js"></script>
+<script src="lib/review.js"></script>
+<script>S4Review.page('motion', { capture: { 'feel:Tuned': function () {
+  return 'based on ' + feel.k + ' (' + feel.name + '), stiffness ×' + tune.stiff.toFixed(2) + ', bounce +' + Math.round(tune.damp * 100) + '%, durations fast/default/slow spatial ' + S['fast-spatial'].d / tune.slow + '/' + S.spatial.d / tune.slow + '/' + S['slow-spatial'].d / tune.slow + 'ms, Origin ' + (document.getElementById('origin').checked ? 'on' : 'off');
+} } });</script>
 </body>
 </html>
