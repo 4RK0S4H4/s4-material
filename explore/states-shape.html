@@ -24,6 +24,8 @@ h1,h2,h3,p{margin:0}
 .sec > p{color:var(--md-sys-color-on-surface-variant);max-width:90ch;margin-bottom:16px}
 .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px}
 .opt{background:var(--md-sys-color-surface-container-low);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.opt header{display:flex;flex-direction:column;gap:12px}
+.opt header .rv-pick{align-self:flex-start}
 .opt header b{display:block;font-size:22px;line-height:28px;font-weight:600}
 .opt header small{display:block;color:var(--md-sys-color-on-surface-variant);font-size:13px;line-height:18px;margin-top:4px}
 .lbl{font-size:11px;line-height:16px;font-weight:600;letter-spacing:.5px;color:var(--md-sys-color-on-surface-variant);text-transform:uppercase;margin-bottom:6px}
@@ -132,10 +134,11 @@ h1,h2,h3,p{margin:0}
 <div class="bar">
   <h1>S4 Orion: States and Shape</h1>
   <div class="ctl"><span>Theme</span><div class="seg" id="theme"><button value="light" aria-pressed="true">Light</button><button value="dark" aria-pressed="false">Dark</button></div></div>
-  <div class="ctl"><span>Seed</span><div class="seg" id="seed"><button value="#000000" aria-pressed="true">Mono</button><button value="#4f46e5" aria-pressed="false">Indigo</button><button value="#00796b" aria-pressed="false">Teal</button><button value="#c2410c" aria-pressed="false">Orange</button></div></div>
+  <div class="ctl"><span>Seed</span><div class="seg" id="seed"><button value="mono" aria-pressed="true">Mono</button><button value="mono-red" aria-pressed="false">Mono + Red</button><button value="#4f46e5" aria-pressed="false">Indigo</button><button value="#00796b" aria-pressed="false">Teal</button><button value="#c2410c" aria-pressed="false">Orange</button></div></div>
+  <button class="rv-pick" id="pickColor" data-pick="color:Mono">Pick as Default Color</button>
 </div>
 <main class="page">
-  <p class="intro">Two choices, one at a time. Each column shows the same parts of an app. Small captions show a state frozen in place (hover, pressed, focused) so you can compare without a mouse; everything is also live, so hover, click and Tab around. Try both themes and a seed color. When you’ve decided, answer at the bottom under <b>Your Answers</b> (or use the button in the corner); your picks are saved in this browser.</p>
+  <p class="intro">Two choices, one at a time. Each column shows the same parts of an app. Small captions show a state frozen in place (hover, pressed, focused) so you can compare without a mouse; everything is also live, so hover, click and Tab around. Try both themes and each color, including <b>Mono + Red</b>. Use the <b>Pick</b> button on an option (or next to the colors) to answer; your picks also show under <b>Your Answers</b> at the bottom, where you can add notes and copy. Picks are saved in this browser.</p>
 
   <section class="sec">
     <h2>States</h2>
@@ -219,6 +222,7 @@ h1,h2,h3,p{margin:0}
 </template>
 
 <script src="lib/m3color.js?v=2"></script>
+<script src="lib/theme.js?v=3"></script>
 <script src="lib/icons.js?v=2"></script>
 <script>
 const STATES=[
@@ -230,22 +234,21 @@ const SHAPES=[
   ['B','S4 Material softer corners','Stock M3E but nothing under 8px: the field rounds all four corners, rows 8px, and the selected row becomes a pill. This is S4 Material today.'],
   ['C','Expressive, rounder','Pill chips and menu items, 16px fields, 24px cards, 32px dialogs, a 20px FAB and a softer press morph. Friendlier and more playful.'],
   ['D','S4 Glass radii','Your older house scale: 10px buttons and fields, 12px cards, 16px dialogs, no press morph. Calm and squarer.']];
-function fill(tplId,host,list,attr){const t=document.getElementById(tplId);list.forEach(([k,n,d])=>{const c=t.content.firstElementChild.cloneNode(true);c.setAttribute(attr,k.toLowerCase());c.querySelector('b').textContent=k+'. '+n;c.querySelector('small').textContent=d;document.getElementById(host).appendChild(c)})}
+function fill(tplId,host,list,attr){const t=document.getElementById(tplId);list.forEach(([k,n,d])=>{const c=t.content.firstElementChild.cloneNode(true);c.setAttribute(attr,k.toLowerCase());c.querySelector('b').textContent=k+'. '+n;c.querySelector('small').textContent=d;const pk=document.createElement('button');pk.className='rv-pick';pk.type='button';pk.dataset.pick=(attr==='data-states'?'states':'shape')+':'+k;pk.textContent='Pick '+k;c.querySelector('header').appendChild(pk);document.getElementById(host).appendChild(c)})}
 fill('tpl-states','states',STATES,'data-states');fill('tpl-shapes','shapes',SHAPES,'data-shape');
 document.querySelectorAll('[data-i]').forEach(e=>{e.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+(ICONS[e.dataset.i]||'')+'</svg>'});
-const state={mode:'light',seed:'#000000'};
-function apply(){const dark=state.mode==='dark',mono=state.seed==='#000000';
-  const s=M3Color.scheme(state.seed,mono?'monochrome':'vibrant',dark,0);let css=':root{';for(const k in s)css+='--md-sys-color-'+k+':'+s[k]+';';css+='}';
-  let el=document.getElementById('dyn');if(!el){el=document.createElement('style');el.id='dyn';document.head.appendChild(el)}el.textContent=css;
-  document.documentElement.dataset.theme=state.mode}
+const state={mode:'light',seed:'mono'};
+function apply(){S4Theme.apply(state.seed,state.mode);
+  const name=document.querySelector('#seed button[aria-pressed=true]').textContent;const pc=document.getElementById('pickColor');
+  pc.dataset.pick='color:'+name;pc.dataset.base='Pick '+name+' as Default';if(window.S4ReviewPage)S4ReviewPage.refresh();else pc.textContent=pc.dataset.base}
 for(const id of ['theme','seed'])document.getElementById(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
   b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));state[id==='theme'?'mode':'seed']=b.value;apply()});
 document.querySelectorAll('.chip:not(.h):not(.f)').forEach(c=>c.addEventListener('click',()=>{const on=c.getAttribute('aria-pressed')==='true';c.setAttribute('aria-pressed',!on);if(!on&&!c.querySelector('.ic'))c.insertAdjacentHTML('afterbegin','<span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">'+ICONS.check+'</svg></span>');if(on)c.querySelector('.ic')?.remove()}));
 apply();
 </script>
 <footer style="max-width:1500px;margin:0 auto;padding:0 24px 32px;font-size:12px;color:var(--md-sys-color-on-surface-variant)"><a href="../" style="color:inherit">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0) · Material Color Utilities (Apache 2.0)</footer>
-<script src="lib/questions.js?v=2"></script>
-<script src="lib/review.js?v=2"></script>
+<script src="lib/questions.js?v=3"></script>
+<script src="lib/review.js?v=3"></script>
 <script>S4Review.page('states-shape');</script>
 </body>
 </html>

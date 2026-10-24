@@ -68,6 +68,10 @@
 .rv-status{font-size:13px;color:var(--rv-fg2)}\
 .rv-fab{position:fixed;z-index:90;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));display:inline-flex;align-items:center;gap:10px;height:56px;padding:0 20px;border:0;border-radius:16px;background:var(--rv-pri);color:var(--rv-on-pri);font:inherit;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgb(0 0 0/.24)}\
 .rv-fab span{display:inline-grid;place-items:center;min-width:28px;height:22px;padding:0 8px;border-radius:999px;background:color-mix(in srgb,var(--rv-on-pri) 22%,transparent);font-size:12px;font-variant-numeric:tabular-nums}\
+.rv-pick{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 18px;border:0;border-radius:999px;font:inherit;font-size:14px;font-weight:600;letter-spacing:.1px;cursor:pointer;white-space:nowrap;background:transparent;color:var(--md-sys-color-on-surface);box-shadow:inset 0 0 0 1px var(--md-sys-color-outline)}\
+.rv-pick:hover{background:color-mix(in srgb,var(--md-sys-color-on-surface) 8%,transparent)}\
+.rv-pick[aria-pressed=true]{background:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary);box-shadow:none}\
+.rv-pick:focus-visible{outline:2px solid var(--md-sys-color-on-surface);outline-offset:2px}\
 .rv-list{display:flex;flex-direction:column;gap:8px}\
 .rv-item{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:12px 16px;border-radius:12px;background:var(--rv-card)}\
 .rv-item a{color:inherit;font-weight:600;text-decoration:none} .rv-item a:hover{text-decoration:underline}\
@@ -92,6 +96,22 @@
       '<label><div class="rv-q"><legend>Notes</legend></div><textarea class="rv-note" placeholder="Anything else: what you liked, what to change, a combination of options…"></textarea></label>' +
       '<div class="rv-acts"><button class="rv-btn pri" type="button" data-copy-page>Copy Answers</button><button class="rv-btn" type="button" data-copy-all>Copy All Demos</button><a class="rv-btn txt" href="./../">Back to Hub</a><button class="rv-btn txt" type="button" data-clear>Clear This Page</button><span class="rv-status" aria-live="polite"></span></div></div>';
     var qsBox = sec.querySelector('.rv-qs');
+    function choose(q, o) {
+      var st = load(), pg = st.pages[cfg.id], cur = pg.answers[q.id];
+      if (cur && cur.v === o.v && !o.capture) delete pg.answers[q.id];   /* click again to unselect */
+      else pg.answers[q.id] = { v: o.v, label: o.label || '', extra: o.capture ? o.capture() : '' };
+      pg.updated = new Date().toISOString(); save(st); render();
+    }
+    function findOpt(spec) {   /* "qid:v" -> [q, o] */
+      var i = spec.indexOf(':'), qid = spec.slice(0, i), v = spec.slice(i + 1);
+      var q = cfg.questions.filter(function (x) { return x.id === qid; })[0], o = q && q.options.filter(function (x) { return x.v === v; })[0];
+      return q && o ? [q, o] : null;
+    }
+    /* Inline pick buttons anywhere on the page: <button class="rv-pick" data-pick="qid:v">Pick A</button> */
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('[data-pick]'); if (!b) return;
+      var f = findOpt(b.dataset.pick); if (f) choose(f[0], f[1]);
+    });
     cfg.questions.forEach(function (q) {
       var fs = document.createElement('fieldset'); fs.className = 'rv-q';
       fs.innerHTML = '<legend>' + esc(q.label) + '</legend>' + (q.help ? '<p class="rv-help">' + esc(q.help) + '</p>' : '') + '<div class="rv-opts" role="radiogroup" aria-label="' + esc(q.label) + '"></div><div class="rv-extra"></div>';
@@ -99,12 +119,7 @@
       q.options.forEach(function (o) {
         var b = document.createElement('button'); b.type = 'button'; b.className = 'rv-opt'; b.setAttribute('role', 'radio'); b.dataset.v = o.v;
         b.innerHTML = '<b>' + esc(o.v) + '</b>' + (o.label ? '<span>' + esc(o.label) + '</span>' : '');
-        b.onclick = function () {
-          var st = load(), pg = st.pages[cfg.id], cur = pg.answers[q.id];
-          if (cur && cur.v === o.v && !o.capture) delete pg.answers[q.id];   /* click again to unselect */
-          else pg.answers[q.id] = { v: o.v, label: o.label || '', extra: o.capture ? o.capture() : '' };
-          pg.updated = new Date().toISOString(); save(st); render();
-        };
+        b.onclick = function () { choose(q, o); };
         box.appendChild(b);
       });
       qsBox.appendChild(fs);
@@ -126,12 +141,18 @@
         fs.querySelector('.rv-extra').textContent = a && a.extra ? a.extra : '';
       });
       if (document.activeElement !== note) note.value = pg.note || '';
+      document.querySelectorAll('[data-pick]').forEach(function (b) {
+        if (!b.dataset.base) b.dataset.base = b.textContent.trim();
+        var f = findOpt(b.dataset.pick), a = f && pg.answers[f[0].id], on = !!(a && a.v === f[1].v);
+        b.setAttribute('aria-pressed', on); b.textContent = on ? '✓ ' + b.dataset.base.replace(/^Pick\b/, 'Picked') : b.dataset.base;
+      });
       var n = Object.keys(pg.answers).length; status.textContent = n + ' of ' + cfg.questions.length + ' answered' + (persistent ? (pg.updated ? ' · saved' : '') : '. ' + NOT_SAVED);
       renderFab();
     }
     window.addEventListener('storage', function (e) { if (e.key === KEY) render(); });
     render();
-    return { answer: function (qid, v) { var b = qsBox.querySelector('.rv-q:nth-child(' + (cfg.questions.map(function (q) { return q.id; }).indexOf(qid) + 1) + ') .rv-opt[data-v="' + v + '"]'); if (b) b.click(); } };
+    window.S4ReviewPage = { refresh: render };
+    return { refresh: render, answer: function (qid, v) { var b = qsBox.querySelector('.rv-q:nth-child(' + (cfg.questions.map(function (q) { return q.id; }).indexOf(qid) + 1) + ') .rv-opt[data-v="' + v + '"]'); if (b) b.click(); } };
   }
 
   /* ---------- hub ---------- */

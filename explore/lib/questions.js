@@ -7,7 +7,9 @@ window.S4_REVIEW_DEMOS = [
       { id: 'states', label: 'States', help: 'How hover, press, focus and selection look.',
         options: [{ v: 'A', label: 'M3, secondary focus ring' }, { v: 'B', label: 'Neutral focus and rows' }, { v: 'C', label: 'Primary-tinted' }, { v: 'Other', label: 'Describe in notes' }] },
       { id: 'shape', label: 'Shape', help: 'The corner scale across components.',
-        options: [{ v: 'A', label: 'Stock M3 Expressive' }, { v: 'B', label: 'S4 Material softer corners' }, { v: 'C', label: 'Expressive, rounder' }, { v: 'D', label: 'S4 Glass radii' }, { v: 'Other', label: 'Describe in notes' }] }
+        options: [{ v: 'A', label: 'Stock M3 Expressive' }, { v: 'B', label: 'S4 Material softer corners' }, { v: 'C', label: 'Expressive, rounder' }, { v: 'D', label: 'S4 Glass radii' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'color', label: 'Default color', help: 'The color S4 Orion uses when an app doesn’t pick its own seed.',
+        options: [{ v: 'Mono', label: 'Black and white' }, { v: 'Mono + Red', label: 'Black and white with a red accent' }, { v: 'Indigo', label: '' }, { v: 'Teal', label: '' }, { v: 'Orange', label: '' }, { v: 'Other', label: 'Describe in notes' }] }
     ]
   },
   {
