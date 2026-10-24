@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>S4 Orion: Motion Lab</title>
+<style>
+@font-face{font-family:Inter;font-weight:100 900;font-display:block;src:url(lib/inter-variable.woff2) format("woff2")}
+:root{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface);font:400 14px/20px Inter,system-ui,sans-serif;letter-spacing:.2px}
+h1,h2,h3,p{margin:0}
+button{font:inherit;color:inherit}
+.bar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;padding:12px 24px;background:var(--md-sys-color-surface-container);border-bottom:1px solid var(--md-sys-color-outline-variant)}
+.bar h1{font-size:22px;line-height:28px;font-weight:500;margin-right:auto}
+.ctl{display:flex;align-items:center;gap:8px}
+.ctl > span{font-size:12px;font-weight:500;letter-spacing:.5px;color:var(--md-sys-color-on-surface-variant)}
+.seg{display:inline-flex;gap:2px;padding:2px;border-radius:999px;background:var(--md-sys-color-surface-container-highest)}
+.seg button{border:0;font-weight:500;padding:6px 14px;min-height:36px;border-radius:999px;background:transparent;color:var(--md-sys-color-on-surface-variant);cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container)}
+.page{max-width:1280px;margin:0 auto;padding:24px 24px 120px;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:24px}
+@media (max-width:980px){.page{grid-template-columns:1fr}}
+.intro{grid-column:1/-1;max-width:85ch;color:var(--md-sys-color-on-surface-variant);font-size:16px;line-height:24px}
+.panel{background:var(--md-sys-color-surface-container-low);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.panel h2{font-size:22px;line-height:28px;font-weight:500}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;flex-direction:column;gap:2px;text-align:left;border:0;padding:12px 16px;border-radius:12px;background:var(--md-sys-color-surface-container-lowest);cursor:pointer}
+:root[data-theme=dark] .opt{background:var(--md-sys-color-surface-container-high)}
+.opt b{font-size:16px;line-height:24px;font-weight:600}
+.opt small{color:var(--md-sys-color-on-surface-variant);font-size:13px;line-height:18px}
+.opt[aria-pressed=true]{background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container)}
+.opt[aria-pressed=true] small{color:inherit}
+.plot{width:100%;height:auto;background:var(--md-sys-color-surface-container-lowest);border-radius:12px}
+:root[data-theme=dark] .plot{background:var(--md-sys-color-surface-container-high)}
+.plot text{font:500 11px Inter;fill:var(--md-sys-color-on-surface-variant)}
+.legend{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;font-size:13px;font-variant-numeric:tabular-nums}
+.legend i{width:14px;height:3px;border-radius:2px;align-self:center}
+.legend span:nth-child(3n){text-align:right;color:var(--md-sys-color-on-surface-variant)}
+.tune{display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:center;font-size:13px}
+.tune input{width:100%;accent-color:var(--md-sys-color-primary)}
+.tune output{font-variant-numeric:tabular-nums;min-width:44px;text-align:right}
+.chk{display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer}
+.chk input{width:18px;height:18px;accent-color:var(--md-sys-color-primary)}
+.stage{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;align-content:start}
+.demo{position:relative;background:var(--md-sys-color-surface-container-low);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px;min-height:200px;overflow:hidden}
+.demo h3{font-size:14px;line-height:20px;font-weight:600}
+.demo p{font-size:13px;line-height:18px;color:var(--md-sys-color-on-surface-variant)}
+.demo .area{position:relative;flex:1;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.btn{position:relative;display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 20px;border:0;border-radius:20px;font-weight:500;cursor:pointer;background:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary);transition:border-radius var(--fast-spatial-d) var(--fast-spatial-e),transform var(--fast-spatial-d) var(--fast-spatial-e)}
+.btn.tonal{background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container)}
+.btn.text{background:transparent;color:var(--md-sys-color-primary);padding:0 12px}
+.btn:active{border-radius:8px}
+.btn.big{height:56px;padding:0 28px;border-radius:28px;font-size:16px}
+.btn.big:active{border-radius:12px}
+/* nav */
+.nav{position:relative;display:flex;gap:4px;padding:8px;border-radius:20px;background:var(--md-sys-color-surface-container)}
+.nav button{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;border:0;background:none;cursor:pointer;font-size:12px;font-weight:500;color:var(--md-sys-color-on-surface-variant);transition:color var(--effects-d) var(--effects-e)}
+.nav button[aria-current]{color:var(--md-sys-color-on-surface);font-weight:600}
+.nav .ic{width:56px;height:32px;display:grid;place-items:center;transition:color var(--effects-d) var(--effects-e)}
+.nav button[aria-current] .ic{color:var(--md-sys-color-on-secondary-container)}
+.nav .ind{position:absolute;z-index:0;top:8px;left:8px;width:56px;height:32px;border-radius:16px;background:var(--md-sys-color-secondary-container);transform:translateX(var(--x,4px));transition:transform var(--spatial-d) var(--spatial-e),width var(--spatial-d) var(--spatial-e)}
+svg.i{width:22px;height:22px}
+svg.i [opacity]{opacity:.8}
+:root[data-theme=dark] svg.i [opacity]{opacity:.65}
+/* switch + chip */
+.sw{position:relative;width:52px;height:32px;border-radius:16px;border:0;padding:0;cursor:pointer;background:var(--md-sys-color-surface-container-highest);box-shadow:inset 0 0 0 2px var(--md-sys-color-outline);transition:background-color var(--effects-d) var(--effects-e),box-shadow var(--effects-d) var(--effects-e)}
+.sw::after{content:"";position:absolute;left:8px;top:8px;width:16px;height:16px;border-radius:50%;background:var(--md-sys-color-outline);transition:transform var(--fast-spatial-d) var(--fast-spatial-e),width var(--fast-spatial-d) var(--fast-spatial-e),height var(--fast-spatial-d) var(--fast-spatial-e),top var(--fast-spatial-d) var(--fast-spatial-e),left var(--fast-spatial-d) var(--fast-spatial-e),background-color var(--effects-d) var(--effects-e)}
+.sw[aria-checked=true]{background:var(--md-sys-color-primary);box-shadow:none}
+.sw[aria-checked=true]::after{transform:translateX(20px);left:4px;top:4px;width:24px;height:24px;background:var(--md-sys-color-on-primary)}
+.chip{display:inline-flex;align-items:center;height:32px;padding:0 16px;border:0;border-radius:8px;cursor:pointer;font-weight:500;color:var(--md-sys-color-on-surface-variant);box-shadow:inset 0 0 0 1px var(--md-sys-color-outline-variant);background:transparent;transition:background-color var(--effects-d) var(--effects-e),padding var(--fast-spatial-d) var(--fast-spatial-e)}
+.chip .ck{display:inline-block;width:0;overflow:hidden;opacity:0;transition:width var(--fast-spatial-d) var(--fast-spatial-e),opacity var(--effects-d) var(--effects-e)}
+.chip[aria-pressed=true]{background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container);box-shadow:none;padding-left:10px}
+.chip[aria-pressed=true] .ck{width:24px;opacity:1}
+/* list */
+.list{list-style:none;margin:0;padding:0;width:100%;display:flex;flex-direction:column}
+.list li{overflow:hidden}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;margin-bottom:2px;border-radius:8px;background:var(--md-sys-color-surface-container-lowest);font-variant-numeric:tabular-nums}
+:root[data-theme=dark] .row{background:var(--md-sys-color-surface-container-high)}
+.row > span:last-child{display:flex;align-items:center;gap:8px}
+.row button{border:0;background:none;cursor:pointer;color:var(--md-sys-color-on-surface-variant);padding:4px;border-radius:50%;display:grid}
+/* overlays */
+.menu{position:absolute;z-index:5;min-width:180px;padding:4px;border-radius:16px;background:var(--md-sys-color-surface-container);box-shadow:0 4px 16px rgb(0 0 0/.18)}
+.menu div{padding:10px 12px;border-radius:12px}
+.menu div:hover{background:color-mix(in srgb,var(--md-sys-color-on-surface) 8%,transparent)}
+.scrim{position:fixed;inset:0;z-index:60;background:rgb(0 0 0/.32)}
+.dialog{position:fixed;z-index:61;left:50%;top:50%;width:min(340px,calc(100vw - 32px));margin-left:calc(min(340px,calc(100vw - 32px))/-2);transform-origin:0 0;padding:24px;border-radius:28px;background:var(--md-sys-color-surface-container-high);display:flex;flex-direction:column;gap:16px}
+.dialog h3{font-size:24px;line-height:32px;font-weight:400}
+.dialog p{color:var(--md-sys-color-on-surface-variant)}
+.dialog .acts{display:flex;justify-content:flex-end;gap:8px}
+.sheet{position:fixed;z-index:61;left:50%;bottom:0;width:min(560px,100vw);transform:translateX(-50%);padding:12px 24px 32px;border-radius:28px 28px 0 0;background:var(--md-sys-color-surface-container-low);display:flex;flex-direction:column;gap:12px}
+.sheet .handle{width:32px;height:4px;border-radius:2px;background:var(--md-sys-color-on-surface-variant);opacity:.4;align-self:center;margin-bottom:8px}
+.sheet h3{font-size:22px;line-height:28px;font-weight:500}
+.snack{position:fixed;z-index:70;left:50%;bottom:24px;transform:translateX(-50%);display:flex;align-items:center;gap:16px;padding:12px 8px 12px 16px;border-radius:8px;background:var(--md-sys-color-inverse-surface);color:var(--md-sys-color-inverse-on-surface)}
+.snack button{border:0;background:none;color:var(--md-sys-color-inverse-primary);font-weight:600;cursor:pointer;padding:8px}
+.big-num{font-size:45px;line-height:52px;font-weight:500;font-variant-numeric:tabular-nums}
+.slow{font-size:12px;color:var(--md-sys-color-on-surface-variant)}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>S4 Orion: Motion Lab</h1>
+  <div class="ctl"><span>Theme</span><div class="seg" id="theme"><button value="light" aria-pressed="true">Light</button><button value="dark" aria-pressed="false">Dark</button></div></div>
+  <div class="ctl"><span>Seed</span><div class="seg" id="seed"><button value="#000000" aria-pressed="true">Mono</button><button value="#4f46e5" aria-pressed="false">Indigo</button><button value="#00796b" aria-pressed="false">Teal</button></div></div>
+  <button class="btn" id="playAll">Play All</button>
+</div>
+<main class="page">
+  <p class="intro">Pick a feel on the right, then play with the demos (or press Play All). Every movement uses one of six springs: three <b>spatial</b> (things that move or resize: fast, default, slow) and three <b>effects</b> (fades and color, never bouncy). Tune stiffness, bounce and speed below the options; the curve shows the result. Tell me the letter, or the tuned numbers, and whether you want Origin on.</p>
+  <section class="stage" id="stage">
+    <div class="demo"><h3>Press</h3><p>Buttons square off as you press (fast spatial).</p><div class="area"><button class="btn">Save</button><button class="btn tonal">Export</button><button class="btn big">New Bill</button></div></div>
+    <div class="demo"><h3>Navigation</h3><p>The indicator travels to the new destination (default spatial).</p><div class="area"><div class="nav" id="nav"><span class="ind"></span></div></div></div>
+    <div class="demo"><h3>Switch and Chips</h3><p>Handle travel and the check sliding in (fast spatial, effects for color).</p><div class="area"><button class="sw" role="switch" aria-checked="false" aria-label="Autopay"></button><button class="chip" aria-pressed="false"><span class="ck">✓</span>Unpaid</button><button class="chip" aria-pressed="true"><span class="ck">✓</span>Overdue</button></div></div>
+    <div class="demo"><h3>Menu</h3><p>Grows from its button (Origin) or just fades in.</p><div class="area"><button class="btn tonal" id="menuBtn">Sort By</button></div></div>
+    <div class="demo"><h3>Dialog</h3><p>Grows out of the button that opened it, and shrinks back.</p><div class="area"><button class="btn" id="dlgBtn">Delete Bill</button></div></div>
+    <div class="demo"><h3>Bottom Sheet</h3><p>Rises from the bottom edge (slow spatial).</p><div class="area"><button class="btn tonal" id="sheetBtn">Add Expense</button></div></div>
+    <div class="demo" style="grid-column:span 1"><h3>List</h3><p>Rows grow in and fold away; the rest close the gap.</p><div class="area" style="flex-direction:column;align-items:stretch"><ul class="list" id="list"></ul><button class="btn tonal" id="addRow" style="align-self:flex-start">Add Row</button></div></div>
+    <div class="demo"><h3>Snackbar</h3><p>Rises from the action that caused it (Origin) or the bottom edge.</p><div class="area"><button class="btn text" id="snackBtn">Archive</button></div></div>
+    <div class="demo"><h3>Total</h3><p>A changed total rolls (default spatial).</p><div class="area" style="flex-direction:column"><div class="big-num" id="total">$4,459.13</div><button class="btn tonal" id="rollBtn">Pay $72.40</button></div></div>
+  </section>
+  <aside class="panel">
+    <h2>Feel</h2>
+    <div class="opts" id="opts"></div>
+    <svg class="plot" id="plot" viewBox="0 0 320 170" role="img" aria-label="Spring curves"></svg>
+    <div class="legend" id="legend"></div>
+    <div class="tune">
+      <label for="tStiff">Stiffness</label><input id="tStiff" type="range" min="0.4" max="2" step="0.05" value="1"><output id="oStiff"></output>
+      <label for="tDamp">Bounce</label><input id="tDamp" type="range" min="0" max="0.5" step="0.01" value="0"><output id="oDamp"></output>
+      <label for="tSlow">Slow-Mo</label><input id="tSlow" type="range" min="1" max="6" step="1" value="1"><output id="oSlow"></output>
+    </div>
+    <label class="chk"><input type="checkbox" id="origin" checked> Origin: surfaces grow from what you touched</label>
+    <p class="slow" id="rm"></p>
+  </aside>
+</main>
+<script src="lib/m3color.js"></script>
+<script src="lib/icons.js"></script>
+<script>
+/* ---- spring math: critically or under-damped, mass 1. Returns {d: ms, e: linear()} ---- */
+function spring(k, z){
+  const w=Math.sqrt(k), x=t=>{ if(z>=1){return 1-Math.exp(-w*t)*(1+w*t)} const wd=w*Math.sqrt(1-z*z); return 1-Math.exp(-z*w*t)*(Math.cos(wd*t)+(z*w/wd)*Math.sin(wd*t)) };
+  let end=0; for(let t=0;t<3;t+=.001){ if(Math.abs(x(t)-1)>.002) end=t } end=Math.max(end,.05);
+  const n=40, pts=[]; let peak=0; for(let i=0;i<=n;i++){const v=x(end*i/n); peak=Math.max(peak,v); pts.push(i===0?'0':i===n?'1':v.toFixed(3)+' '+(i*100/n).toFixed(1)+'%')}
+  return {d:Math.round(end*1000), e:'linear('+pts.join(',')+')', x, end, peak};
+}
+const FEELS=[
+  {k:'A',name:'Fluid',desc:'S4 Material today. Critically damped: glides to rest, never overshoots.',sp:[[1400,1],[800,1],[420,1]],fx:[[2600,1],[1500,1],[900,1]]},
+  {k:'B',name:'Crisp',desc:'Stiffer and shorter, still no overshoot. Feels quick and precise, closer to a pro tool.',sp:[[2200,1],[1300,1],[700,1]],fx:[[3800,1],[2200,1],[1300,1]]},
+  {k:'C',name:'Liquid Settle',desc:'A hair of give: about 1% overshoot on movement only. Soft, glassy, alive without bouncing.',sp:[[1300,.86],[720,.88],[380,.9]],fx:[[2600,1],[1500,1],[900,1]]},
+  {k:'D',name:'M3 Expressive',desc:'Google’s stock springs: visible bounce on fast moves (≈9% overshoot). Playful.',sp:[[800,.6],[380,.8],[200,.8]],fx:[[3800,1],[1600,1],[800,1]]}];
+const NAMES=['fast-spatial','spatial','slow-spatial','fast-effects','effects','slow-effects'];
+const COLORS=['var(--md-sys-color-primary)','var(--md-sys-color-tertiary)','var(--md-sys-color-secondary)'];
+let feel=FEELS[0], tune={stiff:1,damp:0,slow:1}, S={};
+const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+function compute(){
+  const sp=feel.sp.map(([k,z])=>spring(k*tune.stiff, Math.max(.3,z-tune.damp))), fx=feel.fx.map(([k,z])=>spring(k*tune.stiff,z));
+  [...sp,...fx].forEach((s,i)=>{S[NAMES[i]]={d:reduce.matches&&i<3?1:s.d*tune.slow,e:s.e,raw:s}; document.documentElement.style.setProperty('--'+NAMES[i]+'-d',S[NAMES[i]].d+'ms'); document.documentElement.style.setProperty('--'+NAMES[i]+'-e',s.e)});
+  plot(sp);
+}
+function plot(sp){
+  const W=320,H=170,P=24,maxT=Math.max(...sp.map(s=>s.end)),maxY=Math.max(1.12,...sp.map(s=>s.peak));
+  const X=t=>P+(W-2*P)*t/maxT, Y=v=>H-P-(H-2*P)*v/maxY;
+  let g=`<line x1="${P}" x2="${W-P}" y1="${Y(1)}" y2="${Y(1)}" stroke="var(--md-sys-color-outline-variant)" stroke-dasharray="3 3"/><line x1="${P}" x2="${W-P}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--md-sys-color-outline-variant)"/><text x="${P}" y="${H-6}">0</text><text x="${W-P}" y="${H-6}" text-anchor="end">${Math.round(maxT*1000*tune.slow)}ms</text>`;
+  sp.forEach((s,i)=>{let d='';for(let j=0;j<=80;j++){const t=s.end*j/80;d+=(j?'L':'M')+X(t).toFixed(1)+' '+Y(s.x(t)).toFixed(1)}g+=`<path d="${d}" fill="none" stroke="${COLORS[i]}" stroke-width="2.5" stroke-linecap="round"/>`});
+  document.getElementById('plot').innerHTML=g;
+  document.getElementById('legend').innerHTML=sp.map((s,i)=>`<i style="background:${COLORS[i]}"></i><span>${['Fast','Default','Slow'][i]} spatial${s.peak>1.001?' · '+((s.peak-1)*100).toFixed(1)+'% over':''}</span><span>${S[NAMES[i]].d}ms</span>`).join('')+NAMES.slice(3).map((n,i)=>`<i style="background:var(--md-sys-color-outline)"></i><span>${['Fast','Default','Slow'][i]} effects</span><span>${S[n].d}ms</span>`).join('');
+  document.getElementById('rm').textContent=reduce.matches?'Your device asks for reduced motion: movement is instant, fades remain.':'';
+}
+const anim=(el,kf,name,o={})=>el.animate(kf,{duration:S[name].d,easing:S[name].e,fill:'both',...o});
+const origin=()=>document.getElementById('origin').checked;
+/* ---- options + tuning ---- */
+const opts=document.getElementById('opts');
+FEELS.forEach(f=>{const b=document.createElement('button');b.className='opt';b.setAttribute('aria-pressed',f===feel);b.innerHTML=`<b>${f.k}. ${f.name}</b><small>${f.desc}</small>`;b.onclick=()=>{feel=f;opts.querySelectorAll('.opt').forEach(x=>x.setAttribute('aria-pressed',x===b));compute()};opts.appendChild(b)});
+[['tStiff','oStiff','stiff',v=>'×'+(+v).toFixed(2)],['tDamp','oDamp','damp',v=>'+'+Math.round(v*100)+'%'],['tSlow','oSlow','slow',v=>'×'+v]].forEach(([i,o,k,f])=>{const el=document.getElementById(i);const up=()=>{tune[k]=+el.value;document.getElementById(o).textContent=f(el.value);compute()};el.oninput=up;up()});
+document.getElementById('origin').onchange=()=>{};
+/* ---- demos ---- */
+const icon=n=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]||''}</svg>`;
+const nav=document.getElementById('nav');
+[['home-2','Home'],['wallet','Bills'],['bill-list','Reports'],['settings','Settings']].forEach(([i,l],n)=>{const b=document.createElement('button');b.innerHTML=`<span class="ic">${icon(i)}</span>${l}`;if(!n)b.setAttribute('aria-current','page');b.onclick=()=>{nav.querySelectorAll('button').forEach(x=>x.removeAttribute('aria-current'));b.setAttribute('aria-current','page');nav.querySelector('.ind').style.setProperty('--x',(b.offsetLeft-8+4)+'px')};nav.appendChild(b)});
+document.querySelector('.sw').onclick=e=>e.currentTarget.setAttribute('aria-checked',e.currentTarget.getAttribute('aria-checked')!=='true');
+document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>c.setAttribute('aria-pressed',c.getAttribute('aria-pressed')!=='true'));
+/* menu */
+const menuBtn=document.getElementById('menuBtn');let menu;
+menuBtn.onclick=e=>{e.stopPropagation(); if(menu){closeMenu();return}
+  menu=document.createElement('div');menu.className='menu';menu.innerHTML='<div>Due Date</div><div>Amount</div><div>Vendor</div>';
+  const area=menuBtn.parentElement;area.appendChild(menu);menu.style.left=menuBtn.offsetLeft+'px';menu.style.top=(menuBtn.offsetTop+menuBtn.offsetHeight+4)+'px';menu.style.transformOrigin='top left';
+  if(origin()){anim(menu,[{transform:'scale(.6,.3)'},{transform:'none'}],'fast-spatial');anim(menu,[{opacity:0},{opacity:1}],'fast-effects')}else anim(menu,[{opacity:0},{opacity:1}],'effects')};
+function closeMenu(){const m=menu;menu=null;const a=anim(m,[{opacity:1},{opacity:0}],'fast-effects');if(origin())anim(m,[{transform:'none'},{transform:'scale(.9,.6)'}],'fast-spatial');a.onfinish=()=>m.remove()}
+document.addEventListener('click',()=>{if(menu)closeMenu()});
+/* rect-to-rect grow */
+function grow(el,from,reverse){const a=from.getBoundingClientRect(),b=el.getBoundingClientRect();
+  const kf=[{transform:`translate(${a.left-b.left}px,${a.top-b.top}px) scale(${a.width/b.width},${a.height/b.height})`,borderRadius:'20px'},{transform:'none',borderRadius:'28px'}];
+  if(reverse)kf.reverse();const sp=anim(el,kf,reverse?'fast-spatial':'spatial');anim(el,[{opacity:0},{opacity:1},{opacity:1}].map((k,i,arr)=>reverse?arr[arr.length-1-i]:k),reverse?'fast-effects':'effects');return sp}
+/* dialog */
+document.getElementById('dlgBtn').onclick=e=>{const btn=e.currentTarget,scrim=document.createElement('div'),d=document.createElement('div');scrim.className='scrim';d.className='dialog';d.setAttribute('role','dialog');
+  d.innerHTML='<h3>Delete this bill?</h3><p>Staples, $72.40. This can’t be undone.</p><div class="acts"><button class="btn text" data-x>Cancel</button><button class="btn" data-x>Delete</button></div>';
+  document.body.append(scrim,d);d.style.marginTop=(-d.offsetHeight/2)+'px';anim(scrim,[{opacity:0},{opacity:1}],'effects');
+  if(origin())grow(d,btn);else{d.style.transformOrigin='50% 50%';anim(d,[{transform:'scale(.92)',opacity:0},{transform:'none',opacity:1}],'spatial')}
+  const close=()=>{anim(scrim,[{opacity:1},{opacity:0}],'fast-effects');const a=origin()?grow(d,btn,true):anim(d,[{transform:'none',opacity:1},{transform:'scale(.96)',opacity:0}],'fast-spatial');a.onfinish=()=>{d.remove();scrim.remove()}};
+  scrim.onclick=close;d.querySelectorAll('[data-x]').forEach(b=>b.onclick=close)};
+/* sheet */
+document.getElementById('sheetBtn').onclick=()=>{const scrim=document.createElement('div'),s=document.createElement('div');scrim.className='scrim';s.className='sheet';
+  s.innerHTML='<span class="handle"></span><h3>Add Expense</h3><p style="color:var(--md-sys-color-on-surface-variant)">Amount, vendor and date go here.</p><button class="btn" style="align-self:flex-end" data-x>Save</button>';
+  document.body.append(scrim,s);anim(scrim,[{opacity:0},{opacity:1}],'effects');anim(s,[{transform:'translate(-50%,100%)'},{transform:'translate(-50%,0)'}],'slow-spatial');
+  const close=()=>{anim(scrim,[{opacity:1},{opacity:0}],'fast-effects');anim(s,[{transform:'translate(-50%,0)'},{transform:'translate(-50%,100%)'}],'spatial').onfinish=()=>{s.remove();scrim.remove()}};
+  scrim.onclick=close;s.querySelector('[data-x]').onclick=close};
+/* list */
+const list=document.getElementById('list');let rowN=0;const VENDORS=[['Iron Mountain','$1,240.00'],['Comcast','$389.17'],['Staples','$72.40'],['Adobe','$59.99'],['Uline','$218.30'],['FedEx','$46.12']];
+function addRow(animate){const [v,a]=VENDORS[rowN++%VENDORS.length];const li=document.createElement('li');li.innerHTML=`<div class="row"><span>${v}</span><span>${a} <button aria-label="Remove ${v}">${icon('trash-bin-minimalistic')}</button></span></div>`;
+  list.appendChild(li);li.querySelector('button').onclick=()=>removeRow(li);
+  if(animate){const h=li.offsetHeight;anim(li,[{height:'0px'},{height:h+'px'}],'spatial',{fill:'none'});anim(li,[{opacity:0},{opacity:1}],'effects',{fill:'none'})}}
+function removeRow(li){const h=li.offsetHeight;anim(li,[{opacity:1},{opacity:0}],'fast-effects');anim(li,[{height:h+'px'},{height:'0px'}],'spatial').onfinish=()=>li.remove()}
+for(let i=0;i<3;i++)addRow(false);document.getElementById('addRow').onclick=()=>{if(list.children.length>=5)removeRow(list.firstElementChild);addRow(true)};
+/* snackbar */
+let snack;document.getElementById('snackBtn').onclick=e=>{const btn=e.currentTarget;if(snack)snack.remove();const s=snack=document.createElement('div');s.className='snack';s.innerHTML='<span>Bill archived</span><button>Undo</button>';document.body.appendChild(s);
+  if(origin()){const a=btn.getBoundingClientRect(),b=s.getBoundingClientRect();anim(s,[{transform:`translate(calc(-50% + ${a.left+a.width/2-(b.left+b.width/2)}px),${a.top-b.top}px) scale(.4)`,opacity:0},{transform:'translate(-50%,0)',opacity:1}],'spatial')}
+  else anim(s,[{transform:'translate(-50%,24px)',opacity:0},{transform:'translate(-50%,0)',opacity:1}],'spatial');
+  const close=()=>{if(!s.isConnected)return;anim(s,[{opacity:1},{opacity:0}],'effects').onfinish=()=>s.remove()};s.querySelector('button').onclick=close;setTimeout(close,3500*tune.slow)};
+/* roll */
+let total=445913;document.getElementById('rollBtn').onclick=()=>{const el=document.getElementById('total');const from=total,to=total=total>20000?total-7240:445913;const t0=performance.now(),s=S.spatial;
+  const fmt=c=>'$'+(c/100).toLocaleString('en-US',{minimumFractionDigits:2});
+  (function f(now){const p=Math.min(1,(now-t0)/s.d),v=s.raw.x(p*s.raw.end);el.textContent=fmt(Math.round(from+(to-from)*v));if(p<1)requestAnimationFrame(f)})(t0)};
+/* play all */
+document.getElementById('playAll').onclick=async e=>{e.stopPropagation();const w=ms=>new Promise(r=>setTimeout(r,ms*tune.slow));
+  const navBtns=nav.querySelectorAll('button');navBtns[2].click();await w(500);document.querySelector('.sw').click();await w(150);document.querySelectorAll('.chip')[0].click();await w(500);
+  menuBtn.click();await w(900);closeMenu();await w(400);document.getElementById('addRow').click();await w(700);document.getElementById('rollBtn').click();await w(700);
+  document.getElementById('dlgBtn').click();await w(1200);document.querySelector('.dialog [data-x]')?.click();await w(700);
+  document.getElementById('sheetBtn').click();await w(1300);document.querySelector('.scrim')?.click();await w(700);document.getElementById('snackBtn').click();navBtns[0].click()};
+/* ---- theme ---- */
+const state={mode:'light',seed:'#000000'};
+function apply(){const dark=state.mode==='dark',mono=state.seed==='#000000';const s=M3Color.scheme(state.seed,mono?'monochrome':'vibrant',dark,0);let css=':root{';for(const k in s)css+='--md-sys-color-'+k+':'+s[k]+';';
+  let el=document.getElementById('dyn');if(!el){el=document.createElement('style');el.id='dyn';document.head.appendChild(el)}el.textContent=css+'}';document.documentElement.dataset.theme=state.mode;compute()}
+for(const id of ['theme','seed'])document.getElementById(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));state[id==='theme'?'mode':'seed']=b.value;apply()});
+reduce.addEventListener?.('change',compute);
+apply();
+</script>
+<footer style="max-width:1500px;margin:0 auto;padding:0 24px 32px;font-size:12px;color:var(--md-sys-color-on-surface-variant)"><a href="../" style="color:inherit">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0) · Material Color Utilities (Apache 2.0)</footer>
+</body>
+</html>

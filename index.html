@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>S4 Orion</title>
+<style>
+@font-face{font-family:Inter;font-weight:100 900;font-display:swap;src:url(explore/lib/inter-variable.woff2) format("woff2")}
+:root{color-scheme:light dark;--bg:#f9f9f9;--fg:#1b1b1b;--fg2:#474747;--card:#ffffff;--line:#c6c6c6;--chip:#e8e8e8}
+@media (prefers-color-scheme:dark){:root{--bg:#131313;--fg:#e2e2e2;--fg2:#c6c6c6;--card:#2a2a2a;--line:#474747;--chip:#353535}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/24px Inter,system-ui,sans-serif;letter-spacing:.5px}
+main{max-width:960px;margin:0 auto;padding:56px 24px 64px;display:flex;flex-direction:column;gap:40px}
+header{display:flex;flex-direction:column;gap:16px}
+h1{margin:0;font-size:57px;line-height:64px;font-weight:500;letter-spacing:-.25px}
+h2{margin:0 0 12px;font-size:22px;line-height:28px;font-weight:500;letter-spacing:0}
+p{margin:0;color:var(--fg2);max-width:65ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+a.card{display:flex;flex-direction:column;gap:6px;padding:20px;border-radius:16px;background:var(--card);color:inherit;text-decoration:none;transition:transform .2s cubic-bezier(.2,0,0,1)}
+a.card:hover{transform:translateY(-2px)}
+a.card:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+a.card b{font-size:16px;line-height:24px;font-weight:600;letter-spacing:.15px}
+a.card span{font-size:14px;line-height:20px;color:var(--fg2);letter-spacing:.25px}
+.tag{align-self:flex-start;font-size:11px;line-height:16px;font-weight:600;letter-spacing:.5px;padding:2px 8px;border-radius:999px;background:var(--chip);color:var(--fg2)}
+.soon{opacity:.55;pointer-events:none}
+footer{font-size:12px;color:var(--fg2);border-top:1px solid var(--line);padding-top:16px}
+footer a{color:inherit}
+@media (prefers-reduced-motion:reduce){a.card{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>S4 Orion</h1>
+    <p>A personal design language built on Material 3 Expressive, with a glass layer for floating chrome. This site holds the live demos and the reference for the system as it's built.</p>
+  </header>
+
+  <section>
+    <h2>Open for Review</h2>
+    <div class="grid">
+      <a class="card" href="explore/states-shape.html"><span class="tag">Phase 1</span><b>States and Shape</b><span>Pick a state style (A–C) and a corner scale (A–D) on real components.</span></a>
+      <a class="card" href="explore/motion.html"><span class="tag">Phase 1</span><b>Motion Lab</b><span>Pick and tune the spring feel (A–D) and the Origin motion language.</span></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Reference</h2>
+    <div class="grid">
+      <a class="card soon" href="#"><span class="tag">Phase 3</span><b>Tokens</b><span>Color, type, shape, spacing, elevation, motion and glass.</span></a>
+      <a class="card soon" href="#"><span class="tag">Phase 4</span><b>Glass</b><span>Where glass goes, stacking limits, contrast and fallbacks.</span></a>
+      <a class="card soon" href="#"><span class="tag">Phase 6</span><b>Demo</b><span>One showcase app using every component.</span></a>
+      <a class="card" href="https://github.com/4rk0s4h4/s4-material/blob/main/docs/decisions/0001-phase-1-audit.md"><span class="tag">Decision Log</span><b>Phase 1 Audit</b><span>What S4 Material 1.3 is, its bugs and drift, and the decisions so far.</span></a>
+    </div>
+  </section>
+
+  <footer>Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0) · Material Color Utilities (Apache 2.0)</footer>
+</main>
+</body>
+</html>

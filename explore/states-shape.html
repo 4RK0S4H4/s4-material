@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>S4 Orion: States and Shape</title>
+<style>
+@font-face{font-family:Inter;font-weight:100 900;font-display:block;src:url(lib/inter-variable.woff2) format("woff2")}
+:root{color-scheme:light;font-family:Inter,system-ui,sans-serif;--ease:cubic-bezier(.2,0,0,1)}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface);font:400 14px/20px Inter,system-ui,sans-serif;letter-spacing:.2px}
+h1,h2,h3,p{margin:0}
+.page{max-width:1500px;margin:0 auto;padding:24px 24px 64px;display:flex;flex-direction:column;gap:28px}
+.bar{position:sticky;top:0;z-index:10;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;padding:12px 24px;background:var(--md-sys-color-surface-container);border-bottom:1px solid var(--md-sys-color-outline-variant)}
+.bar h1{font-size:22px;line-height:28px;font-weight:500;margin-right:auto}
+.ctl{display:flex;align-items:center;gap:8px}
+.ctl span{font-size:12px;font-weight:500;letter-spacing:.5px;color:var(--md-sys-color-on-surface-variant)}
+.seg{display:inline-flex;gap:2px;padding:2px;border-radius:999px;background:var(--md-sys-color-surface-container-highest)}
+.seg button{border:0;font:inherit;font-weight:500;padding:6px 14px;min-height:36px;border-radius:999px;background:transparent;color:var(--md-sys-color-on-surface-variant);cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container)}
+.intro{max-width:80ch;color:var(--md-sys-color-on-surface-variant);font-size:16px;line-height:24px}
+.sec h2{font-size:28px;line-height:36px;font-weight:500;margin-bottom:6px}
+.sec > p{color:var(--md-sys-color-on-surface-variant);max-width:90ch;margin-bottom:16px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px}
+.opt{background:var(--md-sys-color-surface-container-low);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.opt header b{display:block;font-size:22px;line-height:28px;font-weight:600}
+.opt header small{display:block;color:var(--md-sys-color-on-surface-variant);font-size:13px;line-height:18px;margin-top:4px}
+.lbl{font-size:11px;line-height:16px;font-weight:600;letter-spacing:.5px;color:var(--md-sys-color-on-surface-variant);text-transform:uppercase;margin-bottom:6px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.cap{display:flex;flex-direction:column;align-items:center;gap:4px}
+.cap > i{font-style:normal;font-size:11px;color:var(--md-sys-color-on-surface-variant)}
+.ic{width:20px;height:20px;flex:none;display:inline-block}
+.ic svg{width:100%;height:100%;display:block}
+.ic svg [opacity]{opacity:.8}
+:root[data-theme=dark] .ic svg [opacity]{opacity:.65}
+
+/* ======= shared component skeletons (values come from --st-* and --sh-* below) ======= */
+.b{position:relative;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border:0;font:inherit;font-weight:500;letter-spacing:.1px;cursor:pointer;border-radius:var(--sh-btn);transition:border-radius .3s var(--ease);color:var(--fg);background:var(--bg,transparent);outline-offset:var(--st-ring-off)}
+.b::before,.chip::before,.li::before,.nav::before,.ib::before{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--st-layer,currentColor);opacity:0;transition:opacity .15s;z-index:-1;pointer-events:none}
+.b:hover::before,.b.h::before,.chip:hover::before,.chip.h::before,.li:hover::before,.li.h::before,.nav:hover::before,.nav.h::before,.ib:hover::before,.ib.h::before{opacity:var(--st-hover)}
+.b:active::before,.b.p::before,.chip:active::before,.chip.p::before,.li:active::before,.li.p::before,.ib:active::before,.ib.p::before{opacity:var(--st-press)}
+.b:active,.b.p{border-radius:var(--sh-btn-press)}
+.b.filled{--bg:var(--md-sys-color-primary);--fg:var(--md-sys-color-on-primary)}
+.b.tonal{--bg:var(--md-sys-color-secondary-container);--fg:var(--md-sys-color-on-secondary-container)}
+.b.outlined{--fg:var(--md-sys-color-on-surface-variant);box-shadow:inset 0 0 0 1px var(--md-sys-color-outline-variant)}
+.b.text{--fg:var(--md-sys-color-primary);padding:0 12px}
+.ib{position:relative;isolation:isolate;display:inline-grid;place-items:center;width:40px;height:40px;border:0;border-radius:var(--sh-ib);color:var(--md-sys-color-on-surface-variant);background:transparent;cursor:pointer;transition:border-radius .3s var(--ease)}
+.ib:active,.ib.p{border-radius:var(--sh-btn-press)}
+.ib .ic{width:24px;height:24px}
+.f,.f-ring:focus-visible{outline:var(--st-ring-w) solid var(--st-ring);outline-offset:var(--st-ring-off)}
+.chip{position:relative;isolation:isolate;display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 16px;border:0;font:inherit;font-weight:500;letter-spacing:.1px;border-radius:var(--sh-chip);color:var(--md-sys-color-on-surface-variant);background:transparent;box-shadow:inset 0 0 0 1px var(--md-sys-color-outline-variant);cursor:pointer}
+.chip .ic{width:18px;height:18px}
+.chip[aria-pressed=true]{background:var(--st-sel-chip);color:var(--st-sel-chip-fg);box-shadow:none;padding-left:8px}
+.list{display:flex;flex-direction:column;gap:2px;padding:0;margin:0;list-style:none;border-radius:var(--sh-list);overflow:clip}
+.li{position:relative;isolation:isolate;display:flex;align-items:center;gap:16px;min-height:56px;padding:8px 16px;background:var(--md-sys-color-surface-container-lowest);color:var(--md-sys-color-on-surface);border-radius:var(--sh-row);cursor:pointer}
+.li .t{flex:1;min-width:0} .li .t b{display:block;font-weight:500;font-size:16px;line-height:24px;letter-spacing:.15px} .li .t small{display:block;color:var(--md-sys-color-on-surface-variant);font-size:14px}
+.li .amt{font-variant-numeric:tabular-nums;font-weight:500}
+.li[aria-selected=true]{background:var(--st-sel-row);color:var(--st-sel-row-fg);border-radius:var(--sh-row-sel)}
+.li[aria-selected=true] .t small{color:inherit;opacity:.85}
+.navs{display:flex;gap:4px}
+.nav{position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 4px;font-size:12px;font-weight:500;letter-spacing:.5px;color:var(--md-sys-color-on-surface-variant);border:0;background:none;cursor:pointer}
+.nav::before{display:none}
+.nav .pill{position:relative;isolation:isolate;display:grid;place-items:center;width:56px;height:32px;border-radius:999px}
+.nav .pill::before{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--st-layer,currentColor);opacity:0;z-index:-1}
+.nav:hover .pill::before,.nav.h .pill::before{opacity:var(--st-hover)}
+.nav .pill .ic{width:24px;height:24px}
+.nav[aria-current=page]{color:var(--md-sys-color-on-surface);font-weight:600}
+.nav[aria-current=page] .pill{background:var(--st-sel-nav);color:var(--st-sel-nav-fg)}
+.tf{position:relative;display:flex;flex-direction:column;justify-content:center;height:56px;padding:0 16px;background:var(--md-sys-color-surface-container-highest);border-radius:var(--sh-field);box-shadow:inset 0 -1px 0 var(--md-sys-color-on-surface-variant);min-width:200px}
+.tf small{font-size:12px;line-height:16px;color:var(--md-sys-color-on-surface-variant)}
+.tf span{font-size:16px;line-height:24px}
+.tf.focus{box-shadow:inset 0 -3px 0 var(--st-field-focus)}
+.tf.focus small{color:var(--st-field-focus)}
+.card{background:var(--md-sys-color-surface-container-lowest);border-radius:var(--sh-card);padding:16px;display:flex;flex-direction:column;gap:12px}
+:root[data-theme=dark] .card,:root[data-theme=dark] .li:not([aria-selected=true]){background:var(--md-sys-color-surface-container-high)}
+.card h3{font-size:16px;line-height:24px;font-weight:500}
+.card .big{font-size:28px;line-height:36px;font-weight:500;font-variant-numeric:tabular-nums}
+.menu{background:var(--md-sys-color-surface-container);border-radius:var(--sh-menu);padding:4px;width:200px;box-shadow:0 2px 6px 2px rgb(0 0 0/.12),0 1px 2px rgb(0 0 0/.24)}
+.menu .li{min-height:44px;background:transparent;border-radius:var(--sh-menu-item);padding:0 12px;gap:12px}
+.dlg{background:var(--md-sys-color-surface-container-high);border-radius:var(--sh-dialog);padding:24px;display:flex;flex-direction:column;gap:16px;max-width:320px}
+.dlg h3{font-size:24px;line-height:32px;font-weight:400}
+.dlg p{color:var(--md-sys-color-on-surface-variant)}
+.dlg .acts{display:flex;justify-content:flex-end;gap:8px}
+.fab{display:inline-grid;place-items:center;width:56px;height:56px;border:0;border-radius:var(--sh-fab);background:var(--md-sys-color-primary-container);color:var(--md-sys-color-on-primary-container);cursor:pointer;transition:border-radius .3s var(--ease)}
+.fab:active{border-radius:var(--sh-btn-press)}
+.fab .ic{width:24px;height:24px}
+.sw{display:inline-flex;align-items:center;gap:10px;color:var(--md-sys-color-on-surface)}
+.sw .tr{position:relative;width:52px;height:32px;border-radius:999px;background:var(--md-sys-color-primary);outline-offset:var(--st-ring-off)}
+.sw .tr::after{content:"";position:absolute;right:4px;top:4px;width:24px;height:24px;border-radius:50%;background:var(--md-sys-color-on-primary)}
+.cb{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:var(--sh-check);background:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary);outline-offset:var(--st-ring-off)}
+.cb .ic{width:14px;height:14px}
+
+/* ======= STATE options ======= */
+[data-states=a]{ /* M3, as S4 Material does today */
+  --st-hover:.08;--st-press:.10;--st-ring:var(--md-sys-color-secondary);--st-ring-w:3px;--st-ring-off:2px;
+  --st-sel-chip:var(--md-sys-color-secondary-container);--st-sel-chip-fg:var(--md-sys-color-on-secondary-container);
+  --st-sel-row:var(--md-sys-color-secondary-container);--st-sel-row-fg:var(--md-sys-color-on-secondary-container);
+  --st-sel-nav:var(--md-sys-color-secondary-container);--st-sel-nav-fg:var(--md-sys-color-on-secondary-container);
+  --st-field-focus:var(--md-sys-color-primary)}
+[data-states=b]{ /* S4 hybrid: M3 layers, neutral focus and neutral row selection */
+  --st-hover:.08;--st-press:.10;--st-ring:var(--md-sys-color-on-surface);--st-ring-w:2px;--st-ring-off:2px;
+  --st-sel-chip:var(--md-sys-color-secondary-container);--st-sel-chip-fg:var(--md-sys-color-on-secondary-container);
+  --st-sel-row:var(--md-sys-color-surface-container-highest);--st-sel-row-fg:var(--md-sys-color-on-surface);
+  --st-sel-nav:var(--md-sys-color-secondary-container);--st-sel-nav-fg:var(--md-sys-color-on-secondary-container);
+  --st-field-focus:var(--md-sys-color-on-surface)}
+:root:not([data-theme=dark]) [data-states=b] .li[aria-selected=true]{background:var(--md-sys-color-surface-container-high)}
+[data-states=c]{ /* primary-tinted everything */
+  --st-hover:.08;--st-press:.12;--st-layer:var(--md-sys-color-primary);--st-ring:var(--md-sys-color-primary);--st-ring-w:3px;--st-ring-off:2px;
+  --st-sel-chip:var(--md-sys-color-primary-container);--st-sel-chip-fg:var(--md-sys-color-on-primary-container);
+  --st-sel-row:var(--md-sys-color-primary-container);--st-sel-row-fg:var(--md-sys-color-on-primary-container);
+  --st-sel-nav:var(--md-sys-color-primary-container);--st-sel-nav-fg:var(--md-sys-color-on-primary-container);
+  --st-field-focus:var(--md-sys-color-primary)}
+[data-states=c] .b.filled,[data-states=c] .b.tonal{--st-layer:currentColor}
+/* shape is fixed (S4 Material softer corners) inside the states section */
+[data-states]{--sh-btn:999px;--sh-btn-press:8px;--sh-ib:999px;--sh-chip:8px;--sh-list:16px;--sh-row:8px;--sh-row-sel:999px;--sh-field:8px;--sh-card:12px;--sh-check:4px}
+
+/* ======= SHAPE options ======= */
+[data-shape=a]{--sh-btn:999px;--sh-btn-press:8px;--sh-ib:999px;--sh-chip:8px;--sh-field:4px 4px 0 0;--sh-card:12px;--sh-list:16px;--sh-row:4px;--sh-row-sel:4px;--sh-menu:16px;--sh-menu-item:12px;--sh-dialog:28px;--sh-fab:16px;--sh-check:2px}
+[data-shape=b]{--sh-btn:999px;--sh-btn-press:8px;--sh-ib:999px;--sh-chip:8px;--sh-field:8px;--sh-card:12px;--sh-list:16px;--sh-row:8px;--sh-row-sel:999px;--sh-menu:16px;--sh-menu-item:12px;--sh-dialog:28px;--sh-fab:16px;--sh-check:4px}
+[data-shape=c]{--sh-btn:999px;--sh-btn-press:12px;--sh-ib:999px;--sh-chip:999px;--sh-field:16px;--sh-card:24px;--sh-list:24px;--sh-row:12px;--sh-row-sel:999px;--sh-menu:20px;--sh-menu-item:999px;--sh-dialog:32px;--sh-fab:20px;--sh-check:6px}
+[data-shape=d]{--sh-btn:10px;--sh-btn-press:10px;--sh-ib:10px;--sh-chip:8px;--sh-field:10px;--sh-card:12px;--sh-list:12px;--sh-row:8px;--sh-row-sel:8px;--sh-menu:12px;--sh-menu-item:8px;--sh-dialog:16px;--sh-fab:16px;--sh-check:6px}
+[data-shape]{--st-hover:.08;--st-press:.10;--st-ring:var(--md-sys-color-secondary);--st-ring-w:3px;--st-ring-off:2px;
+  --st-sel-chip:var(--md-sys-color-secondary-container);--st-sel-chip-fg:var(--md-sys-color-on-secondary-container);
+  --st-sel-row:var(--md-sys-color-secondary-container);--st-sel-row-fg:var(--md-sys-color-on-secondary-container);
+  --st-sel-nav:var(--md-sys-color-secondary-container);--st-sel-nav-fg:var(--md-sys-color-on-secondary-container);--st-field-focus:var(--md-sys-color-primary)}
+.shapegrid{display:grid;grid-template-columns:1fr;gap:16px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>S4 Orion: States and Shape</h1>
+  <div class="ctl"><span>Theme</span><div class="seg" id="theme"><button value="light" aria-pressed="true">Light</button><button value="dark" aria-pressed="false">Dark</button></div></div>
+  <div class="ctl"><span>Seed</span><div class="seg" id="seed"><button value="#000000" aria-pressed="true">Mono</button><button value="#4f46e5" aria-pressed="false">Indigo</button><button value="#00796b" aria-pressed="false">Teal</button><button value="#c2410c" aria-pressed="false">Orange</button></div></div>
+</div>
+<main class="page">
+  <p class="intro">Two choices, one at a time. Each column shows the same parts of an app. Small captions show a state frozen in place (hover, pressed, focused) so you can compare without a mouse; everything is also live, so hover, click and Tab around. Try both themes and a seed color. Answer with a letter for each section, for example “States B, Shape B”.</p>
+
+  <section class="sec">
+    <h2>States</h2>
+    <p>How hover, press, keyboard focus and “selected” look. Shapes are held constant here.</p>
+    <div class="cols" id="states"></div>
+  </section>
+
+  <section class="sec">
+    <h2>Shape</h2>
+    <p>Corner radii across components. Press and hold a button or the FAB to see the press-morph (A–C). States are held at option A here.</p>
+    <div class="cols" id="shapes"></div>
+  </section>
+</main>
+
+<template id="tpl-states">
+  <div class="opt">
+    <header><b></b><small></small></header>
+    <div><div class="lbl">Buttons</div>
+      <div class="row">
+        <span class="cap"><button class="b filled f-ring">Save</button><i>rest</i></span>
+        <span class="cap"><button class="b filled h">Save</button><i>hover</i></span>
+        <span class="cap"><button class="b tonal p">Export</button><i>pressed</i></span>
+        <span class="cap"><button class="b outlined f">Filter</button><i>focused</i></span>
+        <span class="cap"><button class="ib h"><span class="ic" data-i="menu-dots"></span></button><i>hover</i></span>
+      </div></div>
+    <div><div class="lbl">Filter chips</div>
+      <div class="row">
+        <button class="chip">All</button>
+        <button class="chip" aria-pressed="true"><span class="ic" data-i="check"></span>Unpaid</button>
+        <button class="chip h">Overdue</button>
+        <button class="chip f">Paid</button>
+      </div></div>
+    <div><div class="lbl">List rows (rest, hover, selected)</div>
+      <ul class="list">
+        <li class="li"><span class="ic" data-i="bill-list"></span><span class="t"><b>Iron Mountain</b><small>Due Oct 28</small></span><span class="amt">$1,240.00</span></li>
+        <li class="li h"><span class="ic" data-i="bill-list"></span><span class="t"><b>Comcast Business</b><small>Due Oct 30</small></span><span class="amt">$389.17</span></li>
+        <li class="li" aria-selected="true"><span class="ic" data-i="bill-list"></span><span class="t"><b>Staples</b><small>Due Nov 2</small></span><span class="amt">$72.40</span></li>
+      </ul></div>
+    <div><div class="lbl">Navigation, field and controls</div>
+      <div class="row" style="gap:16px;align-items:flex-start">
+        <div class="navs">
+          <button class="nav" aria-current="page"><span class="pill"><span class="ic" data-i="home-2"></span></span>Home</button>
+          <button class="nav h"><span class="pill"><span class="ic" data-i="wallet"></span></span>Bills</button>
+          <button class="nav"><span class="pill"><span class="ic" data-i="settings"></span></span>Settings</button>
+        </div>
+        <div class="tf focus"><small>Vendor</small><span>Staples</span></div>
+        <span class="cap"><span class="sw"><span class="tr f"></span></span><i>focused</i></span>
+        <span class="cap"><span class="cb f"><span class="ic" data-i="check"></span></span><i>focused</i></span>
+      </div></div>
+  </div>
+</template>
+
+<template id="tpl-shapes">
+  <div class="opt">
+    <header><b></b><small></small></header>
+    <div class="row">
+      <button class="b filled"><span class="ic" data-i="add-circle"></span>New Bill</button>
+      <button class="b outlined">Export</button>
+      <button class="ib"><span class="ic" data-i="pen-2"></span></button>
+      <button class="fab" aria-label="Add"><span class="ic" data-i="add-circle"></span></button>
+    </div>
+    <div class="row">
+      <button class="chip" aria-pressed="true"><span class="ic" data-i="check"></span>Unpaid</button>
+      <button class="chip">Overdue</button>
+      <span class="cb"><span class="ic" data-i="check"></span></span>
+    </div>
+    <div class="tf"><small>Amount</small><span>$1,240.00</span></div>
+    <div class="card">
+      <h3>This Month</h3>
+      <div class="big">$4,459.13</div>
+      <ul class="list">
+        <li class="li"><span class="t"><b>Iron Mountain</b><small>Due Oct 28</small></span><span class="amt">$1,240.00</span></li>
+        <li class="li" aria-selected="true"><span class="t"><b>Staples</b><small>Due Nov 2</small></span><span class="amt">$72.40</span></li>
+      </ul>
+    </div>
+    <div class="row" style="align-items:flex-start;gap:16px">
+      <div class="menu"><div class="li"><span class="ic" data-i="pen-2"></span>Edit</div><div class="li h"><span class="ic" data-i="export"></span>Export</div><div class="li"><span class="ic" data-i="trash-bin-minimalistic"></span>Delete</div></div>
+      <div class="dlg"><h3>Delete this bill?</h3><p>Staples, $72.40. This can't be undone.</p><div class="acts"><button class="b text">Cancel</button><button class="b filled">Delete</button></div></div>
+    </div>
+  </div>
+</template>
+
+<script src="lib/m3color.js"></script>
+<script src="lib/icons.js"></script>
+<script>
+const STATES=[
+  ['A','M3, as S4 Material is today','State layers in the content color (8% hover, 10% press). Focus is a 3px secondary ring. Selected chips, rows and nav use secondary container.'],
+  ['B','S4 hybrid: neutral focus','Same M3 layers. Focus is a 2px neutral (on-surface) ring, the field underline goes neutral, and selected rows are neutral grey. Controls (chips, nav) still use secondary container. Closest to S4 Glass.'],
+  ['C','Primary-tinted','Hover and press tint with primary, focus is a 3px primary ring, and selection uses primary container everywhere. Most colorful; the seed shows up most.']];
+const SHAPES=[
+  ['A','Stock M3 Expressive','Pill buttons that square off on press, 12px cards, 4px rows, a filled field with square bottom corners, 28px dialogs, 16px FAB.'],
+  ['B','S4 Material softer corners','Stock M3E but nothing under 8px: the field rounds all four corners, rows 8px, and the selected row becomes a pill. This is S4 Material today.'],
+  ['C','Expressive, rounder','Pill chips and menu items, 16px fields, 24px cards, 32px dialogs, a 20px FAB and a softer press morph. Friendlier and more playful.'],
+  ['D','S4 Glass radii','Your older house scale: 10px buttons and fields, 12px cards, 16px dialogs, no press morph. Calm and squarer.']];
+function fill(tplId,host,list,attr){const t=document.getElementById(tplId);list.forEach(([k,n,d])=>{const c=t.content.firstElementChild.cloneNode(true);c.setAttribute(attr,k.toLowerCase());c.querySelector('b').textContent=k+'. '+n;c.querySelector('small').textContent=d;document.getElementById(host).appendChild(c)})}
+fill('tpl-states','states',STATES,'data-states');fill('tpl-shapes','shapes',SHAPES,'data-shape');
+document.querySelectorAll('[data-i]').forEach(e=>{e.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+(ICONS[e.dataset.i]||'')+'</svg>'});
+const state={mode:'light',seed:'#000000'};
+function apply(){const dark=state.mode==='dark',mono=state.seed==='#000000';
+  const s=M3Color.scheme(state.seed,mono?'monochrome':'vibrant',dark,0);let css=':root{';for(const k in s)css+='--md-sys-color-'+k+':'+s[k]+';';css+='}';
+  let el=document.getElementById('dyn');if(!el){el=document.createElement('style');el.id='dyn';document.head.appendChild(el)}el.textContent=css;
+  document.documentElement.dataset.theme=state.mode}
+for(const id of ['theme','seed'])document.getElementById(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));state[id==='theme'?'mode':'seed']=b.value;apply()});
+document.querySelectorAll('.chip:not(.h):not(.f)').forEach(c=>c.addEventListener('click',()=>{const on=c.getAttribute('aria-pressed')==='true';c.setAttribute('aria-pressed',!on);if(!on&&!c.querySelector('.ic'))c.insertAdjacentHTML('afterbegin','<span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">'+ICONS.check+'</svg></span>');if(on)c.querySelector('.ic')?.remove()}));
+apply();
+</script>
+<footer style="max-width:1500px;margin:0 auto;padding:0 24px 32px;font-size:12px;color:var(--md-sys-color-on-surface-variant)"><a href="../" style="color:inherit">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0) · Material Color Utilities (Apache 2.0)</footer>
+</body>
+</html>
