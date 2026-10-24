@@ -1,6 +1,6 @@
 # 0001: Phase 1 audit of S4 Material 1.3.x and the S4 Orion decisions
 
-Status: in progress (states and shape still to be picked; backdrop decided in Phase 4)
+Status: in progress (transitions being explored; backdrop decided in Phase 4)
 Date: 2026-10-24
 
 S4 Orion is the successor to the **S4 Material** skill (1.3.x). It's a leaner rebuild with the same lineage: Material 3 Expressive as the foundation and a glass layer as the personal change. **S4 Glass** stays a separate look and isn't part of Orion.
@@ -68,5 +68,8 @@ S4 Orion is the successor to the **S4 Material** skill (1.3.x). It's a leaner re
 | Labels | Title Case for labels, sentence case for sentences |
 | Type | Inter |
 | Icons | Solar: Bold Duotone where the icon carries the screen, Linear for small and inline icons. Icons sit behind a set-neutral name layer, so Phosphor Duotone can be swapped in later. |
-| States | To be picked from the comparison page (A: M3 secondary ring / B: neutral focus / C: primary-tinted) |
-| Shape | To be picked from the comparison page (A: stock M3E / B: S4 Material softer / C: rounder / D: S4 Glass radii) |
+| States | **A: stock M3.** State layers in the content colour (hover 8%, press 10%), a 3dp secondary focus ring, and selection in the secondary container. |
+| Shape | **A: stock M3 Expressive.** Pill buttons that square off on press, 12dp cards, 4dp list rows, filled fields with square bottom corners, 28dp dialogs and 16dp FAB. |
+| Default colour | **Mono:** black and white (MCU monochrome). Mono + Red was explored as an option. |
+| Motion springs | **D: M3 Expressive** (Google's stock springs; fast spatial overshoots about 9%). This replaces S4 Material's Fluid default. |
+| Transitions | Origin felt too intense. The alternatives are being explored per surface in the Transitions Lab (`explore/transitions.html`). |

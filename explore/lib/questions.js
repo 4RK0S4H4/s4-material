@@ -21,4 +21,16 @@ window.S4_REVIEW_DEMOS = [
         options: [{ v: 'On', label: 'Grow from the source' }, { v: 'Off', label: 'Fade in place' }] }
     ]
   }
+  ,
+  {
+    id: 'transitions', title: 'Transitions Lab', href: 'explore/transitions.html',
+    questions: [
+      { id: 'menus', label: 'Menus', options: [{ v: 'A', label: 'Origin (S4 Material)' }, { v: 'B', label: 'Unfold' }, { v: 'C', label: 'Drop' }, { v: 'D', label: 'Fade' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'dialogs', label: 'Dialogs', options: [{ v: 'A', label: 'Origin (S4 Material)' }, { v: 'B', label: 'Container transform' }, { v: 'C', label: 'Lean' }, { v: 'D', label: 'Scale and fade' }, { v: 'E', label: 'Fade' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'sheets', label: 'Bottom sheets', options: [{ v: 'A', label: 'Origin (S4 Material)' }, { v: 'B', label: 'Container transform' }, { v: 'C', label: 'Slide from edge' }, { v: 'D', label: 'Short rise' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'peers', label: 'Switching views', options: [{ v: 'A', label: 'Shared axis' }, { v: 'B', label: 'Fade through' }, { v: 'C', label: 'Crossfade' }, { v: 'D', label: 'Push' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'detail', label: 'List to detail', options: [{ v: 'A', label: 'Origin (S4 Material)' }, { v: 'B', label: 'Container transform' }, { v: 'C', label: 'Shared axis Z' }, { v: 'D', label: 'Push' }, { v: 'E', label: 'Fade through' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'snackbar', label: 'Snackbars', options: [{ v: 'A', label: 'Origin' }, { v: 'B', label: 'Slide from edge' }, { v: 'C', label: 'Rise and fade' }, { v: 'Other', label: 'Describe in notes' }] }
+    ]
+  }
 ];

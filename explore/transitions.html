@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>S4 Orion: Transitions Lab</title>
+<style>
+@font-face{font-family:Inter;font-weight:100 900;font-display:block;src:url(lib/inter-variable.woff2) format("woff2")}
+:root{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface);font:400 14px/20px Inter,system-ui,sans-serif;letter-spacing:.2px}
+h1,h2,h3,p{margin:0}
+button{font:inherit;color:inherit}
+.bar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;padding:12px 24px;background:var(--md-sys-color-surface-container);border-bottom:1px solid var(--md-sys-color-outline-variant)}
+.bar h1{font-size:22px;line-height:28px;font-weight:500;margin-right:auto}
+.ctl{display:flex;align-items:center;gap:8px}
+.ctl > span{font-size:12px;font-weight:500;letter-spacing:.5px;color:var(--md-sys-color-on-surface-variant)}
+.seg{display:inline-flex;gap:2px;padding:2px;border-radius:999px;background:var(--md-sys-color-surface-container-highest)}
+.seg button{border:0;font-weight:500;padding:6px 14px;min-height:36px;border-radius:999px;background:transparent;color:var(--md-sys-color-on-surface-variant);cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container)}
+.page{max-width:1500px;margin:0 auto;padding:24px 24px 64px;display:flex;flex-direction:column;gap:40px}
+.intro{max-width:85ch;color:var(--md-sys-color-on-surface-variant);font-size:16px;line-height:24px;display:flex;flex-direction:column;gap:12px}
+.sec > h2{font-size:28px;line-height:36px;font-weight:500;margin-bottom:6px}
+.sec > p{color:var(--md-sys-color-on-surface-variant);max-width:90ch;margin-bottom:16px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.tile{background:var(--md-sys-color-surface-container-low);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.tile header{display:flex;flex-direction:column;gap:4px;min-height:132px}
+#sections{display:flex;flex-direction:column;gap:48px}
+.tile header b{font-size:16px;line-height:24px;font-weight:600}
+.tile header small{font-size:13px;line-height:18px;color:var(--md-sys-color-on-surface-variant)}
+.tile .acts{display:flex;gap:8px;flex-wrap:wrap}
+.tag{align-self:flex-start;font-size:11px;line-height:16px;font-weight:600;letter-spacing:.5px;padding:2px 8px;border-radius:999px;background:var(--md-sys-color-surface-container-highest);color:var(--md-sys-color-on-surface-variant)}
+.play{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 18px;border:0;border-radius:999px;font-weight:600;cursor:pointer;background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container)}
+
+/* ---------- mini app stage ---------- */
+.stage{position:relative;height:320px;border-radius:20px;overflow:hidden;background:var(--md-sys-color-surface);box-shadow:inset 0 0 0 1px var(--md-sys-color-outline-variant);isolation:isolate}
+.sbar{display:flex;align-items:center;gap:8px;height:52px;padding:0 8px 0 16px;font-size:18px;font-weight:500}
+.sbar .t{flex:1}
+.sbody{padding:4px 12px 12px;display:flex;flex-direction:column;gap:4px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-radius:4px;background:var(--md-sys-color-surface-container-low);font-variant-numeric:tabular-nums;border:0;width:100%;text-align:left;cursor:pointer}
+.row:first-child{border-radius:12px 12px 4px 4px} .row:last-child{border-radius:4px 4px 12px 12px}
+.row small{display:block;color:var(--md-sys-color-on-surface-variant);font-size:12px}
+.b{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border:0;border-radius:20px;font-weight:500;cursor:pointer}
+.b.filled{background:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary)}
+.b.tonal{background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container)}
+.b.text{background:transparent;color:var(--md-sys-color-primary);padding:0 12px}
+.fab{position:absolute;right:16px;bottom:16px;z-index:2;width:56px;height:56px;border:0;border-radius:16px;display:grid;place-items:center;background:var(--md-sys-color-primary-container);color:var(--md-sys-color-on-primary-container);cursor:pointer;font-size:28px;line-height:1}
+.scrim{position:absolute;inset:0;z-index:5;background:rgb(0 0 0/.32)}
+.smenu{position:absolute;z-index:6;top:48px;right:8px;width:180px;padding:4px;border-radius:16px;background:var(--md-sys-color-surface-container);box-shadow:0 2px 6px 2px rgb(0 0 0/.15),0 1px 2px rgb(0 0 0/.3)}
+.smenu div{padding:10px 12px;border-radius:12px}
+.sdlg{position:absolute;z-index:6;left:16px;right:16px;top:64px;padding:20px;border-radius:28px;background:var(--md-sys-color-surface-container-high)}
+.sdlg .inner{display:flex;flex-direction:column;gap:12px}
+.sdlg h3{font-size:22px;line-height:28px;font-weight:400}
+.sdlg p{color:var(--md-sys-color-on-surface-variant)}
+.sdlg .a{display:flex;justify-content:flex-end;gap:4px}
+.ssheet{position:absolute;z-index:6;left:0;right:0;bottom:0;height:62%;padding:10px 20px 20px;border-radius:28px 28px 0 0;background:var(--md-sys-color-surface-container-low)}
+.ssheet .inner{display:flex;flex-direction:column;gap:12px}
+.ssheet .h{width:32px;height:4px;border-radius:2px;background:var(--md-sys-color-on-surface-variant);opacity:.4;align-self:center}
+.ssheet h3{font-size:20px;line-height:28px;font-weight:500}
+.field{height:48px;border-radius:4px 4px 0 0;background:var(--md-sys-color-surface-container-highest);box-shadow:inset 0 -1px 0 var(--md-sys-color-on-surface-variant);padding:4px 12px;font-size:12px;color:var(--md-sys-color-on-surface-variant)}
+.field b{display:block;font-size:15px;font-weight:400;color:var(--md-sys-color-on-surface)}
+.tabs{position:relative;display:flex;border-bottom:1px solid var(--md-sys-color-surface-container-highest)}
+.tabs button{flex:1;height:44px;border:0;background:none;cursor:pointer;font-weight:500;color:var(--md-sys-color-on-surface-variant)}
+.tabs button[aria-selected=true]{color:var(--md-sys-color-primary)}
+.tabs .ind{position:absolute;bottom:-1px;left:0;height:3px;border-radius:3px 3px 0 0;background:var(--md-sys-color-primary)}
+.views{position:absolute;left:0;right:0;top:96px;bottom:0;overflow:hidden}
+.view{position:absolute;inset:0;padding:12px;display:flex;flex-direction:column;gap:8px}
+.view .big{font-size:32px;line-height:40px;font-weight:500;font-variant-numeric:tabular-nums}
+.view .ph{height:20px;border-radius:6px;background:var(--md-sys-color-surface-container-high)}
+.sdetail{position:absolute;inset:0;z-index:6;background:var(--md-sys-color-surface-container-low);padding:0 16px 16px}
+.sdetail .inner{display:flex;flex-direction:column;gap:12px}
+.sdetail .back{display:flex;align-items:center;gap:8px;height:52px;font-size:18px;font-weight:500}
+.sdetail .back button{width:40px;height:40px;border:0;border-radius:20px;background:none;cursor:pointer;font-size:20px}
+.sdetail .big{font-size:36px;line-height:44px;font-weight:500;font-variant-numeric:tabular-nums}
+.ssnack{position:absolute;z-index:6;left:12px;right:12px;bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 8px 8px 16px;border-radius:8px;background:var(--md-sys-color-inverse-surface);color:var(--md-sys-color-inverse-on-surface)}
+.ssnack button{border:0;background:none;color:var(--md-sys-color-inverse-primary);font-weight:600;cursor:pointer;padding:8px}
+.center{flex:1;display:grid;place-items:center;padding-top:40px}
+footer{max-width:1500px;margin:0 auto;padding:0 24px 32px;font-size:12px;color:var(--md-sys-color-on-surface-variant)}
+footer a{color:inherit}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>S4 Orion: Transitions Lab</h1>
+  <div class="ctl"><span>Theme</span><div class="seg" id="theme"><button value="light" aria-pressed="true">Light</button><button value="dark" aria-pressed="false">Dark</button></div></div>
+  <div class="ctl"><span>Color</span><div class="seg" id="seed"><button value="mono" aria-pressed="true">Mono</button><button value="mono-red" aria-pressed="false">Mono + Red</button><button value="#4f46e5" aria-pressed="false">Indigo</button></div></div>
+  <div class="ctl"><span>Springs</span><div class="seg" id="feel"><button value="A" aria-pressed="false">Fluid</button><button value="D" aria-pressed="true">M3 Expressive</button></div></div>
+  <div class="ctl"><span>Speed</span><div class="seg" id="slow"><button value="1" aria-pressed="true">×1</button><button value="3" aria-pressed="false">Slow ×3</button></div></div>
+</div>
+<main class="page">
+  <div class="intro">
+    <p>“Origin” is one idea for showing where a surface comes from: it grows the surface out of the button you pressed. S4 Material did it by <b>scaling the whole surface</b>, so text squashes and stretches on the way in, which is where it can feel goofy. This lab puts that next to calmer ways of saying the same thing and next to the other motion concepts M3 uses, one surface type at a time.</p>
+    <p>Each tile is a tiny app. Press its button (or <b>Play</b>) to see the transition in and out, then press <b>Pick</b> on the one you like. You can pick a different concept for each surface type. Everything runs on the springs you chose (M3 Expressive); switch to Fluid or Slow ×3 to compare.</p>
+  </div>
+  <div id="sections"></div>
+</main>
+<footer><a href="../">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Material Color Utilities (Apache 2.0)</footer>
+
+<script src="lib/m3color.js?v=2"></script>
+<script src="lib/theme.js?v=3"></script>
+<script src="lib/springs.js?v=1"></script>
+<script>
+const A=(el,kf,n,o)=>S4Springs.anim(el,kf,n,o), D=n=>S4Springs.get(n).d;
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const h=(html)=>{const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild};
+function rel(el,stage){const a=el.getBoundingClientRect(),s=stage.getBoundingClientRect();return {l:a.left-s.left,t:a.top-s.top,w:a.width,h:a.height,r:s.right-a.right,b:s.bottom-a.bottom}}
+/* reveal an element from a source rect by clipping (container stays its real size, nothing squashes) */
+function clipFrom(el,src,stage,r0,r1){const s=rel(src,stage),e=rel(el,stage);
+  const inset=`inset(${s.t-e.t}px ${e.l+e.w-(s.l+s.w)}px ${e.t+e.h-(s.t+s.h)}px ${s.l-e.l}px round ${r0}px)`;return [{clipPath:inset},{clipPath:`inset(0px 0px 0px 0px round ${r1})`}]}
+/* the old S4 Material way: scale the whole element from the source rect */
+function scaleFrom(el,src,stage){const s=rel(src,stage),e=rel(el,stage);el.style.transformOrigin='0 0';return [{transform:`translate(${s.l-e.l}px,${s.t-e.t}px) scale(${s.w/e.w},${s.h/e.h})`},{transform:'none'}]}
+const rev=kf=>kf.slice().reverse();
+const contentIn=[{opacity:0},{opacity:0,offset:.35},{opacity:1}];
+
+/* ---------- sections ---------- */
+const ROWS='<button class="row"><span>Iron Mountain<small>Due Oct 28</small></span><span>$1,240.00</span></button><button class="row"><span>Comcast<small>Due Oct 30</small></span><span>$389.17</span></button><button class="row"><span>Staples<small>Due Nov 2</small></span><span>$72.40</span></button>';
+const SECTIONS=[
+ {id:'menus',title:'Menus',desc:'A small list of choices attached to a button. Appears often, so it should be quick and quiet.',
+  stage:`<div class="sbar"><span class="t">Bills</span><button class="b tonal trig">Sort By</button></div><div class="sbody">${ROWS}</div>`,
+  make:st=>h('<div class="smenu"><div>Due Date</div><div>Amount</div><div>Vendor</div></div>'),
+  opts:[
+   {k:'A',name:'Origin (S4 Material)',tag:'Current',desc:'Scales out of the button from its corner.',
+    in:(m)=>{m.style.transformOrigin='top right';A(m,[{transform:'scale(.6,.3)'},{transform:'none'}],'fast-spatial');A(m,[{opacity:0},{opacity:1}],'fast-effects')},
+    out:(m)=>{A(m,[{transform:'none'},{transform:'scale(.9,.6)'}],'fast-spatial');return A(m,[{opacity:1},{opacity:0}],'fast-effects')}},
+   {k:'B',name:'Unfold',tag:'M3',desc:'The menu’s own shape opens downward from its top edge; items stay still. Stock M3 Expressive.',
+    in:(m)=>{A(m,[{clipPath:'inset(0 0 100% 0 round 16px)'},{clipPath:'inset(0 0 0% 0 round 16px)'}],'spatial');A(m,[{opacity:0},{opacity:1}],'fast-effects')},
+    out:(m)=>A(m,[{opacity:1},{opacity:0}],'fast-effects')},
+   {k:'C',name:'Drop',desc:'Fades in while settling 6px into place. A hint of direction, no growth.',
+    in:(m)=>{A(m,[{transform:'translateY(-6px)'},{transform:'none'}],'fast-spatial');A(m,[{opacity:0},{opacity:1}],'fast-effects')},
+    out:(m)=>A(m,[{opacity:1},{opacity:0}],'fast-effects')},
+   {k:'D',name:'Fade',desc:'Opacity only. The quietest option.',
+    in:(m)=>A(m,[{opacity:0},{opacity:1}],'effects'),out:(m)=>A(m,[{opacity:1},{opacity:0}],'fast-effects')}]},
+
+ {id:'dialogs',title:'Dialogs',desc:'Interrupts the task to ask something. Needs focus, so it should arrive clearly but not theatrically.',
+  stage:`<div class="sbar"><span class="t">Staples</span></div><div class="sbody"><div class="row" style="cursor:default"><span>Amount<small>Due Nov 2</small></span><span>$72.40</span></div><div style="display:flex;justify-content:flex-end;padding-top:8px"><button class="b filled trig">Delete Bill</button></div></div>`,
+  make:st=>h('<div class="sdlg" role="dialog"><div class="inner"><h3>Delete this bill?</h3><p>Staples, $72.40. This can’t be undone.</p><div class="a"><button class="b text x">Cancel</button><button class="b filled x">Delete</button></div></div></div>'),
+  scrim:true,
+  opts:[
+   {k:'A',name:'Origin (S4 Material)',tag:'Current',desc:'The whole dialog scales out of the button, text included.',
+    in:(d,st,src)=>{A(d,scaleFrom(d,src,st),'spatial');A(d,[{opacity:0},{opacity:1}],'fast-effects')},
+    out:(d,st,src)=>{const a=A(d,rev(scaleFrom(d,src,st)),'fast-spatial');A(d,[{opacity:1},{opacity:0}],'fast-effects');return a}},
+   {k:'B',name:'Container Transform',tag:'M3',desc:'The dialog’s shape grows out of the button at its real size; the text fades in once there’s room. Nothing stretches.',
+    in:(d,st,src)=>{A(d,clipFrom(d,src,st,20,'28px'),'spatial');A(d.querySelector('.inner'),contentIn,'spatial');A(src,[{opacity:1},{opacity:0}],'fast-effects')},
+    out:(d,st,src)=>{const a=A(d,rev(clipFrom(d,src,st,20,'28px')),'fast-spatial');A(d.querySelector('.inner'),[{opacity:1},{opacity:0,offset:.5},{opacity:0}],'fast-spatial');A(src,[{opacity:0},{opacity:1}],'effects');return a}},
+   {k:'C',name:'Lean',desc:'Appears in place, scaling up slightly from the side the button is on. Says “from there” with a nudge, not a flight.',
+    in:(d,st,src)=>{const s=rel(src,st),e=rel(d,st);d.style.transformOrigin=`${s.l+s.w/2-e.l}px ${s.t+s.h/2-e.t}px`;A(d,[{transform:'scale(.9)'},{transform:'none'}],'spatial');A(d,[{opacity:0},{opacity:1}],'effects')},
+    out:(d)=>{A(d,[{transform:'none'},{transform:'scale(.96)'}],'fast-spatial');return A(d,[{opacity:1},{opacity:0}],'fast-effects')}},
+   {k:'D',name:'Scale and Fade',desc:'Grows a little from its own center. Classic and neutral; ignores where it came from.',
+    in:(d)=>{d.style.transformOrigin='50% 50%';A(d,[{transform:'scale(.92)'},{transform:'none'}],'spatial');A(d,[{opacity:0},{opacity:1}],'effects')},
+    out:(d)=>{A(d,[{transform:'none'},{transform:'scale(.96)'}],'fast-spatial');return A(d,[{opacity:1},{opacity:0}],'fast-effects')}},
+   {k:'E',name:'Fade',desc:'Opacity only, with the scrim.',
+    in:(d)=>A(d,[{opacity:0},{opacity:1}],'effects'),out:(d)=>A(d,[{opacity:1},{opacity:0}],'fast-effects')}]},
+
+ {id:'sheets',title:'Bottom Sheets',desc:'A larger panel for a short task, often opened from a FAB.',
+  stage:`<div class="sbar"><span class="t">Expenses</span></div><div class="sbody">${ROWS}</div><button class="fab trig" aria-label="Add">+</button>`,
+  make:st=>h('<div class="ssheet"><div class="inner"><span class="h"></span><h3>Add Expense</h3><div class="field">Amount<b>$18.50</b></div><button class="b filled x" style="align-self:flex-end">Save</button></div></div>'),
+  scrim:true,
+  opts:[
+   {k:'A',name:'Origin (S4 Material)',tag:'Current',desc:'The sheet scales out of the FAB.',
+    in:(s,st,src)=>{A(s,scaleFrom(s,src,st),'slow-spatial');A(s,[{opacity:0},{opacity:1}],'fast-effects')},
+    out:(s,st,src)=>{const a=A(s,rev(scaleFrom(s,src,st)),'spatial');A(s,[{opacity:1},{opacity:0}],'effects');return a}},
+   {k:'B',name:'Container Transform',tag:'M3',desc:'The FAB’s shape expands into the sheet; content fades in once there’s room.',
+    in:(s,st,src)=>{A(s,clipFrom(s,src,st,16,'28px 28px 0 0'),'slow-spatial');A(s.querySelector('.inner'),contentIn,'slow-spatial');A(src,[{opacity:1},{opacity:0}],'fast-effects')},
+    out:(s,st,src)=>{const a=A(s,rev(clipFrom(s,src,st,16,'28px 28px 0 0')),'spatial');A(s.querySelector('.inner'),[{opacity:1},{opacity:0,offset:.4},{opacity:0}],'spatial');A(src,[{opacity:0},{opacity:1}],'effects');return a}},
+   {k:'C',name:'Slide From Edge',tag:'M3',desc:'Rises from the bottom of the screen, where sheets live. Stock M3.',
+    in:(s)=>A(s,[{transform:'translateY(100%)'},{transform:'none'}],'slow-spatial'),out:(s)=>A(s,[{transform:'none'},{transform:'translateY(100%)'}],'spatial')},
+   {k:'D',name:'Short Rise',desc:'Fades in while rising 40px. Lighter than a full slide.',
+    in:(s)=>{A(s,[{transform:'translateY(40px)'},{transform:'none'}],'spatial');A(s,[{opacity:0},{opacity:1}],'effects')},
+    out:(s)=>{A(s,[{transform:'none'},{transform:'translateY(24px)'}],'fast-spatial');return A(s,[{opacity:1},{opacity:0}],'fast-effects')}}]},
+
+ {id:'peers',title:'Switching Views',desc:'Moving between sibling screens: tabs, nav destinations, steps. Should show which way you went without making you wait.',
+  stage:`<div class="sbar"><span class="t">Reports</span></div><div class="tabs"><button aria-selected="true">Week</button><button aria-selected="false">Month</button><button aria-selected="false">Year</button><span class="ind"></span></div><div class="views"></div>`,
+  peers:true,
+  opts:[
+   {k:'A',name:'Shared Axis',tag:'M3',desc:'Old view slides out and fades, new one slides in from the side you’re heading. Shows direction.',
+    swap:(o,n,dir)=>{A(o,[{transform:'none',opacity:1},{transform:`translateX(${-30*dir}px)`,opacity:0}],'fast-spatial');A(n,[{transform:`translateX(${30*dir}px)`,opacity:0},{transform:'none',opacity:1}],'spatial');return wait(D('fast-spatial'))}},
+   {k:'B',name:'Fade Through',tag:'M3',desc:'Old view fades out, then the new one fades in with a small zoom. For views that aren’t in a sequence.',
+    swap:async(o,n)=>{n.style.opacity=0;await A(o,[{opacity:1},{opacity:0}],'fast-effects').finished;A(n,[{opacity:0,transform:'scale(.94)'},{opacity:1,transform:'none'}],'spatial')}},
+   {k:'C',name:'Crossfade',desc:'Both fade at once. Calm, no direction.',
+    swap:(o,n)=>{A(o,[{opacity:1},{opacity:0}],'effects');A(n,[{opacity:0},{opacity:1}],'effects');return wait(D('effects'))}},
+   {k:'D',name:'Push',desc:'Full-width slide, like pages in a carousel. Strongest sense of place.',
+    swap:(o,n,dir)=>{A(o,[{transform:'none'},{transform:`translateX(${-100*dir}%)`}],'spatial');A(n,[{transform:`translateX(${100*dir}%)`},{transform:'none'}],'spatial');return wait(D('spatial'))}}]},
+
+ {id:'detail',title:'List to Detail',desc:'Opening one item from a list into its own screen.',
+  stage:`<div class="sbar"><span class="t">Bills</span></div><div class="sbody list">${ROWS}</div>`,
+  make:st=>h('<div class="sdetail"><div class="inner"><div class="back"><button class="x" aria-label="Back">←</button>Comcast</div><div class="big">$389.17</div><div class="field">Due<b>Oct 30, 2026</b></div><div class="field">Account<b>Business Internet</b></div></div></div>'),
+  trigSel:'.row:nth-child(2)',
+  opts:[
+   {k:'A',name:'Origin (S4 Material)',tag:'Current',desc:'The detail screen scales out of the row, text stretched on the way.',
+    in:(d,st,src)=>{A(d,scaleFrom(d,src,st),'spatial');A(d,[{opacity:0},{opacity:1}],'fast-effects')},
+    out:(d,st,src)=>{const a=A(d,rev(scaleFrom(d,src,st)),'fast-spatial');A(d,[{opacity:1},{opacity:0}],'fast-effects');return a}},
+   {k:'B',name:'Container Transform',tag:'M3',desc:'The row’s shape expands to fill the screen; the detail fades in once there’s room. The row “becomes” the screen.',
+    in:(d,st,src)=>{A(d,clipFrom(d,src,st,4,'0px'),'spatial');A(d.querySelector('.inner'),contentIn,'spatial')},
+    out:(d,st,src)=>{const a=A(d,rev(clipFrom(d,src,st,4,'0px')),'spatial');A(d.querySelector('.inner'),[{opacity:1},{opacity:0,offset:.4},{opacity:0}],'spatial');return a}},
+   {k:'C',name:'Shared Axis Z',tag:'M3',desc:'The list recedes and the detail comes forward. Depth instead of position.',
+    in:(d,st)=>{const l=st.querySelector('.list');A(l,[{transform:'none',opacity:1},{transform:'scale(1.06)',opacity:0}],'fast-spatial');A(d,[{transform:'scale(.92)',opacity:0},{transform:'none',opacity:1}],'spatial')},
+    out:(d,st)=>{const l=st.querySelector('.list');A(l,[{transform:'scale(1.06)',opacity:0},{transform:'none',opacity:1}],'spatial');return A(d,[{transform:'none',opacity:1},{transform:'scale(.92)',opacity:0}],'fast-spatial')}},
+   {k:'D',name:'Push',desc:'Detail slides in from the right over the list, like navigating deeper.',
+    in:(d,st)=>{A(st.querySelector('.list'),[{transform:'none'},{transform:'translateX(-25%)',opacity:.4}],'spatial');A(d,[{transform:'translateX(100%)'},{transform:'none'}],'spatial')},
+    out:(d,st)=>{A(st.querySelector('.list'),[{transform:'translateX(-25%)',opacity:.4},{transform:'none',opacity:1}],'spatial');return A(d,[{transform:'none'},{transform:'translateX(100%)'}],'spatial')}},
+   {k:'E',name:'Fade Through',desc:'List fades out, detail fades in with a small zoom.',
+    in:(d,st)=>{d.style.opacity=0;A(st.querySelector('.list'),[{opacity:1},{opacity:0}],'fast-effects');A(d,[{opacity:0,transform:'scale(.96)'},{opacity:0,transform:'scale(.96)',offset:.3},{opacity:1,transform:'none'}],'spatial')},
+    out:(d,st)=>{A(st.querySelector('.list'),[{opacity:0},{opacity:1}],'effects');return A(d,[{opacity:1},{opacity:0}],'fast-effects')}}]},
+
+ {id:'snackbar',title:'Snackbars',desc:'A short message after an action, often with Undo.',
+  stage:`<div class="sbar"><span class="t">Staples</span></div><div class="sbody"><div class="row" style="cursor:default"><span>Amount<small>Due Nov 2</small></span><span>$72.40</span></div><div class="center"><button class="b text trig">Archive</button></div></div>`,
+  make:st=>h('<div class="ssnack"><span>Bill archived</span><button class="x">Undo</button></div>'),
+  opts:[
+   {k:'A',name:'Origin',tag:'Current',desc:'Rises out of the button that caused it.',
+    in:(s,st,src)=>{const a=rel(src,st),b=rel(s,st);A(s,[{transform:`translate(${a.l+a.w/2-(b.l+b.w/2)}px,${a.t-b.t}px) scale(.4)`,opacity:0},{transform:'none',opacity:1}],'spatial')},
+    out:(s)=>A(s,[{opacity:1},{opacity:0}],'effects')},
+   {k:'B',name:'Slide From Edge',tag:'M3',desc:'Slides up from the bottom edge.',
+    in:(s)=>A(s,[{transform:'translateY(calc(100% + 12px))'},{transform:'none'}],'spatial'),out:(s)=>A(s,[{transform:'none'},{transform:'translateY(calc(100% + 12px))'}],'fast-spatial')},
+   {k:'C',name:'Rise and Fade',desc:'Fades in while rising 12px.',
+    in:(s)=>{A(s,[{transform:'translateY(12px)'},{transform:'none'}],'spatial');A(s,[{opacity:0},{opacity:1}],'effects')},out:(s)=>A(s,[{opacity:1},{opacity:0}],'effects')}]}
+];
+
+/* ---------- build tiles ---------- */
+const host=document.getElementById('sections');
+SECTIONS.forEach(sec=>{
+  const el=h(`<section class="sec"><h2>${sec.title}</h2><p>${sec.desc}</p><div class="tiles"></div></section>`);host.appendChild(el);
+  sec.opts.forEach(o=>{
+    const tile=h(`<div class="tile"><header>${o.tag?`<span class="tag">${o.tag==='Current'?'S4 Material today':'M3 pattern'}</span>`:''}<b>${o.k}. ${o.name}</b><small>${o.desc}</small></header><div class="stage">${sec.stage}</div><div class="acts"><button class="play" type="button">Play</button><button class="rv-pick" type="button" data-pick="${sec.id}:${o.k}">Pick ${o.k}</button></div></div>`);
+    el.querySelector('.tiles').appendChild(tile);
+    const st=tile.querySelector('.stage');
+    if(sec.peers){setupPeers(st,o);tile.querySelector('.play').onclick=async()=>{const t=st.querySelectorAll('.tabs button');t[1].click();await wait(700*slowMo());t[2].click();await wait(700*slowMo());t[0].click()};return}
+    let open=null,busy=false;
+    const src=st.querySelector(sec.trigSel||'.trig');
+    async function show(){if(open||busy)return;busy=true;const scrim=sec.scrim?h('<div class="scrim"></div>'):null;const s=sec.make(st);if(scrim){st.appendChild(scrim);A(scrim,[{opacity:0},{opacity:1}],'effects');scrim.onclick=hide}
+      st.appendChild(s);s.querySelectorAll('.x').forEach(x=>x.onclick=e=>{e.stopPropagation();hide()});open={s,scrim};o.in(s,st,src);busy=false}
+    async function hide(){if(!open||busy)return;busy=true;const {s,scrim}=open;if(scrim)A(scrim,[{opacity:1},{opacity:0}],'fast-effects');const a=o.out(s,st,src);await (a&&a.finished?a.finished:wait(D('spatial')));s.remove();scrim&&scrim.remove();
+      st.querySelectorAll('*').forEach(x=>x.getAnimations().forEach(an=>an.cancel()));open=null;busy=false}
+    src.addEventListener('click',e=>{e.stopPropagation();open?hide():show()});
+    st.addEventListener('click',e=>{if(open&&!open.s.contains(e.target)&&!sec.scrim)hide()});
+    tile.querySelector('.play').onclick=async()=>{if(open){await hide()}show();await wait(1300*slowMo());hide()};
+  });
+});
+function setupPeers(st,o){
+  const views=st.querySelector('.views'),tabs=[...st.querySelectorAll('.tabs button')],ind=st.querySelector('.ind');
+  const DATA=[['This Week','$612.30'],['October','$4,459.13'],['2026','$48,120.77']];let cur=0,cv=null,busy=false;
+  const mk=i=>h(`<div class="view"><small style="color:var(--md-sys-color-on-surface-variant)">${DATA[i][0]}</small><div class="big">${DATA[i][1]}</div><div class="ph" style="width:${[80,60,90][i]}%"></div><div class="ph" style="width:${[55,85,40][i]}%"></div><div class="ph" style="width:${[70,45,65][i]}%"></div></div>`);
+  cv=mk(0);views.appendChild(cv);
+  const place=(animate)=>{const b=tabs[cur];const kf={transform:`translateX(${b.offsetLeft+b.offsetWidth/2-24}px)`};ind.style.width='48px';if(animate)A(ind,[{transform:ind.style.transform||'translateX(0)'},kf],'spatial');ind.style.transform=kf.transform};
+  requestAnimationFrame(()=>place(false));
+  tabs.forEach((b,i)=>b.onclick=async()=>{if(i===cur||busy)return;busy=true;const dir=i>cur?1:-1;cur=i;tabs.forEach(t=>t.setAttribute('aria-selected',t===b));place(true);
+    const nv=mk(i);views.appendChild(nv);await o.swap(cv,nv,dir);cv.remove();cv=nv;nv.getAnimations().forEach(a=>{a.finished.then(()=>a.cancel())});nv.style.opacity='';busy=false});
+}
+let slow=1;const slowMo=()=>slow;
+/* ---------- controls ---------- */
+const state={mode:'light',seed:'mono'};
+function seg(id,fn){document.getElementById(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));fn(b.value)})}
+seg('theme',v=>{state.mode=v;S4Theme.apply(state.seed,state.mode)});
+seg('seed',v=>{state.seed=v;S4Theme.apply(state.seed,state.mode)});
+seg('feel',v=>S4Springs.use(v,slow));
+seg('slow',v=>{slow=+v;S4Springs.use(null,slow)});
+S4Theme.apply(state.seed,state.mode);
+</script>
+<script src="lib/questions.js?v=4"></script>
+<script src="lib/review.js?v=4"></script>
+<script>S4Review.page('transitions');</script>
+</body>
+</html>
