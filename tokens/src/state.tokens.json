@@ -1,0 +1,70 @@
+{
+  "$description": "M3 state layers and the focus ring (decision 0001: States A).",
+  "md": {
+    "sys": {
+      "state": {
+        "$type": "number",
+        "hover": {
+          "state-layer-opacity": {
+            "$value": 0.08
+          }
+        },
+        "focus": {
+          "state-layer-opacity": {
+            "$value": 0.1
+          }
+        },
+        "pressed": {
+          "state-layer-opacity": {
+            "$value": 0.1
+          }
+        },
+        "dragged": {
+          "state-layer-opacity": {
+            "$value": 0.16
+          }
+        },
+        "disabled": {
+          "container-opacity": {
+            "$value": 0.12,
+            "$description": "M3: disabled containers are on-surface at 12%."
+          },
+          "content-opacity": {
+            "$value": 0.38,
+            "$description": "M3: disabled text and icons are on-surface at 38%."
+          }
+        }
+      }
+    }
+  },
+  "s4": {
+    "focus": {
+      "ring-width": {
+        "$type": "dimension",
+        "$value": {
+          "value": 3,
+          "unit": "px"
+        }
+      },
+      "ring-offset": {
+        "$type": "dimension",
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        }
+      },
+      "ring-color": {
+        "$type": "color",
+        "$value": "{md.sys.color.secondary}",
+        "$description": "M3 focus indicator: 3dp secondary, 2dp outside the component."
+      }
+    },
+    "scrim": {
+      "opacity": {
+        "$type": "number",
+        "$value": 0.32,
+        "$description": "Scrim behind modal surfaces: md.sys.color.scrim at this opacity."
+      }
+    }
+  }
+}

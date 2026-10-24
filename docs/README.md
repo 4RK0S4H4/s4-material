@@ -3,7 +3,7 @@
 | Page | What it covers | State |
 |---|---|---|
 | [Philosophy](philosophy.md) | What S4 Orion is for and the principles behind every rule | Draft |
-| [Foundations](foundations/) | Color, typography, shape, spacing, elevation, motion, glass, accessibility | Phase 3–4 |
+| [Foundations](foundations/) | Color, typography, shape, spacing, elevation, motion; glass and accessibility in Phase 4 | Phase 3 done |
 | [Components](components/) | Usage guidelines and do/don't for each component | Phase 4 |
 | [Decision log](decisions/) | Why things are the way they are, one record per decision | Ongoing |
 

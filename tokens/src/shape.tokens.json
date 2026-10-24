@@ -1,0 +1,145 @@
+{
+  "$description": "Stock M3 Expressive corner scale (decision 0001: Shape A) and which step each component uses.",
+  "md": {
+    "sys": {
+      "shape": {
+        "corner": {
+          "$type": "dimension",
+          "none": {
+            "$value": {
+              "value": 0,
+              "unit": "px"
+            }
+          },
+          "extra-small": {
+            "$value": {
+              "value": 4,
+              "unit": "px"
+            }
+          },
+          "small": {
+            "$value": {
+              "value": 8,
+              "unit": "px"
+            }
+          },
+          "medium": {
+            "$value": {
+              "value": 12,
+              "unit": "px"
+            }
+          },
+          "large": {
+            "$value": {
+              "value": 16,
+              "unit": "px"
+            }
+          },
+          "large-increased": {
+            "$value": {
+              "value": 20,
+              "unit": "px"
+            }
+          },
+          "extra-large": {
+            "$value": {
+              "value": 28,
+              "unit": "px"
+            }
+          },
+          "extra-large-increased": {
+            "$value": {
+              "value": 32,
+              "unit": "px"
+            }
+          },
+          "extra-extra-large": {
+            "$value": {
+              "value": 48,
+              "unit": "px"
+            }
+          },
+          "full": {
+            "$value": {
+              "value": 9999,
+              "unit": "px"
+            },
+            "$description": "Pill: half the height of the component."
+          }
+        }
+      }
+    }
+  },
+  "s4": {
+    "shape": {
+      "$type": "dimension",
+      "button": {
+        "$value": "{md.sys.shape.corner.full}",
+        "$description": "All button sizes at rest (M3 Expressive round buttons)."
+      },
+      "button-pressed": {
+        "$value": "{md.sys.shape.corner.small}",
+        "$description": "Buttons square off while pressed (M3 Expressive shape morph)."
+      },
+      "icon-button": {
+        "$value": "{md.sys.shape.corner.full}"
+      },
+      "fab": {
+        "$value": "{md.sys.shape.corner.large}"
+      },
+      "fab-large": {
+        "$value": "{md.sys.shape.corner.extra-large}"
+      },
+      "chip": {
+        "$value": "{md.sys.shape.corner.small}"
+      },
+      "card": {
+        "$value": "{md.sys.shape.corner.medium}"
+      },
+      "pane": {
+        "$value": "{md.sys.shape.corner.large}"
+      },
+      "list-segment": {
+        "$value": "{md.sys.shape.corner.extra-small}",
+        "$description": "Inner corners of rows in a segmented list."
+      },
+      "list-group": {
+        "$value": "{md.sys.shape.corner.large}",
+        "$description": "Outer corners of a segmented list group."
+      },
+      "text-field": {
+        "$value": "{md.sys.shape.corner.extra-small}",
+        "$description": "Top corners of a filled field (bottom corners are square), all corners of an outlined field."
+      },
+      "menu": {
+        "$value": "{md.sys.shape.corner.large}"
+      },
+      "menu-item": {
+        "$value": "{md.sys.shape.corner.medium}"
+      },
+      "dialog": {
+        "$value": "{md.sys.shape.corner.extra-large}"
+      },
+      "sheet": {
+        "$value": "{md.sys.shape.corner.extra-large}",
+        "$description": "Top corners of a bottom sheet; the edge that meets the screen stays square."
+      },
+      "snackbar": {
+        "$value": "{md.sys.shape.corner.extra-small}"
+      },
+      "tooltip": {
+        "$value": "{md.sys.shape.corner.extra-small}"
+      },
+      "nav-indicator": {
+        "$value": "{md.sys.shape.corner.full}"
+      },
+      "toolbar": {
+        "$value": "{md.sys.shape.corner.full}",
+        "$description": "Floating toolbar."
+      },
+      "search": {
+        "$value": "{md.sys.shape.corner.full}"
+      }
+    }
+  }
+}

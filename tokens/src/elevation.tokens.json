@@ -1,0 +1,319 @@
+{
+  "$description": "M3 elevation levels as two-layer shadows (shadow color = black, as in S4 Material's m3e look).",
+  "md": {
+    "sys": {
+      "elevation": {
+        "$type": "shadow",
+        "level0": {
+          "$value": [],
+          "$description": "Flat. Most surfaces: M3 shows depth with tonal surface containers first."
+        },
+        "level1": {
+          "$value": [
+            {
+              "color": {
+                "colorSpace": "srgb",
+                "components": [
+                  0,
+                  0,
+                  0
+                ],
+                "alpha": 0.3,
+                "hex": "#000000"
+              },
+              "offsetX": {
+                "value": 0,
+                "unit": "px"
+              },
+              "offsetY": {
+                "value": 1,
+                "unit": "px"
+              },
+              "blur": {
+                "value": 2,
+                "unit": "px"
+              },
+              "spread": {
+                "value": 0,
+                "unit": "px"
+              }
+            },
+            {
+              "color": {
+                "colorSpace": "srgb",
+                "components": [
+                  0,
+                  0,
+                  0
+                ],
+                "alpha": 0.15,
+                "hex": "#000000"
+              },
+              "offsetX": {
+                "value": 0,
+                "unit": "px"
+              },
+              "offsetY": {
+                "value": 1,
+                "unit": "px"
+              },
+              "blur": {
+                "value": 3,
+                "unit": "px"
+              },
+              "spread": {
+                "value": 1,
+                "unit": "px"
+              }
+            }
+          ],
+          "$description": "Elevated card, elevated button at rest."
+        },
+        "level2": {
+          "$value": [
+            {
+              "color": {
+                "colorSpace": "srgb",
+                "components": [
+                  0,
+                  0,
+                  0
+                ],
+                "alpha": 0.3,
+                "hex": "#000000"
+              },
+              "offsetX": {
+                "value": 0,
+                "unit": "px"
+              },
+              "offsetY": {
+                "value": 1,
+                "unit": "px"
+              },
+              "blur": {
+                "value": 2,
+                "unit": "px"
+              },
+              "spread": {
+                "value": 0,
+                "unit": "px"
+              }
+            },
+            {
+              "color": {
+                "colorSpace": "srgb",
+                "components": [
+                  0,
+                  0,
+                  0
+                ],
+                "alpha": 0.15,
+                "hex": "#000000"
+              },
+              "offsetX": {
+                "value": 0,
+                "unit": "px"
+              },
+              "offsetY": {
+                "value": 2,
+                "unit": "px"
+              },
+              "blur": {
+                "value": 6,
+                "unit": "px"
+              },
+              "spread": {
+                "value": 2,
+                "unit": "px"
+              }
+            }
+          ],
+          "$description": "Menus, elevated buttons on hover."
+        },
+        "level3": {
+          "$value": [
+            {
+              "color": {
+                "colorSpace": "srgb",
+                "components": [
+                  0,
+                  0,
+                  0
+                ],
+                "alpha": 0.3,
+                "hex": "#000000"
+              },
+              "offsetX": {
+                "value": 0,
+                "unit": "px"
+              },
+              "offsetY": {
+                "value": 1,
+                "unit": "px"
+              },
+              "blur": {
+                "value": 3,
+                "unit": "px"
+              },
+              "spread": {
+                "value": 0,
+                "unit": "px"
+              }
+            },
+            {
+              "color": {
+                "colorSpace": "srgb",
+                "components": [
+                  0,
+                  0,
+                  0
+                ],
+                "alpha": 0.15,
+                "hex": "#000000"
+              },
+              "offsetX": {
+                "value": 0,
+                "unit": "px"
+              },
+              "offsetY": {
+                "value": 4,
+                "unit": "px"
+              },
+              "blur": {
+                "value": 8,
+                "unit": "px"
+              },
+              "spread": {
+                "value": 3,
+                "unit": "px"
+              }
+            }
+          ],
+          "$description": "FAB at rest, dialogs and sheets when not glass."
+        },
+        "level4": {
+          "$value": [
+            {
+              "color": {
+                "colorSpace": "srgb",
+                "components": [
+                  0,
+                  0,
+                  0
+                ],
+                "alpha": 0.3,
+                "hex": "#000000"
+              },
+              "offsetX": {
+                "value": 0,
+                "unit": "px"
+              },
+              "offsetY": {
+                "value": 2,
+                "unit": "px"
+              },
+              "blur": {
+                "value": 3,
+                "unit": "px"
+              },
+              "spread": {
+                "value": 0,
+                "unit": "px"
+              }
+            },
+            {
+              "color": {
+                "colorSpace": "srgb",
+                "components": [
+                  0,
+                  0,
+                  0
+                ],
+                "alpha": 0.15,
+                "hex": "#000000"
+              },
+              "offsetX": {
+                "value": 0,
+                "unit": "px"
+              },
+              "offsetY": {
+                "value": 6,
+                "unit": "px"
+              },
+              "blur": {
+                "value": 10,
+                "unit": "px"
+              },
+              "spread": {
+                "value": 4,
+                "unit": "px"
+              }
+            }
+          ],
+          "$description": "FAB on hover."
+        },
+        "level5": {
+          "$value": [
+            {
+              "color": {
+                "colorSpace": "srgb",
+                "components": [
+                  0,
+                  0,
+                  0
+                ],
+                "alpha": 0.3,
+                "hex": "#000000"
+              },
+              "offsetX": {
+                "value": 0,
+                "unit": "px"
+              },
+              "offsetY": {
+                "value": 4,
+                "unit": "px"
+              },
+              "blur": {
+                "value": 4,
+                "unit": "px"
+              },
+              "spread": {
+                "value": 0,
+                "unit": "px"
+              }
+            },
+            {
+              "color": {
+                "colorSpace": "srgb",
+                "components": [
+                  0,
+                  0,
+                  0
+                ],
+                "alpha": 0.15,
+                "hex": "#000000"
+              },
+              "offsetX": {
+                "value": 0,
+                "unit": "px"
+              },
+              "offsetY": {
+                "value": 8,
+                "unit": "px"
+              },
+              "blur": {
+                "value": 12,
+                "unit": "px"
+              },
+              "spread": {
+                "value": 6,
+                "unit": "px"
+              }
+            }
+          ],
+          "$description": "Rare."
+        }
+      }
+    }
+  }
+}

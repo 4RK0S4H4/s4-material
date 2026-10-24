@@ -1,6 +1,6 @@
 # Foundations
 
-One page per foundation, written alongside the tokens (Phase 3) and the glass layer (Phase 4):
+Written: color, typography, shape, spacing, elevation, motion (Phase 3). Coming with the glass layer (Phase 4): glass, accessibility.
 
 - `color.md`: seed, scheme variants, roles, contrast levels, monochrome default
 - `typography.md`: Inter, the M3 type scale, emphasized weights, numbers and tabular figures, capitalisation

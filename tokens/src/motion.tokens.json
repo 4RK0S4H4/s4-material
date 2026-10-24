@@ -1,0 +1,286 @@
+{
+  "$description": "Motion: M3 Expressive springs (decision 0001: Springs D), calm variants and the transition patterns. The build turns each spring (stiffness, damping, duration) into a CSS linear() easing. Effects springs never overshoot and keep running under reduced motion (fades are fine); spatial springs become instant.",
+  "md": {
+    "sys": {
+      "motion": {
+        "spring": {
+          "fast-spatial": {
+            "$description": "Small things that move or resize: switch handles, chips, button press shape. Overshoots about 9%.",
+            "$extensions": {
+              "com.s4.spring": true
+            },
+            "stiffness": {
+              "$type": "number",
+              "$value": 800
+            },
+            "damping": {
+              "$type": "number",
+              "$value": 0.6
+            },
+            "duration": {
+              "$type": "duration",
+              "$value": {
+                "value": 375,
+                "unit": "ms"
+              },
+              "$extensions": {
+                "com.s4.modes": {
+                  "reduced-motion": {
+                    "value": 0,
+                    "unit": "ms"
+                  }
+                }
+              }
+            }
+          },
+          "spatial": {
+            "$description": "Default for movement: nav indicators, menus unfolding, dialogs and sheets opening, shared axis.",
+            "$extensions": {
+              "com.s4.spring": true
+            },
+            "stiffness": {
+              "$type": "number",
+              "$value": 380
+            },
+            "damping": {
+              "$type": "number",
+              "$value": 0.8
+            },
+            "duration": {
+              "$type": "duration",
+              "$value": {
+                "value": 415,
+                "unit": "ms"
+              },
+              "$extensions": {
+                "com.s4.modes": {
+                  "reduced-motion": {
+                    "value": 0,
+                    "unit": "ms"
+                  }
+                }
+              }
+            }
+          },
+          "slow-spatial": {
+            "$description": "Large movement: full-screen container transforms, sheets from the edge.",
+            "$extensions": {
+              "com.s4.spring": true
+            },
+            "stiffness": {
+              "$type": "number",
+              "$value": 200
+            },
+            "damping": {
+              "$type": "number",
+              "$value": 0.8
+            },
+            "duration": {
+              "$type": "duration",
+              "$value": {
+                "value": 568,
+                "unit": "ms"
+              },
+              "$extensions": {
+                "com.s4.modes": {
+                  "reduced-motion": {
+                    "value": 0,
+                    "unit": "ms"
+                  }
+                }
+              }
+            }
+          },
+          "fast-effects": {
+            "$description": "Small fades and color changes: state layers, icons.",
+            "$extensions": {
+              "com.s4.spring": true
+            },
+            "stiffness": {
+              "$type": "number",
+              "$value": 3800
+            },
+            "damping": {
+              "$type": "number",
+              "$value": 1
+            },
+            "duration": {
+              "$type": "duration",
+              "$value": {
+                "value": 153,
+                "unit": "ms"
+              }
+            }
+          },
+          "effects": {
+            "$description": "Default fade and color change: content fading in, scrims.",
+            "$extensions": {
+              "com.s4.spring": true
+            },
+            "stiffness": {
+              "$type": "number",
+              "$value": 1600
+            },
+            "damping": {
+              "$type": "number",
+              "$value": 1
+            },
+            "duration": {
+              "$type": "duration",
+              "$value": {
+                "value": 222,
+                "unit": "ms"
+              }
+            }
+          },
+          "slow-effects": {
+            "$description": "Slow fades: large surfaces.",
+            "$extensions": {
+              "com.s4.spring": true
+            },
+            "stiffness": {
+              "$type": "number",
+              "$value": 800
+            },
+            "damping": {
+              "$type": "number",
+              "$value": 1
+            },
+            "duration": {
+              "$type": "duration",
+              "$value": {
+                "value": 300,
+                "unit": "ms"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "s4": {
+    "motion": {
+      "spring": {
+        "fast-spatial-calm": {
+          "$description": "Same stiffness as fast-spatial, critically damped: lands exactly on its target. For collapsing small things back into their source.",
+          "$extensions": {
+            "com.s4.spring": true
+          },
+          "stiffness": {
+            "$type": "number",
+            "$value": 800
+          },
+          "damping": {
+            "$type": "number",
+            "$value": 1
+          },
+          "duration": {
+            "$type": "duration",
+            "$value": {
+              "value": 299,
+              "unit": "ms"
+            },
+            "$extensions": {
+              "com.s4.modes": {
+                "reduced-motion": {
+                  "value": 0,
+                  "unit": "ms"
+                }
+              }
+            }
+          }
+        },
+        "spatial-calm": {
+          "$description": "Critically damped spatial: container transforms collapsing back into their source (never dips below it).",
+          "$extensions": {
+            "com.s4.spring": true
+          },
+          "stiffness": {
+            "$type": "number",
+            "$value": 380
+          },
+          "damping": {
+            "$type": "number",
+            "$value": 1
+          },
+          "duration": {
+            "$type": "duration",
+            "$value": {
+              "value": 434,
+              "unit": "ms"
+            },
+            "$extensions": {
+              "com.s4.modes": {
+                "reduced-motion": {
+                  "value": 0,
+                  "unit": "ms"
+                }
+              }
+            }
+          }
+        },
+        "slow-spatial-calm": {
+          "$description": "Critically damped slow-spatial.",
+          "$extensions": {
+            "com.s4.spring": true
+          },
+          "stiffness": {
+            "$type": "number",
+            "$value": 200
+          },
+          "damping": {
+            "$type": "number",
+            "$value": 1
+          },
+          "duration": {
+            "$type": "duration",
+            "$value": {
+              "value": 598,
+              "unit": "ms"
+            },
+            "$extensions": {
+              "com.s4.modes": {
+                "reduced-motion": {
+                  "value": 0,
+                  "unit": "ms"
+                }
+              }
+            }
+          }
+        }
+      },
+      "pattern": {
+        "container-transform": {
+          "$description": "Opening from a source (dialog from a button, sheet from a FAB, detail from a row): the source becomes the container at real size.",
+          "content-fade-start": {
+            "$type": "number",
+            "$value": 0.35,
+            "$description": "Container content fades in from this fraction of the move."
+          },
+          "source-fade-end": {
+            "$type": "number",
+            "$value": 0.3,
+            "$description": "The source's label fades out by this fraction."
+          }
+        },
+        "shared-axis": {
+          "distance": {
+            "$type": "dimension",
+            "$value": {
+              "value": 30,
+              "unit": "px"
+            },
+            "$description": "How far views slide when switching between siblings."
+          }
+        },
+        "unfold": {
+          "start-scale": {
+            "$type": "number",
+            "$value": 0,
+            "$description": "Menus reveal from their top edge (clip from 0 to full height); items don't move."
+          }
+        }
+      }
+    }
+  }
+}

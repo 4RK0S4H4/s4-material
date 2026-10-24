@@ -27,10 +27,20 @@ S4 Orion is being built phase by phase. Decisions are recorded in [`docs/decisio
 |---|---|---|
 | 1 | Audit of S4 Material 1.3 and decisions | Done ([0001](docs/decisions/0001-phase-1-audit.md)) |
 | 2 | Repo structure | Done ([0002](docs/decisions/0002-repo-structure.md)) |
-| 3 | Tokens and build script | Next |
+| 3 | Tokens and build script | In review ([0003](docs/decisions/0003-tokens.md), [tokens page](https://4rk0s4h4.github.io/s4-material/tokens/)) |
 | 4 | Components and the glass layer | Not started |
 | 5 | Claude skill | Not started |
 | 6 | Demo and review against the skill | Not started |
+
+## Building
+
+Node 20+, no dependencies.
+
+```sh
+npm run build          # tokens/src/*.tokens.json -> tokens/tokens.css, tokens.ts, tokens.json (with checks)
+npm run check          # the same checks, and fails if generated files are stale (runs in CI)
+npm run generate:color # regenerate the default color roles from the seed in tokens/src/color.tokens.json
+```
 
 ## Credits
 

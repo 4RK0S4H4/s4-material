@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>S4 Orion Tokens</title>
+<link rel="preload" href="../components/assets/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="tokens.css?v=1">
+<style>
+/* This page is built only from tokens.css. Page-only layout uses the s4 spacing, shape and type tokens. */
+@font-face{font-family:Inter;font-weight:100 900;font-display:swap;src:url(../components/assets/inter-variable.woff2) format("woff2")}
+*{box-sizing:border-box}
+body{margin:0;background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface);font-family:var(--md-sys-typescale-body-large-font);font-size:var(--md-sys-typescale-body-large-size);line-height:var(--md-sys-typescale-body-large-line-height);letter-spacing:var(--md-sys-typescale-body-large-tracking)}
+h1,h2,h3,p{margin:0}
+.bar{position:sticky;top:0;z-index:var(--s4-z-app-bar);display:flex;flex-wrap:wrap;align-items:center;gap:var(--s4-space-3) var(--s4-space-6);padding:var(--s4-space-3) var(--s4-layout-margin);
+  background:color-mix(in srgb,var(--s4-glass-tint-float) calc(var(--s4-glass-tint-opacity-float) * 100%),transparent);
+  -webkit-backdrop-filter:blur(var(--s4-glass-blur-large)) saturate(var(--s4-glass-saturation-float));backdrop-filter:blur(var(--s4-glass-blur-large)) saturate(var(--s4-glass-saturation-float))}
+.bar h1{margin-right:auto;font-size:var(--md-sys-typescale-title-large-size);line-height:var(--md-sys-typescale-title-large-line-height);font-weight:var(--md-sys-typescale-emphasized-title-large-weight)}
+.ctl{display:flex;align-items:center;gap:var(--s4-space-2);font-size:var(--md-sys-typescale-label-medium-size);color:var(--md-sys-color-on-surface-variant)}
+.seg{display:inline-flex;gap:2px}
+.seg button{min-height:var(--s4-size-button);padding:0 var(--s4-space-4);border:0;font:inherit;font-size:var(--md-sys-typescale-label-large-size);font-weight:var(--md-sys-typescale-label-large-weight);color:var(--md-sys-color-on-surface);background:var(--md-sys-color-surface-container-highest);cursor:pointer}
+.seg button:first-child{border-radius:var(--md-sys-shape-corner-full) var(--md-sys-shape-corner-extra-small) var(--md-sys-shape-corner-extra-small) var(--md-sys-shape-corner-full)}
+.seg button:last-child{border-radius:var(--md-sys-shape-corner-extra-small) var(--md-sys-shape-corner-full) var(--md-sys-shape-corner-full) var(--md-sys-shape-corner-extra-small)}
+.seg button:not(:first-child):not(:last-child){border-radius:var(--md-sys-shape-corner-extra-small)}
+.seg button[aria-pressed=true]{background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container)}
+.seg button:focus-visible,.play:focus-visible{outline:var(--s4-focus-ring-width) solid var(--s4-focus-ring-color);outline-offset:var(--s4-focus-ring-offset)}
+main{max-width:var(--s4-layout-content-max);margin:0 auto;padding:var(--s4-space-8) var(--s4-layout-margin) var(--s4-space-16);display:flex;flex-direction:column;gap:var(--s4-space-16)}
+.lead{max-width:70ch;color:var(--md-sys-color-on-surface-variant)}
+section > h2{font-size:var(--md-sys-typescale-headline-medium-size);line-height:var(--md-sys-typescale-headline-medium-line-height);font-weight:var(--md-sys-typescale-emphasized-headline-medium-weight);margin-bottom:var(--s4-space-2)}
+section > p{color:var(--md-sys-color-on-surface-variant);max-width:75ch;margin-bottom:var(--s4-space-6)}
+code,.mono{font-family:var(--md-ref-typeface-mono);font-size:13px}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--md-sys-color-on-surface-variant)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--min,240px),1fr));gap:var(--s4-space-3)}
+.pane{background:var(--md-sys-color-surface-container-low);border-radius:var(--s4-shape-pane);padding:var(--s4-space-5)}
+/* color */
+.swatch{display:flex;flex-direction:column;justify-content:space-between;gap:var(--s4-space-6);min-height:112px;padding:var(--s4-space-4);border-radius:var(--md-sys-shape-corner-medium);font-size:var(--md-sys-typescale-label-large-size);font-weight:var(--md-sys-typescale-label-large-weight)}
+.swatch small{display:flex;justify-content:space-between;gap:var(--s4-space-2);font-weight:400;font-size:var(--md-sys-typescale-body-small-size);font-variant-numeric:tabular-nums;opacity:.9}
+.swatch.edge{box-shadow:inset 0 0 0 1px var(--md-sys-color-outline-variant)}
+/* type */
+.type-row{display:grid;grid-template-columns:200px minmax(0,1fr);gap:var(--s4-space-4);align-items:baseline;padding:var(--s4-space-3) 0;border-bottom:1px solid var(--md-sys-color-outline-variant)}
+.type-row .meta{font-size:var(--md-sys-typescale-body-small-size);color:var(--md-sys-color-on-surface-variant);font-variant-numeric:tabular-nums}
+.type-row .meta b{display:block;color:var(--md-sys-color-on-surface);font-weight:600;font-size:var(--md-sys-typescale-label-large-size)}
+.type-row .sample{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:600px){.type-row{grid-template-columns:1fr}}
+/* shape */
+.shape{display:flex;flex-direction:column;gap:var(--s4-space-2);font-size:var(--md-sys-typescale-body-small-size)}
+.shape i{display:block;height:88px;background:var(--md-sys-color-primary-container)}
+.shape b{font-size:var(--md-sys-typescale-label-large-size);font-weight:600}
+/* spacing */
+.space-row{display:grid;grid-template-columns:120px 64px minmax(0,1fr);align-items:center;gap:var(--s4-space-3);font-size:var(--md-sys-typescale-body-medium-size);font-variant-numeric:tabular-nums}
+.space-row i{display:block;height:16px;border-radius:var(--md-sys-shape-corner-extra-small);background:var(--md-sys-color-tertiary)}
+.kv{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s4-space-1) var(--s4-space-4);font-size:var(--md-sys-typescale-body-medium-size);font-variant-numeric:tabular-nums}
+.kv span:nth-child(even){color:var(--md-sys-color-on-surface-variant);text-align:right}
+/* elevation */
+.elev{display:grid;place-items:center;height:112px;border-radius:var(--md-sys-shape-corner-medium);background:var(--md-sys-color-surface-container-low);font-size:var(--md-sys-typescale-label-large-size);font-weight:600}
+/* motion */
+.spring{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s4-space-2) var(--s4-space-4);align-items:center}
+.spring .track{grid-column:1/-1;position:relative;height:40px;border-radius:var(--md-sys-shape-corner-full);background:var(--md-sys-color-surface-container-highest)}
+.spring .dot{position:absolute;left:4px;top:4px;width:32px;height:32px;border-radius:50%;background:var(--md-sys-color-primary)}
+.spring.go .dot{transform:translateX(calc(var(--w) - 40px))}
+.spring b{font-size:var(--md-sys-typescale-title-small-size);font-weight:600}
+.spring small{grid-column:1/-1;color:var(--md-sys-color-on-surface-variant);font-size:var(--md-sys-typescale-body-small-size);font-variant-numeric:tabular-nums}
+.play{min-height:var(--s4-size-button);padding:0 var(--s4-space-4);border:0;border-radius:var(--s4-shape-button);background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container);font:inherit;font-size:var(--md-sys-typescale-label-large-size);font-weight:600;cursor:pointer}
+/* state */
+.state{position:relative;display:grid;place-items:center;height:var(--s4-size-button);padding:0 var(--s4-space-6);border-radius:var(--s4-shape-button);background:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary);font-size:var(--md-sys-typescale-label-large-size);font-weight:600;isolation:isolate}
+.state::before{content:"";position:absolute;inset:0;border-radius:inherit;background:currentColor;opacity:var(--o,0);z-index:-1}
+.state.focus{outline:var(--s4-focus-ring-width) solid var(--s4-focus-ring-color);outline-offset:var(--s4-focus-ring-offset)}
+.state.disabled{background:color-mix(in srgb,var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100%),transparent);color:color-mix(in srgb,var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%),transparent)}
+/* glass */
+.glass-stage{position:relative;height:320px;border-radius:var(--md-sys-shape-corner-extra-large);overflow:hidden;background:var(--md-sys-color-surface-container-low)}
+.glass-stage .scroll{position:absolute;inset:0;overflow:auto;padding:88px var(--s4-space-4) var(--s4-space-4);display:flex;flex-direction:column;gap:var(--s4-space-2)}
+.glass-stage .row{display:flex;justify-content:space-between;padding:var(--s4-space-4);border-radius:var(--md-sys-shape-corner-medium);background:var(--md-sys-color-surface-container-highest);font-variant-numeric:tabular-nums}
+.glass-stage .row:nth-child(3n){background:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary)}
+.glass-stage .row:nth-child(4n){background:var(--md-sys-color-tertiary-container);color:var(--md-sys-color-on-tertiary-container)}
+.glass-stage .float{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;height:var(--s4-size-top-app-bar);padding:0 var(--s4-space-4);font-size:var(--md-sys-typescale-title-large-size);
+  background:color-mix(in srgb,var(--s4-glass-tint-float) calc(var(--s4-glass-tint-opacity-float) * 100%),transparent);
+  box-shadow:inset 0 calc(var(--s4-glass-highlight-width) * -1) 0 var(--s4-glass-highlight-color);
+  -webkit-backdrop-filter:blur(var(--s4-glass-blur-large)) saturate(var(--s4-glass-saturation-float));backdrop-filter:blur(var(--s4-glass-blur-large)) saturate(var(--s4-glass-saturation-float))}
+footer{font-size:var(--md-sys-typescale-body-small-size);color:var(--md-sys-color-on-surface-variant)}
+footer a{color:inherit}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>S4 Orion Tokens</h1>
+  <div class="ctl">Theme <div class="seg" data-attr="data-theme"><button value="" aria-pressed="true">Device</button><button value="light" aria-pressed="false">Light</button><button value="dark" aria-pressed="false">Dark</button></div></div>
+  <div class="ctl">Contrast <div class="seg" data-attr="data-contrast"><button value="" aria-pressed="true">Device</button><button value="standard" aria-pressed="false">Standard</button><button value="high" aria-pressed="false">High</button></div></div>
+  <div class="ctl">Seed <div class="seg" id="seed"><button value="" aria-pressed="true">Mono</button><button value="#4f46e5" aria-pressed="false">Indigo</button><button value="#00796b" aria-pressed="false">Teal</button></div></div>
+</div>
+<main>
+  <div class="lead">
+    <p>Every value in S4 Orion, rendered straight from <code>tokens.css</code>, which is generated from <code>tokens/src/*.tokens.json</code>. Switch theme and contrast to see each mode; the seed buttons preview the run-time color generator (any other seed builds the same roles). Values shown are read live from the page.</p>
+  </div>
+
+  <section id="color"><h2>Color</h2><p>The default monochrome scheme from Material Color Utilities. Each swatch is a role with its matching “on” role, the contrast ratio measured live, and the ratio it needs in brackets (4.5 for text, 3 for outlines). The build fails if any pair in the default scheme drops below WCAG AA.</p><div class="grid" id="colors" style="--min:220px"></div></section>
+
+  <section id="type"><h2>Typography</h2><p>Inter on the M3 type scale. Emphasized weights (M3 Expressive) appear in the right column of each row.</p><div id="types"></div></section>
+
+  <section id="shape"><h2>Shape</h2><p>The stock M3 Expressive corner scale, then which step each component uses.</p><div class="grid" id="shapes" style="--min:140px"></div><div class="pane" style="margin-top:var(--s4-space-4)"><div class="kv" id="shape-map"></div></div></section>
+
+  <section id="spacing"><h2>Spacing and Size</h2><p>A 4dp grid. Component sizes are M3's; every interactive target is at least 48dp.</p><div class="grid" style="--min:320px"><div class="pane" id="spaces" style="display:flex;flex-direction:column;gap:var(--s4-space-2)"></div><div class="pane"><div class="kv" id="sizes"></div></div><div class="pane"><div class="kv" id="layout"></div></div></div></section>
+
+  <section id="elevation"><h2>Elevation</h2><p>M3 shows depth with tonal surfaces first; shadows are for FABs, menus and elevated components.</p><div class="grid" id="elevs" style="--min:150px"></div></section>
+
+  <section id="motion"><h2>Motion</h2><p>M3 Expressive springs, turned into CSS <code>linear()</code> easings by the build. Spatial springs move things and may overshoot; effects springs fade and recolor and never do; calm springs land exactly on their target (container transforms collapsing back into their source). Reduced motion makes spatial springs instant.</p><div class="grid" id="springs" style="--min:300px"></div></section>
+
+  <section id="state"><h2>State</h2><p>M3 state layers in the content color, the focus ring (3dp secondary, 2dp outside) and disabled opacities.</p><div class="grid" style="--min:140px" id="states"></div></section>
+
+  <section id="glass"><h2>Glass</h2><p>The float glass carried over from S4 Material: a tint of <code>surface-container</code> over a blur, with saturation so color showing through stays lively. Scroll the list under the bar. High contrast, reduced transparency and browsers without blur turn it solid. Phase 4 refines these values and the rules.</p>
+    <div class="grid" style="--min:320px"><div class="glass-stage"><div class="scroll" id="glass-rows"></div><div class="float">Bills</div></div><div class="pane"><div class="kv" id="glass-kv"></div></div></div></section>
+
+  <footer>S4 Orion <span id="ver"></span> · <a href="../">Hub</a> · <a href="https://github.com/4rk0s4h4/s4-material/tree/main/tokens">Source</a> · Inter (SIL OFL 1.1) · Material Color Utilities (Apache 2.0)</footer>
+</main>
+<script src="../components/assets/m3color.js"></script>
+<script>
+const $=s=>document.querySelector(s), css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const el=(tag,props={},html='')=>Object.assign(document.createElement(tag),props,{innerHTML:html});
+let T={};
+/* color pairs */
+const ROLES=[['primary','on-primary'],['primary-container','on-primary-container'],['secondary','on-secondary'],['secondary-container','on-secondary-container'],['tertiary','on-tertiary'],['tertiary-container','on-tertiary-container'],['error','on-error'],['error-container','on-error-container'],
+ ['surface','on-surface'],['surface-container-lowest','on-surface'],['surface-container-low','on-surface'],['surface-container','on-surface'],['surface-container-high','on-surface'],['surface-container-highest','on-surface'],['surface-dim','on-surface'],['surface-bright','on-surface'],['surface','on-surface-variant'],['surface','outline'],['inverse-surface','inverse-on-surface'],['outline-variant','on-surface']];
+function rgb(c){const x=el('i');x.style.color=c;document.body.appendChild(x);const v=getComputedStyle(x).color.match(/[\d.]+/g).slice(0,3).map(Number);x.remove();return v}
+const lum=c=>{const [r,g,b]=c.map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4});return .2126*r+.7152*g+.0722*b};
+const ratio=(a,b)=>{const [x,y]=[lum(a),lum(b)].sort((p,q)=>q-p);return (x+.05)/(y+.05)};
+const hex=c=>'#'+c.map(v=>v.toString(16).padStart(2,'0')).join('');
+function renderColors(){const box=$('#colors');box.innerHTML='';for(const [bg,fg] of ROLES){const b=rgb(`var(--md-sys-color-${bg})`),f=rgb(`var(--md-sys-color-${fg})`);
+  const need=/outline/.test(fg)?3:4.5,r=ratio(b,f);box.appendChild(el('div',{className:'swatch'+(bg.startsWith('surface')?' edge':''),style:`background:var(--md-sys-color-${bg});color:var(--md-sys-color-${fg})`},`<span>${bg}<br><span style="font-weight:400">${fg}</span></span><small><span>${hex(b)}</span><span title="needs ${need}:1">${r.toFixed(1)}:1 ${r>=need?'✓':'✗'} <span style="opacity:.7">(${need})</span></span></small>`))}}
+/* type */
+const SCALE=['display-large','display-medium','display-small','headline-large','headline-medium','headline-small','title-large','title-medium','title-small','body-large','body-medium','body-small','label-large','label-medium','label-small'];
+function renderType(){$('#types').innerHTML=SCALE.map(n=>{const v=k=>`var(--md-sys-typescale-${n}-${k})`,st=`font-family:${v('font')};font-size:${v('size')};line-height:${v('line-height')};letter-spacing:${v('tracking')}`;
+  return `<div class="type-row"><div class="meta"><b>${n}</b>${css(`--md-sys-typescale-${n}-size`)} / ${css(`--md-sys-typescale-${n}-line-height`)} · ${css(`--md-sys-typescale-${n}-tracking`)} · ${css(`--md-sys-typescale-${n}-weight`)} / ${css(`--md-sys-typescale-emphasized-${n}-weight`)}</div>
+  <div class="sample" style="${st}"><span style="font-weight:${v('weight')}">Pay $1,240.00 by Oct 28</span> <span style="font-weight:var(--md-sys-typescale-emphasized-${n}-weight)">Emphasized</span></div></div>`}).join('')}
+/* shape */
+function renderShape(){const names=Object.keys(T).filter(n=>n.startsWith('--md-sys-shape-corner-'));
+  $('#shapes').innerHTML=names.map(n=>`<div class="shape"><i style="border-radius:var(${n})"></i><b>${n.replace('--md-sys-shape-corner-','')}</b><span class="muted num">${css(n)}</span></div>`).join('');
+  $('#shape-map').innerHTML=Object.keys(T).filter(n=>n.startsWith('--s4-shape-')).map(n=>`<span>${n.replace('--s4-shape-','')}</span><span>${T[n].value.replace('var(--md-sys-shape-corner-','').replace(')','')}</span>`).join('')}
+/* spacing etc */
+function renderSpacing(){$('#spaces').innerHTML=Object.keys(T).filter(n=>n.startsWith('--s4-space-')).map(n=>`<div class="space-row"><span>${n.replace('--s4-','')}</span><span class="muted">${css(n)}</span><i style="width:var(${n})"></i></div>`).join('');
+  const kv=(sel,pre)=>$(sel).innerHTML=Object.keys(T).filter(n=>n.startsWith(pre)).map(n=>`<span>${n.replace(pre,'')}</span><span>${T[n].value.startsWith('var(')?css(n)+' · '+T[n].value.slice(4,-1).replace('--s4-',''):css(n)}</span>`).join('');
+  kv('#sizes','--s4-size-');$('#layout').innerHTML=Object.keys(T).filter(n=>/^--s4-(layout|breakpoint|z)-/.test(n)).map(n=>`<span>${n.replace('--s4-','')}</span><span>${css(n)}</span>`).join('')}
+function renderElev(){$('#elevs').innerHTML=[0,1,2,3,4,5].map(i=>`<div class="elev" style="box-shadow:var(--md-sys-elevation-level${i})">level${i}</div>`).join('')}
+/* motion */
+function renderMotion(){const names=['fast-spatial','spatial','slow-spatial','fast-effects','effects','slow-effects'].map(n=>'--md-sys-motion-spring-'+n).concat(['fast-spatial-calm','spatial-calm','slow-spatial-calm'].map(n=>'--s4-motion-spring-'+n));
+  $('#springs').innerHTML=names.map(n=>`<div class="spring" data-n="${n}"><b>${n.replace(/--(md-sys|s4)-motion-spring-/,'')}</b><button class="play" type="button">Play</button><div class="track"><span class="dot"></span></div><small>${T[n].description}</small></div>`).join('');
+  document.querySelectorAll('.spring').forEach(s=>{const n=s.dataset.n,dot=s.querySelector('.dot');s.querySelector('.play').onclick=()=>{s.style.setProperty('--w',s.querySelector('.track').offsetWidth+'px');
+    dot.style.transition=`transform var(${n}-duration) var(${n})`;s.classList.toggle('go')}})}
+function renderState(){const o=k=>`--o:var(--md-sys-state-${k}-state-layer-opacity)`;
+  $('#states').innerHTML=`<div class="shape"><span class="state">Save</span><span class="muted">Rest</span></div><div class="shape"><span class="state" style="${o('hover')}">Save</span><span class="muted num">Hover ${css('--md-sys-state-hover-state-layer-opacity')}</span></div><div class="shape"><span class="state" style="${o('pressed')}">Save</span><span class="muted num">Pressed ${css('--md-sys-state-pressed-state-layer-opacity')}</span></div><div class="shape"><span class="state focus" style="${o('focus')}">Save</span><span class="muted num">Focused ${css('--md-sys-state-focus-state-layer-opacity')}</span></div><div class="shape"><span class="state disabled">Save</span><span class="muted num">Disabled ${css('--md-sys-state-disabled-container-opacity')} / ${css('--md-sys-state-disabled-content-opacity')}</span></div>`}
+function renderGlass(){$('#glass-rows').innerHTML=['Iron Mountain|$1,240.00','Comcast|$389.17','Staples|$72.40','Adobe|$59.99','Uline|$218.30','FedEx|$46.12','Dropbox|$19.99','Zoom|$15.99','Notion|$10.00','Figma|$45.00'].map(r=>{const [a,b]=r.split('|');return `<div class="row"><span>${a}</span><span>${b}</span></div>`}).join('');
+  $('#glass-kv').innerHTML=Object.keys(T).filter(n=>n.startsWith('--s4-glass-')).map(n=>`<span>${n.replace('--s4-glass-','')}</span><span>${css(n).replace(/var\(--md-sys-color-([^)]+)\)/,'$1')}</span>`).join('')}
+function renderAll(){renderColors();renderType();renderShape();renderSpacing();renderElev();renderState();renderGlass()}
+/* controls */
+document.querySelectorAll('.seg[data-attr]').forEach(g=>g.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  b.value?document.documentElement.setAttribute(g.dataset.attr,b.value):document.documentElement.removeAttribute(g.dataset.attr);applySeed();renderAll()}));
+let seed='';
+function applySeed(){let st=$('#seed-css');if(!seed){st&&st.remove();return}const dark=document.documentElement.dataset.theme==='dark'||(!document.documentElement.dataset.theme&&matchMedia('(prefers-color-scheme: dark)').matches);
+  const hc=document.documentElement.dataset.contrast==='high'||(!document.documentElement.dataset.contrast&&matchMedia('(prefers-contrast: more)').matches);
+  const s=M3Color.scheme(seed,'vibrant',dark,hc?1:0);if(!st){st=el('style',{id:'seed-css'});document.head.appendChild(st)}st.textContent=':root{'+Object.entries(s).map(([k,v])=>`--md-sys-color-${k}:${v}`).join(';')+'}'}
+$('#seed').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$('#seed').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));seed=b.value;applySeed();renderAll()});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{applySeed();renderAll()});
+fetch('tokens.json?v=1').then(r=>r.json()).then(j=>{T=j.tokens;$('#ver').textContent=j.version;renderAll();renderMotion()});
+</script>
+</body>
+</html>
