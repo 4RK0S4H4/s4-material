@@ -1,6 +1,6 @@
 # 0001: Phase 1 audit of S4 Material 1.3.x and the S4 Orion decisions
 
-Status: in progress (transitions being explored; backdrop decided in Phase 4)
+Status: accepted (the glass backdrop is decided in Phase 4)
 Date: 2026-10-24
 
 S4 Orion is the successor to the **S4 Material** skill (1.3.x). It's a leaner rebuild with the same lineage: Material 3 Expressive as the foundation and a glass layer as the personal change. **S4 Glass** stays a separate look and isn't part of Orion.
@@ -72,4 +72,6 @@ S4 Orion is the successor to the **S4 Material** skill (1.3.x). It's a leaner re
 | Shape | **A: stock M3 Expressive.** Pill buttons that square off on press, 12dp cards, 4dp list rows, filled fields with square bottom corners, 28dp dialogs and 16dp FAB. |
 | Default colour | **Mono:** black and white (MCU monochrome). Mono + Red was explored as an option. |
 | Motion springs | **D: M3 Expressive** (Google's stock springs; fast spatial overshoots about 9%). This replaces S4 Material's Fluid default. |
-| Transitions | Origin felt too intense. The alternatives are being explored per surface in the Transitions Lab (`explore/transitions.html`). |
+| Transitions | Origin as S4 Material did it (scaling the whole surface) is **dropped**: too intense. Per surface: **menus Unfold** (the shape opens down from its top edge), **dialogs Container Transform**, **bottom sheets Container Transform** from a FAB (and Slide From Edge when not opened from one), **switching views Shared Axis**, **list to detail Container Transform**, **snackbars Slide From Edge**. |
+| Container transform | The source *becomes* the container: it starts and ends with the source's rect, radius, colour and label, and morphs at real size (no stretching). Collapse runs on a critically damped ("calm") version of the spring, so it never passes the source, and colour crossfades on an effects spring. |
+| Review tooling | Review demos live in `/explore` on GitHub Pages and use a separate "review blue" UI with saved answers. They aren't part of the design system. |
