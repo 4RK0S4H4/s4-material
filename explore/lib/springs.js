@@ -18,11 +18,15 @@ window.S4Springs = (function () {
     D: { name: 'M3 Expressive', sp: [[800, .6], [380, .8], [200, .8]], fx: [[3800, 1], [1600, 1], [800, 1]] }
   };
   var NAMES = ['fast-spatial', 'spatial', 'slow-spatial', 'fast-effects', 'effects', 'slow-effects'];
+  /* "-calm" spatial springs: same stiffness, critically damped. For moves that must land exactly on a target and never
+     pass it, such as a container shrinking back into its source. */
+  var CALM = ['fast-spatial-calm', 'spatial-calm', 'slow-spatial-calm'];
   var S = {}, current = 'D', slow = 1, reduce = matchMedia('(prefers-reduced-motion: reduce)');
   function use(key, slowMo) {
     current = key || current; if (slowMo) slow = slowMo;
     var p = PRESETS[current];
     p.sp.concat(p.fx).forEach(function (kz, i) { var s = spring(kz[0], kz[1]); S[NAMES[i]] = { d: reduce.matches && i < 3 ? 1 : s.d * slow, e: s.e }; });
+    p.sp.forEach(function (kz, i) { var s = spring(kz[0], 1); S[CALM[i]] = { d: reduce.matches ? 1 : s.d * slow, e: s.e }; });
   }
   function anim(el, kf, name, o) {
     var opts = { duration: S[name].d, easing: S[name].e, fill: 'both' }; for (var k in o) opts[k] = o[k];

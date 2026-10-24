@@ -23,7 +23,8 @@ button{font:inherit;color:inherit}
 .intro{max-width:85ch;color:var(--md-sys-color-on-surface-variant);font-size:16px;line-height:24px;display:flex;flex-direction:column;gap:12px}
 .sec > h2{font-size:28px;line-height:36px;font-weight:500;margin-bottom:6px}
 .sec > p{color:var(--md-sys-color-on-surface-variant);max-width:90ch;margin-bottom:16px}
-.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.tiles{--rv-min:250px}
+.tiles .rv-titles{min-height:100px}
 .tile{background:var(--md-sys-color-surface-container-low);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
 .tile header{display:flex;flex-direction:column;gap:4px;min-height:132px}
 #sections{display:flex;flex-direction:column;gap:48px}
@@ -34,7 +35,9 @@ button{font:inherit;color:inherit}
 .play{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 18px;border:0;border-radius:999px;font-weight:600;cursor:pointer;background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container)}
 
 /* ---------- mini app stage ---------- */
-.stage{position:relative;height:320px;border-radius:20px;overflow:hidden;background:var(--md-sys-color-surface);box-shadow:inset 0 0 0 1px var(--md-sys-color-outline-variant);isolation:isolate}
+.stage{position:relative;height:320px;border-radius:16px;overflow:hidden;background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface);isolation:isolate}
+.pv{padding:12px 8px 8px}
+.b{font-size:14px;line-height:20px}
 .sbar{display:flex;align-items:center;gap:8px;height:52px;padding:0 8px 0 16px;font-size:18px;font-weight:500}
 .sbar .t{flex:1}
 .sbody{padding:4px 12px 12px;display:flex;flex-direction:column;gap:4px}
@@ -91,7 +94,7 @@ footer a{color:inherit}
 <main class="page">
   <div class="intro">
     <p>“Origin” is one idea for showing where a surface comes from: it grows the surface out of the button you pressed. S4 Material did it by <b>scaling the whole surface</b>, so text squashes and stretches on the way in, which is where it can feel goofy. This lab puts that next to calmer ways of saying the same thing and next to the other motion concepts M3 uses, one surface type at a time.</p>
-    <p>Each tile is a tiny app. Press its button (or <b>Play</b>) to see the transition in and out, then press <b>Pick</b> on the one you like. You can pick a different concept for each surface type. Everything runs on the springs you chose (M3 Expressive); switch to Fluid or Slow ×3 to compare.</p>
+    <p>Each <b>option card</b> is an answer: tap its title or frame to pick it (it turns blue). The dashed <b>Preview</b> inside is a tiny app and never picks: tap its button, or <b>▶ Play</b>, to see the transition in and out. You can pick a different concept for each surface type. Everything runs on the springs you chose (M3 Expressive); the blue controls at the top switch to Fluid or Slow ×3 to compare.</p>
   </div>
   <div id="sections"></div>
 </main>
@@ -99,15 +102,35 @@ footer a{color:inherit}
 
 <script src="lib/m3color.js?v=2"></script>
 <script src="lib/theme.js?v=3"></script>
-<script src="lib/springs.js?v=1"></script>
+<script src="lib/springs.js?v=2"></script>
+<script src="lib/questions.js?v=5"></script>
+<script src="lib/review.js?v=7"></script>
 <script>
 const A=(el,kf,n,o)=>S4Springs.anim(el,kf,n,o), D=n=>S4Springs.get(n).d;
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 const h=(html)=>{const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild};
 function rel(el,stage){const a=el.getBoundingClientRect(),s=stage.getBoundingClientRect();return {l:a.left-s.left,t:a.top-s.top,w:a.width,h:a.height,r:s.right-a.right,b:s.bottom-a.bottom}}
-/* reveal an element from a source rect by clipping (container stays its real size, nothing squashes) */
-function clipFrom(el,src,stage,r0,r1){const s=rel(src,stage),e=rel(el,stage);
-  const inset=`inset(${s.t-e.t}px ${e.l+e.w-(s.l+s.w)}px ${e.t+e.h-(s.t+s.h)}px ${s.l-e.l}px round ${r0}px)`;return [{clipPath:inset},{clipPath:`inset(0px 0px 0px 0px round ${r1})`}]}
+/* Container transform (M3): the source becomes the container. The container starts exactly as the source (its rect, radius,
+   color and label), morphs to its own size and color while the label fades out and the content fades in, and on the way back
+   lands exactly on the source again before swapping. The shape never overshoots (a calm spring), so it can't dip smaller
+   than the source, and the color crossfade uses an effects spring so it can't overshoot past either color. */
+function containerTransform(el,src,stage,o){
+  const s=rel(src,stage),e=rel(el,stage),cs=getComputedStyle(src),ce=getComputedStyle(el);
+  const from=`inset(${s.t-e.t}px ${e.l+e.w-(s.l+s.w)}px ${e.t+e.h-(s.t+s.h)}px ${s.l-e.l}px round ${cs.borderTopLeftRadius})`;
+  const to=`inset(0px 0px 0px 0px round ${o.radius})`, bg0=cs.backgroundColor, bg1=ce.backgroundColor;
+  /* the source's label rides along inside the container */
+  const ghost=src.cloneNode(true);ghost.removeAttribute('class');ghost.className='ct-ghost';
+  Object.assign(ghost.style,{position:'absolute',left:(s.l-e.l)+'px',top:(s.t-e.t)+'px',width:s.w+'px',height:s.h+'px',margin:0,display:'flex',alignItems:'center',justifyContent:cs.justifyContent,
+    padding:cs.padding,font:cs.font,color:cs.color,pointerEvents:'none',background:'transparent',border:0,boxSizing:'border-box',zIndex:1,visibility:'visible',opacity:1});
+  el.appendChild(ghost);
+  const inner=el.querySelector('.inner');
+  src.style.visibility='hidden';
+  const shape=S4Springs.anim(el,o.reverse?[{clipPath:to},{clipPath:from}]:[{clipPath:from},{clipPath:to}],o.reverse?'spatial-calm':o.name+'-calm');
+  S4Springs.anim(el,o.reverse?[{backgroundColor:bg1},{backgroundColor:bg1,offset:.4},{backgroundColor:bg0}]:[{backgroundColor:bg0},{backgroundColor:bg1,offset:.6},{backgroundColor:bg1}],o.reverse?'spatial-calm':o.name+'-calm');
+  S4Springs.anim(ghost,o.reverse?[{opacity:0},{opacity:0,offset:.3},{opacity:1,offset:.8},{opacity:1}]:[{opacity:1},{opacity:0,offset:.3},{opacity:0}],o.reverse?'spatial-calm':o.name+'-calm');
+  if(inner)S4Springs.anim(inner,o.reverse?[{opacity:1},{opacity:0,offset:.35},{opacity:0}]:[{opacity:0},{opacity:0,offset:.35},{opacity:1}],o.reverse?'spatial-calm':o.name+'-calm');
+  return shape.finished.then(()=>{ghost.remove();if(o.reverse){el.style.visibility='hidden';src.style.visibility=''}});
+}
 /* the old S4 Material way: scale the whole element from the source rect */
 function scaleFrom(el,src,stage){const s=rel(src,stage),e=rel(el,stage);el.style.transformOrigin='0 0';return [{transform:`translate(${s.l-e.l}px,${s.t-e.t}px) scale(${s.w/e.w},${s.h/e.h})`},{transform:'none'}]}
 const rev=kf=>kf.slice().reverse();
@@ -140,9 +163,9 @@ const SECTIONS=[
    {k:'A',name:'Origin (S4 Material)',tag:'Current',desc:'The whole dialog scales out of the button, text included.',
     in:(d,st,src)=>{A(d,scaleFrom(d,src,st),'spatial');A(d,[{opacity:0},{opacity:1}],'fast-effects')},
     out:(d,st,src)=>{const a=A(d,rev(scaleFrom(d,src,st)),'fast-spatial');A(d,[{opacity:1},{opacity:0}],'fast-effects');return a}},
-   {k:'B',name:'Container Transform',tag:'M3',desc:'The dialog’s shape grows out of the button at its real size; the text fades in once there’s room. Nothing stretches.',
-    in:(d,st,src)=>{A(d,clipFrom(d,src,st,20,'28px'),'spatial');A(d.querySelector('.inner'),contentIn,'spatial');A(src,[{opacity:1},{opacity:0}],'fast-effects')},
-    out:(d,st,src)=>{const a=A(d,rev(clipFrom(d,src,st,20,'28px')),'fast-spatial');A(d.querySelector('.inner'),[{opacity:1},{opacity:0,offset:.5},{opacity:0}],'fast-spatial');A(src,[{opacity:0},{opacity:1}],'effects');return a}},
+   {k:'B',name:'Container Transform',tag:'M3',desc:'The button becomes the dialog: its shape and color morph into the dialog at real size, the label fades out and the text fades in. Nothing stretches.',
+    in:(d,st,src)=>containerTransform(d,src,st,{radius:'28px',name:'spatial'}),
+    out:(d,st,src)=>containerTransform(d,src,st,{radius:'28px',reverse:true})},
    {k:'C',name:'Lean',desc:'Appears in place, scaling up slightly from the side the button is on. Says “from there” with a nudge, not a flight.',
     in:(d,st,src)=>{const s=rel(src,st),e=rel(d,st);d.style.transformOrigin=`${s.l+s.w/2-e.l}px ${s.t+s.h/2-e.t}px`;A(d,[{transform:'scale(.9)'},{transform:'none'}],'spatial');A(d,[{opacity:0},{opacity:1}],'effects')},
     out:(d)=>{A(d,[{transform:'none'},{transform:'scale(.96)'}],'fast-spatial');return A(d,[{opacity:1},{opacity:0}],'fast-effects')}},
@@ -161,8 +184,8 @@ const SECTIONS=[
     in:(s,st,src)=>{A(s,scaleFrom(s,src,st),'slow-spatial');A(s,[{opacity:0},{opacity:1}],'fast-effects')},
     out:(s,st,src)=>{const a=A(s,rev(scaleFrom(s,src,st)),'spatial');A(s,[{opacity:1},{opacity:0}],'effects');return a}},
    {k:'B',name:'Container Transform',tag:'M3',desc:'The FAB’s shape expands into the sheet; content fades in once there’s room.',
-    in:(s,st,src)=>{A(s,clipFrom(s,src,st,16,'28px 28px 0 0'),'slow-spatial');A(s.querySelector('.inner'),contentIn,'slow-spatial');A(src,[{opacity:1},{opacity:0}],'fast-effects')},
-    out:(s,st,src)=>{const a=A(s,rev(clipFrom(s,src,st,16,'28px 28px 0 0')),'spatial');A(s.querySelector('.inner'),[{opacity:1},{opacity:0,offset:.4},{opacity:0}],'spatial');A(src,[{opacity:0},{opacity:1}],'effects');return a}},
+    in:(s,st,src)=>containerTransform(s,src,st,{radius:'28px 28px 0 0',name:'slow-spatial'}),
+    out:(s,st,src)=>containerTransform(s,src,st,{radius:'28px 28px 0 0',reverse:true})},
    {k:'C',name:'Slide From Edge',tag:'M3',desc:'Rises from the bottom of the screen, where sheets live. Stock M3.',
     in:(s)=>A(s,[{transform:'translateY(100%)'},{transform:'none'}],'slow-spatial'),out:(s)=>A(s,[{transform:'none'},{transform:'translateY(100%)'}],'spatial')},
    {k:'D',name:'Short Rise',desc:'Fades in while rising 40px. Lighter than a full slide.',
@@ -191,8 +214,8 @@ const SECTIONS=[
     in:(d,st,src)=>{A(d,scaleFrom(d,src,st),'spatial');A(d,[{opacity:0},{opacity:1}],'fast-effects')},
     out:(d,st,src)=>{const a=A(d,rev(scaleFrom(d,src,st)),'fast-spatial');A(d,[{opacity:1},{opacity:0}],'fast-effects');return a}},
    {k:'B',name:'Container Transform',tag:'M3',desc:'The row’s shape expands to fill the screen; the detail fades in once there’s room. The row “becomes” the screen.',
-    in:(d,st,src)=>{A(d,clipFrom(d,src,st,4,'0px'),'spatial');A(d.querySelector('.inner'),contentIn,'spatial')},
-    out:(d,st,src)=>{const a=A(d,rev(clipFrom(d,src,st,4,'0px')),'spatial');A(d.querySelector('.inner'),[{opacity:1},{opacity:0,offset:.4},{opacity:0}],'spatial');return a}},
+    in:(d,st,src)=>containerTransform(d,src,st,{radius:'0px',name:'spatial'}),
+    out:(d,st,src)=>containerTransform(d,src,st,{radius:'0px',reverse:true})},
    {k:'C',name:'Shared Axis Z',tag:'M3',desc:'The list recedes and the detail comes forward. Depth instead of position.',
     in:(d,st)=>{const l=st.querySelector('.list');A(l,[{transform:'none',opacity:1},{transform:'scale(1.06)',opacity:0}],'fast-spatial');A(d,[{transform:'scale(.92)',opacity:0},{transform:'none',opacity:1}],'spatial')},
     out:(d,st)=>{const l=st.querySelector('.list');A(l,[{transform:'scale(1.06)',opacity:0},{transform:'none',opacity:1}],'spatial');return A(d,[{transform:'none',opacity:1},{transform:'scale(.92)',opacity:0}],'fast-spatial')}},
@@ -219,21 +242,22 @@ const SECTIONS=[
 /* ---------- build tiles ---------- */
 const host=document.getElementById('sections');
 SECTIONS.forEach(sec=>{
-  const el=h(`<section class="sec"><h2>${sec.title}</h2><p>${sec.desc}</p><div class="tiles"></div></section>`);host.appendChild(el);
+  const el=h(`<section class="sec"><h2>${sec.title}</h2><p>${sec.desc}</p><div class="tiles rv-group" role="radiogroup" aria-label="${sec.title}"></div></section>`);host.appendChild(el);
   sec.opts.forEach(o=>{
-    const tile=h(`<div class="tile"><header>${o.tag?`<span class="tag">${o.tag==='Current'?'S4 Material today':'M3 pattern'}</span>`:''}<b>${o.k}. ${o.name}</b><small>${o.desc}</small></header><div class="stage">${sec.stage}</div><div class="acts"><button class="play" type="button">Play</button><button class="rv-pick" type="button" data-pick="${sec.id}:${o.k}">Pick ${o.k}</button></div></div>`);
+    const stageEl=h(`<div class="pv"><div class="stage">${sec.stage}</div></div>`),play=h('<button class="rv-play" type="button">▶ Play</button>');
+    const tile=S4Review.card({pick:`${sec.id}:${o.k}`,letter:o.k,title:o.name,desc:o.desc,tag:o.tag?(o.tag==='Current'?'S4 Material today':'M3 pattern'):'',preview:stageEl,side:play});
     el.querySelector('.tiles').appendChild(tile);
     const st=tile.querySelector('.stage');
-    if(sec.peers){setupPeers(st,o);tile.querySelector('.play').onclick=async()=>{const t=st.querySelectorAll('.tabs button');t[1].click();await wait(700*slowMo());t[2].click();await wait(700*slowMo());t[0].click()};return}
+    if(sec.peers){setupPeers(st,o);play.onclick=async()=>{const t=st.querySelectorAll('.tabs button');t[1].click();await wait(700*slowMo());t[2].click();await wait(700*slowMo());t[0].click()};return}
     let open=null,busy=false;
     const src=st.querySelector(sec.trigSel||'.trig');
     async function show(){if(open||busy)return;busy=true;const scrim=sec.scrim?h('<div class="scrim"></div>'):null;const s=sec.make(st);if(scrim){st.appendChild(scrim);A(scrim,[{opacity:0},{opacity:1}],'effects');scrim.onclick=hide}
       st.appendChild(s);s.querySelectorAll('.x').forEach(x=>x.onclick=e=>{e.stopPropagation();hide()});open={s,scrim};o.in(s,st,src);busy=false}
-    async function hide(){if(!open||busy)return;busy=true;const {s,scrim}=open;if(scrim)A(scrim,[{opacity:1},{opacity:0}],'fast-effects');const a=o.out(s,st,src);await (a&&a.finished?a.finished:wait(D('spatial')));s.remove();scrim&&scrim.remove();
+    async function hide(){if(!open||busy)return;busy=true;const {s,scrim}=open;if(scrim)A(scrim,[{opacity:1},{opacity:0}],'fast-effects');const a=o.out(s,st,src);await (a&&a.finished?a.finished:a&&a.then?a:wait(D('spatial')));src.style.visibility='';s.remove();scrim&&scrim.remove();
       st.querySelectorAll('*').forEach(x=>x.getAnimations().forEach(an=>an.cancel()));open=null;busy=false}
     src.addEventListener('click',e=>{e.stopPropagation();open?hide():show()});
     st.addEventListener('click',e=>{if(open&&!open.s.contains(e.target)&&!sec.scrim)hide()});
-    tile.querySelector('.play').onclick=async()=>{if(open){await hide()}show();await wait(1300*slowMo());hide()};
+    play.onclick=async()=>{if(open){await hide()}show();await wait(1300*slowMo());hide()};
   });
 });
 function setupPeers(st,o){
@@ -256,8 +280,6 @@ seg('feel',v=>S4Springs.use(v,slow));
 seg('slow',v=>{slow=+v;S4Springs.use(null,slow)});
 S4Theme.apply(state.seed,state.mode);
 </script>
-<script src="lib/questions.js?v=4"></script>
-<script src="lib/review.js?v=4"></script>
 <script>S4Review.page('transitions');</script>
 </body>
 </html>

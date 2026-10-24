@@ -16,9 +16,7 @@ window.S4_REVIEW_DEMOS = [
     id: 'motion', title: 'Motion Lab', href: 'explore/motion.html',
     questions: [
       { id: 'feel', label: 'Motion feel', help: 'Choose “My Tuned Values” to save the feel, stiffness and bounce currently set in the lab.',
-        options: [{ v: 'A', label: 'Fluid' }, { v: 'B', label: 'Crisp' }, { v: 'C', label: 'Liquid Settle' }, { v: 'D', label: 'M3 Expressive' }, { v: 'Tuned', label: 'My tuned values' }] },
-      { id: 'origin', label: 'Origin motion', help: 'Surfaces grow out of what you touched, or appear in place.',
-        options: [{ v: 'On', label: 'Grow from the source' }, { v: 'Off', label: 'Fade in place' }] }
+        options: [{ v: 'A', label: 'Fluid' }, { v: 'B', label: 'Crisp' }, { v: 'C', label: 'Liquid Settle' }, { v: 'D', label: 'M3 Expressive' }, { v: 'Tuned', label: 'My tuned values' }] }
     ]
   }
   ,

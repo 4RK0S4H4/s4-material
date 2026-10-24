@@ -42,45 +42,21 @@
   }
   function remember(s, text) { if (!text) return; if (s.history[0] && s.history[0].text === text) return; s.history.unshift({ at: new Date().toISOString(), text: text }); s.history = s.history.slice(0, HISTORY_MAX); save(s); }
 
-  var CSS = '\
-.rv{--rv-bg:var(--md-sys-color-surface-container-low);--rv-card:var(--md-sys-color-surface-container-lowest);--rv-fg:var(--md-sys-color-on-surface);--rv-fg2:var(--md-sys-color-on-surface-variant);--rv-line:var(--md-sys-color-outline-variant);--rv-sel:var(--md-sys-color-secondary-container);--rv-sel-fg:var(--md-sys-color-on-secondary-container);--rv-pri:var(--md-sys-color-primary);--rv-on-pri:var(--md-sys-color-on-primary);color:var(--rv-fg);font-family:Inter,system-ui,sans-serif}\
-:root[data-theme=dark] .rv{--rv-card:var(--md-sys-color-surface-container-high)}\
-.rv-sec{scroll-margin-top:80px;max-width:1500px;margin:0 auto 40px;padding:0 24px}\
-.rv-box{background:var(--rv-bg);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:20px}\
-.rv-box h2{margin:0;font-size:28px;line-height:36px;font-weight:500}\
-.rv-box > p{margin:0;color:var(--rv-fg2);max-width:80ch}\
-.rv-q{display:flex;flex-direction:column;gap:10px;border:0;margin:0;padding:0}\
-.rv-q legend{padding:0;margin-bottom:10px;font-size:16px;line-height:24px;font-weight:600}\
-.rv-q .rv-help{margin:-6px 0 4px;color:var(--rv-fg2);font-size:13px;line-height:18px}\
-.rv-opts{display:flex;flex-wrap:wrap;gap:8px}\
-.rv-opt{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 16px;border:0;border-radius:999px;background:var(--rv-card);color:var(--rv-fg);font:inherit;font-weight:500;cursor:pointer;box-shadow:inset 0 0 0 1px var(--rv-line);text-align:left}\
-.rv-opt b{font-weight:700}\
-.rv-opt:hover{background:color-mix(in srgb,var(--rv-fg) 8%,var(--rv-card))}\
-.rv-opt[aria-checked=true]{background:var(--rv-sel);color:var(--rv-sel-fg);box-shadow:none}\
-.rv-opt:focus-visible,.rv-btn:focus-visible,.rv-note:focus-visible,.rv-fab:focus-visible{outline:2px solid var(--rv-fg);outline-offset:2px}\
-.rv-extra{font-size:13px;color:var(--rv-fg2);font-variant-numeric:tabular-nums}\
-.rv-note{width:100%;min-height:88px;padding:12px 16px;border:0;border-radius:12px;background:var(--rv-card);color:var(--rv-fg);font:inherit;font-size:16px;line-height:24px;box-shadow:inset 0 0 0 1px var(--rv-line);resize:vertical}\
-.rv-acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}\
-.rv-btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 20px;border:0;border-radius:999px;font:inherit;font-weight:500;cursor:pointer;background:var(--rv-sel);color:var(--rv-sel-fg)}\
-.rv-btn.pri{background:var(--rv-pri);color:var(--rv-on-pri)}\
-.rv-btn.txt{background:transparent;color:var(--rv-fg2)}\
-.rv-btn[data-done]{background:var(--rv-sel);color:var(--rv-sel-fg)}\
-.rv-status{font-size:13px;color:var(--rv-fg2)}\
-.rv-fab{position:fixed;z-index:90;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));display:inline-flex;align-items:center;gap:10px;height:56px;padding:0 20px;border:0;border-radius:16px;background:var(--rv-pri);color:var(--rv-on-pri);font:inherit;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgb(0 0 0/.24)}\
-.rv-fab span{display:inline-grid;place-items:center;min-width:28px;height:22px;padding:0 8px;border-radius:999px;background:color-mix(in srgb,var(--rv-on-pri) 22%,transparent);font-size:12px;font-variant-numeric:tabular-nums}\
-.rv-pick{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 18px;border:0;border-radius:999px;font:inherit;font-size:14px;font-weight:600;letter-spacing:.1px;cursor:pointer;white-space:nowrap;background:transparent;color:var(--md-sys-color-on-surface);box-shadow:inset 0 0 0 1px var(--md-sys-color-outline)}\
-.rv-pick:hover{background:color-mix(in srgb,var(--md-sys-color-on-surface) 8%,transparent)}\
-.rv-pick[aria-pressed=true]{background:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary);box-shadow:none}\
-.rv-pick:focus-visible{outline:2px solid var(--md-sys-color-on-surface);outline-offset:2px}\
-.rv-list{display:flex;flex-direction:column;gap:8px}\
-.rv-item{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:12px 16px;border-radius:12px;background:var(--rv-card)}\
-.rv-item a{color:inherit;font-weight:600;text-decoration:none} .rv-item a:hover{text-decoration:underline}\
-.rv-item .rv-status{margin-left:auto}\
-.rv-pre{margin:0;padding:12px 16px;border-radius:12px;background:var(--rv-card);font:13px/18px ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;color:var(--rv-fg2);max-height:240px;overflow:auto}\
-.rv-hist summary{cursor:pointer;font-weight:600;padding:6px 0}\
-.rv-hist .rv-item{flex-direction:column;align-items:stretch}\
-@media (max-width:600px){.rv-box{padding:16px}.rv-fab{height:48px;padding:0 16px}}';
-  function injectCSS() { if (document.getElementById('rv-css')) return; var st = document.createElement('style'); st.id = 'rv-css'; st.textContent = CSS; document.head.appendChild(st); }
+  /* review.css sits next to this script */
+  var BASE = (document.currentScript && document.currentScript.src || '').replace(/review\.js.*$/, '');
+  function injectCSS() { if (document.getElementById('rv-css')) return; var l = document.createElement('link'); l.id = 'rv-css'; l.rel = 'stylesheet'; l.href = BASE + 'review.css?v=7'; document.head.appendChild(l); }
+  injectCSS();
+
+  /* An option card: the whole card is the answer. o = { pick:'qid:v', letter, title, desc, tag?, preview?: Element, side?: Element } */
+  function card(o) {
+    var el = document.createElement('div'); el.className = 'rv-card'; el.setAttribute('role', 'radio'); el.setAttribute('aria-checked', 'false'); el.tabIndex = 0; el.dataset.pick = o.pick;
+    el.innerHTML = '<div class="rv-head"><span class="rv-radio" aria-hidden="true"></span><div class="rv-titles">' + (o.tag ? '<span class="rv-tag">' + esc(o.tag) + '</span>' : '') +
+      '<b>' + esc(o.letter) + '. ' + esc(o.title) + '</b>' + (o.desc ? '<small>' + esc(o.desc) + '</small>' : '') + '</div><span class="rv-badge">Selected</span></div>';
+    el.setAttribute('aria-label', o.letter + '. ' + o.title);
+    if (o.side) { var acts = document.createElement('div'); acts.className = 'rv-actions'; acts.setAttribute('data-no-pick', ''); acts.appendChild(o.side); el.appendChild(acts); }
+    if (o.preview) { o.preview.classList.add('rv-preview'); el.appendChild(o.preview); }
+    return el;
+  }
 
   /* ---------- demo page ---------- */
   function page(id, hooks) {
@@ -88,7 +64,7 @@
     if (!demo) throw new Error('S4Review: no demo "' + id + '" in questions.js');
     var caps = (hooks && hooks.capture) || {};
     var cfg = { id: demo.id, title: demo.title, questions: demo.questions.map(function (q) { return { id: q.id, label: q.label, help: q.help, options: q.options.map(function (o) { return { v: o.v, label: o.label, capture: caps[q.id + ':' + o.v] }; }) }; }) };
-    injectCSS(); REGISTRY[cfg.id] = cfg;
+    REGISTRY[cfg.id] = cfg;
     var s = load(); var p = s.pages[cfg.id] || { answers: {}, note: '' };
     p.title = cfg.title; p.url = location.pathname.split('/').pop(); s.pages[cfg.id] = p; save(s);
     var sec = document.createElement('section'); sec.className = 'rv rv-sec'; sec.id = 'answers'; sec.setAttribute('aria-labelledby', 'rv-h');
@@ -96,9 +72,9 @@
       '<label><div class="rv-q"><legend>Notes</legend></div><textarea class="rv-note" placeholder="Anything else: what you liked, what to change, a combination of options…"></textarea></label>' +
       '<div class="rv-acts"><button class="rv-btn pri" type="button" data-copy-page>Copy Answers</button><button class="rv-btn" type="button" data-copy-all>Copy All Demos</button><a class="rv-btn txt" href="./../">Back to Hub</a><button class="rv-btn txt" type="button" data-clear>Clear This Page</button><span class="rv-status" aria-live="polite"></span></div></div>';
     var qsBox = sec.querySelector('.rv-qs');
-    function choose(q, o) {
+    function choose(q, o, keep) {
       var st = load(), pg = st.pages[cfg.id], cur = pg.answers[q.id];
-      if (cur && cur.v === o.v && !o.capture) delete pg.answers[q.id];   /* click again to unselect */
+      if (cur && cur.v === o.v && !o.capture && !keep) delete pg.answers[q.id];   /* chips: click again to unselect; cards stay picked */
       else pg.answers[q.id] = { v: o.v, label: o.label || '', extra: o.capture ? o.capture() : '' };
       pg.updated = new Date().toISOString(); save(st); render();
     }
@@ -108,9 +84,17 @@
       return q && o ? [q, o] : null;
     }
     /* Inline pick buttons anywhere on the page: <button class="rv-pick" data-pick="qid:v">Pick A</button> */
-    document.addEventListener('click', function (e) {
+    function pickFrom(e) {
       var b = e.target.closest && e.target.closest('[data-pick]'); if (!b) return;
-      var f = findOpt(b.dataset.pick); if (f) choose(f[0], f[1]);
+      if (b.classList.contains('rv-card')) {
+        if (e.target.closest('[data-no-pick]')) return;
+        if (e.target.closest('.rv-preview')) return;   /* the preview is the demo: taps there run the demo, never answer */
+      }
+      var f = findOpt(b.dataset.pick); if (f) choose(f[0], f[1], b.classList.contains('rv-card'));
+    }
+    document.addEventListener('click', pickFrom);
+    document.addEventListener('keydown', function (e) {
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('rv-card')) { e.preventDefault(); pickFrom(e); }
     });
     cfg.questions.forEach(function (q) {
       var fs = document.createElement('fieldset'); fs.className = 'rv-q';
@@ -142,8 +126,9 @@
       });
       if (document.activeElement !== note) note.value = pg.note || '';
       document.querySelectorAll('[data-pick]').forEach(function (b) {
-        if (!b.dataset.base) b.dataset.base = b.textContent.trim();
         var f = findOpt(b.dataset.pick), a = f && pg.answers[f[0].id], on = !!(a && a.v === f[1].v);
+        if (b.classList.contains('rv-card')) { b.setAttribute('aria-checked', on); return; }
+        if (!b.dataset.base) b.dataset.base = b.textContent.trim();
         b.setAttribute('aria-pressed', on); b.textContent = on ? '✓ ' + b.dataset.base.replace(/^Pick\b/, 'Picked') : b.dataset.base;
       });
       var n = Object.keys(pg.answers).length; status.textContent = n + ' of ' + cfg.questions.length + ' answered' + (persistent ? (pg.updated ? ' · saved' : '') : '. ' + NOT_SAVED);
@@ -158,7 +143,6 @@
   /* ---------- hub ---------- */
   function hub(el) {
     var demos = window.S4_REVIEW_DEMOS || [];
-    injectCSS();
     demos.forEach(function (d) { REGISTRY[d.id] = REGISTRY[d.id] || { questions: d.questions }; });
     el.classList.add('rv');
     el.innerHTML = '<div class="rv-box"><h2>Your Answers</h2><p>Everything you pick in the demos is saved in this browser. Work through them in any order, in several tabs if you like, then copy everything at once and paste it to Claude.</p><div class="rv-list"></div><div class="rv-acts"><button class="rv-btn pri" type="button" data-copy-all>Copy All Answers</button><button class="rv-btn txt" type="button" data-clear-all>Clear All</button><span class="rv-status" aria-live="polite"></span></div><pre class="rv-pre" hidden></pre><details class="rv-hist"><summary>Previous Copies</summary><div class="rv-list"></div></details></div>';
@@ -179,5 +163,5 @@
     window.addEventListener('pageshow', render);
     render();
   }
-  window.S4Review = { page: page, hub: hub, load: load };
+  window.S4Review = { page: page, hub: hub, card: card, load: load };
 })();

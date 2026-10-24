@@ -23,11 +23,8 @@ h1,h2,h3,p{margin:0}
 .sec h2{font-size:28px;line-height:36px;font-weight:500;margin-bottom:6px}
 .sec > p{color:var(--md-sys-color-on-surface-variant);max-width:90ch;margin-bottom:16px}
 .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px}
-.opt{background:var(--md-sys-color-surface-container-low);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:16px}
-.opt header{display:flex;flex-direction:column;gap:12px}
-.opt header .rv-pick{align-self:flex-start}
-.opt header b{display:block;font-size:22px;line-height:28px;font-weight:600}
-.opt header small{display:block;color:var(--md-sys-color-on-surface-variant);font-size:13px;line-height:18px;margin-top:4px}
+.opt{background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface);padding:20px 16px 16px;display:flex;flex-direction:column;gap:16px}
+.cols{--rv-min:330px}
 .lbl{font-size:11px;line-height:16px;font-weight:600;letter-spacing:.5px;color:var(--md-sys-color-on-surface-variant);text-transform:uppercase;margin-bottom:6px}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .cap{display:flex;flex-direction:column;align-items:center;gap:4px}
@@ -138,18 +135,18 @@ h1,h2,h3,p{margin:0}
   <button class="rv-pick" id="pickColor" data-pick="color:Mono">Pick as Default Color</button>
 </div>
 <main class="page">
-  <p class="intro">Two choices, one at a time. Each column shows the same parts of an app. Small captions show a state frozen in place (hover, pressed, focused) so you can compare without a mouse; everything is also live, so hover, click and Tab around. Try both themes and each color, including <b>Mono + Red</b>. Use the <b>Pick</b> button on an option (or next to the colors) to answer; your picks also show under <b>Your Answers</b> at the bottom, where you can add notes and copy. Picks are saved in this browser.</p>
+  <p class="intro">Each <b>option card</b> is an answer: tap its title or frame to pick it (it turns blue). The dashed <b>Preview</b> inside is the design itself and never picks; its buttons and chips still work, and small captions freeze a state (hover, pressed, focused) so you can compare without a mouse. Use the blue controls at the top to try both themes and each color, and <b>Pick … as Default</b> to answer the color question. Picks are saved in this browser and collected under <b>Your Answers</b> at the bottom.</p>
 
   <section class="sec">
     <h2>States</h2>
     <p>How hover, press, keyboard focus and “selected” look. Shapes are held constant here.</p>
-    <div class="cols" id="states"></div>
+    <div class="cols rv-group" id="states" role="radiogroup" aria-label="States"></div>
   </section>
 
   <section class="sec">
     <h2>Shape</h2>
     <p>Corner radii across components. Press and hold a button or the FAB to see the press-morph (A–C). States are held at option A here.</p>
-    <div class="cols" id="shapes"></div>
+    <div class="cols rv-group" id="shapes" role="radiogroup" aria-label="Shape"></div>
   </section>
 </main>
 
@@ -223,6 +220,8 @@ h1,h2,h3,p{margin:0}
 
 <script src="lib/m3color.js?v=2"></script>
 <script src="lib/theme.js?v=3"></script>
+<script src="lib/questions.js?v=5"></script>
+<script src="lib/review.js?v=7"></script>
 <script src="lib/icons.js?v=2"></script>
 <script>
 const STATES=[
@@ -234,7 +233,8 @@ const SHAPES=[
   ['B','S4 Material softer corners','Stock M3E but nothing under 8px: the field rounds all four corners, rows 8px, and the selected row becomes a pill. This is S4 Material today.'],
   ['C','Expressive, rounder','Pill chips and menu items, 16px fields, 24px cards, 32px dialogs, a 20px FAB and a softer press morph. Friendlier and more playful.'],
   ['D','S4 Glass radii','Your older house scale: 10px buttons and fields, 12px cards, 16px dialogs, no press morph. Calm and squarer.']];
-function fill(tplId,host,list,attr){const t=document.getElementById(tplId);list.forEach(([k,n,d])=>{const c=t.content.firstElementChild.cloneNode(true);c.setAttribute(attr,k.toLowerCase());c.querySelector('b').textContent=k+'. '+n;c.querySelector('small').textContent=d;const pk=document.createElement('button');pk.className='rv-pick';pk.type='button';pk.dataset.pick=(attr==='data-states'?'states':'shape')+':'+k;pk.textContent='Pick '+k;c.querySelector('header').appendChild(pk);document.getElementById(host).appendChild(c)})}
+function fill(tplId,host,list,attr){const t=document.getElementById(tplId),q=attr==='data-states'?'states':'shape';list.forEach(([k,n,d])=>{const c=t.content.firstElementChild.cloneNode(true);c.setAttribute(attr,k.toLowerCase());c.querySelector('header').remove();
+  document.getElementById(host).appendChild(S4Review.card({pick:q+':'+k,letter:k,title:n,desc:d,preview:c}))})}
 fill('tpl-states','states',STATES,'data-states');fill('tpl-shapes','shapes',SHAPES,'data-shape');
 document.querySelectorAll('[data-i]').forEach(e=>{e.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+(ICONS[e.dataset.i]||'')+'</svg>'});
 const state={mode:'light',seed:'mono'};
@@ -247,8 +247,6 @@ document.querySelectorAll('.chip:not(.h):not(.f)').forEach(c=>c.addEventListener
 apply();
 </script>
 <footer style="max-width:1500px;margin:0 auto;padding:0 24px 32px;font-size:12px;color:var(--md-sys-color-on-surface-variant)"><a href="../" style="color:inherit">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0) · Material Color Utilities (Apache 2.0)</footer>
-<script src="lib/questions.js?v=4"></script>
-<script src="lib/review.js?v=4"></script>
 <script>S4Review.page('states-shape');</script>
 </body>
 </html>
