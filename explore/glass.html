@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>S4 Orion: Glass Lab</title>
+<link rel="stylesheet" href="../tokens/tokens.css?v=2">
+<style>
+@font-face{font-family:Inter;font-weight:100 900;font-display:swap;src:url(../components/assets/inter-variable.woff2) format("woff2")}
+*{box-sizing:border-box}
+body{margin:0;background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface);font-family:var(--md-ref-typeface-plain);font-size:var(--md-sys-typescale-body-large-size);line-height:var(--md-sys-typescale-body-large-line-height);letter-spacing:var(--md-sys-typescale-body-large-tracking)}
+h1,h2,h3,p{margin:0}
+button{font:inherit;color:inherit}
+.bar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;padding:12px 24px;background:var(--md-sys-color-surface-container);border-bottom:1px solid var(--md-sys-color-outline-variant)}
+.bar h1{font-size:22px;line-height:28px;font-weight:500;margin-right:auto}
+.ctl{display:flex;align-items:center;gap:8px}
+.ctl > span{font-size:12px;font-weight:500;letter-spacing:.5px}
+.seg{display:inline-flex;gap:2px;padding:2px;border-radius:999px}
+.seg button{border:0;font-weight:500;padding:6px 14px;min-height:36px;border-radius:999px;background:transparent;cursor:pointer}
+.page{max-width:1500px;margin:0 auto;padding:24px 24px 64px;display:flex;flex-direction:column;gap:48px}
+.intro{max-width:80ch;color:var(--md-sys-color-on-surface-variant);display:flex;flex-direction:column;gap:12px}
+.sec > h2{font-size:28px;line-height:36px;font-weight:500;margin-bottom:6px}
+.sec > p{color:var(--md-sys-color-on-surface-variant);max-width:85ch;margin-bottom:16px}
+.cards{--rv-min:300px}
+.cards .rv-titles{min-height:92px}
+.pv{padding:14px 10px 10px;display:grid;place-items:center}
+.guarantee{font:600 12px/18px var(--rv-font);color:var(--rv-ink-2);display:flex;flex-wrap:wrap;gap:4px 10px}
+.guarantee .bad{color:#b3261e} .guarantee .ok{color:#146c2e}
+:root[data-theme=dark] .guarantee .bad{color:#ffb4ab} :root[data-theme=dark] .guarantee .ok{color:#6dd58c}
+
+/* ================= the mini app (all S4 Orion tokens) ================= */
+.phone{--g-tint:var(--s4-glass-tint-opacity-float);--g-blur:var(--s4-glass-blur-large);--g-sat:var(--s4-glass-saturation-float);
+  position:relative;width:100%;max-width:300px;height:460px;overflow:hidden;isolation:isolate;border-radius:28px;background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface);
+  font-size:14px;line-height:20px;letter-spacing:.2px;box-shadow:0 0 0 1px var(--md-sys-color-outline-variant)}
+.phone .backdrop{position:absolute;inset:0;z-index:-1;pointer-events:none}
+.phone[data-backdrop=blooms] .backdrop{background:
+  radial-gradient(60% 40% at 92% 4%,color-mix(in oklab,var(--md-sys-color-primary) 16%,transparent),transparent 70%),
+  radial-gradient(70% 45% at 0% 100%,color-mix(in oklab,var(--md-sys-color-tertiary) 14%,transparent),transparent 72%)}
+.phone[data-backdrop=wash] .backdrop{background:linear-gradient(180deg,var(--md-sys-color-surface) 0%,var(--md-sys-color-surface-container-low) 100%)}
+.scroll{position:absolute;inset:0;overflow:auto;padding:72px 12px 92px;display:flex;flex-direction:column;gap:8px;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+.hero{border-radius:var(--s4-shape-card);padding:16px;background:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary)}
+.hero small{display:block;opacity:.9}
+.hero b{display:block;font-size:32px;line-height:40px;font-weight:500;font-variant-numeric:tabular-nums}
+.chart{display:flex;align-items:flex-end;gap:6px;height:56px;margin-top:8px}
+.chart i{flex:1;border-radius:4px 4px 0 0;background:var(--md-sys-color-on-primary);opacity:.85}
+.chart i:nth-child(3n){background:var(--md-sys-color-tertiary-container);opacity:1}
+.photo{height:120px;border-radius:var(--s4-shape-card);padding:12px;display:flex;align-items:flex-end;color:#fff;font-weight:600;
+  background:radial-gradient(80% 90% at 80% 10%,#ffd36e 0,#ff8a3d 30%,transparent 60%),linear-gradient(160deg,#ff5e62 0%,#7b2ff7 55%,#1e1b4b 100%)}
+.photo span{padding:2px 10px;border-radius:999px;background:rgb(0 0 0/.45)}
+.group{display:flex;flex-direction:column;gap:2px;border-radius:var(--s4-shape-list-group);overflow:hidden}
+.row{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--md-sys-color-surface-container-low);font-variant-numeric:tabular-nums}
+.row .av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:600;flex:none}
+.row .t{flex:1;min-width:0} .row .t small{display:block;color:var(--md-sys-color-on-surface-variant);font-size:12px;line-height:16px}
+.av.a{background:var(--md-sys-color-primary-container);color:var(--md-sys-color-on-primary-container)}
+.av.b{background:var(--md-sys-color-tertiary-container);color:var(--md-sys-color-on-tertiary-container)}
+.av.c{background:var(--md-sys-color-error-container);color:var(--md-sys-color-on-error-container)}
+.av.d{background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container)}
+
+/* glass recipe: tint of a surface role over a blur; edge treatments are separate */
+.glass{background:color-mix(in srgb,var(--s4-glass-tint-float) calc(var(--g-tint) * 100%),transparent);
+  -webkit-backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat))}
+.phone:not([data-surfaces~=chrome]) .chrome.glass,.phone:not([data-surfaces~=overlay]) .overlay.glass{background:var(--md-sys-color-surface-container);-webkit-backdrop-filter:none;backdrop-filter:none}
+.phone:not([data-surfaces~=overlay]) .menu.overlay{background:var(--md-sys-color-surface-container);box-shadow:var(--md-sys-elevation-level2)}
+.phone[data-edge=hairline] .glass{box-shadow:inset 0 1px 0 var(--s4-glass-highlight-color)}
+.phone[data-edge=hairline] .navbar.glass{box-shadow:inset 0 1px 0 var(--s4-glass-highlight-color)}
+.phone[data-edge=rim] .glass{box-shadow:inset 0 0 0 1px var(--s4-glass-highlight-color)}
+.phone[data-edge=specular] .glass::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;padding:1px;
+  background:linear-gradient(150deg,var(--s4-glass-highlight-color) 0%,transparent 40%,transparent 60%,color-mix(in srgb,var(--s4-glass-highlight-color) 50%,transparent) 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.phone[data-edge=specular] .glass::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(180deg,color-mix(in srgb,#fff 10%,transparent),transparent 45%)}
+:root[data-theme=dark] .phone[data-edge=specular] .glass::before{background:linear-gradient(180deg,color-mix(in srgb,#fff 4%,transparent),transparent 45%)}
+
+.appbar{position:absolute;z-index:3;left:0;right:0;top:0;height:64px;display:flex;align-items:center;gap:4px;padding:0 8px 0 16px}
+.appbar .t{flex:1;font-size:22px;line-height:28px}
+.appbar .t small{display:block;font-size:12px;line-height:16px;color:var(--g-sub,var(--md-sys-color-on-surface-variant))}
+.ib{width:40px;height:40px;border:0;border-radius:20px;display:grid;place-items:center;background:transparent;color:var(--md-sys-color-on-surface-variant)}
+.ib svg,.nav svg{width:24px;height:24px}
+.ib svg [opacity],.nav svg [opacity]{opacity:.8}
+:root[data-theme=dark] .ib svg [opacity],:root[data-theme=dark] .nav svg [opacity]{opacity:.65}
+.navbar{position:absolute;z-index:3;left:0;right:0;bottom:0;height:80px;display:flex;justify-content:space-around;align-items:center;padding:0 8px}
+.nav{display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;font-size:12px;line-height:16px;font-weight:500;color:var(--g-sub,var(--md-sys-color-on-surface-variant))}
+.nav i{display:grid;place-items:center;width:56px;height:32px;border-radius:var(--s4-shape-nav-indicator)}
+.nav.on{color:var(--md-sys-color-on-surface);font-weight:700}
+.nav.on i{background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container)}
+.menu{position:absolute;z-index:4;right:8px;top:56px;width:172px;padding:4px;border-radius:var(--s4-shape-menu)}
+.menu div{padding:10px 12px;border-radius:var(--s4-shape-menu-item)}
+.menu div.on{background:color-mix(in srgb,var(--md-sys-color-on-surface) 10%,transparent);font-weight:600}
+.menu small{display:block;padding:6px 12px 2px;font-size:12px;color:var(--g-sub,var(--md-sys-color-on-surface-variant))}
+.phone[data-strict-text] {--g-sub:var(--md-sys-color-on-surface)}
+footer{max-width:1500px;margin:0 auto;padding:0 24px 32px;font-size:12px;color:var(--md-sys-color-on-surface-variant)}
+footer a{color:inherit}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>S4 Orion: Glass Lab</h1>
+  <div class="ctl"><span>Theme</span><div class="seg" id="theme"><button value="light" aria-pressed="true">Light</button><button value="dark" aria-pressed="false">Dark</button></div></div>
+  <div class="ctl"><span>Color</span><div class="seg" id="seed"><button value="mono" aria-pressed="true">Mono</button><button value="mono-red" aria-pressed="false">Mono + Red</button><button value="#4f46e5" aria-pressed="false">Indigo</button></div></div>
+</div>
+<main class="page">
+  <div class="intro">
+    <p>Glass in S4 Orion sits only on floating chrome: the app bar once content scrolls under it, the nav bar, toolbars and overlays. Each preview below is a small bills app; <b>scroll inside it</b> to slide the colorful content under the glass, and switch theme and color at the top.</p>
+    <p>Every material option shows its <b>guaranteed contrast</b>: the worst case for text on that glass when what’s behind it is pure black or pure white. Orion only allows settings that keep text at WCAG AA (4.5:1) over any backdrop. Pick one option per question by tapping its card (not the preview). Answers are saved with your other labs.</p>
+  </div>
+  <div id="sections"></div>
+</main>
+<footer><a href="../">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0) · Material Color Utilities (Apache 2.0)</footer>
+
+<script src="../components/assets/m3color.js"></script>
+<script src="lib/theme.js?v=3"></script>
+<script src="lib/icons.js?v=2"></script>
+<script src="lib/questions.js?v=6"></script>
+<script src="lib/review.js?v=7"></script>
+<script>
+const h=html=>{const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild};
+const ic=n=>`<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]||''}</svg>`;
+/* defaults = S4 Material's float glass, no edge, flat backdrop, chrome + overlays */
+const BASE={tint:null,blur:null,sat:null,edge:'none',backdrop:'flat',surfaces:'chrome overlay',strict:false};
+const MATERIAL={A:{tint:{light:.84,dark:.82},blur:32,sat:1.35},B:{tint:{light:.72,dark:.72},blur:24,sat:1.6,strict:true},C:{tint:{light:.6,dark:.6},blur:16,sat:1.8,strict:true}};
+const SECTIONS=[
+ {id:'material',title:'Material',desc:'How much shows through. Clearer glass feels lighter and more “liquid”, but the guarantee below each option shows what it costs in legibility.',opts:[
+  {k:'A',name:'Frosted',tag:'S4 Material today',desc:'84% tint in light, 82% in dark, 32px blur. Main text stays AA over anything. Grey secondary text passes in Mono but can dip just under AA with some colors (try Indigo in dark).',set:{...MATERIAL.A}},
+  {k:'B',name:'Clear',desc:'72% tint, 24px blur, a little more saturation. Main text stays AA over anything; secondary text on glass switches to the main text color.',set:{...MATERIAL.B}},
+  {k:'C',name:'Very Clear',desc:'60% tint, 16px blur. Closest to Liquid Glass, but can’t guarantee AA in dark mode. Shown for comparison.',set:{...MATERIAL.C}}]},
+ {id:'edge',title:'Edge',desc:'How a glass surface catches the light. S4 Material had no edges at all. Easiest to judge in dark mode.',opts:[
+  {k:'A',name:'None',tag:'S4 Material today',desc:'Flat. The blur and tint alone separate the glass from what’s behind.',set:{edge:'none'}},
+  {k:'B',name:'Hairline',desc:'A thin light line along the top edge, like light catching the rim of a pane.',set:{edge:'hairline'}},
+  {k:'C',name:'Rim',desc:'A thin light outline all the way round.',set:{edge:'rim'}},
+  {k:'D',name:'Specular',desc:'A rim that’s bright at the top-left and fades round the edge, plus a faint sheen at the top. The most Liquid Glass-like.',set:{edge:'specular'}}]},
+ {id:'backdrop',title:'Backdrop',desc:'What the page itself looks like behind content and glass. You chose flat M3 for glows earlier; this is the second look we promised.',opts:[
+  {k:'A',name:'Flat',tag:'M3',desc:'The plain surface color. Glass frosts only the content scrolling under it.',set:{backdrop:'flat'}},
+  {k:'B',name:'Soft Blooms',tag:'S4 Material today',desc:'Two faint glows of the theme’s primary and tertiary colors in the corners. Invisible in Mono; try a color.',set:{backdrop:'blooms'}},
+  {k:'C',name:'Tonal Wash',desc:'A gentle top-to-bottom shift from surface to surface-container-low. Adds depth without color.',set:{backdrop:'wash'}}]},
+ {id:'surfaces',title:'Where Glass Goes',desc:'All options keep glass off content. This decides which floating layers get it.',opts:[
+  {k:'A',name:'Chrome and Overlays',desc:'App bar, nav bar, toolbars, plus menus, sheets, dialogs and tooltips.',set:{surfaces:'chrome overlay'}},
+  {k:'B',name:'Chrome Only',desc:'App bar, nav bar and toolbars are glass; menus, sheets and dialogs are solid with M3 elevation.',set:{surfaces:'chrome'}},
+  {k:'C',name:'Overlays Only',desc:'Menus, sheets, dialogs and tooltips are glass; bars are solid.',set:{surfaces:'overlay'}}]}];
+
+/* worst-case contrast for text on glass over pure black or pure white */
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function rgbOf(c){const x=document.createElement('i');x.style.color=c;document.body.appendChild(x);const v=getComputedStyle(x).color.match(/[\d.]+/g).slice(0,3).map(Number);x.remove();return v}
+const lum=c=>{const [r,g,b]=c.map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4});return .2126*r+.7152*g+.0722*b};
+const cr=(a,b)=>{const [x,y]=[lum(a),lum(b)].sort((p,q)=>q-p);return (x+.05)/(y+.05)};
+const mix=(a,b,t)=>a.map((v,i)=>v*t+b[i]*(1-t));
+function worst(textVar,t){const tint=rgbOf('var(--md-sys-color-surface-container)'),txt=rgbOf(`var(${textVar})`);return Math.min(cr(txt,mix(tint,[0,0,0],t)),cr(txt,mix(tint,[255,255,255],t)))}
+
+function phone(){return h(`<div class="phone">
+  <div class="backdrop"></div>
+  <div class="scroll">
+    <div class="hero"><small>Spent in October</small><b>$4,459.13</b><div class="chart">${[40,62,30,80,55,90,48,70].map(v=>`<i style="height:${v}%"></i>`).join('')}</div></div>
+    <div class="photo"><span>Lisbon Trip · 62% saved</span></div>
+    <div class="group">${[['a','IM','Iron Mountain','Due Oct 28','$1,240.00'],['b','CB','Comcast Business','Due Oct 30','$389.17'],['c','ST','Staples','Overdue','$72.40'],['d','AD','Adobe','Due Nov 3','$59.99'],['a','UL','Uline','Due Nov 5','$218.30'],['b','FX','FedEx','Due Nov 9','$46.12']].map(([c,i,n,s,a])=>`<div class="row"><span class="av ${c}">${i}</span><span class="t">${n}<small>${s}</small></span><span>${a}</span></div>`).join('')}</div>
+  </div>
+  <header class="appbar glass chrome"><span class="t">Bills<small>12 due this month</small></span><button class="ib" aria-label="Search">${ic('magnifer')}</button><button class="ib" aria-label="More">${ic('menu-dots')}</button></header>
+  <div class="menu glass overlay"><small>Sort by</small><div class="on">Due Date</div><div>Amount</div><div>Vendor</div></div>
+  <nav class="navbar glass chrome">${[['home-2','Home'],['bill-list','Bills',1],['wallet','Budget'],['settings','Settings']].map(([i,l,on])=>`<span class="nav${on?' on':''}"><i>${ic(i)}</i>${l}</span>`).join('')}</nav>
+</div>`)}
+function apply(p,set){const s={...BASE,...set};const dark=document.documentElement.dataset.theme==='dark';
+  if(s.tint){p.style.setProperty('--g-tint',dark?s.tint.dark:s.tint.light);p.style.setProperty('--g-blur',s.blur+'px');p.style.setProperty('--g-sat',s.sat)}
+  p.dataset.edge=s.edge;p.dataset.backdrop=s.backdrop;p.dataset.surfaces=s.surfaces;p.toggleAttribute('data-strict-text',!!s.strict)}
+
+const host=document.getElementById('sections'),phones=[];
+SECTIONS.forEach(sec=>{
+  const el=h(`<section class="sec"><h2>${sec.title}</h2><p>${sec.desc}</p><div class="cards rv-group" role="radiogroup" aria-label="${sec.title}"></div></section>`);host.appendChild(el);
+  sec.opts.forEach(o=>{const pv=h('<div class="pv"></div>'),p=phone();pv.appendChild(p);phones.push([p,o.set,sec.id==='material'?o:null]);
+    const side=sec.id==='material'?h('<div class="guarantee" aria-live="polite"></div>'):null;
+    const card=S4Review.card({pick:`${sec.id}:${o.k}`,letter:o.k,title:o.name,desc:o.desc,tag:o.tag||'',preview:pv,side});
+    if(side)side.removeAttribute('data-no-pick');
+    el.querySelector('.cards').appendChild(card)})});
+function refresh(){const dark=document.documentElement.dataset.theme==='dark';
+  phones.forEach(([p,set,mat])=>{apply(p,set);if(!mat)return;const t=dark?mat.set.tint.dark:mat.set.tint.light;
+    const main=worst('--md-sys-color-on-surface',t),sub=worst('--md-sys-color-on-surface-variant',t),g=p.closest('.rv-card').querySelector('.guarantee');
+    g.innerHTML=`<span>Guaranteed (${dark?'dark':'light'}):</span><span class="${main>=4.5?'ok':'bad'}">main text ${main.toFixed(1)}:1 ${main>=4.5?'✓':'✗'}</span><span class="${sub>=4.5?'ok':(mat.set.strict?'':'bad')}">secondary text ${sub.toFixed(1)}:1 ${sub>=4.5?'✓':(mat.set.strict?'(not used on glass)':'✗')}</span>`})}
+document.querySelectorAll('.scroll').forEach(s=>s.scrollTop=150);
+const state={mode:'light',seed:'mono'};
+function seg(id,fn){document.getElementById(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));fn(b.value)})}
+seg('theme',v=>{state.mode=v;S4Theme.apply(state.seed,state.mode);refresh()});
+seg('seed',v=>{state.seed=v;S4Theme.apply(state.seed,state.mode);refresh()});
+S4Theme.apply(state.seed,state.mode);refresh();
+S4Review.page('glass');
+</script>
+</body>
+</html>

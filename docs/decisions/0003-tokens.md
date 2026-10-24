@@ -1,6 +1,6 @@
 # 0003: Tokens
 
-Status: proposed (awaiting Phase 3 approval)
+Status: accepted
 Date: 2026-10-24
 
 ## Decisions
