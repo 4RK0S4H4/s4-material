@@ -8,8 +8,10 @@
   "scripts": {
     "generate:color": "node scripts/generate-color.mjs",
     "build:tokens": "node scripts/build-tokens.mjs",
+    "build:icons": "node scripts/build-icons.mjs",
     "check:tokens": "node scripts/build-tokens.mjs --check",
-    "build": "npm run build:tokens",
-    "check": "npm run check:tokens"
+    "check:icons": "node scripts/build-icons.mjs --check",
+    "build": "npm run build:tokens && npm run build:icons",
+    "check": "npm run check:tokens && npm run check:icons"
   }
 }

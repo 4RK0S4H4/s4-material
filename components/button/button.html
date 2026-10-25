@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Button · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Button</h1></header>
+<main class="ex-main">
+  <p>Buttons start actions. Use one <b>filled</b> button for the most important action in an area, <b>tonal</b> for a strong secondary action, and <b>outlined</b> or <b>text</b> for the rest. Labels are Title Case and say exactly what happens. Press and hold to see the M3 Expressive shape morph.</p>
+
+  <section class="ex-sec">
+    <h2>Variants</h2>
+    <p>Filled, tonal, outlined, elevated, text. Each with an icon, and disabled.</p>
+    <div class="ex-board">
+      <button class="s4-button" type="button"><span class="s4-icon" data-icon="add"></span>Add Bill</button>
+      <button class="s4-button" data-variant="tonal" type="button">Export</button>
+      <button class="s4-button" data-variant="outlined" type="button">Filter</button>
+      <button class="s4-button" data-variant="elevated" type="button">Share</button>
+      <button class="s4-button" data-variant="text" type="button">Cancel</button>
+    </div>
+    <div class="ex-board" style="margin-top:var(--s4-space-3)">
+      <button class="s4-button" type="button" disabled>Add Bill</button>
+      <button class="s4-button" data-variant="tonal" type="button" disabled>Export</button>
+      <button class="s4-button" data-variant="outlined" type="button" disabled>Filter</button>
+      <button class="s4-button" data-variant="elevated" type="button" disabled>Share</button>
+      <button class="s4-button" data-variant="text" type="button" disabled>Cancel</button>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Sizes</h2>
+    <p>Extra small (32) to extra large (136). Small (40) is the default. Every size keeps a 48dp touch target.</p>
+    <div class="ex-board">
+      <button class="s4-button" data-size="xs" type="button">Save</button>
+      <button class="s4-button" type="button">Save</button>
+      <button class="s4-button" data-size="m" type="button"><span class="s4-icon" data-icon="save"></span>Save</button>
+      <button class="s4-button" data-size="l" type="button">Save</button>
+      <button class="s4-button" data-size="xl" type="button">Save</button>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Shape and Toggle</h2>
+    <p>Round by default; <code>data-shape="square"</code> for the square shape. Toggle buttons (<code>data-toggle</code>) switch between a quiet fill and the full color, and turn square when selected.</p>
+    <div class="ex-board">
+      <button class="s4-button" data-shape="square" type="button">Square</button>
+      <button class="s4-button" data-toggle aria-pressed="false" type="button" data-icon-on="favorite"><span class="s4-icon" data-icon="favorite"></span>Favorite</button>
+      <button class="s4-button" data-variant="tonal" data-toggle aria-pressed="true" type="button">Autopay</button>
+      <button class="s4-button" data-variant="outlined" data-toggle aria-pressed="false" type="button">Follow</button>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Destructive</h2>
+    <p><code>data-color="error"</code> on the confirm button of a destructive dialog or a danger zone. A per-row delete stays a plain icon button.</p>
+    <div class="ex-board">
+      <button class="s4-button" data-color="error" type="button">Delete All Data</button>
+      <button class="s4-button" data-color="error" data-variant="tonal" type="button">Reset</button>
+      <button class="s4-button" data-color="error" data-variant="outlined" type="button">Remove Account</button>
+      <button class="s4-button" data-color="error" data-variant="text" type="button">Discard</button>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/button/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../button/button.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+</body>
+</html>

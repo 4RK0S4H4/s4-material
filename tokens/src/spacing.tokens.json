@@ -121,6 +121,12 @@
           "unit": "px"
         }
       },
+      "button-extra-large": {
+        "$value": {
+          "value": 136,
+          "unit": "px"
+        }
+      },
       "icon-button": {
         "$value": {
           "value": 40,

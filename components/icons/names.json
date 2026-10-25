@@ -1,0 +1,22 @@
+{
+  "$description": "S4 Orion icon vocabulary. Apps and the skill use these semantic names; this file maps each to the icon set in use (Solar today). To switch sets (e.g. Phosphor Duotone), add a set entry with its source file and viewBox and map the same names. Arrows and chevrons use Solar's Linear style so they stay light; everything else is Bold Duotone.",
+  "set": "solar",
+  "sets": {
+    "solar": { "source": "components/icons/solar.json", "viewBox": "0 0 24 24", "license": "CC BY 4.0, 480 Design" }
+  },
+  "names": {
+    "home": "home-2", "search": "magnifer", "bills": "bill-list", "wallet": "wallet", "settings": "settings",
+    "add": "add-circle", "edit": "pen-2", "delete": "trash-bin-minimalistic", "more": "menu-dots", "more-vert": "menu-dots-vertical",
+    "close": "close-circle", "check": "check-circle", "chevron-down": "alt-arrow-down", "chevron-up": "alt-arrow-up",
+    "chevron-left": "alt-arrow-left", "chevron-right": "alt-arrow-right", "back": "arrow-left", "forward": "arrow-right",
+    "notifications": "bell", "account": "user-circle", "person": "user", "people": "users-group-rounded", "calendar": "calendar",
+    "filter": "filter", "sort": "sort", "upload": "upload", "download": "download", "export": "export", "save": "diskette",
+    "copy": "copy", "share": "share", "link": "link", "info": "info-circle", "warning": "danger-triangle", "error": "danger-circle",
+    "star": "star", "favorite": "heart", "bookmark": "bookmark", "chart": "chart-2", "dashboard": "widget-5", "document": "document-text",
+    "folder": "folder", "card": "card", "transfer": "card-transfer", "tag": "tag", "schedule": "clock-circle", "history": "history",
+    "lock": "lock-keyhole-minimalistic", "visible": "eye", "hidden": "eye-closed", "light-mode": "sun", "dark-mode": "moon",
+    "menu": "hamburger-menu", "sidebar": "sidebar-minimalistic", "refresh": "refresh", "undo": "undo-left", "logout": "logout",
+    "sparkle": "stars", "magic": "magic-stick", "mail": "letter", "chat": "chat-round-dots", "phone": "phone", "location": "map-point",
+    "camera": "camera", "image": "gallery", "play": "play", "pause": "pause"
+  }
+}

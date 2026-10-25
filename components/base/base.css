@@ -1,0 +1,128 @@
+/* S4 Orion base: cascade layers, font, element defaults, type utilities, icons, focus, and the shared state layer.
+   Everything in S4 Orion lives in these layers, so an app's own unlayered CSS always wins without !important.
+   Order: tokens -> base -> components -> glass -> motion -> utilities. */
+@layer s4.tokens, s4.base, s4.components, s4.glass, s4.motion, s4.utilities;
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../assets/inter-variable.woff2") format("woff2");
+}
+
+@layer s4.base {
+  :where(*, *::before, *::after) { box-sizing: border-box; }
+  :where(html) { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  :where(body) {
+    margin: 0;
+    background: var(--md-sys-color-surface);
+    color: var(--md-sys-color-on-surface);
+    font-family: var(--md-sys-typescale-body-large-font);
+    font-size: var(--md-sys-typescale-body-large-size);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+    font-weight: var(--md-sys-typescale-body-large-weight);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  :where(button, input, select, textarea) { font: inherit; color: inherit; letter-spacing: inherit; }
+  :where(img, svg, video) { display: block; max-width: 100%; }
+  :where(table, input, select, output, time) { font-variant-numeric: tabular-nums; }
+  [hidden] { display: none !important; }   /* otherwise a component's display rule would beat the attribute */
+
+  /* Keyboard focus: M3's 3dp secondary ring, 2dp outside. Components with an inner ring set their own offset. */
+  :where(:focus-visible) {
+    outline: var(--s4-focus-ring-width) solid var(--s4-focus-ring-color);
+    outline-offset: var(--s4-focus-ring-offset);
+  }
+
+  /* ---------- icons: <span class="s4-icon" data-icon="search"></span>, drawn by orion.js from the icon registry ---------- */
+  .s4-icon {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: var(--s4-icon-size, var(--s4-size-icon));
+    height: var(--s4-icon-size, var(--s4-size-icon));
+    color: inherit;
+  }
+  .s4-icon > svg { width: 100%; height: 100%; }
+  .s4-icon > svg [opacity] { opacity: var(--s4-icon-duo-opacity); }
+
+  /* ---------- the shared state layer (M3): a content-colored overlay at the state-layer opacity ----------
+     Every interactive S4 component is listed here once, so hover, focus and press look identical everywhere.
+     A component can tint its layer with --_state-color (defaults to the content color). */
+  :where(.s4-button, .s4-icon-button, .s4-fab, .s4-chip, .s4-menu-item, .s4-tab, .s4-swatch, .s4-segment,
+         a.s4-list-item, button.s4-list-item, label.s4-list-item, .s4-list-item[tabindex],
+         a.s4-card, button.s4-card, .s4-table tr[tabindex], .s4-nav-item) {
+    position: relative;
+    isolation: isolate;
+    -webkit-tap-highlight-color: transparent;
+  }
+  :where(.s4-button, .s4-icon-button, .s4-fab, .s4-chip, .s4-menu-item, .s4-tab, .s4-swatch, .s4-segment,
+         a.s4-list-item, button.s4-list-item, label.s4-list-item, .s4-list-item[tabindex],
+         a.s4-card, button.s4-card, .s4-table tr[tabindex])::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--_state-color, currentColor);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+  }
+  @media (hover: hover) {
+    :where(.s4-button, .s4-icon-button, .s4-fab, .s4-chip, .s4-menu-item, .s4-tab, .s4-swatch, .s4-segment,
+           a.s4-list-item, button.s4-list-item, label.s4-list-item, .s4-list-item[tabindex],
+           a.s4-card, button.s4-card, .s4-table tr[tabindex]):hover::before { opacity: var(--md-sys-state-hover-state-layer-opacity); }
+  }
+  :where(.s4-button, .s4-icon-button, .s4-fab, .s4-chip, .s4-menu-item, .s4-tab, .s4-swatch, .s4-segment,
+         a.s4-list-item, button.s4-list-item, label.s4-list-item, .s4-list-item[tabindex],
+         a.s4-card, button.s4-card, .s4-table tr[tabindex]):focus-visible::before { opacity: var(--md-sys-state-focus-state-layer-opacity); }
+  :where(.s4-button, .s4-icon-button, .s4-fab, .s4-chip, .s4-menu-item, .s4-tab, .s4-swatch, .s4-segment,
+         a.s4-list-item, button.s4-list-item, label.s4-list-item, .s4-list-item[tabindex],
+         a.s4-card, button.s4-card, .s4-table tr[tabindex]):active::before { opacity: var(--md-sys-state-pressed-state-layer-opacity); }
+  :where(.s4-button, .s4-icon-button, .s4-fab, .s4-chip, .s4-menu-item, .s4-tab, .s4-swatch, .s4-segment,
+         a.s4-list-item, button.s4-list-item, label.s4-list-item, .s4-list-item[tabindex],
+         a.s4-card, button.s4-card, .s4-table tr[tabindex]):is(:disabled, [aria-disabled="true"]) { cursor: default; pointer-events: none; }
+  :where(.s4-button, .s4-icon-button, .s4-fab, .s4-chip, .s4-menu-item, .s4-tab, .s4-swatch, .s4-segment,
+         a.s4-list-item, button.s4-list-item, label.s4-list-item, .s4-list-item[tabindex],
+         a.s4-card, button.s4-card, .s4-table tr[tabindex]):is(:disabled, [aria-disabled="true"])::before { display: none; }
+
+  /* Windows high contrast and other forced-color modes: drop decorative layers, keep real borders and focus. */
+  @media (forced-colors: active) {
+    :where(.s4-button, .s4-icon-button, .s4-fab, .s4-chip, .s4-menu-item, .s4-tab, .s4-swatch, .s4-segment)::before { display: none; }
+    :where(:focus-visible) { outline-color: Highlight; }
+  }
+}
+
+@layer s4.utilities {
+  /* ---------- type scale: .s4-<role>; add .s4-emphasized for M3 Expressive's emphasized weight ---------- */
+  .s4-display-large { font-family: var(--md-sys-typescale-display-large-font); font-size: var(--md-sys-typescale-display-large-size); line-height: var(--md-sys-typescale-display-large-line-height); letter-spacing: var(--md-sys-typescale-display-large-tracking); font-weight: var(--md-sys-typescale-display-large-weight); --_emphasized: var(--md-sys-typescale-emphasized-display-large-weight); }
+  .s4-display-medium { font-family: var(--md-sys-typescale-display-medium-font); font-size: var(--md-sys-typescale-display-medium-size); line-height: var(--md-sys-typescale-display-medium-line-height); letter-spacing: var(--md-sys-typescale-display-medium-tracking); font-weight: var(--md-sys-typescale-display-medium-weight); --_emphasized: var(--md-sys-typescale-emphasized-display-medium-weight); }
+  .s4-display-small { font-family: var(--md-sys-typescale-display-small-font); font-size: var(--md-sys-typescale-display-small-size); line-height: var(--md-sys-typescale-display-small-line-height); letter-spacing: var(--md-sys-typescale-display-small-tracking); font-weight: var(--md-sys-typescale-display-small-weight); --_emphasized: var(--md-sys-typescale-emphasized-display-small-weight); }
+  .s4-headline-large { font-family: var(--md-sys-typescale-headline-large-font); font-size: var(--md-sys-typescale-headline-large-size); line-height: var(--md-sys-typescale-headline-large-line-height); letter-spacing: var(--md-sys-typescale-headline-large-tracking); font-weight: var(--md-sys-typescale-headline-large-weight); --_emphasized: var(--md-sys-typescale-emphasized-headline-large-weight); }
+  .s4-headline-medium { font-family: var(--md-sys-typescale-headline-medium-font); font-size: var(--md-sys-typescale-headline-medium-size); line-height: var(--md-sys-typescale-headline-medium-line-height); letter-spacing: var(--md-sys-typescale-headline-medium-tracking); font-weight: var(--md-sys-typescale-headline-medium-weight); --_emphasized: var(--md-sys-typescale-emphasized-headline-medium-weight); }
+  .s4-headline-small { font-family: var(--md-sys-typescale-headline-small-font); font-size: var(--md-sys-typescale-headline-small-size); line-height: var(--md-sys-typescale-headline-small-line-height); letter-spacing: var(--md-sys-typescale-headline-small-tracking); font-weight: var(--md-sys-typescale-headline-small-weight); --_emphasized: var(--md-sys-typescale-emphasized-headline-small-weight); }
+  .s4-title-large { font-family: var(--md-sys-typescale-title-large-font); font-size: var(--md-sys-typescale-title-large-size); line-height: var(--md-sys-typescale-title-large-line-height); letter-spacing: var(--md-sys-typescale-title-large-tracking); font-weight: var(--md-sys-typescale-title-large-weight); --_emphasized: var(--md-sys-typescale-emphasized-title-large-weight); }
+  .s4-title-medium { font-family: var(--md-sys-typescale-title-medium-font); font-size: var(--md-sys-typescale-title-medium-size); line-height: var(--md-sys-typescale-title-medium-line-height); letter-spacing: var(--md-sys-typescale-title-medium-tracking); font-weight: var(--md-sys-typescale-title-medium-weight); --_emphasized: var(--md-sys-typescale-emphasized-title-medium-weight); }
+  .s4-title-small { font-family: var(--md-sys-typescale-title-small-font); font-size: var(--md-sys-typescale-title-small-size); line-height: var(--md-sys-typescale-title-small-line-height); letter-spacing: var(--md-sys-typescale-title-small-tracking); font-weight: var(--md-sys-typescale-title-small-weight); --_emphasized: var(--md-sys-typescale-emphasized-title-small-weight); }
+  .s4-body-large { font-family: var(--md-sys-typescale-body-large-font); font-size: var(--md-sys-typescale-body-large-size); line-height: var(--md-sys-typescale-body-large-line-height); letter-spacing: var(--md-sys-typescale-body-large-tracking); font-weight: var(--md-sys-typescale-body-large-weight); --_emphasized: var(--md-sys-typescale-emphasized-body-large-weight); }
+  .s4-body-medium { font-family: var(--md-sys-typescale-body-medium-font); font-size: var(--md-sys-typescale-body-medium-size); line-height: var(--md-sys-typescale-body-medium-line-height); letter-spacing: var(--md-sys-typescale-body-medium-tracking); font-weight: var(--md-sys-typescale-body-medium-weight); --_emphasized: var(--md-sys-typescale-emphasized-body-medium-weight); }
+  .s4-body-small { font-family: var(--md-sys-typescale-body-small-font); font-size: var(--md-sys-typescale-body-small-size); line-height: var(--md-sys-typescale-body-small-line-height); letter-spacing: var(--md-sys-typescale-body-small-tracking); font-weight: var(--md-sys-typescale-body-small-weight); --_emphasized: var(--md-sys-typescale-emphasized-body-small-weight); }
+  .s4-label-large { font-family: var(--md-sys-typescale-label-large-font); font-size: var(--md-sys-typescale-label-large-size); line-height: var(--md-sys-typescale-label-large-line-height); letter-spacing: var(--md-sys-typescale-label-large-tracking); font-weight: var(--md-sys-typescale-label-large-weight); --_emphasized: var(--md-sys-typescale-emphasized-label-large-weight); }
+  .s4-label-medium { font-family: var(--md-sys-typescale-label-medium-font); font-size: var(--md-sys-typescale-label-medium-size); line-height: var(--md-sys-typescale-label-medium-line-height); letter-spacing: var(--md-sys-typescale-label-medium-tracking); font-weight: var(--md-sys-typescale-label-medium-weight); --_emphasized: var(--md-sys-typescale-emphasized-label-medium-weight); }
+  .s4-label-small { font-family: var(--md-sys-typescale-label-small-font); font-size: var(--md-sys-typescale-label-small-size); line-height: var(--md-sys-typescale-label-small-line-height); letter-spacing: var(--md-sys-typescale-label-small-tracking); font-weight: var(--md-sys-typescale-label-small-weight); --_emphasized: var(--md-sys-typescale-emphasized-label-small-weight); }
+  .s4-emphasized { font-weight: var(--_emphasized, 700); }
+
+  /* ---------- numbers ---------- */
+  .s4-num { font-variant-numeric: tabular-nums; white-space: nowrap; }   /* amounts, counts, dates, IDs */
+  .s4-on-surface-variant { color: var(--md-sys-color-on-surface-variant); }
+  .s4-visually-hidden { position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  /* ---------- layout helpers ---------- */
+  .s4-stack { display: flex; flex-direction: column; gap: var(--s4-gap, var(--s4-layout-gap)); }
+  .s4-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s4-gap, var(--s4-space-2)); }
+  .s4-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(var(--s4-min, 280px), 100%), 1fr)); gap: var(--s4-gap, var(--s4-layout-gap)); }
+}

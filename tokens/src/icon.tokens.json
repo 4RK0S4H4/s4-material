@@ -1,0 +1,13 @@
+{
+  "$description": "Icons: Solar Bold Duotone draws a solid shape and a faded shape. The faded half's opacity is raised from Solar's 0.5 so it still reaches 3:1 on surfaces (carried over from S4 Material).",
+  "s4": {
+    "icon": {
+      "duo-opacity": {
+        "$type": "number",
+        "$value": 0.8,
+        "$extensions": { "com.s4.modes": { "dark": 0.65 } },
+        "$description": "Opacity of the faded half of a duotone icon."
+      }
+    }
+  }
+}

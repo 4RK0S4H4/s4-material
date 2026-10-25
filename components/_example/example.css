@@ -1,0 +1,15 @@
+/* Layout for component reference pages only (not part of S4 Orion). Built from tokens like everything else. */
+.ex-bar{position:sticky;top:0;z-index:var(--s4-z-app-bar);display:flex;flex-wrap:wrap;align-items:center;gap:var(--s4-space-3) var(--s4-space-6);
+  padding:var(--s4-space-3) var(--s4-layout-margin);background:var(--md-sys-color-surface-container);color:var(--md-sys-color-on-surface)}
+.ex-bar h1{margin:0 auto 0 0;font-family:var(--md-sys-typescale-title-large-font);font-size:var(--md-sys-typescale-title-large-size);line-height:var(--md-sys-typescale-title-large-line-height);font-weight:var(--md-sys-typescale-emphasized-title-large-weight)}
+.ex-bar h1 a{color:inherit;text-decoration:none;opacity:.7}
+.ex-ctl{display:flex;align-items:center;gap:var(--s4-space-2);font-size:var(--md-sys-typescale-label-medium-size);color:var(--md-sys-color-on-surface-variant)}
+.ex-main{max-width:var(--s4-layout-content-max);margin:0 auto;padding:var(--s4-space-8) var(--s4-layout-margin) var(--s4-space-16);display:flex;flex-direction:column;gap:var(--s4-space-12)}
+.ex-main > p{margin:0;max-width:70ch;color:var(--md-sys-color-on-surface-variant)}
+.ex-sec h2{margin:0 0 var(--s4-space-2);font-size:var(--md-sys-typescale-headline-small-size);line-height:var(--md-sys-typescale-headline-small-line-height);font-weight:var(--md-sys-typescale-emphasized-headline-small-weight)}
+.ex-sec > p{margin:0 0 var(--s4-space-4);max-width:70ch;color:var(--md-sys-color-on-surface-variant)}
+.ex-board{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s4-space-4);padding:var(--s4-space-6);border-radius:var(--md-sys-shape-corner-large);background:var(--md-sys-color-surface-container-low)}
+.ex-board.col{flex-direction:column;align-items:stretch}
+.ex-cap{display:flex;flex-direction:column;align-items:center;gap:var(--s4-space-2);font-size:var(--md-sys-typescale-label-small-size);color:var(--md-sys-color-on-surface-variant)}
+.ex-foot{font-size:var(--md-sys-typescale-body-small-size);color:var(--md-sys-color-on-surface-variant)}
+.ex-foot a{color:inherit}

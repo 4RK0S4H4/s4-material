@@ -1,0 +1,122 @@
+/* Button (M3 Expressive)
+   <button class="s4-button" data-variant="filled|tonal|outlined|elevated|text" data-size="xs|s|m|l|xl"
+           data-shape="round|square" data-color="error">
+     <span class="s4-icon" data-icon="add"></span>Label
+   </button>
+   Defaults: filled, size s (40), round. Toggle buttons add aria-pressed (and data-toggle so orion.js flips it).
+   Shape: pills at rest that square off while pressed (M3 Expressive shape morph); a selected toggle stays square-ish.
+   Every value comes from tokens. Component internals use --_ names: don't set them from app CSS. */
+@layer s4.components {
+  .s4-button {
+    /* size s (default) */
+    --_h: var(--s4-size-button);
+    --_pad: var(--s4-space-4);
+    --_gap: var(--s4-space-2);
+    --_icon: var(--s4-size-icon-small);
+    --_radius: var(--s4-shape-button);
+    --_radius-pressed: var(--s4-shape-button-pressed);
+    --_radius-selected: var(--md-sys-shape-corner-medium);
+    --_font: var(--md-sys-typescale-label-large-font);
+    --_size: var(--md-sys-typescale-label-large-size);
+    --_line: var(--md-sys-typescale-label-large-line-height);
+    --_track: var(--md-sys-typescale-label-large-tracking);
+    --_weight: var(--md-sys-typescale-label-large-weight);
+    /* filled (default) */
+    --_bg: var(--md-sys-color-primary);
+    --_fg: var(--md-sys-color-on-primary);
+    --_outline: transparent;
+    --_elevation: var(--md-sys-elevation-level0);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--_gap);
+    min-width: 0;
+    height: var(--_h);
+    padding: 0 var(--_pad);
+    border: 0;
+    border-radius: var(--_radius);
+    background: var(--_bg);
+    color: var(--_fg);
+    box-shadow: inset 0 0 0 1px var(--_outline), var(--_elevation);
+    font-family: var(--_font);
+    font-size: var(--_size);
+    line-height: var(--_line);
+    letter-spacing: var(--_track);
+    font-weight: var(--_weight);
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
+    --s4-icon-size: var(--_icon);
+    transition:
+      border-radius var(--md-sys-motion-spring-fast-spatial-duration) var(--md-sys-motion-spring-fast-spatial),
+      background-color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects),
+      color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects),
+      box-shadow var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+  }
+  /* 48dp touch target, even for 32/40dp buttons */
+  .s4-button::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: max(100%, var(--s4-size-touch-target));
+    transform: translateY(-50%);
+  }
+  .s4-button:active:not(:disabled) { border-radius: var(--_radius-pressed); }
+
+  /* ---------- variants ---------- */
+  .s4-button[data-variant="tonal"] { --_bg: var(--md-sys-color-secondary-container); --_fg: var(--md-sys-color-on-secondary-container); }
+  .s4-button[data-variant="outlined"] { --_bg: transparent; --_fg: var(--md-sys-color-on-surface-variant); --_outline: var(--md-sys-color-outline-variant); }
+  .s4-button[data-variant="elevated"] { --_bg: var(--md-sys-color-surface-container-low); --_fg: var(--md-sys-color-primary); --_elevation: var(--md-sys-elevation-level1); }
+  @media (hover: hover) { .s4-button[data-variant="elevated"]:hover:not(:disabled) { --_elevation: var(--md-sys-elevation-level2); } }
+  .s4-button[data-variant="text"] { --_bg: transparent; --_fg: var(--md-sys-color-primary); --_pad: var(--s4-space-3); }
+
+  /* destructive: the confirm button of a destructive dialog, or the action in a danger zone */
+  .s4-button[data-color="error"] { --_bg: var(--md-sys-color-error); --_fg: var(--md-sys-color-on-error); }
+  .s4-button[data-color="error"]:is([data-variant="tonal"]) { --_bg: var(--md-sys-color-error-container); --_fg: var(--md-sys-color-on-error-container); }
+  .s4-button[data-color="error"]:is([data-variant="outlined"], [data-variant="text"]) { --_bg: transparent; --_fg: var(--md-sys-color-error); }
+  .s4-button[data-color="error"][data-variant="outlined"] { --_outline: var(--md-sys-color-error); }
+
+  /* ---------- sizes (M3 Expressive: xs 32, s 40, m 56, l 96, xl 136) ---------- */
+  .s4-button[data-size="xs"] { --_h: var(--s4-size-button-small); --_pad: var(--s4-space-3); --_gap: var(--s4-space-1); }
+  .s4-button[data-size="m"] {
+    --_h: var(--s4-size-button-medium); --_pad: var(--s4-space-6); --_icon: var(--s4-size-icon); --_radius-pressed: var(--md-sys-shape-corner-medium); --_radius-selected: var(--md-sys-shape-corner-large);
+    --_font: var(--md-sys-typescale-title-medium-font); --_size: var(--md-sys-typescale-title-medium-size); --_line: var(--md-sys-typescale-title-medium-line-height); --_track: var(--md-sys-typescale-title-medium-tracking); --_weight: var(--md-sys-typescale-title-medium-weight);
+  }
+  .s4-button[data-size="l"] {
+    --_h: var(--s4-size-button-large); --_pad: var(--s4-space-12); --_gap: var(--s4-space-3); --_icon: var(--s4-size-icon-large); --_radius-pressed: var(--md-sys-shape-corner-large); --_radius-selected: var(--md-sys-shape-corner-extra-large);
+    --_font: var(--md-sys-typescale-headline-small-font); --_size: var(--md-sys-typescale-headline-small-size); --_line: var(--md-sys-typescale-headline-small-line-height); --_track: var(--md-sys-typescale-headline-small-tracking); --_weight: var(--md-sys-typescale-headline-small-weight);
+  }
+  .s4-button[data-size="xl"] {
+    --_h: var(--s4-size-button-extra-large); --_pad: var(--s4-space-16); --_gap: var(--s4-space-4); --_icon: var(--s4-space-10); --_radius-pressed: var(--md-sys-shape-corner-large); --_radius-selected: var(--md-sys-shape-corner-extra-large);
+    --_font: var(--md-sys-typescale-headline-large-font); --_size: var(--md-sys-typescale-headline-large-size); --_line: var(--md-sys-typescale-headline-large-line-height); --_track: var(--md-sys-typescale-headline-large-tracking); --_weight: var(--md-sys-typescale-headline-large-weight);
+  }
+  .s4-button[data-shape="square"] { --_radius: var(--_radius-selected); }
+
+  /* ---------- toggle buttons (aria-pressed): unselected uses a quieter fill, selected the full color and a square shape ---------- */
+  .s4-button[aria-pressed="false"] { --_bg: var(--md-sys-color-surface-container); --_fg: var(--md-sys-color-on-surface-variant); }
+  .s4-button[aria-pressed="false"]:is([data-variant="tonal"]) { --_bg: var(--md-sys-color-secondary-container); --_fg: var(--md-sys-color-on-secondary-container); }
+  .s4-button[aria-pressed="true"]:is([data-variant="tonal"]) { --_bg: var(--md-sys-color-secondary); --_fg: var(--md-sys-color-on-secondary); }
+  .s4-button[aria-pressed="false"]:is([data-variant="outlined"]) { --_bg: transparent; --_fg: var(--md-sys-color-on-surface-variant); }
+  .s4-button[aria-pressed="true"]:is([data-variant="outlined"]) { --_bg: var(--md-sys-color-inverse-surface); --_fg: var(--md-sys-color-inverse-on-surface); --_outline: transparent; }
+  .s4-button[aria-pressed="true"] { --_radius: var(--_radius-selected); }
+
+  /* ---------- disabled (M3: on-surface at 12% container, 38% content) ---------- */
+  .s4-button:is(:disabled, [aria-disabled="true"]) {
+    --_bg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100%), transparent);
+    --_fg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
+    --_elevation: var(--md-sys-elevation-level0);
+  }
+  .s4-button:is(:disabled, [aria-disabled="true"]):is([data-variant="text"]) { --_bg: transparent; }
+  .s4-button:is(:disabled, [aria-disabled="true"]):is([data-variant="outlined"]) { --_bg: transparent; --_outline: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100%), transparent); }
+
+  /* forced colors: outlines and fills are dropped by the browser, so draw a real border */
+  @media (forced-colors: active) {
+    .s4-button { border: 1px solid ButtonText; }
+    .s4-button[aria-pressed="true"] { background: Highlight; color: HighlightText; }
+  }
+}
