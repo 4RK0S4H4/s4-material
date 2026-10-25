@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Menu · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+<style>
+.ex-backdrop{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:var(--s4-space-2);padding:var(--s4-space-4);border-radius:var(--md-sys-shape-corner-large);background:var(--md-sys-color-surface-container-low)}
+.ex-backdrop > i{height:72px;border-radius:var(--md-sys-shape-corner-medium);background:var(--md-sys-color-primary)}
+.ex-backdrop > i:nth-child(3n){background:var(--md-sys-color-tertiary-container)} .ex-backdrop > i:nth-child(4n){background:var(--md-sys-color-secondary-container)}
+.ex-backdrop > i:nth-child(5n){background:linear-gradient(160deg,#ff5e62,#7b2ff7 55%,#1e1b4b)}
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Menu</h1></header>
+<main class="ex-main">
+  <p>Menus show a short list of choices from a button. They <b>unfold</b> from the edge next to their button (the menu’s own shape opens; items don’t move), sit on glass, and close on Escape, a choice, or a click outside. Keyboard: arrows, Home, End, and type to jump.</p>
+  <section class="ex-sec"><h2>Menu Over Content</h2><p>Open each menu; the colorful tiles show what the glass does.</p>
+    <div class="ex-board" style="justify-content:space-between">
+      <button class="s4-button" data-variant="tonal" data-menu="m-sort" type="button"><span class="s4-icon" data-icon="sort"></span>Sort By</button>
+      <button class="s4-button" data-variant="outlined" data-menu="m-actions" type="button">Actions<span class="s4-icon" data-icon="chevron-down"></span></button>
+      <button class="s4-icon-button" data-menu="m-more" data-align="end" aria-label="More options" type="button"><span class="s4-icon" data-icon="more-vert"></span></button>
+    </div>
+    <div class="ex-backdrop" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </section>
+  <div class="s4-menu" id="m-sort" aria-label="Sort by">
+    <div class="s4-menu-label">Sort By</div>
+    <button class="s4-menu-item" role="menuitemradio" aria-checked="true" type="button"><span class="s4-icon" data-icon="calendar"></span>Due Date</button>
+    <button class="s4-menu-item" role="menuitemradio" aria-checked="false" type="button"><span class="s4-icon" data-icon="wallet"></span>Amount</button>
+    <button class="s4-menu-item" role="menuitemradio" aria-checked="false" type="button"><span class="s4-icon" data-icon="person"></span>Vendor</button>
+  </div>
+  <div class="s4-menu" id="m-actions" aria-label="Actions">
+    <button class="s4-menu-item" type="button"><span class="s4-icon" data-icon="edit"></span><span class="s4-menu-item-text">Edit</span><span class="s4-menu-item-trailing">E</span></button>
+    <button class="s4-menu-item" type="button"><span class="s4-icon" data-icon="copy"></span><span class="s4-menu-item-text">Duplicate<span class="s4-menu-item-supporting">Keeps the vendor and amount</span></span></button>
+    <button class="s4-menu-item" type="button"><span class="s4-icon" data-icon="export"></span><span class="s4-menu-item-text">Export to Excel</span></button>
+    <hr class="s4-menu-divider">
+    <button class="s4-menu-item" data-color="error" type="button"><span class="s4-icon" data-icon="delete"></span>Delete</button>
+  </div>
+  <div class="s4-menu" id="m-more" data-align="end" aria-label="More">
+    <button class="s4-menu-item" role="menuitemcheckbox" aria-checked="true" type="button"><span class="s4-icon" data-icon="check"></span>Show Paid Bills</button>
+    <button class="s4-menu-item" type="button"><span class="s4-icon" data-icon="settings"></span>Settings</button>
+    <button class="s4-menu-item" type="button" disabled><span class="s4-icon" data-icon="lock"></span>Lock Month</button>
+  </div>
+  <p class="ex-foot">Source: <code>components/menu/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../motion/motion.js"></script>
+<script src="../button/button.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="menu.js"></script>
+<script src="../_example/example.js"></script>
+
+</body>
+</html>

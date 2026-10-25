@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Table · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Table</h1></header>
+<main class="ex-main">
+  <p>Data tables compare rows across columns: bills, payments, invoices. Every figure uses tabular digits and numbers are right-aligned. On compact screens (the table's space under 600) each row becomes a stacked block with column names, so phones never scroll sideways. Tables are solid content surfaces, never glass.</p>
+
+  <section class="ex-sec">
+    <h2>Basic</h2>
+    <p>Header 56, rows 52, a footer for totals. Status uses a label and a tone, never color alone.</p>
+    <div class="s4-table-wrap">
+      <table class="s4-table">
+        <caption>October Bills</caption>
+        <thead>
+        <tr><th scope="col" data-primary>Vendor</th><th scope="col">Category</th><th scope="col">Invoice</th><th scope="col">Due Date</th><th scope="col">Status</th><th scope="col" class="num">Amount</th></tr>
+        </thead>
+        <tbody>
+        <tr><td>Iron Mountain</td><td>Records storage</td><td>INV-10482</td><td data-value="2026-10-28">Oct 28</td><td><span class="s4-status" data-tone="tertiary">Due</span></td><td class="num" data-value="1240.00">$1,240.00</td></tr>
+        <tr><td>Comcast Business</td><td>Internet and phone</td><td>INV-10477</td><td data-value="2026-10-12">Oct 12</td><td><span class="s4-status">Paid</span></td><td class="num" data-value="389.95">$389.95</td></tr>
+        <tr><td>Staples</td><td>Office supplies</td><td>INV-10451</td><td data-value="2026-10-03">Oct 3</td><td><span class="s4-status" data-tone="error">Overdue</span></td><td class="num" data-value="212.48">$212.48</td></tr>
+        <tr><td>Xcel Energy</td><td>Electricity</td><td>INV-10490</td><td data-value="2026-10-09">Oct 9</td><td><span class="s4-status">Paid</span></td><td class="num" data-value="806.00">$806.00</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><th scope="row" colspan="5">Total</th><td class="num">$2,648.43</td></tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Sortable, Selectable, Clickable</h2>
+    <p>Sort buttons in the headers cycle ascending, descending and the original order. The checkbox column selects rows (the header box selects all, and shows indeterminate for some). Rows with <code>tabindex="0"</code> open on click or Enter. <code>data-sticky</code> keeps the header in view while the rows scroll.</p>
+    <div class="s4-table-wrap" data-sticky style="--s4-table-max-height: calc(var(--s4-size-table-header) + var(--s4-size-table-row) * 6)">
+      <table class="s4-table" id="bills">
+        <caption>All Open and Recent Bills</caption>
+        <thead>
+        <tr><th scope="col" data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select All Bills"><span class="s4-checkbox-box"></span></label></th><th scope="col" data-primary aria-sort="none"><button type="button" class="s4-table-sort">Vendor<span class="s4-icon" data-icon="chevron-down"></span></button></th><th scope="col">Category</th><th scope="col" aria-sort="none"><button type="button" class="s4-table-sort">Invoice<span class="s4-icon" data-icon="chevron-down"></span></button></th><th scope="col" aria-sort="none"><button type="button" class="s4-table-sort">Due Date<span class="s4-icon" data-icon="chevron-down"></span></button></th><th scope="col" aria-sort="none"><button type="button" class="s4-table-sort">Status<span class="s4-icon" data-icon="chevron-down"></span></button></th><th scope="col" class="num" aria-sort="none"><button type="button" class="s4-table-sort">Amount<span class="s4-icon" data-icon="chevron-down"></span></button></th></tr>
+        </thead>
+        <tbody>
+        <tr tabindex="0"><td data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select Iron Mountain INV-10482"><span class="s4-checkbox-box"></span></label></td><td>Iron Mountain</td><td>Records storage</td><td>INV-10482</td><td data-value="2026-10-28">Oct 28</td><td><span class="s4-status" data-tone="tertiary">Due</span></td><td class="num" data-value="1240.00">$1,240.00</td></tr>
+        <tr tabindex="0"><td data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select Comcast Business INV-10477"><span class="s4-checkbox-box"></span></label></td><td>Comcast Business</td><td>Internet and phone</td><td>INV-10477</td><td data-value="2026-10-12">Oct 12</td><td><span class="s4-status">Paid</span></td><td class="num" data-value="389.95">$389.95</td></tr>
+        <tr tabindex="0"><td data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select Staples INV-10451"><span class="s4-checkbox-box"></span></label></td><td>Staples</td><td>Office supplies</td><td>INV-10451</td><td data-value="2026-10-03">Oct 3</td><td><span class="s4-status" data-tone="error">Overdue</span></td><td class="num" data-value="212.48">$212.48</td></tr>
+        <tr tabindex="0"><td data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select Xcel Energy INV-10490"><span class="s4-checkbox-box"></span></label></td><td>Xcel Energy</td><td>Electricity</td><td>INV-10490</td><td data-value="2026-10-09">Oct 9</td><td><span class="s4-status">Paid</span></td><td class="num" data-value="806.00">$806.00</td></tr>
+        <tr tabindex="0"><td data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select Cintas INV-10495"><span class="s4-checkbox-box"></span></label></td><td>Cintas</td><td>Uniforms and mats</td><td>INV-10495</td><td data-value="2026-11-02">Nov 2</td><td><span class="s4-status" data-tone="tertiary">Due</span></td><td class="num" data-value="147.10">$147.10</td></tr>
+        <tr tabindex="0"><td data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select WeWork INV-10466"><span class="s4-checkbox-box"></span></label></td><td>WeWork</td><td>Desk membership</td><td>INV-10466</td><td data-value="2026-10-01">Oct 1</td><td><span class="s4-status">Paid</span></td><td class="num" data-value="1950.00">$1,950.00</td></tr>
+        <tr tabindex="0"><td data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select Verizon Wireless INV-10501"><span class="s4-checkbox-box"></span></label></td><td>Verizon Wireless</td><td>Mobile plans</td><td>INV-10501</td><td data-value="2026-11-05">Nov 5</td><td><span class="s4-status" data-tone="tertiary">Due</span></td><td class="num" data-value="664.32">$664.32</td></tr>
+        <tr tabindex="0"><td data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select FedEx INV-10439"><span class="s4-checkbox-box"></span></label></td><td>FedEx</td><td>Shipping</td><td>INV-10439</td><td data-value="2026-09-30">Sep 30</td><td><span class="s4-status" data-tone="error">Overdue</span></td><td class="num" data-value="88.64">$88.64</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ex-foot" id="table-out" aria-live="polite">Select rows, sort a column, or open a bill.</p>
+  </section>
+  <p class="ex-foot">Source: <code>components/table/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../table/table.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+<script>
+  var out = document.getElementById('table-out');
+  document.getElementById('bills').addEventListener('s4-change', function (e) {
+    out.textContent = e.detail.type === 'sort'
+      ? 'Sorted by ' + e.detail.label + ' (' + e.detail.direction + ')'
+      : e.detail.rows.length + ' selected';
+  });
+  document.getElementById('bills').addEventListener('s4-select', function (e) {
+    out.textContent = 'Open ' + e.detail.row.cells[1].textContent + ' ' + e.detail.row.cells[3].textContent;
+  });
+</script>
+</body>
+</html>

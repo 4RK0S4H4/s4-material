@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tooltip · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+<style>
+.ex-backdrop{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:var(--s4-space-2);padding:var(--s4-space-4);border-radius:var(--md-sys-shape-corner-large);background:var(--md-sys-color-surface-container-low)}
+.ex-backdrop > i{height:72px;border-radius:var(--md-sys-shape-corner-medium);background:var(--md-sys-color-primary)}
+.ex-backdrop > i:nth-child(3n){background:var(--md-sys-color-tertiary-container)} .ex-backdrop > i:nth-child(4n){background:var(--md-sys-color-secondary-container)}
+.ex-backdrop > i:nth-child(5n){background:linear-gradient(160deg,#ff5e62,#7b2ff7 55%,#1e1b4b)}
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Tooltip</h1></header>
+<main class="ex-main">
+  <p>Plain tooltips name an icon-only button: they appear after a short hover, on keyboard focus, or on a long press, and Escape hides them. Rich tooltips explain something in a few lines and can hold an action; they sit on glass.</p>
+  <section class="ex-sec"><h2>Plain</h2><p>Hover or Tab to these icon buttons.</p>
+    <div class="ex-board">
+      <button class="s4-icon-button" aria-label="Copy invoice number" data-tooltip="Copy invoice number" type="button"><span class="s4-icon" data-icon="copy"></span></button>
+      <button class="s4-icon-button" aria-label="Export" data-tooltip="Export to Excel" type="button"><span class="s4-icon" data-icon="export"></span></button>
+      <button class="s4-icon-button" aria-label="Share" data-tooltip="Share" type="button"><span class="s4-icon" data-icon="share"></span></button>
+    </div>
+  </section>
+  <section class="ex-sec"><h2>Rich</h2><p>Hover, focus, or click to pin.</p>
+    <div class="ex-board"><button class="s4-button" data-variant="text" data-rich-tooltip="t-autopay" type="button"><span class="s4-icon" data-icon="info"></span>What Is Autopay?</button></div>
+    <div class="ex-backdrop" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </section>
+  <div class="s4-rich-tooltip" id="t-autopay" role="dialog" aria-label="About Autopay">
+    <span class="s4-rich-tooltip-subhead">Autopay</span>
+    <span>Pays the bill from your default card on its due date. You’ll get a reminder 3 days before.</span>
+    <div class="s4-rich-tooltip-actions"><button class="s4-button" data-variant="text" type="button">Learn More</button></div>
+  </div>
+  <p class="ex-foot">Source: <code>components/tooltip/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../motion/motion.js"></script>
+<script src="../button/button.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../menu/menu.js"></script>
+<script src="tooltip.js"></script>
+<script src="../icon-button/icon-button.js"></script>
+<script src="../_example/example.js"></script>
+
+</body>
+</html>

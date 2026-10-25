@@ -1,0 +1,65 @@
+/* Pane (S4 addition): a solid section container for settings, forms and dashboards.
+   <section class="s4-pane" data-color="lowest|high|error" aria-labelledby="p1">
+     <h2 class="s4-pane-title" id="p1">Payment Methods</h2>
+     <p class="s4-pane-supporting">Cards and accounts used for autopay.</p>
+     … content …
+   </section>
+   Default: surface-container-low, large corners, 24 padding (16 when the space it sits in is compact, < 600).
+   Panes are content surfaces: always solid, never glass. Every value comes from tokens. */
+@layer s4.components {
+  .s4-pane {
+    --_bg: var(--md-sys-color-surface-container-low);
+    --_fg: var(--md-sys-color-on-surface);
+    --_fg-variant: var(--md-sys-color-on-surface-variant);
+    /* 24 from the medium window class up, 16 below it. cqi measures the nearest container (the app's content area)
+       or, if there is none, the viewport: a container query that works with or without a container ancestor. */
+    --_pad: clamp(var(--s4-space-4), (100cqi - var(--s4-breakpoint-medium) + 1px) * 1000, var(--s4-space-6));
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--s4-space-4);
+    min-width: 0;
+    margin: 0;
+    padding: var(--s4-pane-padding, var(--_pad));
+    border-radius: var(--s4-shape-pane);
+    background: var(--_bg);
+    color: var(--_fg);
+    container-type: inline-size;   /* lists, tables and grids inside can adapt to the pane */
+  }
+
+  .s4-pane-title {
+    margin: 0;
+    font-family: var(--md-sys-typescale-title-medium-font);
+    font-size: var(--md-sys-typescale-title-medium-size);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+    font-weight: var(--md-sys-typescale-title-medium-weight);
+    color: var(--_fg);
+  }
+  .s4-pane-supporting {
+    margin: 0;
+    max-width: 70ch;
+    font-family: var(--md-sys-typescale-body-medium-font);
+    font-size: var(--md-sys-typescale-body-medium-size);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-body-medium-tracking);
+    font-weight: var(--md-sys-typescale-body-medium-weight);
+    color: var(--_fg-variant);
+  }
+  /* the supporting line sits 4 under its title, not a full gap */
+  .s4-pane-title + .s4-pane-supporting { margin-top: calc(var(--s4-space-3) * -1); }
+
+  /* ---------- colors ---------- */
+  .s4-pane[data-color="lowest"] { --_bg: var(--md-sys-color-surface-container-lowest); }
+  .s4-pane[data-color="high"] { --_bg: var(--md-sys-color-surface-container-high); }
+  /* danger zone: destructive settings (delete account, erase data) */
+  .s4-pane[data-color="error"] {
+    --_bg: var(--md-sys-color-error-container);
+    --_fg: var(--md-sys-color-on-error-container);
+    --_fg-variant: var(--md-sys-color-on-error-container);
+  }
+
+  @media (forced-colors: active) {
+    .s4-pane { border: 1px solid CanvasText; }
+  }
+}

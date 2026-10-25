@@ -1,0 +1,274 @@
+/* Data table (S4 addition: M3 has no current spec)
+   <div class="s4-table-wrap" data-sticky>
+     <table class="s4-table">
+       <caption>October Bills</caption>
+       <thead><tr>
+         <th data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select All Bills"><span class="s4-checkbox-box"></span></label></th>
+         <th aria-sort="none"><button type="button" class="s4-table-sort">Vendor<span class="s4-icon" data-icon="chevron-down"></span></button></th>
+         <th class="num" aria-sort="none"><button …>Amount…</button></th>
+       </tr></thead>
+       <tbody><tr tabindex="0">
+         <td data-check>…</td><td>Iron Mountain</td><td class="num" data-value="1240">$1,240.00</td>
+       </tr></tbody>
+     </table>
+   </div>
+   Header 56 (title-small, on-surface-variant), rows 52 (body-medium), tabular figures, 1px outline-variant row lines.
+   Under 600 (container query on the wrap) every row becomes a stacked block and each cell shows its column name, so
+   phones never scroll sideways. table.js sorts, selects, copies column names into data-label and wires clickable rows.
+   Tables are content surfaces: solid, never glass. */
+@layer s4.components {
+  .s4-table-wrap {
+    container: s4-table / inline-size;
+    position: relative;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    border-radius: var(--md-sys-shape-corner-large);
+    background: var(--md-sys-color-surface-container-low);
+    color: var(--md-sys-color-on-surface);
+  }
+  /* sticky header: the wrap scrolls in both directions, so it needs a height to stick inside */
+  .s4-table-wrap:is([data-sticky], :has(> .s4-table[data-sticky])) {
+    max-height: var(--s4-table-max-height, calc(var(--s4-size-table-header) + var(--s4-size-table-row) * 8));
+    overflow-y: auto;
+  }
+
+  .s4-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-family: var(--md-sys-typescale-body-medium-font);
+    font-size: var(--md-sys-typescale-body-medium-size);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-body-medium-tracking);
+    font-weight: var(--md-sys-typescale-body-medium-weight);
+    font-variant-numeric: tabular-nums;
+    color: var(--md-sys-color-on-surface);
+  }
+  .s4-table caption {
+    padding: var(--s4-space-4) var(--s4-space-4) var(--s4-space-2);
+    caption-side: top;
+    color: var(--md-sys-color-on-surface);
+    text-align: start;
+    font-family: var(--md-sys-typescale-title-medium-font);
+    font-size: var(--md-sys-typescale-title-medium-size);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+    font-weight: var(--md-sys-typescale-title-medium-weight);
+  }
+
+  .s4-table :is(th, td) {
+    padding: 0 var(--s4-space-4);
+    text-align: start;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .s4-table th {
+    height: var(--s4-size-table-header);
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--md-sys-typescale-title-small-font);
+    font-size: var(--md-sys-typescale-title-small-size);
+    line-height: var(--md-sys-typescale-title-small-line-height);
+    letter-spacing: var(--md-sys-typescale-title-small-tracking);
+    font-weight: var(--md-sys-typescale-title-small-weight);
+  }
+  .s4-table thead th { border-block-end: var(--s4-size-divider) solid var(--md-sys-color-outline-variant); }
+  .s4-table td { height: var(--s4-size-table-row); }
+  .s4-table tbody tr + tr > :is(td, th),
+  .s4-table tbody + tbody tr:first-child > :is(td, th) { border-block-start: var(--s4-size-divider) solid var(--md-sys-color-outline-variant); }
+  .s4-table tbody th { color: var(--md-sys-color-on-surface); font: inherit; }   /* row headers read like cells */
+  .s4-table tfoot :is(td, th) {
+    height: var(--s4-size-table-row);
+    border-block-start: var(--s4-size-divider) solid var(--md-sys-color-outline-variant);
+    color: var(--md-sys-color-on-surface);
+    font-family: var(--md-sys-typescale-title-small-font);
+    font-size: var(--md-sys-typescale-title-small-size);
+    letter-spacing: var(--md-sys-typescale-title-small-tracking);
+    font-weight: var(--md-sys-typescale-title-small-weight);
+  }
+  .s4-table :is(th, td).num { text-align: end; }
+  /* a column that may wrap (descriptions, notes) */
+  .s4-table :is(th, td)[data-wrap] { min-width: calc(var(--s4-space-16) * 3); white-space: normal; }
+
+  /* ---------- sticky header ---------- */
+  .s4-table-wrap:is([data-sticky], :has(> .s4-table[data-sticky])) thead th {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 1;
+    background: var(--md-sys-color-surface-container-low);
+  }
+
+  /* ---------- sortable headers: th[aria-sort] > button.s4-table-sort ---------- */
+  .s4-table-sort {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s4-space-1);
+    min-height: var(--s4-size-touch-target);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--md-sys-shape-corner-extra-small);
+    background: none;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    text-align: inherit;
+    white-space: nowrap;
+    cursor: pointer;
+    --s4-icon-size: var(--s4-size-icon-small);
+    transition: color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+  }
+  /* numbers: the arrow goes before the label so the label stays aligned with the figures */
+  .s4-table th.num .s4-table-sort { flex-direction: row-reverse; }
+  .s4-table-sort .s4-icon {
+    opacity: 0;
+    transition:
+      opacity var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects),
+      transform var(--md-sys-motion-spring-fast-spatial-duration) var(--md-sys-motion-spring-fast-spatial);
+  }
+  @media (hover: hover) {
+    .s4-table-sort:hover { color: var(--md-sys-color-on-surface); }
+    .s4-table-sort:hover .s4-icon { opacity: var(--md-sys-state-disabled-content-opacity); }
+  }
+  .s4-table-sort:focus-visible .s4-icon { opacity: var(--md-sys-state-disabled-content-opacity); }
+  .s4-table th:is([aria-sort="ascending"], [aria-sort="descending"]) { color: var(--md-sys-color-on-surface); }
+  .s4-table th:is([aria-sort="ascending"], [aria-sort="descending"]) .s4-table-sort .s4-icon { opacity: 1; }
+  .s4-table th[aria-sort="ascending"] .s4-table-sort .s4-icon { transform: rotate(180deg); }
+
+  /* ---------- selectable rows: a checkbox column ---------- */
+  .s4-table :is(th, td)[data-check] {
+    width: var(--s4-size-touch-target);
+    padding-inline-end: 0;
+  }
+  .s4-table :is(th, td)[data-check] input { margin: 0; }
+  .s4-table tbody tr:has(> [data-check] input:checked) {
+    background: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+  }
+
+  /* ---------- clickable rows: tr[tabindex] ----------
+     base.css gives these rows the shared ::before state layer, but an absolutely positioned box inside a table row
+     gets an anonymous cell of its own in Chromium, pushing every cell one column over. So while the table is a real
+     table, the layer is drawn on the cells instead (same color and opacities); stacked rows use base's ::before. */
+  .s4-table tr[tabindex] { --_state: 0; cursor: pointer; }
+  .s4-table tr[tabindex]::before { display: none; }
+  @media (hover: hover) { .s4-table tr[tabindex]:hover { --_state: var(--md-sys-state-hover-state-layer-opacity); } }
+  .s4-table tr[tabindex]:focus-visible { --_state: var(--md-sys-state-focus-state-layer-opacity); outline-offset: calc(var(--s4-focus-ring-width) * -1); }
+  .s4-table tr[tabindex]:active { --_state: var(--md-sys-state-pressed-state-layer-opacity); }
+  .s4-table tr[tabindex] > :is(td, th) {
+    background-color: color-mix(in srgb, currentColor calc(var(--_state) * 100%), transparent);
+    transition: background-color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+  }
+
+  .s4-table tbody tr {
+    transition:
+      background-color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects),
+      color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+  }
+
+  /* ---------- compact (< 600): rows become stacked blocks ---------- */
+  @container s4-table (width < 600px) {
+    .s4-table,
+    .s4-table caption,
+    .s4-table :is(tbody, tfoot, tr, td) { display: block; }
+    .s4-table tr[tabindex]::before { display: block; }
+    .s4-table tr[tabindex] > :is(td, th) { background-color: transparent; }
+    .s4-table tbody tr + tr > :is(td, th),
+    .s4-table tbody + tbody tr:first-child > :is(td, th),
+    .s4-table tfoot :is(td, th) { border-block-start: 0; }
+    .s4-table tbody tr,
+    .s4-table tfoot tr {
+      position: relative;
+      padding: var(--s4-space-3) var(--s4-space-4);
+    }
+    .s4-table tbody tr + tr,
+    .s4-table tbody + tbody tr:first-child,
+    .s4-table tfoot tr { border-block-start: var(--s4-size-divider) solid var(--md-sys-color-outline-variant); }
+    .s4-table :is(tbody, tfoot) :is(td, th) {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--s4-space-4);
+      height: auto;
+      min-height: var(--s4-space-6);
+      padding: 0;
+      border: 0;
+      text-align: end;
+      white-space: normal;
+    }
+    .s4-table :is(tbody, tfoot) :is(td, th)[data-label]::before {
+      content: attr(data-label);
+      flex: none;
+      color: var(--md-sys-color-on-surface-variant);
+      text-align: start;
+      font-family: var(--md-sys-typescale-label-large-font);
+      font-size: var(--md-sys-typescale-label-large-size);
+      letter-spacing: var(--md-sys-typescale-label-large-tracking);
+      font-weight: var(--md-sys-typescale-label-large-weight);
+    }
+    .s4-table tbody tr:has(> [data-check] input:checked) :is(td, th)[data-label]::before { color: inherit; }
+    /* the primary column (th[data-primary]) is the block's headline */
+    .s4-table :is(tbody, tfoot) :is(td, th)[data-primary] {
+      justify-content: flex-start;
+      margin-block-end: var(--s4-space-1);
+      text-align: start;
+      font-family: var(--md-sys-typescale-title-medium-font);
+      font-size: var(--md-sys-typescale-title-medium-size);
+      line-height: var(--md-sys-typescale-title-medium-line-height);
+      letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+      font-weight: var(--md-sys-typescale-title-medium-weight);
+    }
+    .s4-table :is(tbody, tfoot) :is(td, th)[data-primary]::before { content: none; }
+    /* checkbox: top-start corner of the block, the rest of the block moves over */
+    .s4-table tbody tr:has(> [data-check]) { padding-inline-start: calc(var(--s4-space-4) + var(--s4-size-touch-target)); }
+    .s4-table tbody td[data-check] {
+      position: absolute;
+      inset-block-start: var(--s4-space-2);
+      inset-inline-start: var(--s4-space-2);
+      display: grid;
+      place-items: center;
+      width: var(--s4-size-touch-target);
+      height: var(--s4-size-touch-target);
+      min-height: 0;
+    }
+    .s4-table tbody td[data-check]::before { content: none; }
+
+    /* the header row turns into a toolbar: select all plus the sort buttons; plain column names are hidden */
+    .s4-table thead { display: block; }
+    .s4-table thead tr {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0 var(--s4-space-4);
+      padding: 0 var(--s4-space-4);
+      border-block-end: var(--s4-size-divider) solid var(--md-sys-color-outline-variant);
+    }
+    .s4-table thead th { display: none; height: auto; padding: 0; border: 0; }
+    .s4-table thead th:is([aria-sort], [data-check]) { display: block; }
+    .s4-table thead th[data-check] {
+      display: grid;
+      place-items: center;
+      width: var(--s4-size-touch-target);
+      height: var(--s4-size-touch-target);
+      margin-inline-start: calc(var(--s4-space-2) * -1);
+    }
+    .s4-table thead tr:not(:has(th:is([aria-sort], [data-check]))) { display: none; }
+    .s4-table thead th.num .s4-table-sort { flex-direction: row; }
+    .s4-table-sort .s4-icon { opacity: var(--md-sys-state-disabled-content-opacity); }
+
+    .s4-table-wrap:is([data-sticky], :has(> .s4-table[data-sticky])) thead {
+      position: sticky;
+      inset-block-start: 0;
+      z-index: 1;
+      background: var(--md-sys-color-surface-container-low);
+    }
+    .s4-table-wrap:is([data-sticky], :has(> .s4-table[data-sticky])) thead th { position: static; }
+  }
+
+  @media (forced-colors: active) {
+    .s4-table-wrap { border: 1px solid CanvasText; }
+    .s4-table tr[tabindex]::before { display: none; }
+    .s4-table tbody tr:has(> [data-check] input:checked) { outline: var(--s4-focus-ring-width) solid Highlight; outline-offset: calc(var(--s4-focus-ring-width) * -1); }
+  }
+}

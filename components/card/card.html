@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Card · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+<style>
+  /* page-only: a stand-in illustration for card media, drawn with color roles */
+  .demo-art { width: 100%; height: 100%; }
+  .demo-art .a { fill: var(--md-sys-color-secondary-container); }
+  .demo-art .b { fill: var(--md-sys-color-primary-container); }
+  .demo-art .c { fill: var(--md-sys-color-tertiary-container); }
+  .demo-figure { margin: 0; font-variant-numeric: tabular-nums; }
+  .demo-figure b {
+    display: block;
+    font-size: var(--md-sys-typescale-headline-medium-size);
+    line-height: var(--md-sys-typescale-headline-medium-line-height);
+    font-weight: var(--md-sys-typescale-emphasized-headline-medium-weight);
+    color: inherit;
+  }
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Card</h1></header>
+<main class="ex-main">
+  <p>Cards hold content and actions about a single subject. Use <b>elevated</b> (the default) to lift a card off a busy page, <b>filled</b> for a quiet grouping, and <b>outlined</b> when cards sit on a surface of the same color. Cards are solid: never glass.</p>
+
+  <section class="ex-sec">
+    <h2>Variants</h2>
+    <p>Elevated, filled and outlined, each with a title, supporting text and actions.</p>
+    <div class="s4-grid" style="--s4-min:240px">
+      <article class="s4-card" aria-labelledby="c1">
+        <div class="s4-card-body">
+          <h3 class="s4-card-title" id="c1">Iron Mountain</h3>
+          <p class="s4-card-subhead">Records storage · Due Oct 28</p>
+          <p class="demo-figure"><b>$1,240.00</b></p>
+        </div>
+        <div class="s4-card-actions">
+          <button class="s4-button" data-variant="text" type="button">Details</button>
+          <button class="s4-button" type="button">Pay Now</button>
+        </div>
+      </article>
+      <article class="s4-card" data-variant="filled" aria-labelledby="c2">
+        <div class="s4-card-body">
+          <h3 class="s4-card-title" id="c2">Comcast Business</h3>
+          <p class="s4-card-subhead">Internet and phone · Paid Oct 12</p>
+          <p class="demo-figure"><b>$389.95</b></p>
+        </div>
+        <div class="s4-card-actions">
+          <button class="s4-button" data-variant="text" type="button">Receipt</button>
+        </div>
+      </article>
+      <article class="s4-card" data-variant="outlined" aria-labelledby="c3">
+        <div class="s4-card-body">
+          <h3 class="s4-card-title" id="c3">Staples</h3>
+          <p class="s4-card-subhead">Office supplies · Overdue since Oct 3</p>
+          <p class="demo-figure"><b>$212.48</b></p>
+        </div>
+        <div class="s4-card-actions">
+          <button class="s4-button" data-variant="outlined" type="button">Remind Me</button>
+          <button class="s4-button" type="button">Pay Now</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>With Media</h2>
+    <p>The media block takes the card's top corners. Text below it keeps 16 padding; actions sit at the end.</p>
+    <div class="s4-grid" style="--s4-min:260px">
+      <article class="s4-card" aria-labelledby="m1">
+        <div class="s4-card-media">
+          <svg class="demo-art" viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect class="a" width="320" height="180"/><circle class="b" cx="250" cy="40" r="90"/><rect class="c" x="40" y="70" width="110" height="140" rx="12"/></svg>
+        </div>
+        <div class="s4-card-body">
+          <h3 class="s4-card-title" id="m1">Q4 Office Budget</h3>
+          <p class="s4-card-supporting">Supplies, storage and utilities for October to December. 62% used so far.</p>
+        </div>
+        <div class="s4-card-actions">
+          <button class="s4-button" data-variant="tonal" type="button">Open Budget</button>
+        </div>
+      </article>
+      <article class="s4-card" data-variant="outlined" aria-labelledby="m2">
+        <div class="s4-card-media">
+          <svg class="demo-art" viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect class="b" width="320" height="180"/><circle class="a" cx="70" cy="150" r="80"/><rect class="c" x="170" y="30" width="120" height="80" rx="40"/></svg>
+        </div>
+        <div class="s4-card-body">
+          <h3 class="s4-card-title" id="m2">Scan Receipts</h3>
+          <p class="s4-card-supporting">Snap a photo of a paper bill and we'll fill in the vendor, date and amount.</p>
+        </div>
+        <div class="s4-card-actions">
+          <button class="s4-button" data-variant="text" type="button">Not Now</button>
+          <button class="s4-button" type="button"><span class="s4-icon" data-icon="camera"></span>Scan</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Interactive</h2>
+    <p>When the whole card opens something, make the card the link (<code>a.s4-card</code>) or button (<code>button.s4-card</code>) and keep buttons out of it. Hover shows the state layer; an elevated card also rises to level 2. Disabled cards fade their content.</p>
+    <div class="s4-grid" style="--s4-min:220px">
+      <a class="s4-card" href="#bill-iron-mountain">
+        <div class="s4-card-body">
+          <h3 class="s4-card-title">Iron Mountain</h3>
+          <p class="s4-card-subhead">Due Oct 28</p>
+          <p class="demo-figure"><b>$1,240.00</b></p>
+        </div>
+      </a>
+      <button class="s4-card" data-variant="filled" type="button">
+        <span class="s4-card-body">
+          <span class="s4-card-title">Comcast Business</span>
+          <span class="s4-card-subhead">Paid Oct 12</span>
+          <span class="demo-figure"><b>$389.95</b></span>
+        </span>
+      </button>
+      <a class="s4-card" data-variant="outlined" href="#bill-staples">
+        <div class="s4-card-body">
+          <h3 class="s4-card-title">Staples</h3>
+          <p class="s4-card-subhead">Overdue since Oct 3</p>
+          <p class="demo-figure"><b>$212.48</b></p>
+        </div>
+      </a>
+      <button class="s4-card" type="button" disabled>
+        <span class="s4-card-body">
+          <span class="s4-card-title">Archived Vendor</span>
+          <span class="s4-card-subhead">No open bills</span>
+          <span class="demo-figure"><b>$0.00</b></span>
+        </span>
+      </button>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/card/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../button/button.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+</body>
+</html>

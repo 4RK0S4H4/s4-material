@@ -4,14 +4,19 @@
   "private": true,
   "description": "S4 Orion: a personal design language on Material 3 Expressive, with a glass layer for floating chrome.",
   "type": "module",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "generate:color": "node scripts/generate-color.mjs",
     "build:tokens": "node scripts/build-tokens.mjs",
     "build:icons": "node scripts/build-icons.mjs",
     "check:tokens": "node scripts/build-tokens.mjs --check",
     "check:icons": "node scripts/build-icons.mjs --check",
-    "build": "npm run build:tokens && npm run build:icons",
-    "check": "npm run check:tokens && npm run check:icons"
+    "build": "npm run build:tokens && npm run build:icons && npm run build:bundle",
+    "check:glass": "node scripts/check-glass.mjs",
+    "check": "npm run check:tokens && npm run check:icons && npm run check:glass && npm run check:bundle",
+    "build:bundle": "node scripts/build.mjs",
+    "check:bundle": "node scripts/build.mjs --check"
   }
 }

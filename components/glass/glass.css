@@ -1,0 +1,60 @@
+/* S4 Orion glass layer (decision 0004). Loaded after components, so it only changes how floating chrome is painted:
+   components give these surfaces a solid M3 role; this layer turns them into very clear glass.
+
+   Where glass goes: floating chrome and overlays only. Never content (cards, panes, lists, fields, tables).
+     chrome   top app bar once content scrolls under it, nav bar, modal or expanded nav rail, floating and docked toolbars
+     overlays menus, dialogs, bottom and side sheets, rich tooltips
+   Snackbars and plain tooltips stay solid inverse surfaces (their inverse-primary action needs the full surface).
+
+   Guarantee: the backdrop filter compresses what shows through (contrast, brightness) so on-surface text on the glass meets
+   WCAG AA over any backdrop for every seed (scripts/check-glass.mjs proves it). To keep that true, every glass surface
+   redefines on-surface-variant as on-surface: secondary text on glass is drawn in the main text color.
+   High contrast, reduced transparency, data-glass="off" and browsers without backdrop-filter make the tokens solid. */
+@layer s4.glass {
+  :where(.s4-glass,
+         .s4-top-app-bar[data-scrolled],
+         .s4-nav-bar,
+         .s4-nav-rail:is([data-modal], [data-overlay]),
+         .s4-toolbar,
+         .s4-menu,
+         .s4-dialog,
+         .s4-bottom-sheet,
+         .s4-side-sheet,
+         .s4-rich-tooltip) {
+    --md-sys-color-on-surface-variant: var(--md-sys-color-on-surface);
+    --_glass-tint: var(--s4-glass-tint-opacity-float);
+    --_glass-edge: to bottom;   /* where the hairline sits: the edge that faces content */
+    background-color: color-mix(in srgb, var(--s4-glass-tint-float) calc(var(--_glass-tint) * 100%), transparent);
+    background-image: linear-gradient(var(--_glass-edge), var(--s4-glass-highlight-color) 0 var(--s4-glass-highlight-width), transparent var(--s4-glass-highlight-width));
+    -webkit-backdrop-filter: blur(var(--s4-glass-blur-float)) saturate(var(--s4-glass-saturation-float)) contrast(var(--s4-glass-backdrop-contrast-float)) brightness(var(--s4-glass-backdrop-brightness-float));
+    backdrop-filter: blur(var(--s4-glass-blur-float)) saturate(var(--s4-glass-saturation-float)) contrast(var(--s4-glass-backdrop-contrast-float)) brightness(var(--s4-glass-backdrop-brightness-float));
+  }
+  /* the app bar's content-facing edge is its bottom */
+  :where(.s4-top-app-bar[data-scrolled]) { --_glass-edge: to top; }
+
+  /* a toolbar in vibrant color keeps its role as the tint */
+  :where(.s4-toolbar[data-color="vibrant"]) { background-color: color-mix(in srgb, var(--md-sys-color-primary-container) calc(var(--_glass-tint) * 100%), transparent); }
+
+  /* medium contrast: firmer glass (high contrast is already solid through the tokens) */
+  :where(:root[data-contrast="medium"]) :where(.s4-glass, .s4-top-app-bar[data-scrolled], .s4-nav-bar, .s4-nav-rail:is([data-modal], [data-overlay]), .s4-toolbar, .s4-menu, .s4-dialog, .s4-bottom-sheet, .s4-side-sheet, .s4-rich-tooltip) {
+    --_glass-tint: var(--s4-glass-tint-opacity-medium-contrast);
+  }
+
+  /* at most two glass layers: a third glass surface nested inside two others is solid */
+  :where(.s4-glass, .s4-menu, .s4-dialog, .s4-bottom-sheet, .s4-side-sheet, .s4-rich-tooltip, .s4-toolbar)
+  :where(.s4-glass, .s4-menu, .s4-dialog, .s4-bottom-sheet, .s4-side-sheet, .s4-rich-tooltip, .s4-toolbar)
+  :where(.s4-glass, .s4-menu, .s4-dialog, .s4-bottom-sheet, .s4-side-sheet, .s4-rich-tooltip, .s4-toolbar) {
+    --_glass-tint: 1;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  /* opt out per element */
+  :where([data-glass="off"]) { --_glass-tint: 1; -webkit-backdrop-filter: none; backdrop-filter: none; }
+
+  @media (forced-colors: active) {
+    :where(.s4-glass, .s4-top-app-bar[data-scrolled], .s4-nav-bar, .s4-toolbar, .s4-menu, .s4-dialog, .s4-bottom-sheet, .s4-side-sheet, .s4-rich-tooltip) {
+      background-image: none; -webkit-backdrop-filter: none; backdrop-filter: none; border: 1px solid CanvasText;
+    }
+  }
+}

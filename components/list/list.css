@@ -1,0 +1,269 @@
+/* List (M3, with M3 Expressive segmented lists)
+   <ul class="s4-list" data-dividers data-style="segmented" data-lines="2|3">
+     <li class="s4-list-subheader">This Week <span class="s4-list-subtotal">$1,240.00</span></li>
+     <li>
+       <a class="s4-list-item" href="…">                       (div when static; a / button / label when interactive)
+         <span class="s4-list-leading"><span class="s4-avatar">IM</span></span>
+         <span class="s4-list-content">
+           <span class="s4-list-overline">Storage</span>
+           <span class="s4-list-headline">Iron Mountain</span>
+           <span class="s4-list-supporting">Due Oct 28</span>
+         </span>
+         <span class="s4-list-trailing"><span class="s4-list-amount">$1,240.00</span>Monthly</span>
+       </a>
+     </li>
+   </ul>
+   Heights 56 / 72 / 88 follow the content (overline or supporting text = two lines, both = three) or data-lines.
+   Selected / current: aria-selected="true" or aria-current on the item → secondary-container.
+   Lists are content surfaces: solid, never glass. Every value comes from tokens. */
+@layer s4.components {
+  .s4-list {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    margin: 0;
+    padding: var(--s4-space-2) 0;
+    list-style: none;
+  }
+  .s4-list > li:not(.s4-list-subheader) { display: block; margin: 0; padding: 0; }
+
+  /* ---------- item ---------- */
+  .s4-list-item {
+    --_h: var(--s4-size-list-item-one-line);
+    --_pad-block: var(--s4-space-2);
+    --_bg: transparent;
+    --_fg: var(--md-sys-color-on-surface);
+    --_fg-variant: var(--md-sys-color-on-surface-variant);
+    --_radius: 0;
+
+    display: flex;
+    align-items: center;
+    gap: var(--s4-space-4);
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    min-height: var(--_h);
+    margin: 0;
+    padding: var(--_pad-block) var(--s4-space-6) var(--_pad-block) var(--s4-space-4);
+    border: 0;
+    border-radius: var(--_radius);
+    background: var(--_bg);
+    color: var(--_fg);
+    font-family: var(--md-sys-typescale-body-large-font);
+    font-size: var(--md-sys-typescale-body-large-size);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+    font-weight: var(--md-sys-typescale-body-large-weight);
+    text-align: start;
+    text-decoration: none;
+    transition:
+      background-color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects),
+      color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+  }
+  :is(a, button, label).s4-list-item,
+  .s4-list-item[tabindex] { cursor: pointer; user-select: none; }
+  /* the focus ring sits inside the row, so it isn't clipped by a scrolling parent or hidden by the next row */
+  :is(a, button, label).s4-list-item:focus-visible,
+  .s4-list-item[tabindex]:focus-visible { outline-offset: calc(var(--s4-focus-ring-width) * -1); }
+  label.s4-list-item:has(:focus-visible) {
+    outline: var(--s4-focus-ring-width) solid var(--s4-focus-ring-color);
+    outline-offset: calc(var(--s4-focus-ring-width) * -1);
+  }
+  label.s4-list-item:has(:focus-visible)::before { opacity: var(--md-sys-state-focus-state-layer-opacity); }
+
+  /* ---------- lines: automatic from the content, or data-lines on the list or item ---------- */
+  .s4-list-item:is(:has(.s4-list-supporting), :has(.s4-list-overline)),
+  :is(.s4-list[data-lines="2"] .s4-list-item, .s4-list-item[data-lines="2"]) {
+    --_h: var(--s4-size-list-item-two-line);
+  }
+  .s4-list-item:has(.s4-list-supporting):has(.s4-list-overline),
+  :is(.s4-list[data-lines="3"] .s4-list-item, .s4-list-item[data-lines="3"]) {
+    --_h: var(--s4-size-list-item-three-line);
+    --_pad-block: var(--s4-space-3);
+    align-items: flex-start;
+  }
+  /* explicit two-line: one line of supporting text; explicit three-line: two lines */
+  :is(.s4-list[data-lines="2"] .s4-list-item, .s4-list-item[data-lines="2"]) .s4-list-supporting { -webkit-line-clamp: 1; }
+  :is(.s4-list[data-lines="3"] .s4-list-item, .s4-list-item[data-lines="3"]) .s4-list-supporting { -webkit-line-clamp: 2; }
+  :is(.s4-list[data-lines] .s4-list-item, .s4-list-item[data-lines]) .s4-list-supporting {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ---------- parts ---------- */
+  .s4-list-leading,
+  .s4-list-trailing {
+    display: flex;
+    flex: none;
+    align-items: center;
+    color: var(--_fg-variant);
+    --s4-icon-size: var(--s4-size-icon);
+  }
+  .s4-list-leading > img {
+    width: var(--s4-size-list-item-one-line);
+    height: var(--s4-size-list-item-one-line);
+    border-radius: var(--md-sys-shape-corner-small);
+    object-fit: cover;
+  }
+
+  .s4-list-content {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+  }
+  .s4-list-overline {
+    color: var(--_fg-variant);
+    font-family: var(--md-sys-typescale-label-small-font);
+    font-size: var(--md-sys-typescale-label-small-size);
+    line-height: var(--md-sys-typescale-label-small-line-height);
+    letter-spacing: var(--md-sys-typescale-label-small-tracking);
+    font-weight: var(--md-sys-typescale-label-small-weight);
+  }
+  .s4-list-headline {
+    overflow: hidden;
+    color: var(--_fg);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .s4-list-supporting {
+    color: var(--_fg-variant);
+    font-family: var(--md-sys-typescale-body-medium-font);
+    font-size: var(--md-sys-typescale-body-medium-size);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-body-medium-tracking);
+    font-weight: var(--md-sys-typescale-body-medium-weight);
+  }
+
+  /* trailing: supporting text (label-small), an icon, a control, or an amount with a note under it */
+  .s4-list-trailing {
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: var(--s4-space-1);
+    font-family: var(--md-sys-typescale-label-small-font);
+    font-size: var(--md-sys-typescale-label-small-size);
+    line-height: var(--md-sys-typescale-label-small-line-height);
+    letter-spacing: var(--md-sys-typescale-label-small-tracking);
+    font-weight: var(--md-sys-typescale-label-small-weight);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .s4-list-amount {
+    color: var(--_fg);
+    font-family: var(--md-sys-typescale-body-large-font);
+    font-size: var(--md-sys-typescale-body-large-size);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+    font-weight: var(--md-sys-typescale-body-large-weight);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  /* three-line items align their leading and trailing content to the top */
+  .s4-list-item:is(:has(.s4-list-supporting):has(.s4-list-overline), [data-lines="3"]) :is(.s4-list-leading, .s4-list-trailing),
+  .s4-list[data-lines="3"] .s4-list-item :is(.s4-list-leading, .s4-list-trailing) { align-self: flex-start; }
+
+  /* ---------- dividers between items ---------- */
+  .s4-list[data-dividers] > li + li:not(.s4-list-subheader) { border-block-start: var(--s4-size-divider) solid var(--md-sys-color-outline-variant); }
+
+  /* ---------- grouped lists: subheader with an optional subtotal ---------- */
+  .s4-list-subheader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s4-space-4);
+    min-height: var(--s4-size-touch-target);
+    margin: 0;
+    padding: 0 var(--s4-space-6) 0 var(--s4-space-4);
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--md-sys-typescale-title-small-font);
+    font-size: var(--md-sys-typescale-title-small-size);
+    line-height: var(--md-sys-typescale-title-small-line-height);
+    letter-spacing: var(--md-sys-typescale-title-small-tracking);
+    font-weight: var(--md-sys-typescale-title-small-weight);
+  }
+  .s4-list > .s4-list-subheader:not(:first-child) { margin-block-start: var(--s4-space-2); }
+  .s4-list-subtotal {
+    margin-inline-start: auto;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* ---------- M3 Expressive segmented list: items 2 apart, small inner corners, large outer group corners ---------- */
+  .s4-list[data-style="segmented"] {
+    gap: calc(var(--s4-space-1) / 2);
+    padding: 0;
+  }
+  .s4-list[data-style="segmented"] .s4-list-item {
+    --_bg: var(--s4-list-segment-color, var(--md-sys-color-surface-container-low));
+    --_radius: var(--s4-shape-list-segment);
+  }
+  /* each run of items between subheaders is one group with outer corners */
+  .s4-list[data-style="segmented"] > li:is(:first-child, .s4-list-subheader + li) > .s4-list-item {
+    border-start-start-radius: var(--s4-shape-list-group);
+    border-start-end-radius: var(--s4-shape-list-group);
+  }
+  .s4-list[data-style="segmented"] > li:is(:last-child, :has(+ .s4-list-subheader)) > .s4-list-item {
+    border-end-start-radius: var(--s4-shape-list-group);
+    border-end-end-radius: var(--s4-shape-list-group);
+  }
+  .s4-list[data-style="segmented"] > .s4-list-subheader { padding-inline: var(--s4-space-4); }
+  .s4-list[data-style="segmented"] > .s4-list-subheader:not(:first-child) { margin-block-start: var(--s4-space-4); }
+  .s4-list[data-style="segmented"][data-dividers] > li + li { border-block-start: 0; }
+
+  /* ---------- selected / current (after the segmented colors, so they win) ---------- */
+  .s4-list-item:is([aria-selected="true"], [aria-current]:not([aria-current="false"])),
+  .s4-list > li:is([aria-selected="true"], [aria-current]:not([aria-current="false"])) > .s4-list-item {
+    --_bg: var(--md-sys-color-secondary-container);
+    --_fg: var(--md-sys-color-on-secondary-container);
+    --_fg-variant: var(--md-sys-color-on-secondary-container);
+  }
+
+  /* ---------- disabled ---------- */
+  .s4-list-item:is(:disabled, [aria-disabled="true"], :has(input:disabled)) {
+    --_fg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
+    --_fg-variant: var(--_fg);
+    cursor: default;
+  }
+  .s4-list-item:is(:disabled, [aria-disabled="true"], :has(input:disabled)) :is(.s4-avatar, .s4-list-leading > img) {
+    opacity: var(--md-sys-state-disabled-content-opacity);
+  }
+  label.s4-list-item:has(input:disabled) { pointer-events: none; }
+  label.s4-list-item:has(input:disabled)::before { display: none; }
+
+  /* ---------- avatar: 40 circle with initials or a photo ---------- */
+  .s4-avatar {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    width: var(--s4-size-avatar);
+    height: var(--s4-size-avatar);
+    overflow: hidden;
+    border-radius: var(--md-sys-shape-corner-full);
+    background: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    font-family: var(--md-sys-typescale-title-medium-font);
+    font-size: var(--md-sys-typescale-title-medium-size);
+    line-height: 1;
+    letter-spacing: 0;
+    font-weight: var(--md-sys-typescale-title-medium-weight);
+    text-transform: uppercase;
+    user-select: none;
+  }
+  .s4-avatar > img { width: 100%; height: 100%; object-fit: cover; }
+  .s4-avatar > .s4-icon { --s4-icon-size: var(--s4-size-icon); }
+
+  @media (forced-colors: active) {
+    :is(a, button, label).s4-list-item::before,
+    .s4-list-item[tabindex]::before { display: none; }
+    .s4-list-item:is([aria-selected="true"], [aria-current]:not([aria-current="false"])),
+    .s4-list > li:is([aria-selected="true"], [aria-current]:not([aria-current="false"])) > .s4-list-item {
+      outline: var(--s4-focus-ring-width) solid Highlight;
+      outline-offset: calc(var(--s4-focus-ring-width) * -1);
+    }
+    .s4-list[data-style="segmented"] .s4-list-item { border: 1px solid CanvasText; }
+    .s4-avatar { border: 1px solid CanvasText; }
+  }
+}

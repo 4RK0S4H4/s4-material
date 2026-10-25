@@ -1,0 +1,180 @@
+/* Progress indicator (M3 Expressive)
+   <div class="s4-progress" data-value="0.6" aria-label="Uploading Receipts"></div>                       linear
+   <div class="s4-progress" data-type="circular" data-value="0.6" aria-label="Syncing"></div>          circular
+   Leave out data-value for indeterminate. progress.js sets role="progressbar", aria-valuenow and --_value (0–1), and
+   draws the circular SVG. Linear: 4dp track, primary indicator, secondary-container track, a 4dp gap between them and
+   a stop dot at the end. Circular: 40dp, 4dp stroke, same gap, no track while indeterminate.
+
+   Public knobs (the indeterminate cycles are long, linear loops that no spring token describes):
+     --s4-progress-cycle           linear indeterminate cycle            1800ms (M3)
+     --s4-progress-circular-cycle  circular arc grow / shrink cycle      1333ms (M3)
+     --s4-progress-circular-spin   circular rotation cycle               2000ms
+   Under prefers-reduced-motion the indeterminate animation stops and shows a static partial indicator. */
+
+@layer s4.components {
+  @property --_t1 { syntax: "<length-percentage>"; inherits: true; initial-value: 0%; }
+  @property --_h1 { syntax: "<length-percentage>"; inherits: true; initial-value: 0%; }
+  @property --_t2 { syntax: "<length-percentage>"; inherits: true; initial-value: 0%; }
+  @property --_h2 { syntax: "<length-percentage>"; inherits: true; initial-value: 0%; }
+
+  .s4-progress {
+    --s4-progress-cycle: 1800ms;
+    --s4-progress-circular-cycle: 1333ms;
+    --s4-progress-circular-spin: 2000ms;
+    --_indicator: var(--md-sys-color-primary);
+    --_track: var(--md-sys-color-secondary-container);
+    --_thickness: var(--s4-space-1);   /* 4 */
+    --_gap: var(--s4-space-1);         /* 4 */
+    --_value: 0;
+
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: var(--_thickness);
+    border-radius: var(--md-sys-shape-corner-full);
+    color: var(--_indicator);
+  }
+
+  /* ---------- linear, determinate: ::before = indicator, ::after = track with the stop dot ---------- */
+  .s4-progress:not([data-type="circular"])::before,
+  .s4-progress:not([data-type="circular"])::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    border-radius: inherit;
+  }
+  .s4-progress:not([data-type="circular"])[data-value]::before {
+    inset-inline-start: 0;
+    width: calc(var(--_value) * 100%);
+    background: var(--_indicator);
+    transition: width var(--s4-motion-spring-spatial-calm-duration) var(--s4-motion-spring-spatial-calm);
+  }
+  .s4-progress:not([data-type="circular"])[data-value]::after {
+    inset-inline-end: 0;
+    /* the gap only opens once there is an indicator to separate from */
+    width: max(0px, calc((1 - var(--_value)) * 100% - var(--_gap) * min(1, var(--_value) * 1000)));
+    background:
+      radial-gradient(circle closest-side, var(--_indicator) 100%, transparent) right center / var(--_thickness) var(--_thickness) no-repeat,
+      var(--_track);
+    transition: width var(--s4-motion-spring-spatial-calm-duration) var(--s4-motion-spring-spatial-calm);
+  }
+  .s4-progress:not([data-type="circular"])[data-value]:dir(rtl)::after { background-position: left center, 0 0; }
+
+  /* ---------- linear, indeterminate: two indicators sweep across; the track is drawn around them with gaps ---------- */
+  .s4-progress:not([data-type="circular"]):not([data-value]) {
+    --_t1: 0%; --_h1: 0%; --_t2: 0%; --_h2: 0%;
+    overflow: hidden;
+    background: linear-gradient(to right,
+      var(--_track) calc(var(--_t2) - var(--_gap)), transparent 0 calc(var(--_h2) + var(--_gap)),
+      var(--_track) 0 calc(var(--_t1) - var(--_gap)), transparent 0 calc(var(--_h1) + var(--_gap)),
+      var(--_track) 0);
+    animation: s4-progress-linear var(--s4-progress-cycle) linear infinite;
+  }
+  /* physical left/right to match the gradient: the sweep runs left to right */
+  .s4-progress:not([data-type="circular"]):not([data-value])::before {
+    left: var(--_t1);
+    width: calc(var(--_h1) - var(--_t1));
+    background: var(--_indicator);
+  }
+  .s4-progress:not([data-type="circular"]):not([data-value])::after {
+    left: var(--_t2);
+    width: calc(var(--_h2) - var(--_t2));
+    background: var(--_indicator);
+  }
+  /* M3 timings: line 1 head 0–750ms, tail 333–1183ms; line 2 head 1000–1567ms, tail 1267–1800ms (of 1800).
+     Each property only interpolates between the keyframes that name it. Lines rest just off either end. */
+  @keyframes s4-progress-linear {
+    0% { --_h1: calc(var(--_gap) * -2); --_t1: calc(var(--_gap) * -2); --_h2: calc(var(--_gap) * -2); --_t2: calc(var(--_gap) * -2); animation-timing-function: var(--md-sys-motion-spring-slow-effects); }
+    18.5% { --_t1: calc(var(--_gap) * -2); animation-timing-function: var(--md-sys-motion-spring-slow-effects); }
+    41.7% { --_h1: calc(100% + var(--_gap) * 2); }
+    55.6% { --_h2: calc(var(--_gap) * -2); animation-timing-function: var(--md-sys-motion-spring-slow-effects); }
+    65.7% { --_t1: calc(100% + var(--_gap) * 2); }
+    70.4% { --_t2: calc(var(--_gap) * -2); animation-timing-function: var(--md-sys-motion-spring-slow-effects); }
+    87% { --_h2: calc(100% + var(--_gap) * 2); }
+    100% { --_h1: calc(100% + var(--_gap) * 2); --_t1: calc(100% + var(--_gap) * 2); --_h2: calc(100% + var(--_gap) * 2); --_t2: calc(100% + var(--_gap) * 2); }
+  }
+
+  /* ---------- circular (SVG drawn by progress.js: 40×40 box, r 18, pathLength 100) ---------- */
+  .s4-progress[data-type="circular"] {
+    /* a 4dp stroke on an r=18 circle (circumference 113.1dp) is 3.54 units of 100; round caps add half a stroke at each end */
+    --_cap: 3.54;
+    --_gap-u: 3.54;
+    --_track-len: calc(100 - var(--_value) * 100 - var(--_gap-u) * 2 - var(--_cap));
+
+    display: inline-block;
+    flex: none;
+    width: var(--s4-space-10);
+    height: var(--s4-space-10);
+    border-radius: 0;
+    vertical-align: middle;
+  }
+  .s4-progress[data-type="circular"] > svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    transform: rotate(-90deg);
+  }
+  .s4-progress[data-type="circular"] circle {
+    fill: none;
+    stroke-linecap: round;
+    stroke-width: 4;
+    transition:
+      stroke-dasharray var(--s4-motion-spring-spatial-calm-duration) var(--s4-motion-spring-spatial-calm),
+      stroke-dashoffset var(--s4-motion-spring-spatial-calm-duration) var(--s4-motion-spring-spatial-calm);
+  }
+  .s4-progress-indicator { stroke: var(--_indicator); }
+  .s4-progress-track { stroke: var(--_track); }
+  .s4-progress[data-type="circular"][data-value] .s4-progress-indicator {
+    stroke-dasharray: max(0, calc(var(--_value) * 100 - var(--_cap))) 200;
+    stroke-dashoffset: calc(var(--_cap) / -2);
+    stroke-width: calc(4 * min(1, var(--_value) * 1000));   /* nothing at 0, not a dot */
+  }
+  .s4-progress[data-type="circular"][data-value] .s4-progress-track {
+    stroke-dasharray: max(0, var(--_track-len)) 200;
+    stroke-dashoffset: calc((var(--_value) * 100 + var(--_gap-u) + var(--_cap) / 2) * -1);
+    stroke-width: calc(4 * clamp(0, var(--_track-len), 1));
+  }
+  .s4-progress[data-type="circular"]:not([data-value]) .s4-progress-track { display: none; }
+  .s4-progress[data-type="circular"]:not([data-value]) > svg { animation: s4-progress-spin var(--s4-progress-circular-spin) linear infinite; }
+  .s4-progress[data-type="circular"]:not([data-value]) .s4-progress-indicator {
+    transition: none;
+    animation: s4-progress-arc var(--s4-progress-circular-cycle) var(--md-sys-motion-spring-slow-effects) infinite;
+  }
+  @keyframes s4-progress-spin { from { transform: rotate(-90deg); } to { transform: rotate(270deg); } }
+  /* the head runs ahead to a 3/4 arc, then the tail catches up */
+  @keyframes s4-progress-arc {
+    0% { stroke-dasharray: 1 200; stroke-dashoffset: 0; }
+    50% { stroke-dasharray: 71 200; stroke-dashoffset: -28; }
+    100% { stroke-dasharray: 71 200; stroke-dashoffset: -99; }
+  }
+
+  /* ---------- reduced motion: no sweeping or spinning; a still, partial indicator says "working" ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .s4-progress:not([data-type="circular"]):not([data-value]) {
+      animation: none;
+      --_t1: 0%; --_h1: 40%; --_t2: calc(var(--_gap) * -2); --_h2: calc(var(--_gap) * -2);
+    }
+    .s4-progress[data-type="circular"]:not([data-value]) > svg { animation: none; }
+    .s4-progress[data-type="circular"]:not([data-value]) .s4-progress-indicator {
+      animation: none;
+      stroke-dasharray: 25 200;
+      stroke-dashoffset: 0;
+    }
+  }
+  /* the app's own reduced-motion switch (S4.motion.reduced) */
+  :root[data-motion="reduced"] .s4-progress:not([data-type="circular"]):not([data-value]) {
+    animation: none;
+    --_t1: 0%; --_h1: 40%; --_t2: calc(var(--_gap) * -2); --_h2: calc(var(--_gap) * -2);
+  }
+  :root[data-motion="reduced"] .s4-progress[data-type="circular"]:not([data-value]) :is(svg, .s4-progress-indicator) { animation: none; }
+  :root[data-motion="reduced"] .s4-progress[data-type="circular"]:not([data-value]) .s4-progress-indicator { stroke-dasharray: 25 200; stroke-dashoffset: 0; }
+
+  @media (forced-colors: active) {
+    .s4-progress:not([data-type="circular"]) { border: 1px solid CanvasText; }
+    .s4-progress:not([data-type="circular"])::before { background: CanvasText; }
+    .s4-progress-indicator { stroke: CanvasText; }
+    .s4-progress-track { stroke: GrayText; }
+  }
+}

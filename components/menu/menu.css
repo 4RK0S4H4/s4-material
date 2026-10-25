@@ -1,0 +1,77 @@
+/* Menu (M3 Expressive)
+   <button class="s4-button" data-menu="sort-menu" aria-haspopup="menu">Sort By</button>
+   <div class="s4-menu" id="sort-menu" popover role="menu" aria-label="Sort by">
+     <div class="s4-menu-label">Sort By</div>
+     <button class="s4-menu-item" role="menuitemradio" aria-checked="true"><span class="s4-icon" data-icon="calendar"></span>Due Date</button>
+     <button class="s4-menu-item" role="menuitem"><span class="s4-icon" data-icon="export"></span>Export<span class="s4-menu-item-trailing">⌘E</span></button>
+     <hr class="s4-menu-divider">
+   </div>
+   Opens below its anchor (end-aligned with data-align="end"), unfolding from the top edge; flips above when there's no room.
+   Solid surface-container here; glass.css makes it glass. */
+@layer s4.components {
+  .s4-menu {
+    position: fixed;
+    inset: auto;
+    margin: 0;
+    min-width: 112px;
+    max-width: min(280px, calc(100vw - 2 * var(--s4-space-4)));
+    max-height: min(480px, calc(100vh - 2 * var(--s4-space-4)));
+    overflow: auto;
+    padding: var(--s4-space-1);
+    border: 0;
+    border-radius: var(--s4-shape-menu);
+    background: var(--md-sys-color-surface-container);
+    color: var(--md-sys-color-on-surface);
+    box-shadow: var(--md-sys-elevation-level2);
+    font-family: var(--md-sys-typescale-label-large-font);
+    font-size: var(--md-sys-typescale-label-large-size);
+    line-height: var(--md-sys-typescale-label-large-line-height);
+    letter-spacing: var(--md-sys-typescale-label-large-tracking);
+    font-weight: var(--md-sys-typescale-label-large-weight);
+    flex-direction: column;
+    gap: 2px;
+  }
+  .s4-menu:popover-open, .s4-menu[data-open] { display: flex; }
+  .s4-menu[data-color="vibrant"] { background: var(--md-sys-color-tertiary-container); color: var(--md-sys-color-on-tertiary-container); }
+
+  .s4-menu-item {
+    display: flex;
+    align-items: center;
+    gap: var(--s4-space-3);
+    width: 100%;
+    min-height: var(--s4-size-touch-target);
+    padding: 0 var(--s4-space-3);
+    border: 0;
+    border-radius: var(--s4-shape-menu-item);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+    --s4-icon-size: var(--s4-size-icon-small);
+  }
+  .s4-menu-item > .s4-icon { color: var(--md-sys-color-on-surface-variant); }
+  .s4-menu-item-text { flex: 1; min-width: 0; }
+  .s4-menu-item-supporting { display: block; font-family: var(--md-sys-typescale-body-small-font); font-size: var(--md-sys-typescale-body-small-size); line-height: var(--md-sys-typescale-body-small-line-height); letter-spacing: var(--md-sys-typescale-body-small-tracking); font-weight: var(--md-sys-typescale-body-small-weight); color: var(--md-sys-color-on-surface-variant); }
+  .s4-menu-item-trailing { margin-inline-start: auto; padding-inline-start: var(--s4-space-3); color: var(--md-sys-color-on-surface-variant); font-variant-numeric: tabular-nums; }
+  .s4-menu-item:focus-visible { outline-offset: calc(var(--s4-focus-ring-width) * -1); }
+  /* selected (radio or checkbox items): secondary container, like every other selection in M3 */
+  .s4-menu-item[aria-checked="true"] { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+  .s4-menu-item[aria-checked="true"] > .s4-icon { color: inherit; }
+  .s4-menu-item:is(:disabled, [aria-disabled="true"]) { color: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent); }
+  .s4-menu-item[data-color="error"] { color: var(--md-sys-color-error); }
+  .s4-menu-item[data-color="error"] > .s4-icon { color: inherit; }
+
+  .s4-menu-label {
+    padding: var(--s4-space-2) var(--s4-space-3) var(--s4-space-1);
+    font-family: var(--md-sys-typescale-label-medium-font);
+    font-size: var(--md-sys-typescale-label-medium-size);
+    line-height: var(--md-sys-typescale-label-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-label-medium-tracking);
+    font-weight: var(--md-sys-typescale-label-medium-weight);
+    color: var(--md-sys-color-on-surface-variant);
+  }
+  .s4-menu-divider { width: 100%; height: 1px; margin: var(--s4-space-1) 0; border: 0; background: var(--md-sys-color-outline-variant); }
+
+  @media (forced-colors: active) { .s4-menu { border: 1px solid CanvasText; } .s4-menu-item[aria-checked="true"] { outline: 2px solid Highlight; } }
+}

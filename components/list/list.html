@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>List · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+<style>
+  /* page-only: lists shown on a card-like board, capped to a readable width */
+  .demo-board { max-width: 560px; border-radius: var(--md-sys-shape-corner-large); background: var(--md-sys-color-surface-container-low); overflow: hidden; }
+  .demo-board .s4-list { --s4-list-segment-color: var(--md-sys-color-surface-container-lowest); }
+  .demo-plain { max-width: 560px; }
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / List</h1></header>
+<main class="ex-main">
+  <p>Lists show rows of the same kind: bills, vendors, settings. Each item has an optional leading element (icon, avatar, image or checkbox), a headline with optional overline and supporting text, and optional trailing content (supporting text, an icon, a switch, or an amount). Items are 56, 72 or 88 high for one, two or three lines.</p>
+
+  <section class="ex-sec">
+    <h2>One, Two and Three Lines</h2>
+    <p>The height follows the content: a supporting line or overline makes a two-line item, both make three. <code>data-lines</code> forces a height and clamps supporting text.</p>
+    <div class="demo-board">
+      <ul class="s4-list">
+        <li>
+          <div class="s4-list-item">
+            <span class="s4-list-leading"><span class="s4-icon" data-icon="bills"></span></span>
+            <span class="s4-list-content"><span class="s4-list-headline">All Bills</span></span>
+            <span class="s4-list-trailing">48</span>
+          </div>
+        </li>
+        <li>
+          <div class="s4-list-item">
+            <span class="s4-list-leading"><span class="s4-avatar">CB</span></span>
+            <span class="s4-list-content">
+              <span class="s4-list-headline">Comcast Business</span>
+              <span class="s4-list-supporting">Internet and phone · Paid Oct 12</span>
+            </span>
+            <span class="s4-list-trailing"><span class="s4-list-amount">$389.95</span>Monthly</span>
+          </div>
+        </li>
+        <li>
+          <div class="s4-list-item">
+            <span class="s4-list-leading"><span class="s4-avatar">IM</span></span>
+            <span class="s4-list-content">
+              <span class="s4-list-overline">Records Storage</span>
+              <span class="s4-list-headline">Iron Mountain</span>
+              <span class="s4-list-supporting">Offsite boxes, shredding and retrieval for the Denver office.</span>
+            </span>
+            <span class="s4-list-trailing"><span class="s4-list-amount">$1,240.00</span><span class="s4-status" data-tone="tertiary">Due</span></span>
+          </div>
+        </li>
+        <li>
+          <div class="s4-list-item" data-lines="3">
+            <span class="s4-list-leading"><span class="s4-avatar">ST</span></span>
+            <span class="s4-list-content">
+              <span class="s4-list-headline">Staples</span>
+              <span class="s4-list-supporting">Toner, paper and breakroom supplies ordered Sep 26. Invoice 88-41207 is past due; a late fee applies after Nov 1.</span>
+            </span>
+            <span class="s4-list-trailing"><span class="s4-list-amount">$212.48</span><span class="s4-status" data-tone="error">Overdue</span></span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Interactive and Selected</h2>
+    <p>Links and buttons as items get the state layer. The current item (<code>aria-current</code>) or a selected option (<code>aria-selected="true"</code>) uses secondary container. Disabled items fade.</p>
+    <div class="demo-board">
+      <ul class="s4-list" aria-label="Bill Folders">
+        <li><a class="s4-list-item" href="#all" aria-current="page"><span class="s4-list-leading"><span class="s4-icon" data-icon="bills"></span></span><span class="s4-list-content"><span class="s4-list-headline">All Bills</span></span><span class="s4-list-trailing">48</span></a></li>
+        <li><a class="s4-list-item" href="#due"><span class="s4-list-leading"><span class="s4-icon" data-icon="schedule"></span></span><span class="s4-list-content"><span class="s4-list-headline">Due Soon</span></span><span class="s4-list-trailing">6</span></a></li>
+        <li><a class="s4-list-item" href="#paid"><span class="s4-list-leading"><span class="s4-icon" data-icon="check"></span></span><span class="s4-list-content"><span class="s4-list-headline">Paid</span></span><span class="s4-list-trailing">39</span></a></li>
+        <li><a class="s4-list-item" aria-disabled="true"><span class="s4-list-leading"><span class="s4-icon" data-icon="folder"></span></span><span class="s4-list-content"><span class="s4-list-headline">Archived</span></span><span class="s4-list-trailing">0</span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Selectable (Listbox)</h2>
+    <p>With <code>role="listbox"</code>, list.js handles selection: arrows, Home and End move, Enter, Space or a click selects, and the list fires <code>s4-change</code>.</p>
+    <div class="demo-board">
+      <ul class="s4-list" role="listbox" aria-label="Pay From">
+        <li role="none"><div class="s4-list-item" role="option" aria-selected="true" data-value="operating"><span class="s4-list-leading"><span class="s4-icon" data-icon="wallet"></span></span><span class="s4-list-content"><span class="s4-list-headline">Operating Account</span><span class="s4-list-supporting">Checking ···4821</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$18,402.11</span></span></div></li>
+        <li role="none"><div class="s4-list-item" role="option" data-value="reserve"><span class="s4-list-leading"><span class="s4-icon" data-icon="lock"></span></span><span class="s4-list-content"><span class="s4-list-headline">Reserve Account</span><span class="s4-list-supporting">Savings ···0937</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$52,000.00</span></span></div></li>
+        <li role="none"><div class="s4-list-item" role="option" data-value="card"><span class="s4-list-leading"><span class="s4-icon" data-icon="card"></span></span><span class="s4-list-content"><span class="s4-list-headline">Company Card</span><span class="s4-list-supporting">Visa ···6610</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$7,250.00</span>Available</span></div></li>
+      </ul>
+    </div>
+    <p class="ex-foot" id="lb-out" aria-live="polite">Paying from: operating</p>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Controls and Dividers</h2>
+    <p>A <code>label.s4-list-item</code> makes the whole row toggle its checkbox or switch. <code>data-dividers</code> draws a line between items.</p>
+    <div class="demo-board">
+      <ul class="s4-list" data-dividers>
+        <li><label class="s4-list-item"><span class="s4-list-leading"><span class="s4-checkbox"><input type="checkbox" checked><span class="s4-checkbox-box"></span></span></span><span class="s4-list-content"><span class="s4-list-headline">Iron Mountain</span><span class="s4-list-supporting">Due Oct 28</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,240.00</span></span></label></li>
+        <li><label class="s4-list-item"><span class="s4-list-leading"><span class="s4-checkbox"><input type="checkbox"><span class="s4-checkbox-box"></span></span></span><span class="s4-list-content"><span class="s4-list-headline">Staples</span><span class="s4-list-supporting">Overdue since Oct 3</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$212.48</span></span></label></li>
+        <li><label class="s4-list-item"><span class="s4-list-leading"><span class="s4-icon" data-icon="notifications"></span></span><span class="s4-list-content"><span class="s4-list-headline">Due Date Reminders</span><span class="s4-list-supporting">Three days before</span></span><span class="s4-list-trailing"><span class="s4-switch"><input type="checkbox" role="switch" checked><span class="s4-switch-track"><span class="s4-switch-handle"></span></span></span></span></label></li>
+        <li><label class="s4-list-item"><span class="s4-list-leading"><span class="s4-icon" data-icon="mail"></span></span><span class="s4-list-content"><span class="s4-list-headline">Email Receipts</span><span class="s4-list-supporting">Needs a verified address</span></span><span class="s4-list-trailing"><span class="s4-switch"><input type="checkbox" role="switch" disabled><span class="s4-switch-track"><span class="s4-switch-handle"></span></span></span></span></label></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Segmented and Grouped</h2>
+    <p>M3 Expressive segmented list (<code>data-style="segmented"</code>): items 2 apart with small inner corners, each group rounded large at its ends. Subheaders group items and can carry a subtotal.</p>
+    <div class="demo-plain">
+      <ul class="s4-list" data-style="segmented">
+        <li class="s4-list-subheader">This Week <span class="s4-list-subtotal">$1,629.95</span></li>
+        <li><a class="s4-list-item" href="#im"><span class="s4-list-leading"><span class="s4-avatar">IM</span></span><span class="s4-list-content"><span class="s4-list-headline">Iron Mountain</span><span class="s4-list-supporting">Due Oct 28</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,240.00</span><span class="s4-status" data-tone="tertiary">Due</span></span></a></li>
+        <li><a class="s4-list-item" href="#cb"><span class="s4-list-leading"><span class="s4-avatar">CB</span></span><span class="s4-list-content"><span class="s4-list-headline">Comcast Business</span><span class="s4-list-supporting">Due Oct 30</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$389.95</span><span class="s4-status" data-tone="tertiary">Due</span></span></a></li>
+        <li class="s4-list-subheader">Earlier <span class="s4-list-subtotal">$1,018.48</span></li>
+        <li><a class="s4-list-item" href="#st"><span class="s4-list-leading"><span class="s4-avatar">ST</span></span><span class="s4-list-content"><span class="s4-list-headline">Staples</span><span class="s4-list-supporting">Due Oct 3</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$212.48</span><span class="s4-status" data-tone="error">Overdue</span></span></a></li>
+        <li><a class="s4-list-item" href="#xe" aria-current="true"><span class="s4-list-leading"><span class="s4-avatar">XE</span></span><span class="s4-list-content"><span class="s4-list-headline">Xcel Energy</span><span class="s4-list-supporting">Paid Oct 9</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$806.00</span><span class="s4-status">Paid</span></span></a></li>
+      </ul>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/list/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../list/list.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+<script>
+  document.addEventListener('s4-change', function (e) {
+    if (e.target.matches('.s4-list[role="listbox"]')) document.getElementById('lb-out').textContent = 'Paying from: ' + e.detail.value;
+  });
+</script>
+</body>
+</html>

@@ -1,31 +1,31 @@
 {
-  "$description": "The glass layer: frosted surfaces for floating chrome only (decision 0001). Values carry over from S4 Material 1.3's float glass; Phase 4 refines them in the glass lab. Glass is tinted with a surface role, blurred and saturated; every accessibility mode turns it solid.",
+  "$description": "The glass layer (decision 0004): very clear frosted glass on floating chrome and overlays only, with a guaranteed contrast floor. The backdrop filter compresses whatever shows through (contrast and brightness) so on-surface text on the glass meets WCAG AA over any backdrop, for every seed (checked by scripts/check-glass.mjs). High contrast, reduced transparency and browsers without backdrop-filter make glass solid.",
   "s4": {
     "glass": {
       "tint": {
         "$type": "color",
-        "$description": "The surface role each glass level is tinted with.",
+        "$description": "The surface role glass is tinted with.",
         "float": {
-          "$value": "{md.sys.color.surface-container}"
+          "$value": "{md.sys.color.surface-container}",
+          "$description": "App bars over scrolled content, nav bar, nav rail, toolbars, menus, sheets, dialogs, rich tooltips."
         },
         "fill": {
-          "$value": "{md.sys.color.surface-container-highest}"
+          "$value": "{md.sys.color.surface-container-highest}",
+          "$description": "Tonal fills inside a glass surface (no blur of their own)."
         }
       },
       "tint-opacity": {
         "$type": "number",
-        "$description": "How much of the tint role is painted over the blur (0\u20131). Higher = more solid, more contrast.",
+        "$description": "How much of the tint role is painted over the blurred backdrop (0\u20131).",
         "float": {
-          "$value": 0.84,
+          "$value": 0.6,
           "$extensions": {
             "com.s4.modes": {
-              "dark": 0.82,
               "high-contrast": 1,
               "dark-high-contrast": 1,
               "reduced-transparency": 1
             }
-          },
-          "$description": "App bars over scrolled content, nav bar, toolbars, menus, sheets, dialogs, rich tooltips."
+          }
         },
         "fill": {
           "$value": 0.56,
@@ -36,82 +36,68 @@
               "dark-high-contrast": 1,
               "reduced-transparency": 1
             }
-          },
-          "$description": "Tonal fills inside a glass surface (no blur of their own)."
+          }
         },
         "medium-contrast": {
-          "$value": 0.9,
-          "$description": "Float tint at contrast level 0.5 (set at run time)."
+          "$value": 0.8,
+          "$description": "Float tint when the app runs at medium contrast (contrast level 0.5)."
         }
       },
       "blur": {
         "$type": "dimension",
-        "$description": "Backdrop blur radius.",
-        "small": {
+        "float": {
           "$value": {
-            "value": 12,
+            "value": 16,
             "unit": "px"
           },
           "$extensions": {
             "com.s4.modes": {
-              "reduced-transparency": {
-                "value": 0,
-                "unit": "px"
-              },
               "high-contrast": {
                 "value": 0,
                 "unit": "px"
-              }
-            }
-          }
-        },
-        "medium": {
-          "$value": {
-            "value": 24,
-            "unit": "px"
-          },
-          "$extensions": {
-            "com.s4.modes": {
-              "reduced-transparency": {
-                "value": 0,
-                "unit": "px"
               },
-              "high-contrast": {
-                "value": 0,
-                "unit": "px"
-              }
-            }
-          }
-        },
-        "large": {
-          "$value": {
-            "value": 32,
-            "unit": "px"
-          },
-          "$extensions": {
-            "com.s4.modes": {
               "reduced-transparency": {
-                "value": 0,
-                "unit": "px"
-              },
-              "high-contrast": {
                 "value": 0,
                 "unit": "px"
               }
             }
           },
-          "$description": "Float glass."
+          "$description": "Backdrop blur radius."
         }
       },
       "saturation": {
         "$type": "number",
-        "$description": "Backdrop saturate() multiplier, so color showing through stays lively instead of going grey.",
         "float": {
-          "$value": 1.35
+          "$value": 1.8,
+          "$description": "saturate() on the backdrop, so color showing through stays lively."
+        }
+      },
+      "backdrop-contrast": {
+        "$type": "number",
+        "float": {
+          "$value": 0.74,
+          "$extensions": {
+            "com.s4.modes": {
+              "dark": 1
+            }
+          },
+          "$description": "contrast() on the backdrop: lifts blacks behind light glass so dark text keeps 4.5:1."
+        }
+      },
+      "backdrop-brightness": {
+        "$type": "number",
+        "float": {
+          "$value": 1.1,
+          "$extensions": {
+            "com.s4.modes": {
+              "dark": 0.8
+            }
+          },
+          "$description": "brightness() on the backdrop: dims whites behind dark glass so light text keeps 4.5:1."
         }
       },
       "highlight": {
-        "$description": "Border highlight: a thin light edge on the top of a glass surface. S4 Material used none; Phase 4 decides whether Orion does.",
+        "$description": "Hairline edge: a 1px light line along the top edge of a glass surface (decision 0004: Edge B).",
         "width": {
           "$type": "dimension",
           "$value": {
@@ -180,7 +166,7 @@
       "max-stack": {
         "$type": "number",
         "$value": 2,
-        "$description": "At most two glass layers may overlap at any point (e.g. a menu over an app bar). A third is solid."
+        "$description": "At most two glass layers overlap at any point (e.g. a menu over an app bar). A third becomes solid."
       }
     }
   }

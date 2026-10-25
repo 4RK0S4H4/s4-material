@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Search · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+<style>
+  /* page-only */
+  .demo-col { display: flex; flex-direction: column; gap: var(--s4-space-4); max-width: 720px; }
+  .demo-log { margin: 0; font-size: var(--md-sys-typescale-body-small-size); color: var(--md-sys-color-on-surface-variant); }
+  .demo-empty { margin: 0; padding: var(--s4-space-6) var(--s4-space-4); color: var(--md-sys-color-on-surface-variant); }
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Search</h1></header>
+<main class="ex-main">
+  <p>The search bar finds things on the current page. It filters as you type: no Search button, no submit. A clear button appears once there's text; Escape clears too. Put it at the top of the content it filters.</p>
+
+  <section class="ex-sec">
+    <h2>Live Filter</h2>
+    <p><code>data-filter="#bill-list"</code> hides the list items that don't contain the text (ignoring case and accents: try "societe"). <code>data-filter-empty</code> shows a message when nothing matches. The bar fires <code>s4-change</code> with the value either way.</p>
+    <div class="ex-board col">
+      <div class="demo-col">
+        <div class="s4-search" role="search" data-filter="#bill-list" data-filter-empty="#bill-empty">
+          <span class="s4-icon" data-icon="search"></span>
+          <input class="s4-search-input" type="search" placeholder="Search Bills" aria-label="Search bills" autocomplete="off">
+          <button class="s4-icon-button s4-search-clear" type="button" aria-label="Clear Search" hidden><span class="s4-icon" data-icon="close"></span></button>
+          <button class="s4-icon-button" type="button" aria-label="Account"><span class="s4-search-avatar">AS</span></button>
+        </div>
+        <p class="demo-log" id="search-log" aria-live="polite">10 bills</p>
+        <ul class="s4-list" id="bill-list">
+        <li><div class="s4-list-item"><span class="s4-list-leading"><span class="s4-avatar">IM</span></span><span class="s4-list-content"><span class="s4-list-headline">Iron Mountain</span><span class="s4-list-supporting">Storage · Due Oct 28</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,240.00</span></span></div></li>
+        <li><div class="s4-list-item"><span class="s4-list-leading"><span class="s4-avatar">AW</span></span><span class="s4-list-content"><span class="s4-list-headline">Amazon Web Services</span><span class="s4-list-supporting">Hosting · Due Oct 30</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$3,412.57</span></span></div></li>
+        <li><div class="s4-list-item"><span class="s4-list-leading"><span class="s4-avatar">PG</span></span><span class="s4-list-content"><span class="s4-list-headline">PG&amp;E</span><span class="s4-list-supporting">Utilities · Overdue</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$412.30</span></span></div></li>
+        <li><div class="s4-list-item"><span class="s4-list-leading"><span class="s4-avatar">WW</span></span><span class="s4-list-content"><span class="s4-list-headline">WeWork</span><span class="s4-list-supporting">Rent · Due Nov 1</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$2,800.00</span></span></div></li>
+        <li><div class="s4-list-item"><span class="s4-list-leading"><span class="s4-avatar">CB</span></span><span class="s4-list-content"><span class="s4-list-headline">Comcast Business</span><span class="s4-list-supporting">Internet · Due Nov 3</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$189.99</span></span></div></li>
+        <li><div class="s4-list-item"><span class="s4-list-leading"><span class="s4-avatar">VZ</span></span><span class="s4-list-content"><span class="s4-list-headline">Verizon</span><span class="s4-list-supporting">Phones · Due Nov 5</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$230.15</span></span></div></li>
+        <li><div class="s4-list-item"><span class="s4-list-leading"><span class="s4-avatar">AD</span></span><span class="s4-list-content"><span class="s4-list-headline">Adobe Creative Cloud</span><span class="s4-list-supporting">Software · Due Nov 8</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$89.99</span></span></div></li>
+        <li><div class="s4-list-item"><span class="s4-list-leading"><span class="s4-avatar">SL</span></span><span class="s4-list-content"><span class="s4-list-headline">Slack</span><span class="s4-list-supporting">Software · Due Nov 12</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$96.00</span></span></div></li>
+        <li><div class="s4-list-item"><span class="s4-list-leading"><span class="s4-avatar">ZM</span></span><span class="s4-list-content"><span class="s4-list-headline">Zoom</span><span class="s4-list-supporting">Software · Due Nov 15</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$149.90</span></span></div></li>
+        <li><div class="s4-list-item"><span class="s4-list-leading"><span class="s4-avatar">SG</span></span><span class="s4-list-content"><span class="s4-list-headline">Société Générale</span><span class="s4-list-supporting">Bank fees · Due Nov 20</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$35.00</span></span></div></li>
+        </ul>
+        <p class="demo-empty" id="bill-empty" hidden>No bills match your search.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Variants</h2>
+    <p>A leading menu or back button instead of the search icon; trailing icon buttons; with text already entered; disabled.</p>
+    <div class="ex-board col">
+      <div class="demo-col">
+        <div class="s4-search" role="search">
+          <button class="s4-icon-button" type="button" aria-label="Open Menu"><span class="s4-icon" data-icon="menu"></span></button>
+          <input class="s4-search-input" type="search" placeholder="Search Vendors" aria-label="Search vendors">
+          <button class="s4-icon-button s4-search-clear" type="button" aria-label="Clear Search" hidden><span class="s4-icon" data-icon="close"></span></button>
+          <button class="s4-icon-button" type="button" aria-label="Filter"><span class="s4-icon" data-icon="filter"></span></button>
+        </div>
+        <div class="s4-search" role="search">
+          <span class="s4-icon" data-icon="search"></span>
+          <input class="s4-search-input" type="search" placeholder="Search Invoices" aria-label="Search invoices" value="INV-2041">
+          <button class="s4-icon-button s4-search-clear" type="button" aria-label="Clear Search" hidden><span class="s4-icon" data-icon="close"></span></button>
+        </div>
+        <div class="s4-search" role="search">
+          <span class="s4-icon" data-icon="search"></span>
+          <input class="s4-search-input" type="search" placeholder="Search Archive" aria-label="Search archive" disabled>
+        </div>
+      </div>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/search/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../motion/motion.js"></script>
+<script src="../search/search.js"></script>
+<script src="../list/list.js"></script>
+<script src="../icon-button/icon-button.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+<script>
+  /* page-only: show the s4-change event */
+  document.addEventListener('s4-change', function (e) {
+    if (e.target.dataset.filter === '#bill-list') document.getElementById('search-log').textContent = e.detail.value ? e.detail.matches + ' of 10 bills match "' + e.detail.value + '"' : '10 bills';
+  });
+</script>
+</body>
+</html>

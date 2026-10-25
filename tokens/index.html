@@ -14,7 +14,7 @@ body{margin:0;background:var(--md-sys-color-surface);color:var(--md-sys-color-on
 h1,h2,h3,p{margin:0}
 .bar{position:sticky;top:0;z-index:var(--s4-z-app-bar);display:flex;flex-wrap:wrap;align-items:center;gap:var(--s4-space-3) var(--s4-space-6);padding:var(--s4-space-3) var(--s4-layout-margin);
   background:color-mix(in srgb,var(--s4-glass-tint-float) calc(var(--s4-glass-tint-opacity-float) * 100%),transparent);
-  -webkit-backdrop-filter:blur(var(--s4-glass-blur-large)) saturate(var(--s4-glass-saturation-float));backdrop-filter:blur(var(--s4-glass-blur-large)) saturate(var(--s4-glass-saturation-float))}
+  -webkit-backdrop-filter:blur(var(--s4-glass-blur-float)) saturate(var(--s4-glass-saturation-float)) contrast(var(--s4-glass-backdrop-contrast-float)) brightness(var(--s4-glass-backdrop-brightness-float));backdrop-filter:blur(var(--s4-glass-blur-float)) saturate(var(--s4-glass-saturation-float)) contrast(var(--s4-glass-backdrop-contrast-float)) brightness(var(--s4-glass-backdrop-brightness-float))}
 .bar h1{margin-right:auto;font-size:var(--md-sys-typescale-title-large-size);line-height:var(--md-sys-typescale-title-large-line-height);font-weight:var(--md-sys-typescale-emphasized-title-large-weight)}
 .ctl{display:flex;align-items:center;gap:var(--s4-space-2);font-size:var(--md-sys-typescale-label-medium-size);color:var(--md-sys-color-on-surface-variant)}
 .seg{display:inline-flex;gap:2px}
@@ -75,8 +75,8 @@ code,.mono{font-family:var(--md-ref-typeface-mono);font-size:13px}
 .glass-stage .row:nth-child(4n){background:var(--md-sys-color-tertiary-container);color:var(--md-sys-color-on-tertiary-container)}
 .glass-stage .float{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;height:var(--s4-size-top-app-bar);padding:0 var(--s4-space-4);font-size:var(--md-sys-typescale-title-large-size);
   background:color-mix(in srgb,var(--s4-glass-tint-float) calc(var(--s4-glass-tint-opacity-float) * 100%),transparent);
-  box-shadow:inset 0 calc(var(--s4-glass-highlight-width) * -1) 0 var(--s4-glass-highlight-color);
-  -webkit-backdrop-filter:blur(var(--s4-glass-blur-large)) saturate(var(--s4-glass-saturation-float));backdrop-filter:blur(var(--s4-glass-blur-large)) saturate(var(--s4-glass-saturation-float))}
+  background-image:linear-gradient(to top,var(--s4-glass-highlight-color) 0 var(--s4-glass-highlight-width),transparent var(--s4-glass-highlight-width));
+  -webkit-backdrop-filter:blur(var(--s4-glass-blur-float)) saturate(var(--s4-glass-saturation-float)) contrast(var(--s4-glass-backdrop-contrast-float)) brightness(var(--s4-glass-backdrop-brightness-float));backdrop-filter:blur(var(--s4-glass-blur-float)) saturate(var(--s4-glass-saturation-float)) contrast(var(--s4-glass-backdrop-contrast-float)) brightness(var(--s4-glass-backdrop-brightness-float))}
 footer{font-size:var(--md-sys-typescale-body-small-size);color:var(--md-sys-color-on-surface-variant)}
 footer a{color:inherit}
 </style>
@@ -107,7 +107,7 @@ footer a{color:inherit}
 
   <section id="state"><h2>State</h2><p>M3 state layers in the content color, the focus ring (3dp secondary, 2dp outside) and disabled opacities.</p><div class="grid" style="--min:140px" id="states"></div></section>
 
-  <section id="glass"><h2>Glass</h2><p>The float glass carried over from S4 Material: a tint of <code>surface-container</code> over a blur, with saturation so color showing through stays lively. Scroll the list under the bar. High contrast, reduced transparency and browsers without blur turn it solid. Phase 4 refines these values and the rules.</p>
+  <section id="glass"><h2>Glass</h2><p>Very clear glass (decision 0004): 60% of <code>surface-container</code> over a 16px blur with saturation, plus a gentle compression of what shows through so text on it meets WCAG AA over any backdrop, for every seed. A hairline marks the edge that faces content. Scroll the list under the bar. High contrast, reduced transparency and browsers without blur turn it solid.</p>
     <div class="grid" style="--min:320px"><div class="glass-stage"><div class="scroll" id="glass-rows"></div><div class="float">Bills</div></div><div class="pane"><div class="kv" id="glass-kv"></div></div></div></section>
 
   <footer>S4 Orion <span id="ver"></span> · <a href="../">Hub</a> · <a href="https://github.com/4rk0s4h4/s4-material/tree/main/tokens">Source</a> · Inter (SIL OFL 1.1) · Material Color Utilities (Apache 2.0)</footer>

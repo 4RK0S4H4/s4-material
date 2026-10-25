@@ -1,0 +1,20 @@
+/* Helpers for the transition patterns in motion.js. */
+@layer s4.motion {
+  /* the source's label carried inside a container transform */
+  .s4-ct-ghost {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
+    box-sizing: border-box;
+    visibility: visible;
+  }
+  .s4-ct-ghost::before, .s4-ct-ghost::after { display: none; }
+}

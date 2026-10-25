@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sheets · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+<style>
+.ex-backdrop{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:var(--s4-space-2);padding:var(--s4-space-4);border-radius:var(--md-sys-shape-corner-large);background:var(--md-sys-color-surface-container-low)}
+.ex-backdrop > i{height:72px;border-radius:var(--md-sys-shape-corner-medium);background:var(--md-sys-color-primary)}
+.ex-backdrop > i:nth-child(3n){background:var(--md-sys-color-tertiary-container)} .ex-backdrop > i:nth-child(4n){background:var(--md-sys-color-secondary-container)}
+.ex-backdrop > i:nth-child(5n){background:linear-gradient(160deg,#ff5e62,#7b2ff7 55%,#1e1b4b)}
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Sheets</h1></header>
+<main class="ex-main">
+  <p>Sheets hold a short task. A bottom sheet opened from a <b>FAB</b> grows out of it (container transform); opened from anything else it <b>slides from the bottom edge</b>. Drag the handle down to dismiss. Side sheets slide from the end edge.</p>
+  <section class="ex-sec"><h2>Bottom and Side Sheets</h2><p>Try the FAB, the button, and the side sheet.</p>
+    <div class="ex-board" style="position:relative;min-height:120px">
+      <button class="s4-button" data-variant="tonal" data-sheet="s-add" type="button">Add Expense</button>
+      <button class="s4-button" data-variant="outlined" data-sheet="s-filters" type="button"><span class="s4-icon" data-icon="filter"></span>Filters</button>
+      <button class="s4-fab" data-sheet="s-add" aria-label="Add expense" type="button" style="margin-inline-start:auto"><span class="s4-icon" data-icon="add"></span></button>
+    </div>
+    <div class="ex-backdrop" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </section>
+  <dialog class="s4-bottom-sheet" id="s-add" aria-labelledby="s-add-h">
+    <span class="s4-sheet-handle" aria-hidden="true"></span>
+    <h2 class="s4-sheet-title" id="s-add-h">Add Expense</h2>
+    <div class="s4-sheet-content">
+      <div class="s4-text-field"><span class="s4-text-field-affix" data-prefix>$</span><input id="s-amt" inputmode="decimal" value="18.50"><label for="s-amt">Amount</label></div>
+      <div class="s4-text-field"><input id="s-vendor" value="Blue Bottle Coffee"><label for="s-vendor">Vendor</label></div>
+    </div>
+    <div class="s4-sheet-actions"><button class="s4-button" data-variant="text" data-close="cancel" type="button">Cancel</button><button class="s4-button" data-close="save" type="button">Save</button></div>
+  </dialog>
+  <dialog class="s4-side-sheet" id="s-filters" aria-labelledby="s-filters-h">
+    <div class="s4-sheet-header"><h2 class="s4-sheet-title" id="s-filters-h">Filters</h2><button class="s4-icon-button" data-close="" aria-label="Close" type="button"><span class="s4-icon" data-icon="close"></span></button></div>
+    <div class="s4-sheet-content">
+      <label class="s4-checkbox"><input type="checkbox" checked><span class="s4-checkbox-box"></span>Due This Month</label>
+      <label class="s4-checkbox"><input type="checkbox"><span class="s4-checkbox-box"></span>Overdue</label>
+      <label class="s4-checkbox"><input type="checkbox"><span class="s4-checkbox-box"></span>Paid</label>
+    </div>
+    <div class="s4-sheet-actions"><button class="s4-button" data-close="apply" type="button">Apply</button></div>
+  </dialog>
+  <p class="ex-foot">Source: <code>components/sheet/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../motion/motion.js"></script>
+<script src="../button/button.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../dialog/dialog.js"></script>
+<script src="sheet.js"></script>
+<script src="../text-field/text-field.js"></script>
+<script src="../icon-button/icon-button.js"></script>
+<script src="../checkbox/checkbox.js"></script>
+<script src="../_example/example.js"></script>
+
+</body>
+</html>

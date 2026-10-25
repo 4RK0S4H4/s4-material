@@ -1,6 +1,6 @@
 # Foundations
 
-Written: color, typography, shape, spacing, elevation, motion (Phase 3). Coming with the glass layer (Phase 4): glass, accessibility.
+Written: color, typography, shape, spacing, elevation, motion (Phase 3), glass (Phase 4). Accessibility (Phase 4).
 
 - `color.md`: seed, scheme variants, roles, contrast levels, monochrome default
 - `typography.md`: Inter, the M3 type scale, emphasized weights, numbers and tabular figures, capitalisation

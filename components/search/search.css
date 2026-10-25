@@ -1,0 +1,87 @@
+/* Search bar (M3)
+   <div class="s4-search" role="search" data-filter="#bill-list">
+     <span class="s4-icon" data-icon="search"></span>
+     <input class="s4-search-input" type="search" placeholder="Search Bills" aria-label="Search bills">
+     <button class="s4-icon-button s4-search-clear" type="button" aria-label="Clear Search" hidden>
+       <span class="s4-icon" data-icon="close"></span></button>
+     <button class="s4-icon-button" type="button" aria-label="Account"><span class="s4-search-avatar">AS</span></button>
+   </div>
+   A 56dp full-radius field on surface-container-high: leading search icon (or a leading icon button), body-large text,
+   a clear button that appears when there is text (search.js), optional trailing icon buttons or an avatar.
+   search.js fires s4-change { value } as you type; data-filter="<selector>" also hides the target's children that
+   don't contain the text (a live filter). Max width 720 (M3). */
+@layer s4.components {
+  .s4-search {
+    --_bg: var(--md-sys-color-surface-container-high);
+    display: flex;
+    align-items: center;
+    gap: var(--s4-space-1);
+    inline-size: 100%;
+    max-inline-size: var(--s4-size-search-max);
+    min-block-size: var(--s4-size-text-field);
+    padding-inline: var(--s4-space-4) var(--s4-space-2);
+    border-radius: var(--s4-shape-search);
+    background: var(--_bg);
+    color: var(--md-sys-color-on-surface-variant);
+    cursor: text;
+    transition: background-color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+  }
+  /* a leading icon button (menu, back) sits closer to the edge, like trailing ones */
+  .s4-search:has(> .s4-icon-button:first-child) { padding-inline-start: var(--s4-space-2); }
+  .s4-search > .s4-icon { color: var(--md-sys-color-on-surface); }
+  .s4-search-input {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    block-size: var(--s4-size-text-field);
+    margin: 0;
+    padding: 0 0 0 var(--s4-space-3);
+    border: 0;
+    background: none;
+    color: var(--md-sys-color-on-surface);
+    caret-color: var(--md-sys-color-primary);
+    font-family: var(--md-sys-typescale-body-large-font);
+    font-size: var(--md-sys-typescale-body-large-size);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+    font-weight: var(--md-sys-typescale-body-large-weight);
+    outline: none;
+    appearance: none;
+  }
+  .s4-search-input::placeholder { color: var(--md-sys-color-on-surface-variant); opacity: 1; }
+  .s4-search-input::-webkit-search-cancel-button,
+  .s4-search-input::-webkit-search-decoration { appearance: none; display: none; }
+  /* focus: the M3 ring around the whole bar */
+  .s4-search:has(> .s4-search-input:focus-visible) {
+    outline: var(--s4-focus-ring-width) solid var(--s4-focus-ring-color);
+    outline-offset: var(--s4-focus-ring-offset);
+  }
+  .s4-search:has(> .s4-search-input:disabled) {
+    --_bg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100%), transparent);
+    color: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
+    cursor: default;
+  }
+  .s4-search:has(> .s4-search-input:disabled) > .s4-icon,
+  .s4-search:has(> .s4-search-input:disabled) > .s4-search-input,
+  .s4-search-input:disabled::placeholder { color: inherit; }
+
+  /* trailing avatar: a 32dp circle with initials (or an <img class="s4-search-avatar">) */
+  .s4-search-avatar {
+    display: inline-grid;
+    place-items: center;
+    inline-size: var(--s4-size-icon-large);
+    block-size: var(--s4-size-icon-large);
+    border-radius: var(--md-sys-shape-corner-full);
+    background: var(--md-sys-color-tertiary-container);
+    color: var(--md-sys-color-on-tertiary-container);
+    object-fit: cover;
+    font-family: var(--md-sys-typescale-label-large-font);
+    font-size: var(--md-sys-typescale-label-medium-size);
+    line-height: 1;
+    font-weight: var(--md-sys-typescale-emphasized-label-medium-weight);
+    letter-spacing: 0;
+  }
+
+  @media (forced-colors: active) {
+    .s4-search { border: 1px solid CanvasText; }
+  }
+}

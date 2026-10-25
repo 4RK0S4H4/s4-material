@@ -1,0 +1,51 @@
+/* Tooltips (M3)
+   Plain: any element with data-tooltip="Copy to clipboard" (usually an icon button). Shows on hover after a short delay, on
+   keyboard focus, and on long press; a solid inverse surface (not glass).
+   Rich: <div class="s4-rich-tooltip" id="autopay-tip" popover role="dialog">…</div> opened by [data-rich-tooltip="id"] on
+   hover, focus or click; may hold a subhead, text and actions. Glass (glass.css). */
+@layer s4.components {
+  .s4-tooltip {
+    position: fixed;
+    z-index: var(--s4-z-tooltip);
+    max-width: min(320px, calc(100vw - 2 * var(--s4-space-4)));
+    padding: var(--s4-space-1) var(--s4-space-2);
+    border-radius: var(--s4-shape-tooltip);
+    background: var(--md-sys-color-inverse-surface);
+    color: var(--md-sys-color-inverse-on-surface);
+    font-family: var(--md-sys-typescale-body-small-font);
+    font-size: var(--md-sys-typescale-body-small-size);
+    line-height: var(--md-sys-typescale-body-small-line-height);
+    letter-spacing: var(--md-sys-typescale-body-small-tracking);
+    pointer-events: none;
+    overflow-wrap: anywhere;
+  }
+  .s4-rich-tooltip {
+    position: fixed;
+    inset: auto;
+    margin: 0;
+    max-width: min(320px, calc(100vw - 2 * var(--s4-space-4)));
+    padding: var(--s4-space-3) var(--s4-space-4) var(--s4-space-2);
+    border: 0;
+    border-radius: var(--md-sys-shape-corner-medium);
+    background: var(--md-sys-color-surface-container);
+    color: var(--md-sys-color-on-surface-variant);
+    box-shadow: var(--md-sys-elevation-level2);
+    font-family: var(--md-sys-typescale-body-medium-font);
+    font-size: var(--md-sys-typescale-body-medium-size);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-body-medium-tracking);
+    flex-direction: column;
+    gap: var(--s4-space-1);
+  }
+  .s4-rich-tooltip:popover-open { display: flex; }
+  .s4-rich-tooltip-subhead {
+    color: var(--md-sys-color-on-surface);
+    font-family: var(--md-sys-typescale-title-small-font);
+    font-size: var(--md-sys-typescale-title-small-size);
+    line-height: var(--md-sys-typescale-title-small-line-height);
+    letter-spacing: var(--md-sys-typescale-title-small-tracking);
+    font-weight: var(--md-sys-typescale-title-small-weight);
+  }
+  .s4-rich-tooltip-actions { display: flex; gap: var(--s4-space-2); margin-inline-start: calc(var(--s4-space-3) * -1); padding-top: var(--s4-space-1); }
+  @media (forced-colors: active) { .s4-tooltip, .s4-rich-tooltip { border: 1px solid CanvasText; } }
+}

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dialog · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+<style>
+.ex-backdrop{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:var(--s4-space-2);padding:var(--s4-space-4);border-radius:var(--md-sys-shape-corner-large);background:var(--md-sys-color-surface-container-low)}
+.ex-backdrop > i{height:72px;border-radius:var(--md-sys-shape-corner-medium);background:var(--md-sys-color-primary)}
+.ex-backdrop > i:nth-child(3n){background:var(--md-sys-color-tertiary-container)} .ex-backdrop > i:nth-child(4n){background:var(--md-sys-color-secondary-container)}
+.ex-backdrop > i:nth-child(5n){background:linear-gradient(160deg,#ff5e62,#7b2ff7 55%,#1e1b4b)}
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Dialog</h1></header>
+<main class="ex-main">
+  <p>Dialogs ask for a decision. The button you press <b>becomes</b> the dialog (container transform): its shape and color grow into the dialog at real size, the label fades out and the text fades in. Closing runs it back into the button. Focus starts on the first non-destructive action, so Enter never confirms a delete by accident.</p>
+  <section class="ex-sec"><h2>Basic and Destructive</h2><p>Escape, Cancel, or a click on the scrim closes the dialog.</p>
+    <div class="ex-board">
+      <button class="s4-button" data-variant="tonal" data-dialog="d-rename" type="button"><span class="s4-icon" data-icon="edit"></span>Rename Bill</button>
+      <button class="s4-button" data-color="error" data-dialog="d-delete" type="button">Delete Bill</button>
+      <button class="s4-button" data-variant="outlined" data-dialog="d-full" type="button">Edit Details</button>
+      <span class="s4-on-surface-variant" id="d-result" aria-live="polite"></span>
+    </div>
+    <div class="ex-backdrop" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </section>
+  <dialog class="s4-dialog" id="d-delete" aria-labelledby="d-delete-h">
+    <span class="s4-icon s4-dialog-icon" data-icon="delete"></span>
+    <h2 class="s4-dialog-headline" id="d-delete-h">Delete this bill?</h2>
+    <div class="s4-dialog-content">Staples, $72.40, due Nov 2. This can’t be undone.</div>
+    <div class="s4-dialog-actions"><button class="s4-button" data-variant="text" data-close="cancel" type="button">Cancel</button><button class="s4-button" data-variant="text" data-color="error" data-close="delete" type="button">Delete</button></div>
+  </dialog>
+  <dialog class="s4-dialog" id="d-rename" aria-labelledby="d-rename-h">
+    <h2 class="s4-dialog-headline" id="d-rename-h">Rename Bill</h2>
+    <div class="s4-dialog-content"><p style="margin:0">Choose the name shown in your bill list.</p>
+      <div class="s4-text-field"><input id="d-name" value="Comcast Business"><label for="d-name">Name</label></div></div>
+    <div class="s4-dialog-actions"><button class="s4-button" data-variant="text" data-close="cancel" type="button">Cancel</button><button class="s4-button" data-variant="text" data-close="save" type="button">Save</button></div>
+  </dialog>
+  <dialog class="s4-dialog" id="d-full" data-fullscreen="compact" aria-labelledby="d-full-h">
+    <div class="s4-dialog-bar"><button class="s4-icon-button" data-close="cancel" aria-label="Close" type="button"><span class="s4-icon" data-icon="close"></span></button><h2 class="s4-dialog-headline">Edit Details</h2><button class="s4-button" data-variant="text" data-close="save" type="button">Save</button></div>
+    <h2 class="s4-dialog-headline" id="d-full-h">Edit Details</h2>
+    <div class="s4-dialog-content">
+      <div class="s4-text-field"><input id="d-v" value="Iron Mountain"><label for="d-v">Vendor</label></div>
+      <div class="s4-text-field"><span class="s4-text-field-affix" data-prefix>$</span><input id="d-a" value="1,240.00" inputmode="decimal"><label for="d-a">Amount</label></div>
+      <p style="margin:0">On phones this dialog fills the screen.</p></div>
+    <div class="s4-dialog-actions"><button class="s4-button" data-variant="text" data-close="cancel" type="button">Cancel</button><button class="s4-button" data-variant="text" data-close="save" type="button">Save</button></div>
+  </dialog>
+  <p class="ex-foot">Source: <code>components/dialog/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../motion/motion.js"></script>
+<script src="../button/button.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="dialog.js"></script>
+<script src="../text-field/text-field.js"></script>
+<script src="../icon-button/icon-button.js"></script>
+<script src="../_example/example.js"></script>
+<script>document.addEventListener("s4-close",e=>{document.getElementById("d-result").textContent=e.detail.value?"Closed with: "+e.detail.value:"Dismissed"});</script>
+</body>
+</html>

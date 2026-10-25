@@ -1,0 +1,155 @@
+/* Top app bar (M3 Expressive)
+   <header class="s4-top-app-bar" data-size="medium|large" data-align="center">
+     <button class="s4-icon-button" type="button" aria-label="Back"><span class="s4-icon" data-icon="back"></span></button>
+     <div class="s4-app-bar-title-group">
+       <h1 class="s4-app-bar-title">Bills</h1>
+       <p class="s4-app-bar-subtitle">12 Due This Month</p>       optional
+     </div>
+     <div class="s4-app-bar-actions">…icon buttons…</div>
+   </header>
+   Small (default): 64dp, title-large title. Medium (112, 136 with a subtitle) and large (120, 152) put a bigger headline
+   under the 64dp row; it collapses on scroll: the bar sticks with a negative top so only the 64dp row stays, and
+   top-app-bar.js slides that row down as the headline scrolls away, then fades a small title into it.
+   At rest the bar is surface; when content scrolls under it top-app-bar.js sets data-scrolled and it takes
+   surface-container (glass.css turns that into glass). Sticks to the top of its scroll container; pads for the notch.
+   Every child that isn't the title group or the actions is the leading (navigation) slot. */
+@layer s4.components {
+  .s4-top-app-bar {
+    --_row: var(--s4-size-top-app-bar);
+    --_h: var(--_row);                         /* full height without the status-bar inset */
+    --_bg: var(--md-sys-color-surface);
+    --_offset: 0px;                            /* set by JS: how far the 64dp row has followed the scroll */
+    --_p: 0;                                   /* set by JS: collapse progress 0..1 */
+    position: sticky;
+    top: calc(var(--_row) - var(--_h));
+    z-index: var(--s4-z-app-bar);
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-rows: var(--_row);
+    grid-template-areas: "lead title actions";
+    align-items: center;
+    flex: none;
+    block-size: calc(var(--_h) + env(safe-area-inset-top, 0px));
+    padding:
+      env(safe-area-inset-top, 0px)
+      max(var(--s4-space-2), env(safe-area-inset-right, 0px))
+      0
+      max(var(--s4-space-2), env(safe-area-inset-left, 0px));
+    background: var(--_bg);
+    color: var(--md-sys-color-on-surface);
+    transition: background-color var(--md-sys-motion-spring-effects-duration) var(--md-sys-motion-spring-effects);
+  }
+  .s4-top-app-bar[data-scrolled] { --_bg: var(--md-sys-color-surface-container); }
+
+  .s4-top-app-bar > * { grid-area: lead; color: var(--md-sys-color-on-surface); }
+  .s4-top-app-bar > .s4-app-bar-title-group { grid-area: title; }
+  .s4-top-app-bar > .s4-app-bar-actions { grid-area: actions; }
+  .s4-top-app-bar > .s4-app-bar-collapsed-title { grid-area: small; }
+
+  .s4-app-bar-title-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-inline-size: 0;
+    padding-inline: var(--s4-space-2);
+  }
+  .s4-app-bar-title,
+  .s4-app-bar-collapsed-title {
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--md-sys-typescale-title-large-font);
+    font-size: var(--md-sys-typescale-title-large-size);
+    line-height: var(--md-sys-typescale-title-large-line-height);
+    letter-spacing: var(--md-sys-typescale-title-large-tracking);
+    font-weight: var(--md-sys-typescale-title-large-weight);
+  }
+  .s4-app-bar-subtitle {
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--md-sys-typescale-label-medium-font);
+    font-size: var(--md-sys-typescale-label-medium-size);
+    line-height: var(--md-sys-typescale-label-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-label-medium-tracking);
+    font-weight: var(--md-sys-typescale-label-medium-weight);
+  }
+  .s4-app-bar-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--s4-space-2);
+    color: var(--md-sys-color-on-surface-variant);
+  }
+  .s4-app-bar-collapsed-title { display: none; }
+
+  /* centered title (small only) */
+  .s4-top-app-bar[data-align="center"]:not([data-size]) { grid-template-columns: minmax(0, 1fr) minmax(0, max-content) minmax(0, 1fr); }
+  .s4-top-app-bar[data-align="center"]:not([data-size]) > .s4-app-bar-title-group { align-items: center; text-align: center; }
+  .s4-top-app-bar[data-align="center"]:not([data-size]) > :not(.s4-app-bar-title-group, .s4-app-bar-actions) { justify-self: start; }
+
+  /* ---------- medium and large: headline under the 64dp row, collapsing on scroll ---------- */
+  .s4-top-app-bar:is([data-size="medium"], [data-size="large"]) {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-rows: var(--_row) minmax(0, 1fr);
+    grid-template-areas: "lead small actions" "title title title";
+  }
+  .s4-top-app-bar[data-size="medium"] { --_h: calc(var(--_row) + var(--s4-space-12)); }
+  .s4-top-app-bar[data-size="medium"]:has(.s4-app-bar-subtitle) { --_h: calc(var(--_row) + var(--s4-space-12) + var(--s4-space-6)); }
+  .s4-top-app-bar[data-size="large"] { --_h: calc(var(--_row) + var(--s4-space-12) + var(--s4-space-2)); }
+  .s4-top-app-bar[data-size="large"]:has(.s4-app-bar-subtitle) { --_h: calc(var(--_row) + var(--s4-space-16) + var(--s4-space-6)); }
+
+  /* the 64dp row follows the scroll so it stays put while the headline scrolls away under it */
+  .s4-top-app-bar:is([data-size="medium"], [data-size="large"]) > :not(.s4-app-bar-title-group) {
+    position: relative;
+    z-index: 1;
+    transform: translateY(var(--_offset));
+  }
+  .s4-top-app-bar:is([data-size="medium"], [data-size="large"]) > .s4-app-bar-title-group {
+    align-self: end;
+    padding-block-end: var(--s4-space-3);
+    opacity: calc(1 - var(--_p) * 2);
+    clip-path: inset(var(--_offset) 0 0 0);
+  }
+  .s4-top-app-bar:is([data-size="medium"], [data-size="large"]) > .s4-app-bar-collapsed-title {
+    display: block;
+    padding-inline: var(--s4-space-2);
+    opacity: calc((var(--_p) - 0.75) * 4);
+  }
+  .s4-top-app-bar[data-size="medium"] .s4-app-bar-title {
+    white-space: normal;
+    font-family: var(--md-sys-typescale-headline-medium-font);
+    font-size: var(--md-sys-typescale-headline-medium-size);
+    line-height: var(--md-sys-typescale-headline-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-headline-medium-tracking);
+    font-weight: var(--md-sys-typescale-headline-medium-weight);
+  }
+  .s4-top-app-bar[data-size="large"] .s4-app-bar-title {
+    font-family: var(--md-sys-typescale-display-small-font);
+    font-size: var(--md-sys-typescale-display-small-size);
+    line-height: var(--md-sys-typescale-display-small-line-height);
+    letter-spacing: var(--md-sys-typescale-display-small-tracking);
+    font-weight: var(--md-sys-typescale-display-small-weight);
+  }
+  .s4-top-app-bar[data-size="medium"] .s4-app-bar-subtitle {
+    font-family: var(--md-sys-typescale-label-large-font);
+    font-size: var(--md-sys-typescale-label-large-size);
+    line-height: var(--md-sys-typescale-label-large-line-height);
+    letter-spacing: var(--md-sys-typescale-label-large-tracking);
+    font-weight: var(--md-sys-typescale-label-large-weight);
+  }
+  .s4-top-app-bar[data-size="large"] .s4-app-bar-subtitle {
+    font-family: var(--md-sys-typescale-title-medium-font);
+    font-size: var(--md-sys-typescale-title-medium-size);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+    font-weight: var(--md-sys-typescale-title-medium-weight);
+  }
+
+  @media (forced-colors: active) {
+    .s4-top-app-bar[data-scrolled] { border-block-end: 1px solid CanvasText; }
+  }
+}

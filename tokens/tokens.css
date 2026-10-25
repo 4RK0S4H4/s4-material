@@ -193,13 +193,13 @@
     --md-ref-typeface-weight-bold: 700;
     --s4-glass-tint-float: var(--md-sys-color-surface-container);
     --s4-glass-tint-fill: var(--md-sys-color-surface-container-highest);
-    --s4-glass-tint-opacity-float: 0.84;
+    --s4-glass-tint-opacity-float: 0.6;
     --s4-glass-tint-opacity-fill: 0.56;
-    --s4-glass-tint-opacity-medium-contrast: 0.9;
-    --s4-glass-blur-small: 12px;
-    --s4-glass-blur-medium: 24px;
-    --s4-glass-blur-large: 32px;
-    --s4-glass-saturation-float: 1.35;
+    --s4-glass-tint-opacity-medium-contrast: 0.8;
+    --s4-glass-blur-float: 16px;
+    --s4-glass-saturation-float: 1.8;
+    --s4-glass-backdrop-contrast-float: 0.74;
+    --s4-glass-backdrop-brightness-float: 1.1;
     --s4-glass-highlight-width: 1px;
     --s4-glass-highlight-color: rgb(255 255 255 / 0.5);
     --s4-glass-max-stack: 2;
@@ -273,6 +273,12 @@
     --s4-size-table-row: 52px;
     --s4-size-table-header: 56px;
     --s4-size-divider: 1px;
+    --s4-size-nav-rail-expanded: 240px;
+    --s4-size-toolbar: 64px;
+    --s4-size-search-max: 720px;
+    --s4-size-avatar: 40px;
+    --s4-size-badge-dot: 6px;
+    --s4-size-badge: 16px;
     --s4-layout-margin-compact: var(--s4-space-4);
     --s4-layout-margin: var(--s4-space-6);
     --s4-layout-pane-gap: var(--s4-space-6);
@@ -361,8 +367,9 @@
       --md-sys-color-tertiary-fixed-dim: #474747;
       --md-sys-color-on-tertiary-fixed: #ffffff;
       --md-sys-color-on-tertiary-fixed-variant: #e2e2e2;
-      --s4-glass-tint-opacity-float: 0.82;
       --s4-glass-tint-opacity-fill: 0.64;
+      --s4-glass-backdrop-contrast-float: 1;
+      --s4-glass-backdrop-brightness-float: 0.8;
       --s4-glass-highlight-color: rgb(255 255 255 / 0.12);
       --s4-icon-duo-opacity: 0.65;
     }
@@ -418,8 +425,9 @@
     --md-sys-color-tertiary-fixed-dim: #474747;
     --md-sys-color-on-tertiary-fixed: #ffffff;
     --md-sys-color-on-tertiary-fixed-variant: #e2e2e2;
-    --s4-glass-tint-opacity-float: 0.82;
     --s4-glass-tint-opacity-fill: 0.64;
+    --s4-glass-backdrop-contrast-float: 1;
+    --s4-glass-backdrop-brightness-float: 0.8;
     --s4-glass-highlight-color: rgb(255 255 255 / 0.12);
     --s4-icon-duo-opacity: 0.65;
   }
@@ -476,9 +484,7 @@
       --md-sys-color-on-tertiary-fixed-variant: #ffffff;
       --s4-glass-tint-opacity-float: 1;
       --s4-glass-tint-opacity-fill: 1;
-      --s4-glass-blur-small: 0px;
-      --s4-glass-blur-medium: 0px;
-      --s4-glass-blur-large: 0px;
+      --s4-glass-blur-float: 0px;
       --s4-glass-highlight-color: rgb(255 255 255 / 0);
     }
     }
@@ -534,9 +540,7 @@
     --md-sys-color-on-tertiary-fixed-variant: #ffffff;
     --s4-glass-tint-opacity-float: 1;
     --s4-glass-tint-opacity-fill: 1;
-    --s4-glass-blur-small: 0px;
-    --s4-glass-blur-medium: 0px;
-    --s4-glass-blur-large: 0px;
+    --s4-glass-blur-float: 0px;
     --s4-glass-highlight-color: rgb(255 255 255 / 0);
   }
   @media (prefers-color-scheme: dark) and (prefers-contrast: more) {
@@ -592,9 +596,9 @@
       --md-sys-color-on-tertiary-fixed-variant: #0b0b0b;
       --s4-glass-tint-opacity-float: 1;
       --s4-glass-tint-opacity-fill: 1;
-      --s4-glass-blur-small: 0px;
-      --s4-glass-blur-medium: 0px;
-      --s4-glass-blur-large: 0px;
+      --s4-glass-blur-float: 0px;
+      --s4-glass-backdrop-contrast-float: 1;
+      --s4-glass-backdrop-brightness-float: 0.8;
       --s4-glass-highlight-color: rgb(255 255 255 / 0);
       --s4-icon-duo-opacity: 0.65;
     }
@@ -652,9 +656,9 @@
       --md-sys-color-on-tertiary-fixed-variant: #0b0b0b;
       --s4-glass-tint-opacity-float: 1;
       --s4-glass-tint-opacity-fill: 1;
-      --s4-glass-blur-small: 0px;
-      --s4-glass-blur-medium: 0px;
-      --s4-glass-blur-large: 0px;
+      --s4-glass-blur-float: 0px;
+      --s4-glass-backdrop-contrast-float: 1;
+      --s4-glass-backdrop-brightness-float: 0.8;
       --s4-glass-highlight-color: rgb(255 255 255 / 0);
       --s4-icon-duo-opacity: 0.65;
     }
@@ -712,9 +716,9 @@
       --md-sys-color-on-tertiary-fixed-variant: #0b0b0b;
       --s4-glass-tint-opacity-float: 1;
       --s4-glass-tint-opacity-fill: 1;
-      --s4-glass-blur-small: 0px;
-      --s4-glass-blur-medium: 0px;
-      --s4-glass-blur-large: 0px;
+      --s4-glass-blur-float: 0px;
+      --s4-glass-backdrop-contrast-float: 1;
+      --s4-glass-backdrop-brightness-float: 0.8;
       --s4-glass-highlight-color: rgb(255 255 255 / 0);
       --s4-icon-duo-opacity: 0.65;
     }
@@ -771,9 +775,9 @@
     --md-sys-color-on-tertiary-fixed-variant: #0b0b0b;
     --s4-glass-tint-opacity-float: 1;
     --s4-glass-tint-opacity-fill: 1;
-    --s4-glass-blur-small: 0px;
-    --s4-glass-blur-medium: 0px;
-    --s4-glass-blur-large: 0px;
+    --s4-glass-blur-float: 0px;
+    --s4-glass-backdrop-contrast-float: 1;
+    --s4-glass-backdrop-brightness-float: 0.8;
     --s4-glass-highlight-color: rgb(255 255 255 / 0);
     --s4-icon-duo-opacity: 0.65;
   }
@@ -799,27 +803,21 @@
     :where(:root) {
       --s4-glass-tint-opacity-float: 1;
       --s4-glass-tint-opacity-fill: 1;
-      --s4-glass-blur-small: 0px;
-      --s4-glass-blur-medium: 0px;
-      --s4-glass-blur-large: 0px;
+      --s4-glass-blur-float: 0px;
       --s4-glass-highlight-color: rgb(255 255 255 / 0);
     }
     }
   :where(:root[data-glass="off"]) {
     --s4-glass-tint-opacity-float: 1;
     --s4-glass-tint-opacity-fill: 1;
-    --s4-glass-blur-small: 0px;
-    --s4-glass-blur-medium: 0px;
-    --s4-glass-blur-large: 0px;
+    --s4-glass-blur-float: 0px;
     --s4-glass-highlight-color: rgb(255 255 255 / 0);
   }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     :where(:root) {
       --s4-glass-tint-opacity-float: 1;
       --s4-glass-tint-opacity-fill: 1;
-      --s4-glass-blur-small: 0px;
-      --s4-glass-blur-medium: 0px;
-      --s4-glass-blur-large: 0px;
+      --s4-glass-blur-float: 0px;
       --s4-glass-highlight-color: rgb(255 255 255 / 0);
     }
     }

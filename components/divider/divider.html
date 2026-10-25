@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Divider · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+<style>
+  /* page-only */
+  .demo-lines { display: flex; flex-direction: column; gap: var(--s4-space-4); width: 100%; }
+  .demo-lines p { margin: 0; font-size: var(--md-sys-typescale-body-medium-size); color: var(--md-sys-color-on-surface-variant); }
+  .demo-stats { display: flex; align-items: stretch; gap: var(--s4-space-4); font-variant-numeric: tabular-nums; }
+  .demo-stats span { display: flex; flex-direction: column; font-size: var(--md-sys-typescale-title-medium-size); }
+  .demo-stats small { font-size: var(--md-sys-typescale-label-medium-size); color: var(--md-sys-color-on-surface-variant); }
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Divider</h1></header>
+<main class="ex-main">
+  <p>A divider is a thin line that groups content. Prefer space and surfaces to separate things; use a divider when items of the same kind sit close together.</p>
+
+  <section class="ex-sec">
+    <h2>Horizontal</h2>
+    <p>Full width, inset at the start, and inset at both ends (middle).</p>
+    <div class="ex-board col">
+      <div class="demo-lines">
+        <p>Full width</p>
+        <hr class="s4-divider">
+        <p>Inset start</p>
+        <hr class="s4-divider" data-inset="start">
+        <p>Middle inset</p>
+        <hr class="s4-divider" data-inset="middle">
+        <p>Inset 72, lined up with list text after an avatar (<code>--s4-divider-inset</code>)</p>
+        <hr class="s4-divider" data-inset="start" style="--s4-divider-inset:calc(var(--s4-space-4) * 2 + var(--s4-space-10))">
+      </div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Vertical</h2>
+    <p>Between items in a row. It stretches to the row's height.</p>
+    <div class="ex-board">
+      <div class="demo-stats">
+        <span>$3,210.00<small>Paid</small></span>
+        <hr class="s4-divider" data-orientation="vertical">
+        <span>$1,389.92<small>Due</small></span>
+        <hr class="s4-divider" data-orientation="vertical">
+        <span>$212.48<small>Overdue</small></span>
+      </div>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/divider/</code></p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../button/button.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+</body>
+</html>

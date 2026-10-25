@@ -35,7 +35,7 @@ window.S4_REVIEW_DEMOS = [
   {
     id: 'glass', title: 'Glass Lab', href: 'explore/glass.html',
     questions: [
-      { id: 'material', label: 'Glass material', options: [{ v: 'A', label: 'Frosted (84%)' }, { v: 'B', label: 'Clear (72%)' }, { v: 'C', label: 'Very clear (60%)' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'material', label: 'Glass material', options: [{ v: 'A', label: 'Frosted (84%)' }, { v: 'B', label: 'Clear (72%)' }, { v: 'C', label: 'Very clear (60%), guaranteed' }, { v: 'D', label: 'Very clear (60%), unguarded' }, { v: 'Other', label: 'Describe in notes' }] },
       { id: 'edge', label: 'Glass edge', options: [{ v: 'A', label: 'None' }, { v: 'B', label: 'Hairline' }, { v: 'C', label: 'Rim' }, { v: 'D', label: 'Specular' }, { v: 'Other', label: 'Describe in notes' }] },
       { id: 'backdrop', label: 'Backdrop', options: [{ v: 'A', label: 'Flat' }, { v: 'B', label: 'Soft blooms' }, { v: 'C', label: 'Tonal wash' }, { v: 'Other', label: 'Describe in notes' }] },
       { id: 'surfaces', label: 'Where glass goes', options: [{ v: 'A', label: 'Chrome and overlays' }, { v: 'B', label: 'Chrome only' }, { v: 'C', label: 'Overlays only' }, { v: 'Other', label: 'Describe in notes' }] }

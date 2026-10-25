@@ -1,0 +1,62 @@
+/* Badge (M3)
+   <span class="s4-badge"></span>                small: a 6dp dot (empty element)
+   <span class="s4-badge">3</span>               large: 16dp high, min 16 wide, label-small ("999+" at most)
+   On an icon: <span class="s4-badge-host"><span class="s4-icon" data-icon="notifications"></span><span class="s4-badge">3</span></span>
+   The host wraps the 24dp icon itself (not the 40dp icon button), so M3's offsets land in the right place:
+   small dot in the icon's top-end corner; large badge starting 12dp from the icon's end, its bottom 14dp below the top.
+   Outside a host the badge sits inline (after a nav label, at the end of a list item). */
+@layer s4.components {
+  .s4-badge {
+    --_size: var(--s4-size-badge-dot);
+    --_h: var(--s4-space-4);                  /* 16 */
+
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-width: var(--_h);
+    height: var(--_h);
+    padding: 0 var(--s4-space-1);
+    border-radius: var(--md-sys-shape-corner-full);
+    background: var(--md-sys-color-error);
+    color: var(--md-sys-color-on-error);
+    font-family: var(--md-sys-typescale-label-small-font);
+    font-size: var(--md-sys-typescale-label-small-size);
+    line-height: var(--md-sys-typescale-label-small-line-height);
+    letter-spacing: var(--md-sys-typescale-label-small-tracking);
+    font-weight: var(--md-sys-typescale-label-small-weight);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    vertical-align: middle;
+    pointer-events: none;
+  }
+  .s4-badge:empty {
+    width: var(--_size);
+    min-width: 0;
+    height: var(--_size);
+    padding: 0;
+  }
+
+  /* ---------- on an icon ---------- */
+  .s4-badge-host {
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    vertical-align: middle;
+  }
+  .s4-badge-host > .s4-badge {
+    position: absolute;
+    inset-block-start: calc(var(--s4-space-3) + var(--s4-space-1) / 2 - var(--_h));   /* bottom 14 below the icon top */
+    inset-inline-start: calc(100% - var(--s4-space-3));                                  /* 12 in from the icon's end */
+  }
+  .s4-badge-host > .s4-badge:empty {
+    inset-block-start: 0;
+    inset-inline-start: calc(100% - var(--_size));
+  }
+
+  @media (forced-colors: active) {
+    .s4-badge { border: 1px solid CanvasText; background: Canvas; color: CanvasText; }
+    .s4-badge:empty { background: CanvasText; }
+  }
+}

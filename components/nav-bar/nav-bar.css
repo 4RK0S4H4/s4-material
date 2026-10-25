@@ -1,0 +1,162 @@
+/* Navigation bar (M3) and the navigation item shared with the navigation rail
+   <nav class="s4-nav-bar" aria-label="Main">
+     <a class="s4-nav-item" href="#home" aria-current="page">
+       <span class="s4-nav-indicator"><span class="s4-icon" data-icon="home"></span><span class="s4-badge">3</span></span>
+       <span class="s4-nav-label">Home</span>
+     </a>
+     … 3 to 5 items (a or button)
+   </nav>
+   80dp bar on surface-container. Each item: a 56x32 pill indicator (secondary-container) around the icon, label-medium
+   label under it. The current item has aria-current="page": the pill expands in from half width and fades in.
+   From 600 wide the items sit horizontally (icon beside label inside a 40dp pill), as M3 Expressive does on medium windows.
+   Inside .s4-app the bar sticks to the bottom and pads for the home indicator. The badge slot is .s4-badge in the indicator. */
+@layer s4.components {
+  .s4-nav-bar {
+    container: s4-nav-bar / inline-size;
+    display: flex;
+    justify-content: center;
+    min-block-size: calc(var(--s4-size-nav-bar) + env(safe-area-inset-bottom, 0px));
+    padding: 0 env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+    background: var(--md-sys-color-surface-container);
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  /* ---------- the navigation item (also used by .s4-nav-rail) ---------- */
+  .s4-nav-item {
+    --_fg: var(--md-sys-color-on-surface-variant);
+    --_icon-fg: var(--md-sys-color-on-surface-variant);
+    --_pill: var(--md-sys-color-secondary-container);
+    --_weight: var(--md-sys-typescale-label-medium-weight);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--s4-space-1);
+    min-inline-size: 0;
+    min-block-size: var(--s4-size-touch-target);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--_fg);
+    font-family: var(--md-sys-typescale-label-medium-font);
+    font-size: var(--md-sys-typescale-label-medium-size);
+    line-height: var(--md-sys-typescale-label-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-label-medium-tracking);
+    font-weight: var(--_weight);
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    transition: color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+  }
+  .s4-nav-item[aria-current]:not([aria-current="false"]) {
+    --_fg: var(--md-sys-color-on-surface);
+    --_icon-fg: var(--md-sys-color-on-secondary-container);
+    --_weight: var(--md-sys-typescale-emphasized-label-medium-weight);
+  }
+  .s4-nav-indicator {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    inline-size: var(--s4-size-nav-indicator-width);
+    block-size: var(--s4-size-nav-indicator-height);
+    border-radius: var(--s4-shape-nav-indicator);
+    color: var(--_icon-fg);
+    transition: color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+  }
+  /* the pill (::after) and the M3 state layer (::before) both live on the indicator, as in M3 */
+  .s4-nav-indicator::before,
+  .s4-nav-indicator::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--s4-shape-nav-indicator);
+    pointer-events: none;
+  }
+  .s4-nav-indicator::before {
+    z-index: -1;
+    background: var(--_fg);
+    opacity: 0;
+    transition: opacity var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+  }
+  .s4-nav-indicator::after {
+    z-index: -2;
+    background: var(--_pill);
+    opacity: 0;
+    transform: scaleX(0.5);
+    transition:
+      transform var(--md-sys-motion-spring-spatial-duration) var(--md-sys-motion-spring-spatial),
+      opacity var(--md-sys-motion-spring-effects-duration) var(--md-sys-motion-spring-effects);
+  }
+  .s4-nav-item[aria-current]:not([aria-current="false"]) .s4-nav-indicator::after { opacity: 1; transform: none; }
+  .s4-nav-item[aria-current]:not([aria-current="false"]) .s4-icon { --s4-icon-duo-opacity: 1; }   /* M3: filled icon when selected */
+  @media (hover: hover) {
+    .s4-nav-item:hover .s4-nav-indicator::before { opacity: var(--md-sys-state-hover-state-layer-opacity); }
+  }
+  .s4-nav-item:focus-visible .s4-nav-indicator::before { opacity: var(--md-sys-state-focus-state-layer-opacity); }
+  .s4-nav-item:active .s4-nav-indicator::before { opacity: var(--md-sys-state-pressed-state-layer-opacity); }
+  /* focus ring around the indicator, not the whole cell */
+  .s4-nav-item:focus-visible .s4-nav-indicator {
+    outline: var(--s4-focus-ring-width) solid var(--s4-focus-ring-color);
+    outline-offset: var(--s4-focus-ring-offset);
+  }
+  .s4-nav-label {
+    max-inline-size: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  /* badge slot: top-end of the icon */
+  .s4-nav-indicator > .s4-badge {
+    position: absolute;
+    inset-block-start: calc(var(--s4-space-1) / 2);
+    inset-inline-start: calc(50% + var(--s4-space-1));
+    z-index: 1;
+  }
+  .s4-nav-item:is(:disabled, [aria-disabled="true"]) {
+    --_fg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
+    --_icon-fg: var(--_fg);
+    cursor: default;
+    pointer-events: none;
+  }
+
+  /* ---------- items in the bar ---------- */
+  .s4-nav-bar > .s4-nav-item {
+    flex: 1 1 0;
+    block-size: var(--s4-size-nav-bar);
+    padding: var(--s4-space-3) var(--s4-space-1) var(--s4-space-4);
+  }
+
+  /* ---------- medium (>= 600): horizontal items, the pill wraps icon and label ---------- */
+  @container s4-nav-bar (width >= 600px) {
+    .s4-nav-bar > .s4-nav-item {
+      flex: 0 1 auto;
+      flex-direction: row;
+      align-self: center;
+      justify-content: center;
+      gap: var(--s4-space-2);
+      block-size: var(--s4-size-touch-target);
+      margin-inline: var(--s4-space-4);
+      padding: 0 var(--s4-space-4);
+      border-radius: var(--s4-shape-nav-indicator);
+    }
+    .s4-nav-bar > .s4-nav-item > .s4-nav-indicator { display: contents; }
+    .s4-nav-bar > .s4-nav-item > .s4-nav-indicator::before,
+    .s4-nav-bar > .s4-nav-item > .s4-nav-indicator::after {
+      inset-block: calc((var(--s4-size-touch-target) - var(--s4-size-button)) / 2);
+      inset-inline: 0;
+    }
+    .s4-nav-bar > .s4-nav-item > .s4-nav-indicator > .s4-badge { position: static; order: 2; }
+    .s4-nav-bar > .s4-nav-item:focus-visible { outline: var(--s4-focus-ring-width) solid var(--s4-focus-ring-color); outline-offset: calc(-1 * var(--s4-space-1) + var(--s4-focus-ring-offset)); }
+  }
+
+  @media (forced-colors: active) {
+    .s4-nav-bar { border-block-start: 1px solid CanvasText; }
+    .s4-nav-indicator::before { display: none; }
+    .s4-nav-item[aria-current]:not([aria-current="false"]) .s4-nav-indicator::after { background: Highlight; forced-color-adjust: none; }
+    .s4-nav-item[aria-current]:not([aria-current="false"]) .s4-nav-indicator { color: HighlightText; forced-color-adjust: none; }
+  }
+}

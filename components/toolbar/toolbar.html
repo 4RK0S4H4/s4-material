@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Toolbar · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+<style>
+  /* page-only */
+  .demo-phone { position: relative; display: flex; flex-direction: column; max-width: 390px; height: calc(var(--s4-size-list-item-two-line) * 6); overflow: auto; border-radius: var(--md-sys-shape-corner-large); background: var(--md-sys-color-surface); box-shadow: inset 0 0 0 1px var(--md-sys-color-outline-variant); }
+  .demo-phone > .s4-list { flex: 1 0 auto; }
+  .demo-phone > .s4-toolbar[data-type="docked"] { position: sticky; bottom: 0; }
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Toolbar</h1></header>
+<main class="ex-main">
+  <p>Toolbars hold the actions for the current page or selection. The <b>floating</b> toolbar is a pill that floats over content, often beside a FAB; the <b>docked</b> toolbar spans the bottom edge, in place of a navigation bar on pages that have none. With <code>role="toolbar"</code> the whole toolbar is one tab stop and the arrow keys move between its actions.</p>
+
+  <section class="ex-sec">
+    <h2>Floating</h2>
+    <p>Standard (surface-container) and vibrant (<code>data-color="vibrant"</code>, primary-container). A divider can group actions.</p>
+    <div class="ex-board col" style="align-items:flex-start">
+      <div class="s4-toolbar" role="toolbar" aria-label="Bill Actions"><button class="s4-icon-button" type="button" aria-label="Edit Bill"><span class="s4-icon" data-icon="edit"></span></button><button class="s4-icon-button" type="button" aria-label="Duplicate"><span class="s4-icon" data-icon="copy"></span></button><button class="s4-icon-button" type="button" aria-label="Share"><span class="s4-icon" data-icon="share"></span></button><button class="s4-icon-button" type="button" aria-label="Download PDF"><span class="s4-icon" data-icon="download"></span></button><button class="s4-icon-button" type="button" aria-label="Delete Bill"><span class="s4-icon" data-icon="delete"></span></button></div>
+      <div class="s4-toolbar" role="toolbar" aria-label="Bill Actions (vibrant)" data-color="vibrant"><button class="s4-icon-button" type="button" aria-label="Edit Bill"><span class="s4-icon" data-icon="edit"></span></button><button class="s4-icon-button" type="button" aria-label="Duplicate"><span class="s4-icon" data-icon="copy"></span></button><button class="s4-icon-button" type="button" aria-label="Share"><span class="s4-icon" data-icon="share"></span></button><span class="s4-toolbar-divider" role="separator"></span><button class="s4-icon-button" type="button" aria-label="Delete Bill"><span class="s4-icon" data-icon="delete"></span></button></div>
+      <div class="s4-toolbar" role="toolbar" aria-label="Text Format"><button class="s4-icon-button" type="button" aria-label="Undo"><span class="s4-icon" data-icon="undo"></span></button><button class="s4-icon-button" type="button" aria-label="Version History" disabled><span class="s4-icon" data-icon="history"></span></button><span class="s4-toolbar-divider" role="separator"></span><button class="s4-button" data-variant="tonal" type="button">Save Draft</button></div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Vertical</h2>
+    <p><code>data-orientation="vertical"</code>: a 64dp column, for the side of a wide screen. Up and Down move focus.</p>
+    <div class="ex-board">
+      <div class="s4-toolbar" role="toolbar" aria-label="Chart Tools" data-orientation="vertical"><button class="s4-icon-button" type="button" aria-label="Filter"><span class="s4-icon" data-icon="filter"></span></button><button class="s4-icon-button" type="button" aria-label="Sort"><span class="s4-icon" data-icon="sort"></span></button><button class="s4-icon-button" type="button" aria-label="Date Range"><span class="s4-icon" data-icon="calendar"></span></button><button class="s4-icon-button" type="button" aria-label="Export"><span class="s4-icon" data-icon="export"></span></button></div>
+      <div class="s4-toolbar" role="toolbar" aria-label="Chart Tools (vibrant)" data-orientation="vertical" data-color="vibrant"><button class="s4-icon-button" type="button" aria-label="Filter"><span class="s4-icon" data-icon="filter"></span></button><button class="s4-icon-button" type="button" aria-label="Sort"><span class="s4-icon" data-icon="sort"></span></button><button class="s4-icon-button" type="button" aria-label="Date Range"><span class="s4-icon" data-icon="calendar"></span></button></div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>With a FAB</h2>
+    <p><code>.s4-toolbar-dock</code> sets a toolbar beside the FAB. With <code>data-position="bottom"</code> the pair floats centered above the bottom edge (and above the nav bar in an app shell). Scroll the frame.</p>
+    <div class="ex-board col">
+      <div class="demo-phone" tabindex="0" aria-label="Floating toolbar example">
+        <ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Iron Mountain</span><span class="s4-list-supporting">Due Oct 28</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,240.00</span></span></div></li><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Amazon Web Services</span><span class="s4-list-supporting">Due Oct 30</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$3,412.57</span></span></div></li><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">PG&amp;E</span><span class="s4-list-supporting">Overdue</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$412.30</span></span></div></li><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">WeWork</span><span class="s4-list-supporting">Due Nov 1</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$2,800.00</span></span></div></li><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Comcast Business</span><span class="s4-list-supporting">Due Nov 3</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$189.99</span></span></div></li><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Verizon</span><span class="s4-list-supporting">Due Nov 5</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$230.15</span></span></div></li><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Adobe Creative Cloud</span><span class="s4-list-supporting">Due Nov 8</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$89.99</span></span></div></li><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Slack</span><span class="s4-list-supporting">Due Nov 12</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$96.00</span></span></div></li><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Zoom</span><span class="s4-list-supporting">Due Nov 15</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$149.90</span></span></div></li></ul>
+        <div class="s4-toolbar-dock" data-position="bottom">
+          <div class="s4-toolbar" role="toolbar" aria-label="List Actions"><button class="s4-icon-button" type="button" aria-label="Filter"><span class="s4-icon" data-icon="filter"></span></button><button class="s4-icon-button" type="button" aria-label="Sort"><span class="s4-icon" data-icon="sort"></span></button><button class="s4-icon-button" type="button" aria-label="Export"><span class="s4-icon" data-icon="export"></span></button><button class="s4-icon-button" type="button" aria-label="Search"><span class="s4-icon" data-icon="search"></span></button></div>
+          <button class="s4-fab" type="button" data-color="primary-container" aria-label="Add Bill"><span class="s4-icon" data-icon="add"></span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Docked</h2>
+    <p><code>data-type="docked"</code>: full width, 64dp, square corners, actions spread out, padded for the home indicator.</p>
+    <div class="ex-board col">
+      <div class="demo-phone" tabindex="0" aria-label="Docked toolbar example">
+        <ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Invoice INV-2041</span><span class="s4-list-supporting">Iron Mountain · Oct 1</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,240.00</span></span></div></li><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Line: Storage, 40 boxes</span><span class="s4-list-supporting">Qty 40</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$800.00</span></span></div></li><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Line: Shredding</span><span class="s4-list-supporting">Qty 1</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$290.00</span></span></div></li><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Line: Pickup fee</span><span class="s4-list-supporting">Qty 1</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$150.00</span></span></div></li></ul>
+        <div class="s4-toolbar" role="toolbar" aria-label="Invoice Actions" data-type="docked"><button class="s4-icon-button" type="button" aria-label="Previous Invoice"><span class="s4-icon" data-icon="back"></span></button><button class="s4-icon-button" type="button" aria-label="Share"><span class="s4-icon" data-icon="share"></span></button><button class="s4-icon-button" type="button" aria-label="Download PDF"><span class="s4-icon" data-icon="download"></span></button><button class="s4-icon-button" type="button" aria-label="Delete Invoice"><span class="s4-icon" data-icon="delete"></span></button><button class="s4-icon-button" type="button" aria-label="Next Invoice"><span class="s4-icon" data-icon="forward"></span></button></div>
+      </div>
+      <div class="s4-toolbar" role="toolbar" aria-label="Invoice Actions (vibrant)" data-type="docked" data-color="vibrant" style="max-width:390px"><button class="s4-icon-button" type="button" aria-label="Previous Invoice"><span class="s4-icon" data-icon="back"></span></button><button class="s4-icon-button" type="button" aria-label="Share"><span class="s4-icon" data-icon="share"></span></button><button class="s4-button" type="button" data-variant="tonal">Mark Paid</button><button class="s4-icon-button" type="button" aria-label="Next Invoice"><span class="s4-icon" data-icon="forward"></span></button></div>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/toolbar/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../motion/motion.js"></script>
+<script src="../toolbar/toolbar.js"></script>
+<script src="../icon-button/icon-button.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+</body>
+</html>

@@ -29,7 +29,7 @@ button{font:inherit;color:inherit}
 :root[data-theme=dark] .guarantee .bad{color:#ffb4ab} :root[data-theme=dark] .guarantee .ok{color:#6dd58c}
 
 /* ================= the mini app (all S4 Orion tokens) ================= */
-.phone{--g-tint:var(--s4-glass-tint-opacity-float);--g-blur:var(--s4-glass-blur-large);--g-sat:var(--s4-glass-saturation-float);
+.phone{--g-tint:.84;--g-blur:32px;--g-sat:1.35;--g-comp:;
   position:relative;width:100%;max-width:300px;height:460px;overflow:hidden;isolation:isolate;border-radius:28px;background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface);
   font-size:14px;line-height:20px;letter-spacing:.2px;box-shadow:0 0 0 1px var(--md-sys-color-outline-variant)}
 .phone .backdrop{position:absolute;inset:0;z-index:-1;pointer-events:none}
@@ -59,7 +59,7 @@ button{font:inherit;color:inherit}
 
 /* glass recipe: tint of a surface role over a blur; edge treatments are separate */
 .glass{background:color-mix(in srgb,var(--s4-glass-tint-float) calc(var(--g-tint) * 100%),transparent);
-  -webkit-backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat));backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat))}
+  -webkit-backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat)) var(--g-comp);backdrop-filter:blur(var(--g-blur)) saturate(var(--g-sat)) var(--g-comp)}
 .phone:not([data-surfaces~=chrome]) .chrome.glass,.phone:not([data-surfaces~=overlay]) .overlay.glass{background:var(--md-sys-color-surface-container);-webkit-backdrop-filter:none;backdrop-filter:none}
 .phone:not([data-surfaces~=overlay]) .menu.overlay{background:var(--md-sys-color-surface-container);box-shadow:var(--md-sys-elevation-level2)}
 .phone[data-edge=hairline] .glass{box-shadow:inset 0 1px 0 var(--s4-glass-highlight-color)}
@@ -117,12 +117,13 @@ const h=html=>{const t=document.createElement('template');t.innerHTML=html.trim(
 const ic=n=>`<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]||''}</svg>`;
 /* defaults = S4 Material's float glass, no edge, flat backdrop, chrome + overlays */
 const BASE={tint:null,blur:null,sat:null,edge:'none',backdrop:'flat',surfaces:'chrome overlay',strict:false};
-const MATERIAL={A:{tint:{light:.84,dark:.82},blur:32,sat:1.35},B:{tint:{light:.72,dark:.72},blur:24,sat:1.6,strict:true},C:{tint:{light:.6,dark:.6},blur:16,sat:1.8,strict:true}};
+const MATERIAL={A:{tint:{light:.84,dark:.82},blur:32,sat:1.35},B:{tint:{light:.72,dark:.72},blur:24,sat:1.6,strict:true},C:{tint:{light:.6,dark:.6},blur:16,sat:1.8,strict:true,comp:{light:'contrast(.74) brightness(1.1)',dark:'brightness(.8)'}},C0:{tint:{light:.6,dark:.6},blur:16,sat:1.8,strict:true}};
 const SECTIONS=[
  {id:'material',title:'Material',desc:'How much shows through. Clearer glass feels lighter and more “liquid”, but the guarantee below each option shows what it costs in legibility.',opts:[
   {k:'A',name:'Frosted',tag:'S4 Material today',desc:'84% tint in light, 82% in dark, 32px blur. Main text stays AA over anything. Grey secondary text passes in Mono but can dip just under AA with some colors (try Indigo in dark).',set:{...MATERIAL.A}},
   {k:'B',name:'Clear',desc:'72% tint, 24px blur, a little more saturation. Main text stays AA over anything; secondary text on glass switches to the main text color.',set:{...MATERIAL.B}},
-  {k:'C',name:'Very Clear',desc:'60% tint, 16px blur. Closest to Liquid Glass, but can’t guarantee AA in dark mode. Shown for comparison.',set:{...MATERIAL.C}}]},
+  {k:'C',name:'Very Clear, Guaranteed',tag:'Your pick, now with a floor',desc:'60% tint, 16px blur. The glass also gently compresses what shows through (light: contrast .74, brightness 1.1; dark: brightness .8), so text stays AA over anything, for every color.',set:{...MATERIAL.C}},
+  {k:'D',name:'Very Clear, Unguarded',desc:'60% tint, 16px blur, no compression. What you picked before; fails AA over some backdrops. Compare with C.',set:{...MATERIAL.C0}}]},
  {id:'edge',title:'Edge',desc:'How a glass surface catches the light. S4 Material had no edges at all. Easiest to judge in dark mode.',opts:[
   {k:'A',name:'None',tag:'S4 Material today',desc:'Flat. The blur and tint alone separate the glass from what’s behind.',set:{edge:'none'}},
   {k:'B',name:'Hairline',desc:'A thin light line along the top edge, like light catching the rim of a pane.',set:{edge:'hairline'}},
@@ -132,7 +133,7 @@ const SECTIONS=[
   {k:'A',name:'Flat',tag:'M3',desc:'The plain surface color. Glass frosts only the content scrolling under it.',set:{backdrop:'flat'}},
   {k:'B',name:'Soft Blooms',tag:'S4 Material today',desc:'Two faint glows of the theme’s primary and tertiary colors in the corners. Invisible in Mono; try a color.',set:{backdrop:'blooms'}},
   {k:'C',name:'Tonal Wash',desc:'A gentle top-to-bottom shift from surface to surface-container-low. Adds depth without color.',set:{backdrop:'wash'}}]},
- {id:'surfaces',title:'Where Glass Goes',desc:'All options keep glass off content. This decides which floating layers get it.',opts:[
+ {id:'surfaces',title:'Where Glass Goes',desc:'All options keep glass off content. The difference shows most in the open menu (top right): glass lets the chart and photo glow through it, solid hides them. Dialogs and sheets sit over a dimming scrim, so glass there mostly shows a soft, darkened blur.',opts:[
   {k:'A',name:'Chrome and Overlays',desc:'App bar, nav bar, toolbars, plus menus, sheets, dialogs and tooltips.',set:{surfaces:'chrome overlay'}},
   {k:'B',name:'Chrome Only',desc:'App bar, nav bar and toolbars are glass; menus, sheets and dialogs are solid with M3 elevation.',set:{surfaces:'chrome'}},
   {k:'C',name:'Overlays Only',desc:'Menus, sheets, dialogs and tooltips are glass; bars are solid.',set:{surfaces:'overlay'}}]}];
@@ -143,7 +144,8 @@ function rgbOf(c){const x=document.createElement('i');x.style.color=c;document.b
 const lum=c=>{const [r,g,b]=c.map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4});return .2126*r+.7152*g+.0722*b};
 const cr=(a,b)=>{const [x,y]=[lum(a),lum(b)].sort((p,q)=>q-p);return (x+.05)/(y+.05)};
 const mix=(a,b,t)=>a.map((v,i)=>v*t+b[i]*(1-t));
-function worst(textVar,t){const tint=rgbOf('var(--md-sys-color-surface-container)'),txt=rgbOf(`var(${textVar})`);return Math.min(cr(txt,mix(tint,[0,0,0],t)),cr(txt,mix(tint,[255,255,255],t)))}
+const comp=(v,s,dark)=>{if(!s.comp)return v;const c=dark?1:.74,b=dark?.8:1.1;return Math.min(255,Math.max(0,((v-127.5)*c+127.5)*b))};
+function worst(textVar,t,s,dark){const tint=rgbOf('var(--md-sys-color-surface-container)'),txt=rgbOf(`var(${textVar})`),lo=comp(0,s,dark),hi=comp(255,s,dark);return Math.min(cr(txt,mix(tint,[lo,lo,lo],t)),cr(txt,mix(tint,[hi,hi,hi],t)))}
 
 function phone(){return h(`<div class="phone">
   <div class="backdrop"></div>
@@ -157,7 +159,7 @@ function phone(){return h(`<div class="phone">
   <nav class="navbar glass chrome">${[['home-2','Home'],['bill-list','Bills',1],['wallet','Budget'],['settings','Settings']].map(([i,l,on])=>`<span class="nav${on?' on':''}"><i>${ic(i)}</i>${l}</span>`).join('')}</nav>
 </div>`)}
 function apply(p,set){const s={...BASE,...set};const dark=document.documentElement.dataset.theme==='dark';
-  if(s.tint){p.style.setProperty('--g-tint',dark?s.tint.dark:s.tint.light);p.style.setProperty('--g-blur',s.blur+'px');p.style.setProperty('--g-sat',s.sat)}
+  if(s.tint){p.style.setProperty('--g-tint',dark?s.tint.dark:s.tint.light);p.style.setProperty('--g-blur',s.blur+'px');p.style.setProperty('--g-sat',s.sat);p.style.setProperty('--g-comp',s.comp?(dark?s.comp.dark:s.comp.light):' ')}
   p.dataset.edge=s.edge;p.dataset.backdrop=s.backdrop;p.dataset.surfaces=s.surfaces;p.toggleAttribute('data-strict-text',!!s.strict)}
 
 const host=document.getElementById('sections'),phones=[];
@@ -170,7 +172,7 @@ SECTIONS.forEach(sec=>{
     el.querySelector('.cards').appendChild(card)})});
 function refresh(){const dark=document.documentElement.dataset.theme==='dark';
   phones.forEach(([p,set,mat])=>{apply(p,set);if(!mat)return;const t=dark?mat.set.tint.dark:mat.set.tint.light;
-    const main=worst('--md-sys-color-on-surface',t),sub=worst('--md-sys-color-on-surface-variant',t),g=p.closest('.rv-card').querySelector('.guarantee');
+    const main=worst('--md-sys-color-on-surface',t,mat.set,dark),sub=worst('--md-sys-color-on-surface-variant',t,mat.set,dark),g=p.closest('.rv-card').querySelector('.guarantee');
     g.innerHTML=`<span>Guaranteed (${dark?'dark':'light'}):</span><span class="${main>=4.5?'ok':'bad'}">main text ${main.toFixed(1)}:1 ${main>=4.5?'✓':'✗'}</span><span class="${sub>=4.5?'ok':(mat.set.strict?'':'bad')}">secondary text ${sub.toFixed(1)}:1 ${sub>=4.5?'✓':(mat.set.strict?'(not used on glass)':'✗')}</span>`})}
 document.querySelectorAll('.scroll').forEach(s=>s.scrollTop=150);
 const state={mode:'light',seed:'mono'};

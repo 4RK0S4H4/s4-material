@@ -1,0 +1,63 @@
+/* Dialog (M3)
+   <button class="s4-button" data-color="error" data-dialog="confirm-delete">Delete Bill</button>
+   <dialog class="s4-dialog" id="confirm-delete" aria-labelledby="cd-h">
+     <span class="s4-icon s4-dialog-icon" data-icon="delete"></span>          optional, centers the headline
+     <h2 class="s4-dialog-headline" id="cd-h">Delete this bill?</h2>
+     <div class="s4-dialog-content">Staples, $72.40. This can’t be undone.</div>
+     <div class="s4-dialog-actions">
+       <button class="s4-button" data-variant="text" data-close="cancel">Cancel</button>
+       <button class="s4-button" data-variant="text" data-color="error" data-close="delete">Delete</button>
+     </div>
+   </dialog>
+   Opens with a container transform from its opener (orion.js). data-fullscreen="compact" makes it full screen on phones.
+   Solid surface-container-high here; glass.css makes it glass. */
+@layer s4.components {
+  .s4-dialog {
+    width: min(560px, calc(100vw - 2 * var(--s4-space-6)));
+    min-width: min(280px, calc(100vw - 2 * var(--s4-space-6)));
+    max-height: calc(100dvh - 2 * var(--s4-space-12));
+    margin: auto;
+    padding: var(--s4-space-6);
+    border: 0;
+    border-radius: var(--s4-shape-dialog);
+    background: var(--md-sys-color-surface-container-high);
+    color: var(--md-sys-color-on-surface);
+    box-shadow: var(--md-sys-elevation-level3);
+    overflow: auto;
+    flex-direction: column;
+    gap: var(--s4-space-4);
+  }
+  .s4-dialog[open] { display: flex; }
+  .s4-dialog::backdrop { background: color-mix(in srgb, var(--md-sys-color-scrim) calc(var(--s4-scrim-opacity) * 100%), transparent); }
+  .s4-dialog-icon { align-self: center; color: var(--md-sys-color-secondary); }
+  .s4-dialog-headline {
+    margin: 0;
+    font-family: var(--md-sys-typescale-headline-small-font);
+    font-size: var(--md-sys-typescale-headline-small-size);
+    line-height: var(--md-sys-typescale-headline-small-line-height);
+    letter-spacing: var(--md-sys-typescale-headline-small-tracking);
+    font-weight: var(--md-sys-typescale-headline-small-weight);
+  }
+  .s4-dialog-icon ~ .s4-dialog-headline { text-align: center; }
+  .s4-dialog-content {
+    font-family: var(--md-sys-typescale-body-medium-font);
+    font-size: var(--md-sys-typescale-body-medium-size);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-body-medium-tracking);
+    color: var(--md-sys-color-on-surface-variant);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s4-space-4);
+  }
+  .s4-dialog-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--s4-space-2); padding-top: var(--s4-space-2); }
+
+  /* full-screen on compact windows: square corners, a top bar with close and a confirm action */
+  .s4-dialog-bar { display: none; align-items: center; gap: var(--s4-space-2); min-height: var(--s4-size-top-app-bar); }
+  .s4-dialog-bar .s4-dialog-headline { flex: 1; text-align: start; }
+  @media (max-width: 599px) {
+    .s4-dialog[data-fullscreen="compact"] { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh; border-radius: var(--md-sys-shape-corner-none); padding: 0 var(--s4-space-4) var(--s4-space-4); }
+    .s4-dialog[data-fullscreen="compact"] .s4-dialog-bar { display: flex; }
+    .s4-dialog[data-fullscreen="compact"] > .s4-dialog-headline, .s4-dialog[data-fullscreen="compact"] > .s4-dialog-actions { display: none; }
+  }
+  @media (forced-colors: active) { .s4-dialog { border: 1px solid CanvasText; } }
+}

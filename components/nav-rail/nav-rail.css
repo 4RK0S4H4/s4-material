@@ -1,0 +1,101 @@
+/* Navigation rail (M3 Expressive)
+   <nav class="s4-nav-rail" aria-label="Main">
+     <div class="s4-nav-rail-header">
+       <button class="s4-icon-button" type="button" data-rail-toggle aria-expanded="false" aria-label="Expand Navigation">
+         <span class="s4-icon" data-icon="menu"></span></button>
+       <button class="s4-fab" type="button" aria-label="Add Bill"><span class="s4-icon" data-icon="add"></span><span>Add Bill</span></button>
+     </div>
+     <div class="s4-nav-rail-items">
+       <a class="s4-nav-item" href="#home" aria-current="page">
+         <span class="s4-nav-indicator"><span class="s4-icon" data-icon="home"></span></span><span class="s4-nav-label">Home</span></a>
+       …
+     </div>
+   </nav>
+   Collapsed: 96dp, icon in a 56x32 pill with the label under it, on surface. data-expanded: wider, labels beside the
+   icons inside a 56dp pill that spans icon and label, label-large, on surface-container. [data-rail-toggle] flips it
+   (nav-rail.js). In the collapsed rail a FAB's text (any child span that is not the icon) is hidden, so the same FAB
+   becomes an extended FAB when the rail expands. Shares .s4-nav-item with the nav bar (nav-bar.css).
+   Public knob: --s4-nav-rail-expanded-width (default 240; M3 Expressive allows 220 to 360). */
+@layer s4.components {
+  .s4-nav-rail {
+    --_w: var(--s4-size-nav-rail);
+    --_inset: calc((var(--s4-size-nav-rail) - var(--s4-size-nav-indicator-width)) / 2);   /* 20: indicator's start edge */
+    display: flex;
+    flex-direction: column;
+    flex: none;
+    inline-size: calc(var(--_w) + env(safe-area-inset-left, 0px));
+    padding-block: max(var(--s4-space-10), env(safe-area-inset-top, 0px)) max(var(--s4-space-4), env(safe-area-inset-bottom, 0px));
+    padding-inline-start: env(safe-area-inset-left, 0px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    background: var(--md-sys-color-surface);
+    color: var(--md-sys-color-on-surface-variant);
+    transition:
+      inline-size var(--md-sys-motion-spring-spatial-duration) var(--md-sys-motion-spring-spatial),
+      background-color var(--md-sys-motion-spring-effects-duration) var(--md-sys-motion-spring-effects);
+  }
+  .s4-nav-rail-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s4-space-1);
+    padding-block-end: var(--s4-space-10);
+  }
+  .s4-nav-rail-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s4-space-1);
+  }
+  .s4-nav-rail .s4-nav-item {
+    inline-size: var(--s4-size-nav-rail);
+    padding-block: var(--s4-space-1) var(--s4-space-2);
+  }
+  /* a collapsed rail shows the FAB as icon-only (aria-label carries the name) */
+  .s4-nav-rail:not([data-expanded]) .s4-nav-rail-header .s4-fab > :not(.s4-icon) { display: none; }
+
+  /* ---------- expanded ---------- */
+  .s4-nav-rail[data-expanded] {
+    --_w: var(--s4-nav-rail-expanded-width, var(--s4-size-nav-rail-expanded));
+    background: var(--md-sys-color-surface-container);
+  }
+  .s4-nav-rail[data-expanded] .s4-nav-rail-header {
+    align-items: flex-start;
+    padding-inline-start: var(--_inset);
+  }
+  /* the menu button lines up with the item icons (icon at 36) */
+  .s4-nav-rail[data-expanded] .s4-nav-rail-header > [data-rail-toggle] {
+    margin-inline-start: calc((var(--s4-size-nav-indicator-width) - var(--s4-size-icon-button)) / 2);
+  }
+  .s4-nav-rail[data-expanded] .s4-nav-item {
+    --_weight: var(--md-sys-typescale-label-large-weight);
+    flex-direction: row;
+    justify-content: flex-start;
+    align-self: flex-start;
+    gap: var(--s4-space-2);
+    inline-size: auto;
+    max-inline-size: calc(100% - 2 * var(--_inset));
+    min-block-size: var(--s4-size-list-item-one-line);
+    margin-inline-start: var(--_inset);
+    padding: 0 var(--s4-space-4);
+    border-radius: var(--s4-shape-nav-indicator);
+    font-family: var(--md-sys-typescale-label-large-font);
+    font-size: var(--md-sys-typescale-label-large-size);
+    line-height: var(--md-sys-typescale-label-large-line-height);
+    letter-spacing: var(--md-sys-typescale-label-large-tracking);
+  }
+  .s4-nav-rail[data-expanded] .s4-nav-item[aria-current]:not([aria-current="false"]) { --_weight: var(--md-sys-typescale-emphasized-label-large-weight); }
+  /* the indicator box dissolves so its pill and state layer (absolute) span the whole item: icon and label */
+  .s4-nav-rail[data-expanded] .s4-nav-indicator { display: contents; }
+  .s4-nav-rail[data-expanded] .s4-nav-indicator > .s4-badge { position: static; order: 2; margin-inline-start: auto; }
+  .s4-nav-rail[data-expanded] .s4-nav-label { text-align: start; }
+  .s4-nav-rail[data-expanded] .s4-nav-item:focus-visible {
+    outline: var(--s4-focus-ring-width) solid var(--s4-focus-ring-color);
+    outline-offset: var(--s4-focus-ring-offset);
+  }
+
+  @media (forced-colors: active) {
+    .s4-nav-rail { border-inline-end: 1px solid CanvasText; }
+  }
+}

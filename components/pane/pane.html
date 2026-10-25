@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pane · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+<style>
+  /* page-only helpers */
+  .demo-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--s4-space-4); margin: 0; }
+  .demo-kpis div { margin: 0; }
+  .demo-kpis dt { font-size: var(--md-sys-typescale-label-medium-size); color: var(--md-sys-color-on-surface-variant); }
+  .demo-kpis dd { margin: 0; font-size: var(--md-sys-typescale-headline-small-size); line-height: var(--md-sys-typescale-headline-small-line-height); font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Pane</h1></header>
+<main class="ex-main">
+  <p>A pane is a solid section of a page: a group of settings, a form, or a block on a dashboard. It has a title, optional supporting text, and its content. Padding is 24, or 16 when the space it sits in is compact (under 600). Panes are never glass.</p>
+
+  <section class="ex-sec">
+    <h2>Default</h2>
+    <p>Surface container low on the page surface, large corners.</p>
+    <section class="s4-pane" aria-labelledby="p1">
+      <h3 class="s4-pane-title" id="p1">October Summary</h3>
+      <p class="s4-pane-supporting">Bills received between Oct 1 and Oct 31.</p>
+      <dl class="demo-kpis">
+        <div><dt>Total Billed</dt><dd>$4,812.40</dd></div>
+        <div><dt>Paid</dt><dd>$3,210.00</dd></div>
+        <div><dt>Due</dt><dd>$1,389.92</dd></div>
+        <div><dt>Overdue</dt><dd>$212.48</dd></div>
+      </dl>
+    </section>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Colors</h2>
+    <p><code>data-color="lowest"</code> and <code>"high"</code> separate nested or neighbouring panes. <code>data-color="error"</code> is the danger zone for destructive settings.</p>
+    <div class="s4-grid" style="--s4-min:280px">
+      <section class="s4-pane" data-color="lowest" aria-labelledby="p2">
+        <h3 class="s4-pane-title" id="p2">Autopay</h3>
+        <p class="s4-pane-supporting">Pay recurring bills from your operating account on the due date.</p>
+        <div class="s4-row"><button class="s4-button" data-variant="tonal" type="button">Manage Autopay</button></div>
+      </section>
+      <section class="s4-pane" data-color="high" aria-labelledby="p3">
+        <h3 class="s4-pane-title" id="p3">Reminders</h3>
+        <p class="s4-pane-supporting">We'll email you three days before a bill is due.</p>
+        <div class="s4-row"><button class="s4-button" data-variant="outlined" type="button">Edit Reminders</button></div>
+      </section>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Danger Zone</h2>
+    <p>Error container with on-error-container text. Keep it to the last pane of a settings page.</p>
+    <section class="s4-pane" data-color="error" aria-labelledby="p4">
+      <h3 class="s4-pane-title" id="p4">Delete Workspace</h3>
+      <p class="s4-pane-supporting">This deletes every bill, receipt and vendor in Acme Facilities. You can't undo this.</p>
+      <div class="s4-row"><button class="s4-button" data-color="error" type="button"><span class="s4-icon" data-icon="delete"></span>Delete Workspace</button></div>
+    </section>
+  </section>
+  <p class="ex-foot">Source: <code>components/pane/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../button/button.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+</body>
+</html>

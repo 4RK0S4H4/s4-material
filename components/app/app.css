@@ -1,0 +1,116 @@
+/* App shell (M3 canonical layout)
+   <div class="s4-app">
+     <nav class="s4-nav-rail" aria-label="Main">…</nav>            optional, shown from 840 (expanded)
+     <div class="s4-app-body">
+       <header class="s4-top-app-bar">…</header>
+       <main class="s4-content">…</main>
+     </div>
+     <nav class="s4-nav-bar" aria-label="Main">…</nav>             optional, shown under 840
+   </div>
+   The window scrolls (best on phones: the browser chrome can collapse, pull to refresh works). The top app bar sticks to
+   the top, the rail sticks to the left at full height, and the nav bar sticks to the bottom: sticky, not fixed, so it
+   keeps its own space at the end of the page and never covers the last content.
+   .s4-app is a size container named s4-app: window classes are container queries, so the shell also works in a frame.
+   Public knobs: --s4-content-max (content width cap), and --s4-app-inset-bottom (read it to float something above the
+   nav bar, e.g. a FAB or a floating toolbar). */
+@layer s4.components {
+  .s4-app {
+    container: s4-app / inline-size;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: 1fr auto;
+    min-block-size: 100dvh;
+    background: var(--md-sys-color-surface);
+    color: var(--md-sys-color-on-surface);
+  }
+  /* Everything inside can read how much the bottom is covered: the nav bar (if shown) plus the home indicator. */
+  .s4-app > * { --s4-app-inset-bottom: env(safe-area-inset-bottom, 0px); }
+
+  .s4-app > .s4-nav-rail {
+    grid-column: 1;
+    grid-row: 1 / -1;
+    position: sticky;
+    top: 0;
+    align-self: start;
+    block-size: 100dvh;
+    z-index: var(--s4-z-navigation);
+  }
+  .s4-app > .s4-app-body {
+    grid-column: 2;
+    grid-row: 1;
+    min-inline-size: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .s4-app > .s4-nav-bar {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    position: sticky;
+    bottom: 0;
+    z-index: var(--s4-z-navigation);
+  }
+
+  /* ---------- content: margins, width cap, safe areas ---------- */
+  .s4-content {
+    --_margin: var(--s4-layout-margin-compact);
+    flex: 1 0 auto;
+    box-sizing: content-box;          /* the cap applies to the content, not the margins */
+    max-inline-size: var(--s4-content-max, var(--s4-layout-content-max));
+    margin-inline: auto;
+    padding-block: 0 calc(var(--s4-space-6) + var(--s4-app-inset-bottom, env(safe-area-inset-bottom, 0px)));
+    padding-inline: max(var(--_margin), env(safe-area-inset-left, 0px)) max(var(--_margin), env(safe-area-inset-right, 0px));
+  }
+  /* in the flex column, auto margins would shrink the content to fit: give it the full width minus its margins */
+  .s4-app-body > .s4-content { inline-size: calc(100% - 2 * var(--_margin)); }
+  /* no top app bar: keep content below the status bar / notch */
+  .s4-app-body:not(:has(> .s4-top-app-bar)) > .s4-content {
+    padding-block-start: max(var(--s4-space-6), env(safe-area-inset-top, 0px));
+  }
+
+  /* ---------- window size classes ---------- */
+  /* compact and medium (< 840): nav bar at the bottom, rail hidden */
+  @container s4-app (width < 840px) {
+    .s4-app > .s4-nav-rail { display: none; }
+    /* the nav bar already pads for the home indicator, so content only needs to clear the bar itself, which it does by
+       being in flow; floating things (FAB, floating toolbar) read the inset to sit above the bar */
+    .s4-app:has(> .s4-nav-bar) > * { --s4-app-inset-bottom: calc(var(--s4-size-nav-bar) + env(safe-area-inset-bottom, 0px)); }
+    .s4-app:has(> .s4-nav-bar) .s4-content { padding-block-end: var(--s4-space-6); }
+  }
+  /* medium and up: 24 margins */
+  @container s4-app (width >= 600px) {
+    .s4-content { --_margin: var(--s4-layout-margin); }
+    /* the bar's title and icons line up with the 24dp content margin (the bar's own inset is 8 + the slot's 8) */
+    .s4-app-body > .s4-top-app-bar {
+      padding-inline: max(var(--s4-space-4), env(safe-area-inset-left, 0px)) max(var(--s4-space-4), env(safe-area-inset-right, 0px));
+    }
+  }
+  /* expanded (>= 840): rail at the left, nav bar hidden; the rail takes the left safe area */
+  @container s4-app (width >= 840px) {
+    .s4-app > .s4-nav-bar { display: none; }
+    .s4-app:has(> .s4-nav-rail) .s4-content { padding-inline-start: var(--_margin); }
+  }
+
+  /* ---------- views: sibling destinations switched by app.js with the shared axis pattern ---------- */
+  .s4-view { display: block; }
+
+  /* ---------- page helpers ---------- */
+  /* A page heading row inside .s4-content: title on the left, actions on the right. */
+  .s4-page-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s4-space-2) var(--s4-space-4);
+    padding-block: var(--s4-space-4);
+  }
+  .s4-page-header > :first-child { margin: 0 auto 0 0; }
+  /* A vertical rhythm for page sections */
+  .s4-section { display: flex; flex-direction: column; gap: var(--s4-space-3); padding-block: var(--s4-space-4); }
+  .s4-section-title {
+    margin: 0;
+    font-family: var(--md-sys-typescale-title-medium-font);
+    font-size: var(--md-sys-typescale-title-medium-size);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+    font-weight: var(--md-sys-typescale-emphasized-title-medium-weight);
+  }
+}

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Components · S4 Orion</title>
+<link rel="stylesheet" href="orion.css">
+<link rel="stylesheet" href="_example/example.css">
+<style>
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr));gap:var(--s4-space-3)}
+.gal .s4-card{text-decoration:none;color:inherit}
+.gal .s4-card-body{display:flex;flex-direction:column;gap:var(--s4-space-1)}
+.gal small{color:var(--md-sys-color-on-surface-variant);font-size:var(--md-sys-typescale-body-medium-size);line-height:var(--md-sys-typescale-body-medium-line-height)}
+.gal b{font-size:var(--md-sys-typescale-title-medium-size);line-height:var(--md-sys-typescale-title-medium-line-height);font-weight:var(--md-sys-typescale-emphasized-title-medium-weight)}
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">S4 Orion</a> / Components</h1></header>
+<main class="ex-main">
+  <p>Every S4 Orion component, each with a reference page showing its variants and states. Switch theme, contrast and color at the top; every page has the same controls. Apps load the bundle: <code>components/orion.css</code> and <code>components/orion.js</code>.</p>
+  <section class="ex-sec" id="groups"></section>
+  <p class="ex-foot">Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0) · Material Color Utilities (Apache 2.0)</p>
+</main>
+<script src="assets/icons.js"></script>
+<script src="orion.js"></script>
+<script src="_example/example.js"></script>
+<script>
+const G=[
+ ['Actions',[['button','Button','Filled, tonal, outlined, elevated and text, in five sizes, with the M3 Expressive press morph.'],['icon-button','Icon Button','Icon-only actions and toggles.'],['button-group','Button Group','Related buttons, standard or connected, single or multi select.'],['fab','FAB','The screen’s primary action, plain or extended.']]],
+ ['Navigation and Shell',[['app','App Shell','Nav bar on phones, nav rail from 840; content, margins and safe areas.'],['top-app-bar','Top App Bar','Title and actions; turns to glass when content scrolls under it.'],['nav-bar','Navigation Bar','Three to five destinations at the bottom.'],['nav-rail','Navigation Rail','Destinations at the side on wide windows; expandable.'],['tabs','Tabs','Sibling views with a sliding indicator and shared axis motion.'],['toolbar','Toolbar','Floating or docked actions.'],['search','Search','A search bar that filters as you type.']]],
+ ['Containment and Data',[['card','Card','Elevated, filled or outlined content containers.'],['pane','Pane','Sections for settings, forms and dashboards.'],['list','List','One to three line items, segmented and grouped lists.'],['table','Table','Sortable, selectable data that stacks on phones.'],['divider','Divider','Hairline separators.']]],
+ ['Inputs',[['text-field','Text Field','Filled and outlined fields, select and textarea.'],['chip','Chips','Assist, filter, input and suggestion chips.'],['switch','Switch','On and off settings.'],['checkbox','Checkbox','Multiple choices and select-all.'],['radio','Radio','One choice from a short list.'],['slider','Slider','A value from a range.'],['swatches','Color Swatches','Pick the app’s seed color.']]],
+ ['Feedback',[['badge','Badge','Counts and dots on icons.'],['status','Status','A labelled tone for state: Paid, Due, Overdue.'],['progress','Progress','Linear and circular, determinate or not.'],['snackbar','Snackbar','Short confirmations with Undo.'],['tooltip','Tooltips','Plain labels and rich explanations.']]],
+ ['Overlays',[['menu','Menu','Choices from a button; unfolds, on glass.'],['dialog','Dialog','Decisions; grows out of its button.'],['sheet','Sheets','Bottom and side sheets for short tasks.']]]];
+const host=document.getElementById('groups');
+host.innerHTML=G.map(([g,items])=>`<h2>${g}</h2><div class="gal" style="margin-bottom:var(--s4-space-8)">${items.map(([id,n,d])=>`<a class="s4-card" data-variant="filled" href="${id}/${id}.html"><div class="s4-card-body"><b>${n}</b><small>${d}</small></div></a>`).join('')}</div>`).join('');
+</script>
+</body>
+</html>

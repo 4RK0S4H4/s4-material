@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>App Shell · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<style>
+  /* page-only: a summary row for the demo */
+  .demo-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: var(--s4-space-3); }
+  .demo-kpi { padding: var(--s4-space-4); border-radius: var(--s4-shape-card); background: var(--md-sys-color-surface-container-low); }
+  .demo-kpi > p { margin: 0; }
+  .demo-note { margin: 0; max-width: 70ch; color: var(--md-sys-color-on-surface-variant); }
+</style>
+</head>
+<body>
+<div class="s4-app">
+  <nav class="s4-nav-rail" aria-label="Main">
+    <div class="s4-nav-rail-header">
+      <button class="s4-icon-button" type="button" data-rail-toggle aria-expanded="false" aria-label="Expand Navigation"
+              data-label-expand="Expand Navigation" data-label-collapse="Collapse Navigation"><span class="s4-icon" data-icon="menu"></span></button>
+      <button class="s4-fab" type="button" aria-label="Add Bill"><span class="s4-icon" data-icon="add"></span><span class="s4-fab-label">Add Bill</span></button>
+    </div>
+    <div class="s4-nav-rail-items">
+      <a class="s4-nav-item" href="#home" data-view="home" aria-current="page"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="home"></span></span><span class="s4-nav-label">Home</span></a>
+      <a class="s4-nav-item" href="#bills" data-view="bills"><span class="s4-nav-indicator"><span class="s4-badge-host"><span class="s4-icon" data-icon="bills"></span><span class="s4-badge">3</span></span></span><span class="s4-nav-label">Bills</span></a>
+      <a class="s4-nav-item" href="#budget" data-view="budget"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="wallet"></span></span><span class="s4-nav-label">Budget</span></a>
+      <a class="s4-nav-item" href="#settings" data-view="settings"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="settings"></span></span><span class="s4-nav-label">Settings</span></a>
+    </div>
+  </nav>
+
+  <div class="s4-app-body">
+    <header class="s4-top-app-bar">
+      <div class="s4-app-bar-title-group">
+        <h1 class="s4-app-bar-title">Home</h1>
+      </div>
+      <div class="s4-app-bar-actions">
+        <button class="s4-icon-button" type="button" aria-label="Notifications"><span class="s4-icon" data-icon="notifications"></span></button>
+        <button class="s4-icon-button" type="button" aria-label="Dark Mode" id="theme-toggle"><span class="s4-icon" data-icon="dark-mode"></span></button>
+        <button class="s4-icon-button" type="button" aria-label="Account"><span class="s4-icon" data-icon="account"></span></button>
+      </div>
+    </header>
+
+    <main class="s4-content">
+      <!-- Home -->
+      <section class="s4-view" data-view="home" data-title="Home" aria-label="Home">
+        <div class="s4-section">
+          <p class="demo-note">This page is the app shell itself. Under 600 wide the nav bar sits at the bottom; from 600 its items sit horizontally; from 840 a nav rail replaces it. Resize the window, switch destinations (shared axis), and scroll to see the top app bar change color.</p>
+          <div class="demo-kpis">
+            <div class="demo-kpi"><p class="s4-label-large s4-on-surface-variant">Due This Month</p><p class="s4-headline-medium s4-num">$8,620.60</p></div>
+            <div class="demo-kpi"><p class="s4-label-large s4-on-surface-variant">Paid</p><p class="s4-headline-medium s4-num">$5,104.82</p></div>
+            <div class="demo-kpi"><p class="s4-label-large s4-on-surface-variant">Overdue</p><p class="s4-headline-medium s4-num">$412.30</p></div>
+          </div>
+        </div>
+        <div class="s4-section">
+          <h2 class="s4-section-title">Upcoming</h2>
+          <ul class="s4-list" data-style="segmented">
+            <li><a class="s4-list-item" href="#bills"><span class="s4-list-leading"><span class="s4-avatar">IM</span></span><span class="s4-list-content"><span class="s4-list-headline">Iron Mountain</span><span class="s4-list-supporting">Due Oct 28 · Storage</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,240.00</span></span></a></li>
+            <li><a class="s4-list-item" href="#bills"><span class="s4-list-leading"><span class="s4-avatar">AW</span></span><span class="s4-list-content"><span class="s4-list-headline">Amazon Web Services</span><span class="s4-list-supporting">Due Oct 30 · Hosting</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$3,412.57</span></span></a></li>
+            <li><a class="s4-list-item" href="#bills"><span class="s4-list-leading"><span class="s4-avatar">PG</span></span><span class="s4-list-content"><span class="s4-list-headline">PG&amp;E</span><span class="s4-list-supporting">Overdue since Oct 20 · Utilities</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$412.30</span></span></a></li>
+            <li><a class="s4-list-item" href="#bills"><span class="s4-list-leading"><span class="s4-avatar">WW</span></span><span class="s4-list-content"><span class="s4-list-headline">WeWork</span><span class="s4-list-supporting">Due Nov 1 · Rent</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$2,800.00</span></span></a></li>
+            <li><a class="s4-list-item" href="#bills"><span class="s4-list-leading"><span class="s4-avatar">CB</span></span><span class="s4-list-content"><span class="s4-list-headline">Comcast Business</span><span class="s4-list-supporting">Due Nov 3 · Internet</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$189.99</span></span></a></li>
+            <li><a class="s4-list-item" href="#bills"><span class="s4-list-leading"><span class="s4-avatar">VZ</span></span><span class="s4-list-content"><span class="s4-list-headline">Verizon</span><span class="s4-list-supporting">Due Nov 5 · Phones</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$230.15</span></span></a></li>
+            <li><a class="s4-list-item" href="#bills"><span class="s4-list-leading"><span class="s4-avatar">AD</span></span><span class="s4-list-content"><span class="s4-list-headline">Adobe Creative Cloud</span><span class="s4-list-supporting">Due Nov 8 · Software</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$89.99</span></span></a></li>
+            <li><a class="s4-list-item" href="#bills"><span class="s4-list-leading"><span class="s4-avatar">SL</span></span><span class="s4-list-content"><span class="s4-list-headline">Slack</span><span class="s4-list-supporting">Due Nov 12 · Software</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$96.00</span></span></a></li>
+            <li><a class="s4-list-item" href="#bills"><span class="s4-list-leading"><span class="s4-avatar">ZM</span></span><span class="s4-list-content"><span class="s4-list-headline">Zoom</span><span class="s4-list-supporting">Due Nov 15 · Software</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$149.90</span></span></a></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Bills -->
+      <section class="s4-view" data-view="bills" data-title="Bills" aria-label="Bills" hidden>
+        <div class="s4-section">
+          <div class="s4-search" role="search" data-filter="#bills-due" data-filter-empty="#bills-none">
+            <span class="s4-icon" data-icon="search"></span>
+            <input class="s4-search-input" type="search" placeholder="Search Bills" aria-label="Search bills">
+            <button class="s4-icon-button s4-search-clear" type="button" aria-label="Clear Search" hidden><span class="s4-icon" data-icon="close"></span></button>
+          </div>
+        </div>
+        <div class="s4-tabs" role="tablist" aria-label="Bill Status">
+          <button class="s4-tab" role="tab" id="app-tab-due" aria-controls="app-panel-due" aria-selected="true">Due</button>
+          <button class="s4-tab" role="tab" id="app-tab-paid" aria-controls="app-panel-paid">Paid</button>
+          <button class="s4-tab" role="tab" id="app-tab-overdue" aria-controls="app-panel-overdue">Overdue</button>
+        </div>
+        <div class="s4-tab-panel" id="app-panel-due" role="tabpanel" aria-labelledby="app-tab-due">
+          <ul class="s4-list" id="bills-due">
+            <li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Iron Mountain</span><span class="s4-list-supporting">Due Oct 28</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,240.00</span></span></div></li>
+            <li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Amazon Web Services</span><span class="s4-list-supporting">Due Oct 30</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$3,412.57</span></span></div></li>
+            <li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">WeWork</span><span class="s4-list-supporting">Due Nov 1</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$2,800.00</span></span></div></li>
+            <li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Comcast Business</span><span class="s4-list-supporting">Due Nov 3</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$189.99</span></span></div></li>
+            <li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Verizon</span><span class="s4-list-supporting">Due Nov 5</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$230.15</span></span></div></li>
+          </ul>
+          <p id="bills-none" class="demo-note" hidden>No bills match your search.</p>
+        </div>
+        <div class="s4-tab-panel" id="app-panel-paid" role="tabpanel" aria-labelledby="app-tab-paid" hidden>
+          <ul class="s4-list">
+            <li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Slack</span><span class="s4-list-supporting">Paid Oct 12</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$96.00</span></span></div></li>
+            <li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Adobe Creative Cloud</span><span class="s4-list-supporting">Paid Oct 8</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$89.99</span></span></div></li>
+          </ul>
+        </div>
+        <div class="s4-tab-panel" id="app-panel-overdue" role="tabpanel" aria-labelledby="app-tab-overdue" hidden>
+          <ul class="s4-list">
+            <li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">PG&amp;E</span><span class="s4-list-supporting">Overdue since Oct 20</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$412.30</span></span></div></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Budget -->
+      <section class="s4-view" data-view="budget" data-title="Budget" aria-label="Budget" hidden>
+        <div class="s4-section">
+          <h2 class="s4-section-title">October Budget</h2>
+          <div class="demo-kpis">
+            <div class="demo-kpi"><p class="s4-label-large s4-on-surface-variant">Software</p><p class="s4-headline-small s4-num">$435.89 <span class="s4-body-medium s4-on-surface-variant">of $600.00</span></p></div>
+            <div class="demo-kpi"><p class="s4-label-large s4-on-surface-variant">Hosting</p><p class="s4-headline-small s4-num">$3,412.57 <span class="s4-body-medium s4-on-surface-variant">of $3,000.00</span></p></div>
+            <div class="demo-kpi"><p class="s4-label-large s4-on-surface-variant">Rent</p><p class="s4-headline-small s4-num">$2,800.00 <span class="s4-body-medium s4-on-surface-variant">of $2,800.00</span></p></div>
+            <div class="demo-kpi"><p class="s4-label-large s4-on-surface-variant">Utilities</p><p class="s4-headline-small s4-num">$832.44 <span class="s4-body-medium s4-on-surface-variant">of $900.00</span></p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings -->
+      <section class="s4-view" data-view="settings" data-title="Settings" aria-label="Settings" hidden>
+        <div class="s4-section">
+          <ul class="s4-list" data-style="segmented">
+            <li><a class="s4-list-item" href="#settings"><span class="s4-list-leading"><span class="s4-icon" data-icon="notifications"></span></span><span class="s4-list-content"><span class="s4-list-headline">Reminders</span><span class="s4-list-supporting">3 days before each due date</span></span></a></li>
+            <li><a class="s4-list-item" href="#settings"><span class="s4-list-leading"><span class="s4-icon" data-icon="card"></span></span><span class="s4-list-content"><span class="s4-list-headline">Payment Methods</span><span class="s4-list-supporting">Visa ending 4021</span></span></a></li>
+            <li><a class="s4-list-item" href="#settings"><span class="s4-list-leading"><span class="s4-icon" data-icon="export"></span></span><span class="s4-list-content"><span class="s4-list-headline">Export Data</span><span class="s4-list-supporting">CSV or Excel</span></span></a></li>
+          </ul>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="s4-nav-bar" aria-label="Main">
+    <a class="s4-nav-item" href="#home" data-view="home" aria-current="page"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="home"></span></span><span class="s4-nav-label">Home</span></a>
+    <a class="s4-nav-item" href="#bills" data-view="bills"><span class="s4-nav-indicator"><span class="s4-badge-host"><span class="s4-icon" data-icon="bills"></span><span class="s4-badge">3</span></span></span><span class="s4-nav-label">Bills</span></a>
+    <a class="s4-nav-item" href="#budget" data-view="budget"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="wallet"></span></span><span class="s4-nav-label">Budget</span></a>
+    <a class="s4-nav-item" href="#settings" data-view="settings"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="settings"></span></span><span class="s4-nav-label">Settings</span></a>
+  </nav>
+</div>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../motion/motion.js"></script>
+<script src="../app/app.js"></script>
+<script src="../top-app-bar/top-app-bar.js"></script>
+<script src="../nav-bar/nav-bar.js"></script>
+<script src="../nav-rail/nav-rail.js"></script>
+<script src="../tabs/tabs.js"></script>
+<script src="../search/search.js"></script>
+<script src="../list/list.js"></script>
+<script src="../icon-button/icon-button.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+<script>
+  /* page-only: the theme button in the top app bar */
+  document.getElementById('theme-toggle').addEventListener('click', function () {
+    var dark = document.documentElement.dataset.theme !== 'dark';
+    S4.theme({ mode: dark ? 'dark' : 'light' });
+    this.setAttribute('aria-label', dark ? 'Light Mode' : 'Dark Mode');
+    S4.icon.set(this.querySelector('.s4-icon'), dark ? 'light-mode' : 'dark-mode');
+  });
+</script>
+</body>
+</html>

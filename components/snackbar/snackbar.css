@@ -1,0 +1,43 @@
+/* Snackbar (M3): a short message after an action, often with Undo. Created from code:
+     S4.snackbar({ text: 'Bill archived', action: 'Undo', onAction: fn, closable: false, duration: 4000 })
+   Slides up from the bottom edge (decision 0001), above the nav bar, a docked toolbar or a FAB. Solid inverse surface
+   (not glass: its inverse-primary action only reaches 4.5:1 on the full surface). */
+@layer s4.components {
+  .s4-snackbar-host {
+    position: fixed;
+    z-index: var(--s4-z-snackbar);
+    left: 0;
+    right: 0;
+    bottom: calc(var(--s4-snackbar-offset, 0px) + max(var(--s4-space-4), env(safe-area-inset-bottom)));
+    display: flex;
+    justify-content: center;
+    padding: 0 var(--s4-space-4);
+    pointer-events: none;
+  }
+  .s4-snackbar {
+    display: flex;
+    align-items: center;
+    gap: var(--s4-space-2);
+    width: max-content;
+    min-width: min(344px, 100%);
+    max-width: min(600px, 100%);
+    min-height: var(--s4-size-touch-target);
+    padding: var(--s4-space-1) var(--s4-space-2) var(--s4-space-1) var(--s4-space-4);
+    border-radius: var(--s4-shape-snackbar);
+    background: var(--md-sys-color-inverse-surface);
+    color: var(--md-sys-color-inverse-on-surface);
+    box-shadow: var(--md-sys-elevation-level3);
+    pointer-events: auto;
+    font-family: var(--md-sys-typescale-body-medium-font);
+    font-size: var(--md-sys-typescale-body-medium-size);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-body-medium-tracking);
+  }
+  .s4-snackbar-text { flex: 1; padding: var(--s4-space-3) 0; }
+  .s4-snackbar[data-multiline] { flex-wrap: wrap; }
+  .s4-snackbar[data-multiline] .s4-snackbar-text { flex-basis: 100%; }
+  .s4-snackbar[data-multiline] .s4-snackbar-action { margin-inline-start: auto; }
+  .s4-snackbar .s4-button[data-variant="text"] { --_fg: var(--md-sys-color-inverse-primary); }
+  .s4-snackbar .s4-icon-button { color: var(--md-sys-color-inverse-on-surface); }
+  @media (forced-colors: active) { .s4-snackbar { border: 1px solid CanvasText; } }
+}

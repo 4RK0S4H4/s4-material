@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Snackbar · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+<style>
+.ex-backdrop{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:var(--s4-space-2);padding:var(--s4-space-4);border-radius:var(--md-sys-shape-corner-large);background:var(--md-sys-color-surface-container-low)}
+.ex-backdrop > i{height:72px;border-radius:var(--md-sys-shape-corner-medium);background:var(--md-sys-color-primary)}
+.ex-backdrop > i:nth-child(3n){background:var(--md-sys-color-tertiary-container)} .ex-backdrop > i:nth-child(4n){background:var(--md-sys-color-secondary-container)}
+.ex-backdrop > i:nth-child(5n){background:linear-gradient(160deg,#ff5e62,#7b2ff7 55%,#1e1b4b)}
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Snackbar</h1></header>
+<main class="ex-main">
+  <p>Snackbars confirm an action in a short line, often with Undo. They <b>slide up from the bottom edge</b>, stay above a nav bar or FAB, pause while you hover or focus them, and a new one replaces the old. They stay solid (inverse surface) so the action color keeps its contrast.</p>
+  <section class="ex-sec"><h2>Messages</h2><p>Each button shows a different snackbar.</p>
+    <div class="ex-board">
+      <button class="s4-button" data-variant="tonal" type="button" id="sb1">Archive Bill</button>
+      <button class="s4-button" data-variant="tonal" type="button" id="sb2">Mark as Paid</button>
+      <button class="s4-button" data-variant="outlined" type="button" id="sb3">Long Message</button>
+      <span class="s4-on-surface-variant" id="sb-out" aria-live="polite"></span>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/snackbar/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../motion/motion.js"></script>
+<script src="../button/button.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="snackbar.js"></script>
+<script src="../icon-button/icon-button.js"></script>
+<script src="../_example/example.js"></script>
+<script>
+document.getElementById('sb1').onclick=()=>S4.snackbar({text:'Bill archived',action:'Undo',onAction:()=>document.getElementById('sb-out').textContent='Restored'});
+document.getElementById('sb2').onclick=()=>S4.snackbar('Staples marked as paid');
+document.getElementById('sb3').onclick=()=>S4.snackbar({text:'Couldn’t sync 3 bills. Check your connection, then try again from the Bills screen.',action:'Retry',multiline:true,closable:true});
+</script>
+</body>
+</html>

@@ -51,17 +51,18 @@
 
   /* ---------- the shared state layer (M3): a content-colored overlay at the state-layer opacity ----------
      Every interactive S4 component is listed here once, so hover, focus and press look identical everywhere.
-     A component can tint its layer with --_state-color (defaults to the content color). */
+     A component can tint its layer with --_state-color (defaults to the content color).
+     Table rows draw their own layer on the cells (an absolutely positioned ::before on a <tr> breaks table layout). */
   :where(.s4-button, .s4-icon-button, .s4-fab, .s4-chip, .s4-menu-item, .s4-tab, .s4-swatch, .s4-segment,
          a.s4-list-item, button.s4-list-item, label.s4-list-item, .s4-list-item[tabindex],
-         a.s4-card, button.s4-card, .s4-table tr[tabindex], .s4-nav-item) {
+         a.s4-card, button.s4-card, .s4-nav-item) {
     position: relative;
     isolation: isolate;
     -webkit-tap-highlight-color: transparent;
   }
   :where(.s4-button, .s4-icon-button, .s4-fab, .s4-chip, .s4-menu-item, .s4-tab, .s4-swatch, .s4-segment,
          a.s4-list-item, button.s4-list-item, label.s4-list-item, .s4-list-item[tabindex],
-         a.s4-card, button.s4-card, .s4-table tr[tabindex])::before {
+         a.s4-card, button.s4-card)::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -75,24 +76,26 @@
   @media (hover: hover) {
     :where(.s4-button, .s4-icon-button, .s4-fab, .s4-chip, .s4-menu-item, .s4-tab, .s4-swatch, .s4-segment,
            a.s4-list-item, button.s4-list-item, label.s4-list-item, .s4-list-item[tabindex],
-           a.s4-card, button.s4-card, .s4-table tr[tabindex]):hover::before { opacity: var(--md-sys-state-hover-state-layer-opacity); }
+           a.s4-card, button.s4-card):hover::before { opacity: var(--md-sys-state-hover-state-layer-opacity); }
   }
   :where(.s4-button, .s4-icon-button, .s4-fab, .s4-chip, .s4-menu-item, .s4-tab, .s4-swatch, .s4-segment,
          a.s4-list-item, button.s4-list-item, label.s4-list-item, .s4-list-item[tabindex],
-         a.s4-card, button.s4-card, .s4-table tr[tabindex]):focus-visible::before { opacity: var(--md-sys-state-focus-state-layer-opacity); }
+         a.s4-card, button.s4-card):focus-visible::before,
+  label.s4-list-item:has(:focus-visible)::before { opacity: var(--md-sys-state-focus-state-layer-opacity); }
   :where(.s4-button, .s4-icon-button, .s4-fab, .s4-chip, .s4-menu-item, .s4-tab, .s4-swatch, .s4-segment,
          a.s4-list-item, button.s4-list-item, label.s4-list-item, .s4-list-item[tabindex],
-         a.s4-card, button.s4-card, .s4-table tr[tabindex]):active::before { opacity: var(--md-sys-state-pressed-state-layer-opacity); }
+         a.s4-card, button.s4-card):active::before { opacity: var(--md-sys-state-pressed-state-layer-opacity); }
   :where(.s4-button, .s4-icon-button, .s4-fab, .s4-chip, .s4-menu-item, .s4-tab, .s4-swatch, .s4-segment,
          a.s4-list-item, button.s4-list-item, label.s4-list-item, .s4-list-item[tabindex],
-         a.s4-card, button.s4-card, .s4-table tr[tabindex]):is(:disabled, [aria-disabled="true"]) { cursor: default; pointer-events: none; }
+         a.s4-card, button.s4-card):is(:disabled, [aria-disabled="true"]) { cursor: default; pointer-events: none; }
   :where(.s4-button, .s4-icon-button, .s4-fab, .s4-chip, .s4-menu-item, .s4-tab, .s4-swatch, .s4-segment,
          a.s4-list-item, button.s4-list-item, label.s4-list-item, .s4-list-item[tabindex],
-         a.s4-card, button.s4-card, .s4-table tr[tabindex]):is(:disabled, [aria-disabled="true"])::before { display: none; }
+         a.s4-card, button.s4-card):is(:disabled, [aria-disabled="true"])::before { display: none; }
 
   /* Windows high contrast and other forced-color modes: drop decorative layers, keep real borders and focus. */
   @media (forced-colors: active) {
-    :where(.s4-button, .s4-icon-button, .s4-fab, .s4-chip, .s4-menu-item, .s4-tab, .s4-swatch, .s4-segment)::before { display: none; }
+    :where(.s4-button, .s4-icon-button, .s4-fab, .s4-chip, .s4-menu-item, .s4-tab, .s4-swatch, .s4-segment,
+           a.s4-list-item, button.s4-list-item, label.s4-list-item, .s4-list-item[tabindex], a.s4-card, button.s4-card)::before { display: none; }
     :where(:focus-visible) { outline-color: Highlight; }
   }
 }

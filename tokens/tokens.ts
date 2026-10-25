@@ -1030,18 +1030,18 @@ export const tokens = {
   },
   "--s4-glass-tint-float": {
     "type": "color",
-    "value": "var(--md-sys-color-surface-container)"
+    "value": "var(--md-sys-color-surface-container)",
+    "description": "App bars over scrolled content, nav bar, nav rail, toolbars, menus, sheets, dialogs, rich tooltips."
   },
   "--s4-glass-tint-fill": {
     "type": "color",
-    "value": "var(--md-sys-color-surface-container-highest)"
+    "value": "var(--md-sys-color-surface-container-highest)",
+    "description": "Tonal fills inside a glass surface (no blur of their own)."
   },
   "--s4-glass-tint-opacity-float": {
     "type": "number",
-    "value": "0.84",
-    "description": "App bars over scrolled content, nav bar, toolbars, menus, sheets, dialogs, rich tooltips.",
+    "value": "0.6",
     "modes": {
-      "dark": "0.82",
       "high-contrast": "1",
       "dark-high-contrast": "1",
       "reduced-transparency": "1"
@@ -1050,7 +1050,6 @@ export const tokens = {
   "--s4-glass-tint-opacity-fill": {
     "type": "number",
     "value": "0.56",
-    "description": "Tonal fills inside a glass surface (no blur of their own).",
     "modes": {
       "dark": "0.64",
       "high-contrast": "1",
@@ -1060,40 +1059,41 @@ export const tokens = {
   },
   "--s4-glass-tint-opacity-medium-contrast": {
     "type": "number",
-    "value": "0.9",
-    "description": "Float tint at contrast level 0.5 (set at run time)."
+    "value": "0.8",
+    "description": "Float tint when the app runs at medium contrast (contrast level 0.5)."
   },
-  "--s4-glass-blur-small": {
+  "--s4-glass-blur-float": {
     "type": "dimension",
-    "value": "12px",
+    "value": "16px",
+    "description": "Backdrop blur radius.",
     "modes": {
-      "reduced-transparency": "0px",
       "high-contrast": "0px",
-      "dark-high-contrast": "0px"
-    }
-  },
-  "--s4-glass-blur-medium": {
-    "type": "dimension",
-    "value": "24px",
-    "modes": {
       "reduced-transparency": "0px",
-      "high-contrast": "0px",
-      "dark-high-contrast": "0px"
-    }
-  },
-  "--s4-glass-blur-large": {
-    "type": "dimension",
-    "value": "32px",
-    "description": "Float glass.",
-    "modes": {
-      "reduced-transparency": "0px",
-      "high-contrast": "0px",
       "dark-high-contrast": "0px"
     }
   },
   "--s4-glass-saturation-float": {
     "type": "number",
-    "value": "1.35"
+    "value": "1.8",
+    "description": "saturate() on the backdrop, so color showing through stays lively."
+  },
+  "--s4-glass-backdrop-contrast-float": {
+    "type": "number",
+    "value": "0.74",
+    "description": "contrast() on the backdrop: lifts blacks behind light glass so dark text keeps 4.5:1.",
+    "modes": {
+      "dark": "1",
+      "dark-high-contrast": "1"
+    }
+  },
+  "--s4-glass-backdrop-brightness-float": {
+    "type": "number",
+    "value": "1.1",
+    "description": "brightness() on the backdrop: dims whites behind dark glass so light text keeps 4.5:1.",
+    "modes": {
+      "dark": "0.8",
+      "dark-high-contrast": "0.8"
+    }
   },
   "--s4-glass-highlight-width": {
     "type": "dimension",
@@ -1112,7 +1112,7 @@ export const tokens = {
   "--s4-glass-max-stack": {
     "type": "number",
     "value": "2",
-    "description": "At most two glass layers may overlap at any point (e.g. a menu over an app bar). A third is solid."
+    "description": "At most two glass layers overlap at any point (e.g. a menu over an app bar). A third becomes solid."
   },
   "--s4-icon-duo-opacity": {
     "type": "number",
@@ -1419,6 +1419,33 @@ export const tokens = {
   "--s4-size-divider": {
     "type": "dimension",
     "value": "1px"
+  },
+  "--s4-size-nav-rail-expanded": {
+    "type": "dimension",
+    "value": "240px",
+    "description": "Expanded navigation rail (M3 Expressive allows 220–360)."
+  },
+  "--s4-size-toolbar": {
+    "type": "dimension",
+    "value": "64px",
+    "description": "Floating and docked toolbars."
+  },
+  "--s4-size-search-max": {
+    "type": "dimension",
+    "value": "720px",
+    "description": "Maximum width of a search bar."
+  },
+  "--s4-size-avatar": {
+    "type": "dimension",
+    "value": "40px"
+  },
+  "--s4-size-badge-dot": {
+    "type": "dimension",
+    "value": "6px"
+  },
+  "--s4-size-badge": {
+    "type": "dimension",
+    "value": "16px"
   },
   "--s4-layout-margin-compact": {
     "type": "dimension",

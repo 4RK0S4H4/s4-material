@@ -1,0 +1,35 @@
+/* Divider (M3)
+   <hr class="s4-divider">                                  full width
+   <hr class="s4-divider" data-inset="start|middle">         inset 16 at the start, or 16 at both ends
+   <hr class="s4-divider" data-orientation="vertical">       between items in a row (needs a flex or grid parent)
+   1px outline-variant. --s4-divider-inset sets the inset (e.g. 72 to line up with list text after an avatar).
+   Drawn with a real border so it survives forced-colors mode. */
+@layer s4.components {
+  .s4-divider {
+    flex: none;
+    align-self: stretch;
+    width: auto;
+    height: 0;
+    margin: 0;
+    border: 0;
+    border-block-start: var(--s4-size-divider) solid var(--md-sys-color-outline-variant);
+    color: var(--md-sys-color-outline-variant);
+  }
+  .s4-divider[data-inset="start"] { margin-inline-start: var(--s4-divider-inset, var(--s4-space-4)); }
+  .s4-divider[data-inset="middle"] { margin-inline: var(--s4-divider-inset, var(--s4-space-4)); }
+
+  .s4-divider[data-orientation="vertical"] {
+    display: inline-block;   /* inline rows too; in a flex or grid row it stretches to the row's height */
+    width: 0;
+    height: auto;
+    min-height: var(--s4-space-6);
+    vertical-align: middle;
+    border-block-start: 0;
+    border-inline-start: var(--s4-size-divider) solid var(--md-sys-color-outline-variant);
+  }
+  .s4-divider[data-orientation="vertical"]:is([data-inset="start"], [data-inset="middle"]) {
+    margin-inline: 0;
+    margin-block: var(--s4-divider-inset, var(--s4-space-2));
+  }
+  .s4-divider[data-orientation="vertical"][data-inset="start"] { margin-block-end: 0; }
+}

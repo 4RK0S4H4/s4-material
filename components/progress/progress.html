@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Progress · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+<style>
+  /* page-only */
+  .demo-row { display: flex; flex-direction: column; gap: var(--s4-space-2); width: 100%; }
+  .demo-row > span { display: flex; justify-content: space-between; font-size: var(--md-sys-typescale-body-medium-size); color: var(--md-sys-color-on-surface-variant); font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Progress</h1></header>
+<main class="ex-main">
+  <p>Progress indicators show that something is happening. Use <b>determinate</b> when you know how far along it is (give <code>data-value</code> from 0 to 1) and <b>indeterminate</b> when you don't. M3 Expressive styling: a gap between the indicator and the track, and a stop dot at the end of a linear track.</p>
+
+  <section class="ex-sec">
+    <h2>Linear</h2>
+    <p>4dp track. Determinate at 0, 25%, 60% and 100%, then indeterminate.</p>
+    <div class="ex-board col">
+      <div class="demo-row"><span>Not Started <b>0%</b></span><div class="s4-progress" data-value="0" aria-label="Import Not Started"></div></div>
+      <div class="demo-row"><span>Uploading Receipts <b>25%</b></span><div class="s4-progress" data-value="0.25" aria-label="Uploading Receipts"></div></div>
+      <div class="demo-row"><span>Q4 Budget Used <b>$6,820.00 of $11,000.00</b></span><div class="s4-progress" data-value="0.62" aria-label="Q4 Budget Used"></div></div>
+      <div class="demo-row"><span>Import Complete <b>100%</b></span><div class="s4-progress" data-value="1" aria-label="Import Complete"></div></div>
+      <div class="demo-row"><span>Syncing With Your Bank</span><div class="s4-progress" aria-label="Syncing With Your Bank"></div></div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Circular</h2>
+    <p>40dp, 4dp stroke. Determinate values, then indeterminate (no track while it spins).</p>
+    <div class="ex-board">
+      <div class="ex-cap"><div class="s4-progress" data-type="circular" data-value="0.1" aria-label="Scanning"></div>10%</div>
+      <div class="ex-cap"><div class="s4-progress" data-type="circular" data-value="0.4" aria-label="Scanning"></div>40%</div>
+      <div class="ex-cap"><div class="s4-progress" data-type="circular" data-value="0.75" aria-label="Scanning"></div>75%</div>
+      <div class="ex-cap"><div class="s4-progress" data-type="circular" data-value="1" aria-label="Scanning"></div>100%</div>
+      <div class="ex-cap"><div class="s4-progress" data-type="circular" aria-label="Loading Bills"></div>Indeterminate</div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Live Update</h2>
+    <p>Change <code>data-value</code> and the indicator moves with a spring; progress.js keeps <code>aria-valuenow</code> in step.</p>
+    <div class="ex-board">
+      <div class="s4-progress" id="live" data-value="0.2" aria-label="Exporting to Excel" style="flex:1;min-width:160px"></div>
+      <div class="s4-progress" id="live-c" data-type="circular" data-value="0.2" aria-label="Exporting to Excel"></div>
+      <button class="s4-button" data-variant="tonal" type="button" id="step">Step</button>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/progress/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../progress/progress.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+<script>
+  document.getElementById('step').addEventListener('click', function () {
+    ['live', 'live-c'].forEach(function (id) {
+      var el = document.getElementById(id), v = +el.dataset.value + 0.2;
+      el.dataset.value = v > 1.01 ? 0 : Math.round(v * 10) / 10;
+    });
+  });
+</script>
+</body>
+</html>

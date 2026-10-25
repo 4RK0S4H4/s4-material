@@ -222,6 +222,45 @@
           "value": 1,
           "unit": "px"
         }
+      },
+      "nav-rail-expanded": {
+        "$value": {
+          "value": 240,
+          "unit": "px"
+        },
+        "$description": "Expanded navigation rail (M3 Expressive allows 220\u2013360)."
+      },
+      "toolbar": {
+        "$value": {
+          "value": 64,
+          "unit": "px"
+        },
+        "$description": "Floating and docked toolbars."
+      },
+      "search-max": {
+        "$value": {
+          "value": 720,
+          "unit": "px"
+        },
+        "$description": "Maximum width of a search bar."
+      },
+      "avatar": {
+        "$value": {
+          "value": 40,
+          "unit": "px"
+        }
+      },
+      "badge-dot": {
+        "$value": {
+          "value": 6,
+          "unit": "px"
+        }
+      },
+      "badge": {
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        }
       }
     },
     "layout": {

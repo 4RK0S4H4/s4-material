@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Badge · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Badge</h1></header>
+<main class="ex-main">
+  <p>Badges show that something is new or how many items need attention, on a navigation icon or next to a label. A small dot means "something new"; a number counts items. Badges use error and on-error.</p>
+
+  <section class="ex-sec">
+    <h2>Small and Large</h2>
+    <p>Small is a 6dp dot (an empty element). Large is 16dp high with a count; cap long counts at "999+".</p>
+    <div class="ex-board">
+      <span class="ex-cap"><span class="s4-badge"></span>Small</span>
+      <span class="ex-cap"><span class="s4-badge">3</span>Large</span>
+      <span class="ex-cap"><span class="s4-badge">48</span>Two digits</span>
+      <span class="ex-cap"><span class="s4-badge">999+</span>Capped</span>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>On an Icon</h2>
+    <p>Wrap the 24dp icon in <code>.s4-badge-host</code>. The dot sits in the icon's top-end corner; a count starts 12dp in from the icon's end. Give the control an accessible name that includes the count.</p>
+    <div class="ex-board">
+      <span class="ex-cap"><span class="s4-badge-host"><span class="s4-icon" data-icon="notifications"></span><span class="s4-badge"></span></span>New</span>
+      <span class="ex-cap"><span class="s4-badge-host"><span class="s4-icon" data-icon="bills"></span><span class="s4-badge">6</span></span>Due Bills</span>
+      <span class="ex-cap"><span class="s4-badge-host"><span class="s4-icon" data-icon="mail"></span><span class="s4-badge">28</span></span>Inbox</span>
+      <span class="ex-cap"><span class="s4-badge-host"><span class="s4-icon" data-icon="chat"></span><span class="s4-badge">999+</span></span>Messages</span>
+      <button class="s4-button" data-variant="tonal" type="button" aria-label="Bills, 6 due"><span class="s4-badge-host"><span class="s4-icon" data-icon="bills"></span><span class="s4-badge" aria-hidden="true">6</span></span>Bills</button>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Inline</h2>
+    <p>Outside a host the badge sits in the line, after a label.</p>
+    <div class="ex-board">
+      <span class="s4-row">Overdue Bills <span class="s4-badge">2</span></span>
+      <span class="s4-row">New Vendors <span class="s4-badge"></span></span>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/badge/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../button/button.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+</body>
+</html>

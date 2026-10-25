@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tabs · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+<style>
+  /* page-only */
+  .demo-tabs { border-radius: var(--md-sys-shape-corner-large); overflow: hidden; background: var(--md-sys-color-surface); box-shadow: inset 0 0 0 1px var(--md-sys-color-outline-variant); max-width: 640px; }
+  .demo-tabs .s4-tab-panel { padding: var(--s4-space-2); }
+  .demo-log { margin: var(--s4-space-3) 0 0; font-size: var(--md-sys-typescale-body-small-size); color: var(--md-sys-color-on-surface-variant); }
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Tabs</h1></header>
+<main class="ex-main">
+  <p>Tabs switch between related views of the same content at the same level, such as a list of bills by status. <b>Primary</b> tabs sit under the top app bar and organize the whole screen; <b>secondary</b> tabs sit inside a content area and divide it further. Use the arrow keys, Home and End: the selection follows focus.</p>
+
+  <section class="ex-sec">
+    <h2>Primary</h2>
+    <p>Selected label in primary with a 3dp indicator as wide as its content. The indicator slides; the panel slides in from the side you're heading (shared axis).</p>
+      <div class="demo-tabs">
+      <div class="s4-tabs" role="tablist" aria-label="Bill Status">
+        <button class="s4-tab" type="button" role="tab" id="pa-t0" aria-controls="pa-p0" aria-selected="true">Due</button>
+        <button class="s4-tab" type="button" role="tab" id="pa-t1" aria-controls="pa-p1" aria-selected="false">Paid</button>
+        <button class="s4-tab" type="button" role="tab" id="pa-t2" aria-controls="pa-p2" aria-selected="false">Overdue</button>
+      </div>
+      <div class="s4-tab-panel" role="tabpanel" id="pa-p0" aria-labelledby="pa-t0"><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Iron Mountain</span><span class="s4-list-supporting">Due Oct 28</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,240.00</span></span></div></li><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Amazon Web Services</span><span class="s4-list-supporting">Due Oct 30</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$3,412.57</span></span></div></li><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">WeWork</span><span class="s4-list-supporting">Due Nov 1</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$2,800.00</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="pa-p1" aria-labelledby="pa-t1" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Slack</span><span class="s4-list-supporting">Paid Oct 12</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$96.00</span></span></div></li><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Adobe Creative Cloud</span><span class="s4-list-supporting">Paid Oct 8</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$89.99</span></span></div></li><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Zoom</span><span class="s4-list-supporting">Paid Oct 5</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$149.90</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="pa-p2" aria-labelledby="pa-t2" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">PG&amp;E</span><span class="s4-list-supporting">Overdue since Oct 20</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$412.30</span></span></div></li></ul></div>
+      </div>
+    <p class="demo-log" id="tabs-log" aria-live="polite">Selected: Due</p>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Primary with Icons</h2>
+    <p>Icons sit above the labels (64dp).</p>
+      <div class="demo-tabs">
+      <div class="s4-tabs" role="tablist" aria-label="Sections">
+        <button class="s4-tab" type="button" role="tab" id="pb-t0" aria-controls="pb-p0" aria-selected="true"><span class="s4-icon" data-icon="bills"></span>Bills</button>
+        <button class="s4-tab" type="button" role="tab" id="pb-t1" aria-controls="pb-p1" aria-selected="false"><span class="s4-icon" data-icon="wallet"></span>Budget</button>
+        <button class="s4-tab" type="button" role="tab" id="pb-t2" aria-controls="pb-p2" aria-selected="false"><span class="s4-icon" data-icon="chart"></span>Reports</button>
+      </div>
+      <div class="s4-tab-panel" role="tabpanel" id="pb-p0" aria-labelledby="pb-t0"><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Bills Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,000.00</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="pb-p1" aria-labelledby="pb-t1" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Budget Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,137.00</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="pb-p2" aria-labelledby="pb-t2" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Reports Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,274.00</span></span></div></li></ul></div>
+      </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Secondary</h2>
+    <p><code>data-variant="secondary"</code>: on-surface label and a 2dp indicator under the full tab; icons sit beside labels.</p>
+      <div class="demo-tabs">
+      <div class="s4-tabs" role="tablist" aria-label="Period" data-variant="secondary">
+        <button class="s4-tab" type="button" role="tab" id="sa-t0" aria-controls="sa-p0" aria-selected="true">This Month</button>
+        <button class="s4-tab" type="button" role="tab" id="sa-t1" aria-controls="sa-p1" aria-selected="false">Last Month</button>
+        <button class="s4-tab" type="button" role="tab" id="sa-t2" aria-controls="sa-p2" aria-selected="false">This Year</button>
+      </div>
+      <div class="s4-tab-panel" role="tabpanel" id="sa-p0" aria-labelledby="sa-t0"><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">This Month Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,000.00</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="sa-p1" aria-labelledby="sa-t1" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Last Month Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,137.00</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="sa-p2" aria-labelledby="sa-t2" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">This Year Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,274.00</span></span></div></li></ul></div>
+      </div>
+      <div class="demo-tabs" style="margin-top:var(--s4-space-4)">
+      <div class="s4-tabs" role="tablist" aria-label="View" data-variant="secondary">
+        <button class="s4-tab" type="button" role="tab" id="sb-t0" aria-controls="sb-p0" aria-selected="true"><span class="s4-icon" data-icon="document"></span>List</button>
+        <button class="s4-tab" type="button" role="tab" id="sb-t1" aria-controls="sb-p1" aria-selected="false"><span class="s4-icon" data-icon="calendar"></span>Calendar</button>
+        <button class="s4-tab" type="button" role="tab" id="sb-t2" aria-controls="sb-p2" aria-selected="false"><span class="s4-icon" data-icon="chart"></span>Chart</button>
+      </div>
+      <div class="s4-tab-panel" role="tabpanel" id="sb-p0" aria-labelledby="sb-t0"><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">List Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,000.00</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="sb-p1" aria-labelledby="sb-t1" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Calendar Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,137.00</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="sb-p2" aria-labelledby="sb-t2" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">Chart Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,274.00</span></span></div></li></ul></div>
+      </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Scrollable</h2>
+    <p><code>data-scrollable</code>: tabs keep their natural width and the row scrolls sideways; the selected tab scrolls into view.</p>
+      <div class="demo-tabs">
+      <div class="s4-tabs" role="tablist" aria-label="Month" data-scrollable>
+        <button class="s4-tab" type="button" role="tab" id="sc-t0" aria-controls="sc-p0" aria-selected="false">January</button>
+        <button class="s4-tab" type="button" role="tab" id="sc-t1" aria-controls="sc-p1" aria-selected="false">February</button>
+        <button class="s4-tab" type="button" role="tab" id="sc-t2" aria-controls="sc-p2" aria-selected="false">March</button>
+        <button class="s4-tab" type="button" role="tab" id="sc-t3" aria-controls="sc-p3" aria-selected="false">April</button>
+        <button class="s4-tab" type="button" role="tab" id="sc-t4" aria-controls="sc-p4" aria-selected="false">May</button>
+        <button class="s4-tab" type="button" role="tab" id="sc-t5" aria-controls="sc-p5" aria-selected="false">June</button>
+        <button class="s4-tab" type="button" role="tab" id="sc-t6" aria-controls="sc-p6" aria-selected="false">July</button>
+        <button class="s4-tab" type="button" role="tab" id="sc-t7" aria-controls="sc-p7" aria-selected="false">August</button>
+        <button class="s4-tab" type="button" role="tab" id="sc-t8" aria-controls="sc-p8" aria-selected="false">September</button>
+        <button class="s4-tab" type="button" role="tab" id="sc-t9" aria-controls="sc-p9" aria-selected="true">October</button>
+        <button class="s4-tab" type="button" role="tab" id="sc-t10" aria-controls="sc-p10" aria-selected="false">November</button>
+        <button class="s4-tab" type="button" role="tab" id="sc-t11" aria-controls="sc-p11" aria-selected="false">December</button>
+      </div>
+      <div class="s4-tab-panel" role="tabpanel" id="sc-p0" aria-labelledby="sc-t0" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">January Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,000.00</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="sc-p1" aria-labelledby="sc-t1" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">February Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,137.00</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="sc-p2" aria-labelledby="sc-t2" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">March Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,274.00</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="sc-p3" aria-labelledby="sc-t3" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">April Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,411.00</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="sc-p4" aria-labelledby="sc-t4" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">May Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,548.00</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="sc-p5" aria-labelledby="sc-t5" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">June Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,685.00</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="sc-p6" aria-labelledby="sc-t6" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">July Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,822.00</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="sc-p7" aria-labelledby="sc-t7" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">August Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$1,959.00</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="sc-p8" aria-labelledby="sc-t8" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">September Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$2,096.00</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="sc-p9" aria-labelledby="sc-t9"><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">October Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$2,233.00</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="sc-p10" aria-labelledby="sc-t10" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">November Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$2,370.00</span></span></div></li></ul></div>
+      <div class="s4-tab-panel" role="tabpanel" id="sc-p11" aria-labelledby="sc-t11" hidden><ul class="s4-list"><li><div class="s4-list-item"><span class="s4-list-content"><span class="s4-list-headline">December Report</span><span class="s4-list-supporting">Generated Oct 25</span></span><span class="s4-list-trailing"><span class="s4-list-amount">$2,507.00</span></span></div></li></ul></div>
+      </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/tabs/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../motion/motion.js"></script>
+<script src="../tabs/tabs.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+<script>
+  /* page-only: show the s4-change event */
+  document.addEventListener('s4-change', function (e) {
+    if (e.target.getAttribute('aria-label') === 'Bill Status') document.getElementById('tabs-log').textContent = 'Selected: ' + e.detail.tab.textContent.trim() + ' (index ' + e.detail.index + ')';
+  });
+</script>
+</body>
+</html>

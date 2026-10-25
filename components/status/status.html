@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Status · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Status</h1></header>
+<main class="ex-main">
+  <p>A status pill names the state of a thing: a bill, a payment, a sync. The label always says the status in words; the tone and the optional dot only reinforce it, so it never relies on color. Status pills aren't buttons: to filter by status, use a filter chip.</p>
+
+  <section class="ex-sec">
+    <h2>Tones</h2>
+    <p>Neutral by default; <code>data-tone</code> picks the primary, secondary, tertiary or error container.</p>
+    <div class="ex-board">
+      <span class="s4-status">Paid</span>
+      <span class="s4-status" data-tone="primary">Scheduled</span>
+      <span class="s4-status" data-tone="secondary">In Review</span>
+      <span class="s4-status" data-tone="tertiary">Due</span>
+      <span class="s4-status" data-tone="error">Overdue</span>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>With a Dot or Icon</h2>
+    <p><code>data-dot</code> adds a leading dot in the text color. An icon can lead instead.</p>
+    <div class="ex-board">
+      <span class="s4-status" data-dot>Draft</span>
+      <span class="s4-status" data-tone="primary" data-dot>Scheduled</span>
+      <span class="s4-status" data-tone="tertiary" data-dot>Due Nov 2</span>
+      <span class="s4-status" data-tone="error" data-dot>Overdue 22 Days</span>
+      <span class="s4-status"><span class="s4-icon" data-icon="check"></span>Paid</span>
+      <span class="s4-status" data-tone="error"><span class="s4-icon" data-icon="warning"></span>Payment Failed</span>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>In Context</h2>
+    <p>Bills app convention: Paid is neutral, Due is tertiary, Overdue is error.</p>
+    <div class="ex-board col">
+      <div class="s4-row" style="justify-content:space-between"><span>Iron Mountain · <span class="s4-num">$1,240.00</span></span><span class="s4-status" data-tone="tertiary">Due</span></div>
+      <div class="s4-row" style="justify-content:space-between"><span>Comcast Business · <span class="s4-num">$389.95</span></span><span class="s4-status">Paid</span></div>
+      <div class="s4-row" style="justify-content:space-between"><span>Staples · <span class="s4-num">$212.48</span></span><span class="s4-status" data-tone="error">Overdue</span></div>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/status/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../button/button.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+</body>
+</html>

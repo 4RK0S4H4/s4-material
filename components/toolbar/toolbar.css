@@ -1,0 +1,91 @@
+/* Toolbar (M3 Expressive)
+   <div class="s4-toolbar" role="toolbar" aria-label="Bill Actions" data-color="vibrant" data-orientation="vertical">
+     <button class="s4-icon-button" type="button" aria-label="Edit"><span class="s4-icon" data-icon="edit"></span></button>
+     …
+   </div>
+   Floating (default): a 64dp pill on surface-container with elevation 3, icon buttons 4dp apart. data-color="vibrant":
+   primary-container. data-orientation="vertical": a 64dp-wide column. data-type="docked": a full-width 64dp bar with
+   square corners, items spread out, padded for the home indicator (glass.css can add glass to both).
+   <div class="s4-toolbar-dock" data-position="bottom"> holds a floating toolbar with a FAB beside it; with
+   data-position="bottom" the pair floats centered above the bottom edge (and above the nav bar inside .s4-app).
+   toolbar.js adds the ARIA toolbar keys (arrows, Home, End) when role="toolbar" is set. */
+@layer s4.components {
+  .s4-toolbar {
+    --_bg: var(--md-sys-color-surface-container);
+    --_fg: var(--md-sys-color-on-surface-variant);
+    --_size: var(--s4-size-toolbar);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s4-space-1);
+    flex: none;
+    block-size: var(--_size);
+    max-inline-size: 100%;
+    padding-inline: var(--s4-space-2);
+    border-radius: var(--s4-shape-toolbar);
+    background: var(--_bg);
+    color: var(--_fg);
+    box-shadow: var(--md-sys-elevation-level3);
+    pointer-events: auto;
+  }
+  .s4-toolbar[data-color="vibrant"] {
+    --_bg: var(--md-sys-color-primary-container);
+    --_fg: var(--md-sys-color-on-primary-container);
+  }
+  /* standard icon buttons and text buttons take the toolbar's content color (on vibrant they'd otherwise vanish) */
+  .s4-toolbar[data-color="vibrant"] > :is(.s4-icon-button:not([data-variant]), .s4-button[data-variant="text"]):not(:disabled, [aria-disabled="true"]) {
+    color: var(--md-sys-color-on-primary-container);
+  }
+
+  .s4-toolbar[data-orientation="vertical"] {
+    flex-direction: column;
+    block-size: auto;
+    inline-size: var(--_size);
+    padding: var(--s4-space-2) 0;
+  }
+
+  /* docked: edge to edge, square corners, no shadow */
+  .s4-toolbar[data-type="docked"] {
+    display: flex;
+    justify-content: space-between;
+    inline-size: 100%;
+    block-size: auto;
+    min-block-size: calc(var(--_size) + env(safe-area-inset-bottom, 0px));
+    padding:
+      0
+      max(var(--s4-space-4), env(safe-area-inset-right, 0px))
+      env(safe-area-inset-bottom, 0px)
+      max(var(--s4-space-4), env(safe-area-inset-left, 0px));
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  /* a separator between groups of actions */
+  .s4-toolbar-divider {
+    flex: none;
+    align-self: stretch;
+    inline-size: var(--s4-size-divider);
+    margin-block: var(--s4-space-4);
+    background: var(--md-sys-color-outline-variant);
+  }
+  .s4-toolbar[data-orientation="vertical"] > .s4-toolbar-divider { inline-size: auto; block-size: var(--s4-size-divider); margin: 0 var(--s4-space-4); }
+
+  /* ---------- toolbar + FAB ---------- */
+  .s4-toolbar-dock {
+    display: flex;
+    align-items: center;
+    gap: var(--s4-space-2);
+  }
+  .s4-toolbar-dock[data-position="bottom"] {
+    position: sticky;
+    bottom: calc(var(--s4-app-inset-bottom, env(safe-area-inset-bottom, 0px)) + var(--s4-space-4));
+    z-index: var(--s4-z-fab);
+    justify-content: center;
+    margin-block-start: var(--s4-space-4);
+    pointer-events: none;                         /* only the toolbar and FAB take clicks, not the empty row */
+  }
+  .s4-toolbar-dock[data-position="bottom"] > * { pointer-events: auto; }
+
+  @media (forced-colors: active) {
+    .s4-toolbar { border: 1px solid CanvasText; }
+  }
+}

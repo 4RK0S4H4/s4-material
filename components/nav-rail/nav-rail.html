@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Navigation Rail · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+<style>
+  /* page-only: a frame the height of a small laptop window, with fake content beside the rail */
+  .demo-window { display: flex; height: calc(var(--s4-size-nav-rail) * 6); overflow: hidden; border-radius: var(--md-sys-shape-corner-large); box-shadow: inset 0 0 0 1px var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface); }
+  .demo-window > .s4-nav-rail { height: 100%; }
+  .demo-page { flex: 1; min-width: 0; padding: var(--s4-space-6); display: flex; flex-direction: column; gap: var(--s4-space-3); }
+  .demo-page > div { height: var(--s4-size-list-item-two-line); border-radius: var(--s4-shape-card); background: var(--md-sys-color-surface-container-low); }
+  .demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: var(--s4-space-6); }
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Navigation Rail</h1></header>
+<main class="ex-main">
+  <p>The navigation rail holds the top-level destinations on wider windows (840 and up), at the side of the screen. It can carry a menu button that expands it, and the screen's main action as a FAB. It uses the same <code>.s4-nav-item</code> markup as the <a href="../nav-bar/nav-bar.html">navigation bar</a>, so an <a href="../app/app.html">app shell</a> can show either.</p>
+
+  <section class="ex-sec">
+    <h2>Collapsed and Expanded</h2>
+    <p>Collapsed: 96dp, label under the icon. Press the menu button to expand: the rail widens, labels move beside the icons inside a pill that spans both, and the FAB shows its label. <code>data-expanded</code> starts it open.</p>
+    <div class="demo-grid">
+      <div class="demo-window">
+        <nav class="s4-nav-rail" aria-label="Main (collapsed)">
+        <div class="s4-nav-rail-header">
+          <button class="s4-icon-button" type="button" data-rail-toggle aria-expanded="false" aria-label="Expand Navigation" data-label-expand="Expand Navigation" data-label-collapse="Collapse Navigation"><span class="s4-icon" data-icon="menu"></span></button>
+          <button class="s4-fab" type="button" data-color="tertiary-container" aria-label="Add Bill"><span class="s4-icon" data-icon="add"></span><span class="s4-fab-label">Add Bill</span></button>
+        </div>
+          <div class="s4-nav-rail-items">
+      <a class="s4-nav-item" href="#home" data-view="home" aria-current="page"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="home"></span></span><span class="s4-nav-label">Home</span></a>
+      <a class="s4-nav-item" href="#bills" data-view="bills"><span class="s4-nav-indicator"><span class="s4-badge-host"><span class="s4-icon" data-icon="bills"></span><span class="s4-badge">3</span></span></span><span class="s4-nav-label">Bills</span></a>
+      <a class="s4-nav-item" href="#budget" data-view="budget"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="wallet"></span></span><span class="s4-nav-label">Budget</span></a>
+      <a class="s4-nav-item" href="#settings" data-view="settings"><span class="s4-nav-indicator"><span class="s4-badge-host"><span class="s4-icon" data-icon="settings"></span><span class="s4-badge"></span></span></span><span class="s4-nav-label">Settings</span></a>
+          </div>
+        </nav>
+        <div class="demo-page" aria-hidden="true"><div></div><div></div><div></div></div>
+      </div>
+      <div class="demo-window">
+        <nav class="s4-nav-rail" aria-label="Main (expanded)" data-expanded>
+        <div class="s4-nav-rail-header">
+          <button class="s4-icon-button" type="button" data-rail-toggle aria-expanded="false" aria-label="Expand Navigation" data-label-expand="Expand Navigation" data-label-collapse="Collapse Navigation"><span class="s4-icon" data-icon="menu"></span></button>
+          <button class="s4-fab" type="button" data-color="tertiary-container" aria-label="Add Bill"><span class="s4-icon" data-icon="add"></span><span class="s4-fab-label">Add Bill</span></button>
+        </div>
+          <div class="s4-nav-rail-items">
+      <a class="s4-nav-item" href="#home" data-view="home"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="home"></span></span><span class="s4-nav-label">Home</span></a>
+      <a class="s4-nav-item" href="#bills" data-view="bills" aria-current="page"><span class="s4-nav-indicator"><span class="s4-badge-host"><span class="s4-icon" data-icon="bills"></span><span class="s4-badge">3</span></span></span><span class="s4-nav-label">Bills</span></a>
+      <a class="s4-nav-item" href="#budget" data-view="budget"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="wallet"></span></span><span class="s4-nav-label">Budget</span></a>
+      <a class="s4-nav-item" href="#settings" data-view="settings"><span class="s4-nav-indicator"><span class="s4-badge-host"><span class="s4-icon" data-icon="settings"></span><span class="s4-badge"></span></span></span><span class="s4-nav-label">Settings</span></a>
+          </div>
+        </nav>
+        <div class="demo-page" aria-hidden="true"><div></div><div></div><div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Without Header</h2>
+    <p>Just destinations: no menu button or FAB.</p>
+    <div class="demo-grid">
+      <div class="demo-window">
+        <nav class="s4-nav-rail" aria-label="Main (plain)">
+          <div class="s4-nav-rail-items">
+      <button class="s4-nav-item" type="button" data-view="home"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="home"></span></span><span class="s4-nav-label">Home</span></button>
+      <button class="s4-nav-item" type="button" data-view="bills"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="bills"></span></span><span class="s4-nav-label">Bills</span></button>
+      <button class="s4-nav-item" type="button" data-view="budget" aria-current="page"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="wallet"></span></span><span class="s4-nav-label">Budget</span></button>
+      <button class="s4-nav-item" type="button" data-view="reports"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="chart"></span></span><span class="s4-nav-label">Reports</span></button>
+      <button class="s4-nav-item" type="button" data-view="settings"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="settings"></span></span><span class="s4-nav-label">Settings</span></button>
+          </div>
+        </nav>
+        <div class="demo-page" aria-hidden="true"><div></div><div></div><div></div></div>
+      </div>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/nav-rail/</code> (uses <code>.s4-nav-item</code> from <code>nav-bar.css</code>) · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../motion/motion.js"></script>
+<script src="../nav-rail/nav-rail.js"></script>
+<script src="../icon-button/icon-button.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+</body>
+</html>

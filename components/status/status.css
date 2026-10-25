@@ -1,0 +1,53 @@
+/* Status (S4 addition): a small pill that names the state of a thing.
+   <span class="s4-status">Draft</span>
+   <span class="s4-status" data-tone="primary|secondary|tertiary|error" data-dot>Overdue</span>
+   Neutral by default (surface-container-high / on-surface-variant); a tone uses the matching container role. The
+   label always says the status: tone and dot only reinforce it, so it never relies on color alone.
+   Not interactive: to filter by status use a filter chip. */
+@layer s4.components {
+  .s4-status {
+    --_bg: var(--md-sys-color-surface-container-high);
+    --_fg: var(--md-sys-color-on-surface-variant);
+
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: var(--s4-space-1);
+    box-sizing: border-box;
+    height: var(--s4-space-6);
+    max-width: 100%;
+    padding: 0 var(--s4-space-2);
+    border-radius: var(--md-sys-shape-corner-small);
+    background: var(--_bg);
+    color: var(--_fg);
+    font-family: var(--md-sys-typescale-label-medium-font);
+    font-size: var(--md-sys-typescale-label-medium-size);
+    line-height: var(--md-sys-typescale-label-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-label-medium-tracking);
+    font-weight: var(--md-sys-typescale-label-medium-weight);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    vertical-align: middle;
+    --s4-icon-size: var(--s4-space-4);
+  }
+  /* an icon instead of the dot: <span class="s4-status"><span class="s4-icon" data-icon="check"></span>Paid</span> */
+  .s4-status:has(> .s4-icon:first-child) { padding-inline-start: var(--s4-space-1); }
+
+  .s4-status[data-dot]::before {
+    content: "";
+    flex: none;
+    width: calc(var(--s4-space-1) * 1.5);
+    height: calc(var(--s4-space-1) * 1.5);
+    border-radius: var(--md-sys-shape-corner-full);
+    background: currentColor;
+  }
+
+  .s4-status[data-tone="primary"] { --_bg: var(--md-sys-color-primary-container); --_fg: var(--md-sys-color-on-primary-container); }
+  .s4-status[data-tone="secondary"] { --_bg: var(--md-sys-color-secondary-container); --_fg: var(--md-sys-color-on-secondary-container); }
+  .s4-status[data-tone="tertiary"] { --_bg: var(--md-sys-color-tertiary-container); --_fg: var(--md-sys-color-on-tertiary-container); }
+  .s4-status[data-tone="error"] { --_bg: var(--md-sys-color-error-container); --_fg: var(--md-sys-color-on-error-container); }
+
+  @media (forced-colors: active) {
+    .s4-status { border: 1px solid CanvasText; }
+  }
+}
