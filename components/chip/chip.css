@@ -1,0 +1,185 @@
+/* Chips (M3)
+   <div class="s4-chip-set" data-select="single" data-scroll>
+     <button class="s4-chip" type="button"><span class="s4-icon" data-icon="calendar"></span>Add to Calendar</button>     assist (default)
+     <button class="s4-chip" data-type="suggestion" type="button">Pay in Full</button>
+     <button class="s4-chip" data-type="filter" aria-pressed="false" type="button">Utilities</button>
+     <span class="s4-chip" data-type="input">Office<button class="s4-chip-remove" type="button" aria-label="Remove Office"></button></span>
+   </div>
+   32dp, corner --s4-shape-chip, 1dp outline-variant outline. Selected filter chips are secondary-container with no outline
+   and a check that slides in (chip.js adds .s4-chip-check). data-elevated swaps the outline for a level-1 shadow.
+   Leading .s4-icon or .s4-chip-avatar (24dp image or initials). chip.js fires s4-change { pressed } on filter chips and
+   s4-remove (cancelable) on input chips before removing them. */
+@layer s4.components {
+  .s4-chip-set {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s4-space-2);
+    min-width: 0;
+  }
+  .s4-chip-set[data-scroll] {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    contain: inline-size;   /* the row's width comes from its container, never from its chips (no page overflow) */
+    scrollbar-width: none;
+    padding-block: var(--s4-space-1);   /* room for the focus ring and elevated shadows */
+  }
+  .s4-chip-set[data-scroll]::-webkit-scrollbar { display: none; }
+  .s4-chip-set[data-scroll] > .s4-chip { flex: none; }
+
+  .s4-chip {
+    --_icon: calc(var(--s4-size-icon-small) * 0.9);   /* 18dp */
+    --_pad-start: var(--s4-space-4);
+    --_pad-end: var(--s4-space-4);
+    --_gap: var(--s4-space-2);
+    --_bg: transparent;
+    --_fg: var(--md-sys-color-on-surface);
+    --_icon-color: var(--md-sys-color-primary);
+    --_outline: var(--md-sys-color-outline-variant);
+    --_elevation: var(--md-sys-elevation-level0);
+    --_spatial: var(--md-sys-motion-spring-fast-spatial-duration) var(--md-sys-motion-spring-fast-spatial);
+    --_effects: var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+
+    display: inline-flex;
+    align-items: center;
+    gap: var(--_gap);
+    max-width: 100%;
+    height: var(--s4-size-chip);
+    padding: 0 var(--_pad-end) 0 var(--_pad-start);
+    border: 0;
+    border-radius: var(--s4-shape-chip);
+    background: var(--_bg);
+    color: var(--_fg);
+    box-shadow: inset 0 0 0 1px var(--_outline), var(--_elevation);
+    font-family: var(--md-sys-typescale-label-large-font);
+    font-size: var(--md-sys-typescale-label-large-size);
+    line-height: var(--md-sys-typescale-label-large-line-height);
+    letter-spacing: var(--md-sys-typescale-label-large-tracking);
+    font-weight: var(--md-sys-typescale-label-large-weight);
+    white-space: nowrap;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    --s4-icon-size: var(--_icon);
+    transition:
+      padding var(--_spatial),
+      background-color var(--_effects),
+      color var(--_effects),
+      box-shadow var(--_effects);
+  }
+  /* 48dp touch target */
+  .s4-chip::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: var(--s4-size-touch-target);
+    transform: translateY(-50%);
+  }
+  .s4-chip > .s4-icon { color: var(--_icon-color); }
+  .s4-chip:has(> :is(.s4-icon, .s4-chip-avatar):first-child) { --_pad-start: var(--s4-space-2); }
+  .s4-chip:has(> .s4-chip-check:first-child + .s4-icon) { --_pad-start: var(--s4-space-2); }
+
+  /* ---------- types ---------- */
+  .s4-chip[data-type="suggestion"] { --_fg: var(--md-sys-color-on-surface-variant); }
+  .s4-chip[data-type="filter"] { --_fg: var(--md-sys-color-on-surface-variant); }
+  .s4-chip[data-type="input"] {
+    --_fg: var(--md-sys-color-on-surface-variant);
+    --_icon-color: var(--md-sys-color-on-surface-variant);
+    --_pad-start: var(--s4-space-3);
+    cursor: default;
+  }
+  .s4-chip:has(> .s4-chip-remove) { --_pad-end: var(--s4-space-2); }
+  .s4-chip:has(> .s4-chip-avatar:first-child) { --_pad-start: var(--s4-space-1); }
+
+  /* ---------- filter: check slides in, selected = secondary-container ---------- */
+  .s4-chip-check {
+    flex: none;
+    width: 0;
+    height: var(--_icon);
+    margin-inline-end: calc(var(--_gap) * -1);
+    background: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9.55 18 3.85 12.3 5.275 10.875 9.55 15.15 18.725 5.975 20.15 7.4Z'/%3E%3C/svg%3E") left center / var(--_icon) no-repeat;
+    transition: width var(--_spatial), margin var(--_spatial);
+  }
+  .s4-chip[data-type="filter"] > .s4-icon { transition: width var(--_spatial), margin var(--_spatial), opacity var(--_effects); }
+  .s4-chip[aria-pressed="true"] {
+    --_bg: var(--md-sys-color-secondary-container);
+    --_fg: var(--md-sys-color-on-secondary-container);
+    --_icon-color: var(--md-sys-color-on-secondary-container);
+    --_outline: transparent;
+    --_pad-start: var(--s4-space-2);
+  }
+  .s4-chip[aria-pressed="true"] > .s4-chip-check { width: var(--_icon); margin-inline-end: 0; }
+  /* a leading icon gives way to the check */
+  .s4-chip[aria-pressed="true"] > .s4-chip-check + .s4-icon { width: 0; margin-inline-end: calc(var(--_gap) * -1); opacity: 0; }
+
+  /* ---------- avatar and remove button ---------- */
+  .s4-chip-avatar {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: var(--s4-size-icon);
+    height: var(--s4-size-icon);
+    overflow: hidden;
+    border-radius: var(--md-sys-shape-corner-full);
+    background: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    font-size: var(--md-sys-typescale-label-small-size);
+    font-weight: var(--md-sys-typescale-label-small-weight);
+    object-fit: cover;
+  }
+  .s4-chip-remove {
+    position: relative;
+    z-index: 1;   /* above the chip's touch-target layer */
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: var(--_icon);
+    height: var(--_icon);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--md-sys-shape-corner-full);
+    background: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    cursor: pointer;
+    --s4-icon-size: var(--_icon);
+  }
+  .s4-chip-remove::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: var(--s4-size-chip);
+    height: var(--s4-size-touch-target);
+    transform: translate(-50%, -50%);
+  }
+
+  /* ---------- elevated ---------- */
+  .s4-chip[data-elevated] { --_bg: var(--md-sys-color-surface-container-low); --_outline: transparent; --_elevation: var(--md-sys-elevation-level1); }
+  @media (hover: hover) { .s4-chip[data-elevated]:hover:not(:disabled) { --_elevation: var(--md-sys-elevation-level2); } }
+  .s4-chip[data-elevated][aria-pressed="true"] { --_bg: var(--md-sys-color-secondary-container); }
+
+  /* ---------- disabled ---------- */
+  .s4-chip:is(:disabled, [aria-disabled="true"]) {
+    --_fg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
+    --_icon-color: var(--_fg);
+    --_outline: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100%), transparent);
+    --_elevation: var(--md-sys-elevation-level0);
+  }
+  .s4-chip:is(:disabled, [aria-disabled="true"]):is([aria-pressed="true"], [data-elevated]) {
+    --_bg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100%), transparent);
+    --_outline: transparent;
+  }
+  .s4-chip:is(:disabled, [aria-disabled="true"]) > .s4-chip-remove { color: inherit; }
+
+  @media (forced-colors: active) {
+    .s4-chip { border: 1px solid ButtonText; }
+    .s4-chip[aria-pressed="true"] { background: Highlight; color: HighlightText; }
+    .s4-chip-check { background: HighlightText; forced-color-adjust: none; }
+  }
+}

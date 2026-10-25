@@ -1,0 +1,164 @@
+/* Switch (M3)
+   <label class="s4-switch"><input type="checkbox" role="switch"><span class="s4-switch-track"><span class="s4-switch-handle"></span></span>Autopay</label>
+   data-icons on the label shows a check (on) / close (off) icon in the handle. Put the label text before the track to
+   end-align the switch (settings rows).
+   The native checkbox sits invisibly over the 48dp target, so keyboard, forms and screen readers work as usual.
+   Track 52x32. Off: surface-container-highest track, 2dp outline border, 16dp outline handle (24 with icons).
+   On: primary track, 24dp on-primary handle. Pressed: 28dp handle. The handle slides on the fast-spatial spring.
+   The state layer is a 40dp circle around the handle (drawn on the track, not on the whole label). */
+@layer s4.components {
+  .s4-switch {
+    position: relative;
+    --_track: var(--md-sys-color-surface-container-highest);
+    --_border: var(--md-sys-color-outline);
+    --_handle: var(--md-sys-color-outline);
+    --_handle-size: var(--s4-space-4);
+    --_icon-color: var(--md-sys-color-surface-container-highest);
+    --_state: var(--md-sys-color-on-surface);
+    --_x: var(--s4-space-4);
+    --_w: calc(var(--s4-space-12) + var(--s4-space-1));
+    --_h: var(--s4-space-8);
+    --_spatial: var(--md-sys-motion-spring-fast-spatial-duration) var(--md-sys-motion-spring-fast-spatial);
+    --_effects: var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s4-space-4);
+    min-height: var(--s4-size-touch-target);
+    color: var(--md-sys-color-on-surface);
+    font-family: var(--md-sys-typescale-body-large-font);
+    font-size: var(--md-sys-typescale-body-large-size);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    vertical-align: middle;
+  }
+  .s4-switch > input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .s4-switch-track {
+    position: relative;
+    flex: none;
+    width: var(--_w);
+    height: var(--_h);
+    border-radius: var(--md-sys-shape-corner-full);
+    background: var(--_track);
+    box-shadow: inset 0 0 0 2px var(--_border);
+    transition: background-color var(--_effects), box-shadow var(--_effects);
+  }
+  /* 48dp touch target */
+  .s4-switch-track::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: var(--s4-size-touch-target);
+    transform: translateY(-50%);
+  }
+  /* state layer: 40dp circle centred on the handle */
+  .s4-switch-track::before {
+    content: "";
+    position: absolute;
+    left: var(--_x);
+    top: 50%;
+    width: var(--s4-size-icon-button);
+    height: var(--s4-size-icon-button);
+    border-radius: var(--md-sys-shape-corner-full);
+    background: var(--_state);
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: left var(--_spatial), opacity var(--_effects);
+  }
+  .s4-switch-handle {
+    position: absolute;
+    left: var(--_x);
+    top: 50%;
+    display: grid;
+    place-items: center;
+    width: var(--_handle-size);
+    height: var(--_handle-size);
+    border-radius: var(--md-sys-shape-corner-full);
+    background: var(--_handle);
+    color: var(--_icon-color);
+    transform: translate(-50%, -50%);
+    transition: left var(--_spatial), width var(--_spatial), height var(--_spatial), background-color var(--_effects);
+  }
+  /* icons drawn with a mask so they take the handle's content color */
+  .s4-switch-handle::after {
+    content: "";
+    width: var(--s4-space-4);
+    height: var(--s4-space-4);
+    background: currentColor;
+    mask: var(--_mask) center / contain no-repeat;
+    opacity: 0;
+    transition: opacity var(--_effects);
+  }
+
+  /* ---------- on ---------- */
+  .s4-switch:has(> input:checked) {
+    --_track: var(--md-sys-color-primary);
+    --_border: var(--md-sys-color-primary);
+    --_handle: var(--md-sys-color-on-primary);
+    --_handle-size: var(--s4-space-6);
+    --_icon-color: var(--md-sys-color-primary);   /* M3 says on-primary-container; primary always contrasts with the on-primary handle, also in monochrome */
+    --_state: var(--md-sys-color-primary);
+    --_x: calc(var(--_w) - var(--s4-space-4));
+  }
+
+  /* ---------- icons ---------- */
+  .s4-switch[data-icons] { --_handle-size: var(--s4-space-6); --_mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6.4 19 5 17.6 10.6 12 5 6.4 6.4 5 12 10.6 17.6 5 19 6.4 13.4 12 19 17.6 17.6 19 12 13.4Z'/%3E%3C/svg%3E"); }
+  .s4-switch[data-icons]:has(> input:checked) { --_mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9.55 18 3.85 12.3 5.275 10.875 9.55 15.15 18.725 5.975 20.15 7.4Z'/%3E%3C/svg%3E"); }
+  .s4-switch[data-icons] .s4-switch-handle::after { opacity: 1; }
+
+  /* ---------- hover, focus, pressed ---------- */
+  @media (hover: hover) {
+    .s4-switch:hover:not(:has(> input:disabled)) { --_handle: var(--md-sys-color-on-surface-variant); }
+    .s4-switch:hover:not(:has(> input:disabled)):has(> input:checked) { --_handle: var(--md-sys-color-primary-container); }
+    .s4-switch:hover:not(:has(> input:disabled)) .s4-switch-track::before { opacity: var(--md-sys-state-hover-state-layer-opacity); }
+  }
+  .s4-switch:has(> input:focus-visible) .s4-switch-track::before { opacity: var(--md-sys-state-focus-state-layer-opacity); }
+  .s4-switch:has(> input:focus-visible) .s4-switch-track {
+    outline: var(--s4-focus-ring-width) solid var(--s4-focus-ring-color);
+    outline-offset: var(--s4-focus-ring-offset);
+  }
+  .s4-switch:active:not(:has(> input:disabled)) { --_handle-size: calc(var(--s4-space-6) + var(--s4-space-1)); }
+  .s4-switch:active:not(:has(> input:disabled)) .s4-switch-track::before { opacity: var(--md-sys-state-pressed-state-layer-opacity); }
+  .s4-switch:active:not(:has(> input:disabled)):not(:has(> input:checked)) { --_handle: var(--md-sys-color-on-surface-variant); }
+  .s4-switch:active:not(:has(> input:disabled)):has(> input:checked) { --_handle: var(--md-sys-color-primary-container); }
+
+  /* ---------- disabled ---------- */
+  .s4-switch:has(> input:disabled) {
+    --_track: color-mix(in srgb, var(--md-sys-color-surface-container-highest) calc(var(--md-sys-state-disabled-container-opacity) * 100%), transparent);
+    --_border: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100%), transparent);
+    --_handle: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
+    --_icon-color: color-mix(in srgb, var(--md-sys-color-surface-container-highest) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
+    color: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
+    cursor: default;
+  }
+  .s4-switch:has(> input:disabled:checked) {
+    --_track: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100%), transparent);
+    --_border: transparent;
+    --_handle: var(--md-sys-color-surface);
+    --_icon-color: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
+  }
+
+  @media (forced-colors: active) {
+    .s4-switch-track { border: 2px solid CanvasText; forced-color-adjust: none; background: Canvas; }
+    .s4-switch-handle { forced-color-adjust: none; background: CanvasText; color: Canvas; }
+    .s4-switch:has(> input:checked) .s4-switch-track { background: Highlight; border-color: Highlight; }
+    .s4-switch:has(> input:checked) .s4-switch-handle { background: HighlightText; color: Highlight; }
+    .s4-switch:has(> input:disabled) { color: GrayText; }
+    .s4-switch:has(> input:disabled) .s4-switch-track { border-color: GrayText; }
+    .s4-switch:has(> input:disabled) .s4-switch-handle { background: GrayText; }
+    .s4-switch-track::before { display: none; }
+  }
+}

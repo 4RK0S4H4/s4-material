@@ -1,0 +1,158 @@
+/* Slider (M3 Expressive)
+   <div class="s4-slider" data-label data-stops data-prefix="$">
+     <input type="range" min="0" max="2000" step="50" value="1240" aria-label="Monthly Budget">
+   </div>
+   The native range input stays on top (invisible) so dragging, keys, forms and screen readers are native. slider.js adds
+   the handle, value label and stops, and keeps --_value (0..1) in sync. 16dp track: active primary, inactive
+   secondary-container, with a 6dp gap each side of a 4dp x 44dp handle; a stop indicator at the end; data-stops adds a
+   dot for each step; data-label shows the value above the handle while dragging or focused (data-prefix / data-suffix
+   format it). The handle narrows to 2dp while pressed. */
+@layer s4.components {
+  .s4-slider {
+    --_value: 0;
+    --_track-h: var(--s4-space-4);
+    --_handle-w: var(--s4-space-1);
+    --_handle-h: calc(var(--s4-space-10) + var(--s4-space-1));
+    --_gap: calc(var(--s4-space-1) * 1.5);
+    --_inset: calc(var(--_track-h) / 2);                     /* handle travel starts and ends half a track height in */
+    --_inner: calc(var(--md-sys-shape-corner-extra-small) / 2);
+    --_active: var(--md-sys-color-primary);
+    --_inactive: var(--md-sys-color-secondary-container);
+    --_handle: var(--md-sys-color-primary);
+    --_stop-on-active: var(--md-sys-color-secondary-container);   /* M3 Expressive stop indicator colors */
+    --_stop-on-inactive: var(--md-sys-color-primary);
+    --_x: calc(var(--_inset) + var(--_value) * (100% - 2 * var(--_inset)));   /* handle centre */
+
+    position: relative;
+    display: block;
+    min-width: calc(var(--s4-space-16) * 2);
+    height: var(--s4-size-touch-target);
+    touch-action: pan-y;
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* tracks */
+  .s4-slider::before,
+  .s4-slider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    height: var(--_track-h);
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+  .s4-slider::before {
+    left: 0;
+    width: max(0px, calc(var(--_x) - var(--_handle-w) / 2 - var(--_gap)));
+    border-radius: var(--_inset) var(--_inner) var(--_inner) var(--_inset);
+    background: var(--_active);
+  }
+  .s4-slider::after {
+    right: 0;
+    width: max(0px, calc(100% - var(--_x) - var(--_handle-w) / 2 - var(--_gap)));
+    border-radius: var(--_inner) var(--_inset) var(--_inset) var(--_inner);
+    background: var(--_inactive);
+  }
+  /* stop indicators: the end stop always; every step with data-stops. Dots take the color of the track they sit on. */
+  .s4-slider-stops {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    z-index: 1;
+    height: var(--s4-space-1);
+    transform: translateY(-50%);
+    pointer-events: none;
+    background: linear-gradient(to right, var(--_stop-on-active) var(--_x), var(--_stop-on-inactive) var(--_x));
+    --_dot: radial-gradient(circle closest-side, var(--_handle) 100%, transparent 100%);   /* mask: only alpha matters */
+    mask: var(--_dot) calc(100% - var(--_inset) + var(--s4-space-1) / 2) 50% / var(--s4-space-1) var(--s4-space-1) no-repeat;
+  }
+  /* data-stops: the layer spans exactly steps + 1 tiles, one dot centred in each, so dot k sits on value position k */
+  .s4-slider[data-stops] .s4-slider-stops {
+    --_p: calc(100% / (var(--_steps, 10) + 1));   /* one tile, in this layer's own width */
+    left: calc(var(--_inset) - (100% - 2 * var(--_inset)) / var(--_steps, 10) / 2);
+    right: auto;
+    width: calc((100% - 2 * var(--_inset)) * (var(--_steps, 10) + 1) / var(--_steps, 10));
+    mask: var(--_dot) 0 50% / var(--_p) var(--s4-space-1) repeat-x;
+    background: linear-gradient(to right, var(--_stop-on-active) calc(var(--_p) / 2 + var(--_value) * (100% - var(--_p))), var(--_stop-on-inactive) 0);
+  }
+  .s4-slider-handle {
+    position: absolute;
+    left: var(--_x);
+    top: 50%;
+    z-index: 1;
+    width: var(--_handle-w);
+    height: var(--_handle-h);
+    border-radius: var(--md-sys-shape-corner-full);
+    background: var(--_handle);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: width var(--md-sys-motion-spring-fast-spatial-duration) var(--md-sys-motion-spring-fast-spatial);
+  }
+  /* value label */
+  .s4-slider-label {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + var(--s4-space-1));
+    min-width: var(--s4-size-touch-target);
+    padding: var(--s4-space-3) var(--s4-space-4);
+    border-radius: var(--md-sys-shape-corner-full);
+    background: var(--md-sys-color-inverse-surface);
+    color: var(--md-sys-color-inverse-on-surface);
+    font-family: var(--md-sys-typescale-label-large-font);
+    font-size: var(--md-sys-typescale-label-large-size);
+    line-height: var(--md-sys-typescale-label-large-line-height);
+    letter-spacing: var(--md-sys-typescale-label-large-tracking);
+    font-weight: var(--md-sys-typescale-label-large-weight);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(-50%) scale(0.5);
+    transform-origin: 50% 100%;
+    transition:
+      opacity var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects),
+      transform var(--md-sys-motion-spring-fast-spatial-duration) var(--md-sys-motion-spring-fast-spatial);
+  }
+  .s4-slider[data-label]:has(> input:is(:active, :focus-visible)) .s4-slider-label,
+  .s4-slider[data-label][data-dragging] .s4-slider-label { opacity: 1; transform: translateX(-50%) scale(1); }
+
+  /* the native input: on top, invisible, thumb as wide as the travel inset so pointer positions match the drawing */
+  .s4-slider > input[type="range"] {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    appearance: none;
+    background: transparent;
+  }
+  .s4-slider > input[type="range"]::-webkit-slider-thumb { appearance: none; width: var(--_track-h); height: var(--_handle-h); }
+  .s4-slider > input[type="range"]::-moz-range-thumb { width: var(--_track-h); height: var(--_handle-h); border: 0; }
+
+  /* pressed and focus */
+  .s4-slider:has(> input:active) { --_handle-w: calc(var(--s4-space-1) / 2); }
+  .s4-slider:has(> input:focus-visible) .s4-slider-handle {
+    outline: var(--s4-focus-ring-width) solid var(--s4-focus-ring-color);
+    outline-offset: var(--s4-focus-ring-offset);
+  }
+
+  /* disabled */
+  .s4-slider:has(> input:disabled) {
+    --_active: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
+    --_inactive: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100%), transparent);
+    --_handle: var(--_active);
+    --_stop-on-active: var(--md-sys-color-surface);
+    --_stop-on-inactive: var(--md-sys-color-on-surface);
+  }
+  .s4-slider > input:disabled { cursor: default; }
+
+  @media (forced-colors: active) {
+    .s4-slider::before { background: Highlight; forced-color-adjust: none; }
+    .s4-slider::after { background: GrayText; forced-color-adjust: none; }
+    .s4-slider-handle { background: CanvasText; forced-color-adjust: none; }
+    .s4-slider-stops { display: none; }
+  }
+}

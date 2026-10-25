@@ -1,0 +1,79 @@
+/* Button group (M3 Expressive)
+   Standard: <div class="s4-button-group"> <button class="s4-button">…</button> … </div>
+     Buttons 8dp apart. Pressing one widens it a little while its neighbours give way (M3 Expressive press interaction).
+   Connected: <div class="s4-button-group" data-connected data-select="single|multi" aria-label="View">
+     Buttons 2dp apart, outer corners full, inner corners small; the selected button morphs fully round.
+     Connected groups stretch to fill their width (equal weights); data-fit="content" keeps them as wide as their labels.
+   Works with .s4-button and .s4-icon-button children. The size comes from the buttons' own data-size.
+   button-group.js manages aria-pressed (data-select), arrow-key navigation and the s4-change event. */
+@layer s4.components {
+  .s4-button-group {
+    display: flex;
+    align-items: center;
+    gap: var(--s4-space-2);
+    min-width: 0;
+  }
+  .s4-button-group[data-fit="content"] { display: inline-flex; vertical-align: middle; }
+  .s4-button-group > :is(.s4-button, .s4-icon-button) { flex: none; }
+
+  /* ---------- standard group: the pressed button widens and its neighbours give way ---------- */
+  .s4-button-group:not([data-connected]) > .s4-button {
+    --_give: calc(var(--_h) * 0.15);
+    transition:
+      padding var(--md-sys-motion-spring-fast-spatial-duration) var(--md-sys-motion-spring-fast-spatial),
+      border-radius var(--md-sys-motion-spring-fast-spatial-duration) var(--md-sys-motion-spring-fast-spatial),
+      background-color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects),
+      color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects),
+      box-shadow var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+  }
+  .s4-button-group:not([data-connected]) > .s4-button:active:not(:disabled) { padding-inline: calc(var(--_pad) + var(--_give)); }
+  .s4-button-group:not([data-connected]) > .s4-button:is(:has(+ .s4-button:active:not(:disabled)), .s4-button:active:not(:disabled) + *) {
+    padding-inline: calc(var(--_pad) - var(--_give) / 2);
+  }
+  .s4-button-group:not([data-connected]) > .s4-icon-button { --_give: calc(var(--_w) * 0.15); }
+  .s4-button-group:not([data-connected]) > .s4-icon-button:active:not(:disabled) { width: calc(var(--_w) + 2 * var(--_give)); }
+  .s4-button-group:not([data-connected]) > .s4-icon-button:is(:has(+ .s4-icon-button:active:not(:disabled)), .s4-icon-button:active:not(:disabled) + *) {
+    width: calc(var(--_w) - var(--_give));
+  }
+
+  /* ---------- connected group ---------- */
+  .s4-button-group[data-connected] {
+    --_inner: var(--md-sys-shape-corner-small);
+    --_inner-pressed: var(--md-sys-shape-corner-extra-small);
+    gap: 2px;   /* M3 Expressive connected groups: 2dp between buttons */
+  }
+  .s4-button-group[data-connected]:has(> [data-size="xs"]) { --_inner: var(--md-sys-shape-corner-extra-small); --_inner-pressed: calc(var(--md-sys-shape-corner-extra-small) / 2); }
+  .s4-button-group[data-connected]:has(> [data-size="l"]) { --_inner: var(--md-sys-shape-corner-large); --_inner-pressed: var(--md-sys-shape-corner-medium); }
+  .s4-button-group[data-connected]:has(> [data-size="xl"]) { --_inner: var(--md-sys-shape-corner-large-increased); --_inner-pressed: var(--md-sys-shape-corner-large); }
+
+  .s4-button-group[data-connected] > :is(.s4-button, .s4-icon-button) {
+    --_r: var(--_inner);
+    flex: 1 1 0;
+    min-width: max-content;
+    border-radius: var(--_r);
+  }
+  .s4-button-group[data-connected][data-fit="content"] > :is(.s4-button, .s4-icon-button) { flex: none; }
+  .s4-button-group[data-connected] > :is(.s4-button, .s4-icon-button):active:not(:disabled) { --_r: var(--_inner-pressed); }
+  .s4-button-group[data-connected] > :is(.s4-button, .s4-icon-button):first-child {
+    border-start-start-radius: var(--md-sys-shape-corner-full);
+    border-end-start-radius: var(--md-sys-shape-corner-full);
+  }
+  .s4-button-group[data-connected] > :is(.s4-button, .s4-icon-button):last-child {
+    border-start-end-radius: var(--md-sys-shape-corner-full);
+    border-end-end-radius: var(--md-sys-shape-corner-full);
+  }
+  /* the selected button morphs fully round */
+  .s4-button-group[data-connected] > :is(.s4-button, .s4-icon-button)[aria-pressed="true"] { border-radius: var(--md-sys-shape-corner-full); }
+  /* a disabled option of a toggle group: button.css's aria-pressed colors would otherwise win over its disabled colors */
+  .s4-button-group > :is(.s4-button, .s4-icon-button)[aria-pressed]:is(:disabled, [aria-disabled="true"]) {
+    --_bg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100%), transparent);
+    --_fg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
+    --_outline: transparent;
+  }
+  /* the focus ring would hide under the next button */
+  .s4-button-group[data-connected] > :focus-visible { z-index: 1; }
+
+  @media (forced-colors: active) {
+    .s4-button-group[data-connected] > :is(.s4-button, .s4-icon-button) { border: 1px solid ButtonText; }
+  }
+}

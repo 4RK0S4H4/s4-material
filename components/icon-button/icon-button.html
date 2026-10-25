@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Icon Button · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Icon Button</h1></header>
+<main class="ex-main">
+  <p>Icon buttons run a single action with one icon: edit a bill, open a menu, mark a favorite. The <b>standard</b> icon button has no container and suits toolbars and rows; <b>filled</b>, <b>tonal</b> and <b>outlined</b> add emphasis. Every icon button needs an <code>aria-label</code>. Press and hold to see the shape morph.</p>
+
+  <section class="ex-sec">
+    <h2>Variants</h2>
+    <p>Standard, filled, tonal, outlined. The second row is disabled.</p>
+    <div class="ex-board">
+      <button class="s4-icon-button" type="button" aria-label="Edit Bill"><span class="s4-icon" data-icon="edit"></span></button>
+      <button class="s4-icon-button" data-variant="filled" type="button" aria-label="Add Bill"><span class="s4-icon" data-icon="add"></span></button>
+      <button class="s4-icon-button" data-variant="tonal" type="button" aria-label="Share Statement"><span class="s4-icon" data-icon="share"></span></button>
+      <button class="s4-icon-button" data-variant="outlined" type="button" aria-label="Download Invoice"><span class="s4-icon" data-icon="download"></span></button>
+    </div>
+    <div class="ex-board" style="margin-top:var(--s4-space-3)">
+      <button class="s4-icon-button" type="button" aria-label="Edit Bill" disabled><span class="s4-icon" data-icon="edit"></span></button>
+      <button class="s4-icon-button" data-variant="filled" type="button" aria-label="Add Bill" disabled><span class="s4-icon" data-icon="add"></span></button>
+      <button class="s4-icon-button" data-variant="tonal" type="button" aria-label="Share Statement" disabled><span class="s4-icon" data-icon="share"></span></button>
+      <button class="s4-icon-button" data-variant="outlined" type="button" aria-label="Download Invoice" disabled><span class="s4-icon" data-icon="download"></span></button>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Toggle</h2>
+    <p><code>data-toggle</code> with <code>aria-pressed</code>. Selected icon buttons take the full color and swap shape (round to square). Optional <code>data-icon-on</code> swaps the icon and <code>data-label-on</code> the label. Top row unselected, bottom row selected.</p>
+    <div class="ex-board">
+      <button class="s4-icon-button" data-toggle aria-pressed="false" type="button" aria-label="Favorite"><span class="s4-icon" data-icon="favorite"></span></button>
+      <button class="s4-icon-button" data-variant="filled" data-toggle aria-pressed="false" type="button" aria-label="Autopay"><span class="s4-icon" data-icon="schedule"></span></button>
+      <button class="s4-icon-button" data-variant="tonal" data-toggle aria-pressed="false" type="button" aria-label="Remind Me"><span class="s4-icon" data-icon="notifications"></span></button>
+      <button class="s4-icon-button" data-variant="outlined" data-toggle aria-pressed="false" type="button" aria-label="Bookmark"><span class="s4-icon" data-icon="bookmark"></span></button>
+    </div>
+    <div class="ex-board" style="margin-top:var(--s4-space-3)">
+      <button class="s4-icon-button" data-toggle aria-pressed="true" type="button" aria-label="Favorite"><span class="s4-icon" data-icon="favorite"></span></button>
+      <button class="s4-icon-button" data-variant="filled" data-toggle aria-pressed="true" type="button" aria-label="Autopay"><span class="s4-icon" data-icon="schedule"></span></button>
+      <button class="s4-icon-button" data-variant="tonal" data-toggle aria-pressed="true" type="button" aria-label="Remind Me"><span class="s4-icon" data-icon="notifications"></span></button>
+      <button class="s4-icon-button" data-variant="outlined" data-toggle aria-pressed="true" type="button" aria-label="Bookmark"><span class="s4-icon" data-icon="bookmark"></span></button>
+      <button class="s4-icon-button" data-variant="tonal" data-toggle aria-pressed="false" type="button" aria-label="Show Amounts" data-label-on="Hide Amounts" data-icon-on="hidden"><span class="s4-icon" data-icon="visible"></span></button>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Sizes</h2>
+    <p>Extra small (32) to extra large (136); small (40) is the default. Every size keeps a 48dp touch target.</p>
+    <div class="ex-board">
+      <button class="s4-icon-button" data-variant="tonal" data-size="xs" type="button" aria-label="Edit Bill"><span class="s4-icon" data-icon="edit"></span></button>
+      <button class="s4-icon-button" data-variant="tonal" type="button" aria-label="Edit Bill"><span class="s4-icon" data-icon="edit"></span></button>
+      <button class="s4-icon-button" data-variant="tonal" data-size="m" type="button" aria-label="Edit Bill"><span class="s4-icon" data-icon="edit"></span></button>
+      <button class="s4-icon-button" data-variant="tonal" data-size="l" type="button" aria-label="Edit Bill"><span class="s4-icon" data-icon="edit"></span></button>
+      <button class="s4-icon-button" data-variant="tonal" data-size="xl" type="button" aria-label="Edit Bill"><span class="s4-icon" data-icon="edit"></span></button>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Width and Shape</h2>
+    <p><code>data-width="narrow"</code> or <code>"wide"</code> change the container width; <code>data-shape="square"</code> uses the square corner for the size.</p>
+    <div class="ex-board">
+      <button class="s4-icon-button" data-variant="filled" data-size="m" data-width="narrow" type="button" aria-label="Previous Month"><span class="s4-icon" data-icon="chevron-left"></span></button>
+      <button class="s4-icon-button" data-variant="filled" data-size="m" type="button" aria-label="Add Bill"><span class="s4-icon" data-icon="add"></span></button>
+      <button class="s4-icon-button" data-variant="filled" data-size="m" data-width="wide" type="button" aria-label="Next Month"><span class="s4-icon" data-icon="chevron-right"></span></button>
+      <button class="s4-icon-button" data-variant="tonal" data-size="m" data-shape="square" type="button" aria-label="Filter Bills"><span class="s4-icon" data-icon="filter"></span></button>
+      <button class="s4-icon-button" data-variant="tonal" data-size="m" data-shape="square" data-width="wide" type="button" aria-label="Sort Bills"><span class="s4-icon" data-icon="sort"></span></button>
+      <button class="s4-icon-button" data-variant="outlined" data-shape="square" data-toggle aria-pressed="true" type="button" aria-label="Pin"><span class="s4-icon" data-icon="star"></span></button>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>In a Row</h2>
+    <p>Standard icon buttons for per-row actions. A delete stays a plain icon button, not red.</p>
+    <div class="ex-board" style="justify-content:space-between">
+      <span><b>Electric Co.</b> <span class="s4-num s4-on-surface-variant">$1,240.00</span></span>
+      <span style="display:flex;gap:var(--s4-space-1)">
+        <button class="s4-icon-button" type="button" aria-label="Edit Electric Co."><span class="s4-icon" data-icon="edit"></span></button>
+        <button class="s4-icon-button" type="button" aria-label="Delete Electric Co."><span class="s4-icon" data-icon="delete"></span></button>
+        <button class="s4-icon-button" type="button" aria-label="More Actions"><span class="s4-icon" data-icon="more-vert"></span></button>
+      </span>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/icon-button/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../icon-button/icon-button.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+</body>
+</html>

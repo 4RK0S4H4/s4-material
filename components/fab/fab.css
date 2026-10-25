@@ -1,0 +1,122 @@
+/* FAB (M3 Expressive)
+   <button class="s4-fab" type="button" aria-label="Add Bill"><span class="s4-icon" data-icon="add"></span></button>
+   <button class="s4-fab" type="button"><span class="s4-icon" data-icon="add"></span><span class="s4-fab-label">Add Bill</span></button>
+   data-size: (default) 56 · m 80 · l 96. data-color: primary-container (default), secondary-container,
+   tertiary-container, primary, secondary, tertiary. Extended FABs add .s4-fab-label; data-collapsed hides the label
+   (e.g. while the page scrolls) with a width animation. data-fixed pins the FAB to the bottom end corner.
+   Elevation level 3, level 4 on hover. Always has an icon; icon-only FABs need aria-label. */
+@layer s4.components {
+  .s4-fab {
+    /* default 56: corner large, icon 24, extended label title-medium */
+    --_h: var(--s4-size-fab);
+    --_radius: var(--s4-shape-fab);
+    --_icon: var(--s4-size-icon);
+    --_pad: var(--s4-space-4);
+    --_gap: var(--s4-space-2);
+    --_font: var(--md-sys-typescale-title-medium-font);
+    --_size: var(--md-sys-typescale-title-medium-size);
+    --_line: var(--md-sys-typescale-title-medium-line-height);
+    --_track: var(--md-sys-typescale-title-medium-tracking);
+    --_weight: var(--md-sys-typescale-title-medium-weight);
+    --_bg: var(--md-sys-color-primary-container);
+    --_fg: var(--md-sys-color-on-primary-container);
+    --_elevation: var(--md-sys-elevation-level3);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    min-width: var(--_h);
+    height: var(--_h);
+    padding: 0 calc((var(--_h) - var(--_icon)) / 2);
+    border: 0;
+    border-radius: var(--_radius);
+    background: var(--_bg);
+    color: var(--_fg);
+    box-shadow: var(--_elevation);
+    font-family: var(--_font);
+    font-size: var(--_size);
+    line-height: var(--_line);
+    letter-spacing: var(--_track);
+    font-weight: var(--_weight);
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
+    --s4-icon-size: var(--_icon);
+    transition:
+      padding var(--md-sys-motion-spring-spatial-duration) var(--md-sys-motion-spring-spatial),
+      background-color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects),
+      color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects),
+      box-shadow var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+  }
+  @media (hover: hover) { .s4-fab:hover:not(:disabled) { --_elevation: var(--md-sys-elevation-level4); } }
+  .s4-fab:active:not(:disabled) { --_elevation: var(--md-sys-elevation-level3); }
+
+  /* ---------- extended FAB: icon + label ---------- */
+  .s4-fab:has(> .s4-fab-label) { padding-inline: var(--_pad); }
+  .s4-fab-label {
+    display: inline-block;
+    overflow: hidden;
+    max-width: 20em;
+    margin-inline-start: var(--_gap);
+    transition:
+      max-width var(--md-sys-motion-spring-spatial-duration) var(--md-sys-motion-spring-spatial),
+      margin var(--md-sys-motion-spring-spatial-duration) var(--md-sys-motion-spring-spatial),
+      opacity var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+  }
+  .s4-fab[data-collapsed] { padding-inline: calc((var(--_h) - var(--_icon)) / 2); }
+  .s4-fab[data-collapsed] > .s4-fab-label { max-width: 0; margin-inline-start: 0; opacity: 0; }
+
+  /* ---------- sizes (M3 Expressive: 56 / medium 80 / large 96) ---------- */
+  .s4-fab[data-size="m"] {
+    --_h: calc(var(--s4-size-fab) + var(--s4-space-6));
+    --_radius: var(--md-sys-shape-corner-large-increased);
+    --_icon: calc(var(--s4-size-icon) + var(--s4-space-1));
+    --_pad: calc(var(--s4-space-6) + var(--s4-space-1) / 2);
+    --_gap: var(--s4-space-3);
+    --_font: var(--md-sys-typescale-title-large-font);
+    --_size: var(--md-sys-typescale-title-large-size);
+    --_line: var(--md-sys-typescale-title-large-line-height);
+    --_track: var(--md-sys-typescale-title-large-tracking);
+    --_weight: var(--md-sys-typescale-title-large-weight);
+  }
+  .s4-fab[data-size="l"] {
+    --_h: var(--s4-size-fab-large);
+    --_radius: var(--s4-shape-fab-large);
+    --_icon: calc(var(--s4-size-icon-large) + var(--s4-space-1));
+    --_pad: calc(var(--s4-space-6) + var(--s4-space-1));
+    --_gap: var(--s4-space-4);
+    --_font: var(--md-sys-typescale-headline-small-font);
+    --_size: var(--md-sys-typescale-headline-small-size);
+    --_line: var(--md-sys-typescale-headline-small-line-height);
+    --_track: var(--md-sys-typescale-headline-small-tracking);
+    --_weight: var(--md-sys-typescale-headline-small-weight);
+  }
+
+  /* ---------- colors ---------- */
+  .s4-fab[data-color="secondary-container"] { --_bg: var(--md-sys-color-secondary-container); --_fg: var(--md-sys-color-on-secondary-container); }
+  .s4-fab[data-color="tertiary-container"] { --_bg: var(--md-sys-color-tertiary-container); --_fg: var(--md-sys-color-on-tertiary-container); }
+  .s4-fab[data-color="primary"] { --_bg: var(--md-sys-color-primary); --_fg: var(--md-sys-color-on-primary); }
+  .s4-fab[data-color="secondary"] { --_bg: var(--md-sys-color-secondary); --_fg: var(--md-sys-color-on-secondary); }
+  .s4-fab[data-color="tertiary"] { --_bg: var(--md-sys-color-tertiary); --_fg: var(--md-sys-color-on-tertiary); }
+
+  /* ---------- pinned to the bottom end corner of the window ---------- */
+  .s4-fab[data-fixed] {
+    position: fixed;
+    inset-block-end: calc(var(--s4-space-4) + env(safe-area-inset-bottom, 0px));
+    inset-inline-end: calc(var(--s4-space-4) + env(safe-area-inset-right, 0px));
+    z-index: var(--s4-z-fab);
+  }
+
+  .s4-fab:is(:disabled, [aria-disabled="true"]) {
+    --_bg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100%), transparent);
+    --_fg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
+    --_elevation: var(--md-sys-elevation-level0);
+  }
+
+  @media (forced-colors: active) {
+    .s4-fab { border: 1px solid ButtonText; }
+  }
+}

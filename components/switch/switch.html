@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Switch · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+<style>
+  .sw-rows { flex: 1; display: flex; flex-direction: column; max-width: 480px; }
+  .sw-rows > .s4-switch { justify-content: space-between; }
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Switch</h1></header>
+<main class="ex-main">
+  <p>Switches turn a single setting on or off, and the change takes effect immediately, like turning on <b>Autopay</b>. Use a checkbox instead when the choice is only applied after the person presses Save. The label says what is on, in Title Case.</p>
+
+  <section class="ex-sec">
+    <h2>States</h2>
+    <p>Off and on, with and without icons, and disabled. Press and hold to see the handle grow; tab to see the focus ring.</p>
+    <div class="ex-board">
+      <label class="s4-switch"><input type="checkbox" role="switch"><span class="s4-switch-track"><span class="s4-switch-handle"></span></span>Autopay</label>
+      <label class="s4-switch"><input type="checkbox" role="switch" checked><span class="s4-switch-track"><span class="s4-switch-handle"></span></span>Remind Me</label>
+      <label class="s4-switch" data-icons><input type="checkbox" role="switch"><span class="s4-switch-track"><span class="s4-switch-handle"></span></span>Paperless</label>
+      <label class="s4-switch" data-icons><input type="checkbox" role="switch" checked><span class="s4-switch-track"><span class="s4-switch-handle"></span></span>Round Up</label>
+    </div>
+    <div class="ex-board" style="margin-top:var(--s4-space-3)">
+      <label class="s4-switch"><input type="checkbox" role="switch" disabled><span class="s4-switch-track"><span class="s4-switch-handle"></span></span>Autopay</label>
+      <label class="s4-switch"><input type="checkbox" role="switch" checked disabled><span class="s4-switch-track"><span class="s4-switch-handle"></span></span>Remind Me</label>
+      <label class="s4-switch" data-icons><input type="checkbox" role="switch" disabled><span class="s4-switch-track"><span class="s4-switch-handle"></span></span>Paperless</label>
+      <label class="s4-switch" data-icons><input type="checkbox" role="switch" checked disabled><span class="s4-switch-track"><span class="s4-switch-handle"></span></span>Round Up</label>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Settings Rows</h2>
+    <p>Put the label first to end-align the switch, as in a settings list.</p>
+    <div class="ex-board">
+      <div class="sw-rows">
+        <label class="s4-switch">Pay Bills Automatically<input type="checkbox" role="switch" checked><span class="s4-switch-track"><span class="s4-switch-handle"></span></span></label>
+        <label class="s4-switch">Remind Me 3 Days Before<input type="checkbox" role="switch" checked><span class="s4-switch-track"><span class="s4-switch-handle"></span></span></label>
+        <label class="s4-switch" data-icons>Email Receipts<input type="checkbox" role="switch"><span class="s4-switch-track"><span class="s4-switch-handle"></span></span></label>
+      </div>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/switch/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+</body>
+</html>

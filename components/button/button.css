@@ -77,8 +77,8 @@
 
   /* destructive: the confirm button of a destructive dialog, or the action in a danger zone */
   .s4-button[data-color="error"] { --_bg: var(--md-sys-color-error); --_fg: var(--md-sys-color-on-error); }
-  .s4-button[data-color="error"]:is([data-variant="tonal"]) { --_bg: var(--md-sys-color-error-container); --_fg: var(--md-sys-color-on-error-container); }
-  .s4-button[data-color="error"]:is([data-variant="outlined"], [data-variant="text"]) { --_bg: transparent; --_fg: var(--md-sys-color-error); }
+  .s4-button[data-color="error"]:where([data-variant="tonal"]) { --_bg: var(--md-sys-color-error-container); --_fg: var(--md-sys-color-on-error-container); }
+  .s4-button[data-color="error"]:where([data-variant="outlined"], [data-variant="text"]) { --_bg: transparent; --_fg: var(--md-sys-color-error); }
   .s4-button[data-color="error"][data-variant="outlined"] { --_outline: var(--md-sys-color-error); }
 
   /* ---------- sizes (M3 Expressive: xs 32, s 40, m 56, l 96, xl 136) ---------- */
@@ -99,20 +99,20 @@
 
   /* ---------- toggle buttons (aria-pressed): unselected uses a quieter fill, selected the full color and a square shape ---------- */
   .s4-button[aria-pressed="false"] { --_bg: var(--md-sys-color-surface-container); --_fg: var(--md-sys-color-on-surface-variant); }
-  .s4-button[aria-pressed="false"]:is([data-variant="tonal"]) { --_bg: var(--md-sys-color-secondary-container); --_fg: var(--md-sys-color-on-secondary-container); }
-  .s4-button[aria-pressed="true"]:is([data-variant="tonal"]) { --_bg: var(--md-sys-color-secondary); --_fg: var(--md-sys-color-on-secondary); }
-  .s4-button[aria-pressed="false"]:is([data-variant="outlined"]) { --_bg: transparent; --_fg: var(--md-sys-color-on-surface-variant); }
-  .s4-button[aria-pressed="true"]:is([data-variant="outlined"]) { --_bg: var(--md-sys-color-inverse-surface); --_fg: var(--md-sys-color-inverse-on-surface); --_outline: transparent; }
+  .s4-button[aria-pressed="false"]:where([data-variant="tonal"]) { --_bg: var(--md-sys-color-secondary-container); --_fg: var(--md-sys-color-on-secondary-container); }
+  .s4-button[aria-pressed="true"]:where([data-variant="tonal"]) { --_bg: var(--md-sys-color-secondary); --_fg: var(--md-sys-color-on-secondary); }
+  .s4-button[aria-pressed="false"]:where([data-variant="outlined"]) { --_bg: transparent; --_fg: var(--md-sys-color-on-surface-variant); }
+  .s4-button[aria-pressed="true"]:where([data-variant="outlined"]) { --_bg: var(--md-sys-color-inverse-surface); --_fg: var(--md-sys-color-inverse-on-surface); --_outline: transparent; }
   .s4-button[aria-pressed="true"] { --_radius: var(--_radius-selected); }
 
   /* ---------- disabled (M3: on-surface at 12% container, 38% content) ---------- */
-  .s4-button:is(:disabled, [aria-disabled="true"]) {
+  .s4-button.s4-button:is(:disabled, [aria-disabled="true"]) {   /* doubled class: beats every variant and toggle rule */
     --_bg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100%), transparent);
     --_fg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
     --_elevation: var(--md-sys-elevation-level0);
   }
-  .s4-button:is(:disabled, [aria-disabled="true"]):is([data-variant="text"]) { --_bg: transparent; }
-  .s4-button:is(:disabled, [aria-disabled="true"]):is([data-variant="outlined"]) { --_bg: transparent; --_outline: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100%), transparent); }
+  .s4-button.s4-button:is(:disabled, [aria-disabled="true"]):is([data-variant="text"]) { --_bg: transparent; }
+  .s4-button.s4-button:is(:disabled, [aria-disabled="true"]):is([data-variant="outlined"]) { --_bg: transparent; --_outline: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100%), transparent); }
 
   /* forced colors: outlines and fills are dropped by the browser, so draw a real border */
   @media (forced-colors: active) {

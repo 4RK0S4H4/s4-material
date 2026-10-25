@@ -1,0 +1,273 @@
+/* Text field (M3)
+   <div class="s4-text-field" data-variant="outlined" data-counter>
+     <span class="s4-icon" data-icon="search"></span>                       leading icon (before the control)
+     <span class="s4-text-field-affix" data-prefix>$</span>
+     <input id="amount" inputmode="decimal" maxlength="12">                 or <select> / <textarea>
+     <label for="amount">Amount</label>
+     <span class="s4-text-field-affix" data-suffix>USD</span>
+     <button class="s4-icon-button" type="button" aria-label="Clear">…</button>  trailing icon or icon button (after the control)
+     <div class="s4-text-field-supporting">Sentence case helper text.</div>
+   </div>
+   Filled (default) or data-variant="outlined". Error: aria-invalid="true" on the control and/or data-error="Message" on
+   the field. Parts are placed on a grid, so their source order only matters for leading vs trailing icons.
+   The label floats (body large -> body small) when the control is focused or has a value (:placeholder-shown;
+   text-field.js adds placeholder=" " when there is none). The outlined notch is a real <fieldset>/<legend> injected by
+   text-field.js: the browser cuts the border around the legend, so the gap works on any background (glass, images). */
+@layer s4.components {
+  .s4-text-field {
+    --_bg: var(--md-sys-color-surface-container-highest);
+    --_indicator: var(--md-sys-color-on-surface-variant);
+    --_indicator-h: 1px;
+    --_label: var(--md-sys-color-on-surface-variant);
+    --_caret: var(--md-sys-color-primary);
+    --_icon-color: var(--md-sys-color-on-surface-variant);
+    --_supporting: var(--md-sys-color-on-surface-variant);
+    --_pad-top: var(--s4-space-6);
+    --_pad-bottom: var(--s4-space-2);
+    --_label-top: var(--s4-space-4);
+    --_label-top-float: var(--s4-space-2);
+    --_label-x-float: 0px;
+    --_motion: var(--s4-motion-spring-fast-spatial-calm-duration) var(--s4-motion-spring-fast-spatial-calm);
+
+    display: grid;
+    grid-template-columns: var(--s4-space-4) auto auto minmax(0, 1fr) auto auto var(--s4-space-4);
+    grid-template-rows: minmax(var(--s4-size-text-field), auto) auto;
+    align-items: center;
+    min-width: 0;
+    color: var(--md-sys-color-on-surface);
+    font-variant-numeric: tabular-nums;
+    cursor: text;
+  }
+  /* container and active indicator (filled) */
+  .s4-text-field::before,
+  .s4-text-field::after {
+    content: "";
+    grid-row: 1;
+    grid-column: 1 / -1;
+    pointer-events: none;
+  }
+  .s4-text-field::before {
+    align-self: stretch;
+    border-radius: var(--s4-shape-text-field) var(--s4-shape-text-field) 0 0;
+    background: var(--_bg);
+    transition: background-color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+  }
+  .s4-text-field::after {
+    align-self: end;
+    height: var(--_indicator-h);
+    background: var(--_indicator);
+  }
+
+  /* ---------- the control ---------- */
+  .s4-text-field > :is(input, select, textarea) {
+    grid-row: 1;
+    grid-column: 4;
+    display: block;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: var(--_pad-top) 0 var(--_pad-bottom);
+    border: 0;
+    border-radius: 0;
+    outline: none;   /* M3: the active indicator / outline is the focus indication */
+    background: transparent;
+    color: inherit;
+    caret-color: var(--_caret);
+    font-family: var(--md-sys-typescale-body-large-font);
+    font-size: var(--md-sys-typescale-body-large-size);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+    font-weight: var(--md-sys-typescale-body-large-weight);
+    font-variant-numeric: tabular-nums;
+  }
+  .s4-text-field > input { height: var(--s4-size-text-field); }
+  .s4-text-field > input::-webkit-search-cancel-button,
+  .s4-text-field > input::-webkit-search-decoration { appearance: none; }
+  .s4-text-field > textarea { align-self: stretch; resize: none; overflow: hidden; min-height: var(--s4-size-text-field); }
+  .s4-text-field > select { height: var(--s4-size-text-field); appearance: none; cursor: pointer; }
+  .s4-text-field > select > option { background: var(--md-sys-color-surface-container); color: var(--md-sys-color-on-surface); }
+  .s4-text-field > :is(input, textarea)::placeholder { color: transparent; opacity: 1; transition: color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects); }
+  .s4-text-field > :is(input, textarea):focus::placeholder { color: var(--md-sys-color-on-surface-variant); }
+  .s4-text-field:not(:has(> label)) > :is(input, select, textarea) { --_pad-top: var(--s4-space-4); --_pad-bottom: var(--s4-space-4); }
+
+  /* ---------- label ---------- */
+  .s4-text-field > label {
+    grid-row: 1;
+    grid-column: 3 / 5;
+    align-self: start;
+    z-index: 1;
+    max-width: 100%;
+    margin-top: var(--_label-top);
+    overflow: hidden;
+    color: var(--_label);
+    font-family: var(--md-sys-typescale-body-large-font);
+    font-size: var(--md-sys-typescale-body-large-size);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+    font-weight: var(--md-sys-typescale-body-large-weight);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    pointer-events: none;
+    transition: margin var(--_motion), font-size var(--_motion), line-height var(--_motion), translate var(--_motion),
+      color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+  }
+
+  /* no label animation until text-field.js has set the field up (it adds placeholder=" ", which changes the state) */
+  .s4-text-field:not([data-ready]) > :is(label, .s4-text-field-affix),
+  .s4-text-field:not([data-ready]) > .s4-text-field-outline > legend { transition: none; }
+
+  /* ---------- icons, prefix, suffix ---------- */
+  .s4-text-field > :is(.s4-icon, .s4-icon-button) { grid-row: 1; color: var(--_icon-color); }
+  .s4-text-field > .s4-icon { --s4-icon-size: var(--s4-size-icon); }
+  /* leading: 12dp from the edge, 16dp to the text */
+  .s4-text-field > :is(.s4-icon, .s4-icon-button):has(~ :is(input, select, textarea)) { grid-column: 2; margin-inline: calc(var(--s4-space-1) * -1) var(--s4-space-4); }
+  .s4-text-field > .s4-icon-button:has(~ :is(input, select, textarea)) { margin-inline: calc(var(--s4-space-3) * -1) var(--s4-space-2); }
+  /* trailing: 16dp from the text, 12dp from the edge (an icon button's 40dp container sits 4dp from the edge) */
+  .s4-text-field > :is(input, select, textarea) ~ :is(.s4-icon, .s4-icon-button) { grid-column: 6; margin-inline: var(--s4-space-4) calc(var(--s4-space-1) * -1); }
+  .s4-text-field > :is(input, select, textarea) ~ .s4-icon-button { margin-inline: var(--s4-space-2) calc(var(--s4-space-3) * -1); }
+  .s4-text-field-chevron { pointer-events: none; transition: rotate var(--md-sys-motion-spring-fast-spatial-duration) var(--md-sys-motion-spring-fast-spatial); }
+
+  .s4-text-field-affix {
+    grid-row: 1;
+    align-self: start;
+    padding-top: var(--_pad-top);
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--md-sys-typescale-body-large-font);
+    font-size: var(--md-sys-typescale-body-large-size);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+  }
+  .s4-text-field-affix[data-prefix] { grid-column: 3; padding-inline-end: calc(var(--s4-space-1) / 2); }
+  .s4-text-field-affix[data-suffix] { grid-column: 5; padding-inline-start: calc(var(--s4-space-1) / 2); }
+
+  /* ---------- supporting text and counter ---------- */
+  .s4-text-field-supporting,
+  .s4-text-field-counter {
+    grid-row: 2;
+    grid-column: 2 / 7;
+    align-self: start;
+    padding-top: var(--s4-space-1);
+    color: var(--_supporting);
+    font-family: var(--md-sys-typescale-body-small-font);
+    font-size: var(--md-sys-typescale-body-small-size);
+    line-height: var(--md-sys-typescale-body-small-line-height);
+    letter-spacing: var(--md-sys-typescale-body-small-tracking);
+    font-weight: var(--md-sys-typescale-body-small-weight);
+    cursor: default;
+  }
+  .s4-text-field-counter { justify-self: end; color: var(--md-sys-color-on-surface-variant); font-variant-numeric: tabular-nums; }
+  .s4-text-field:has(> .s4-text-field-counter) > .s4-text-field-supporting { padding-inline-end: var(--s4-space-16); }
+
+  /* ---------- floated label: focused, has a value, a chosen option, or a date/time input ---------- */
+  .s4-text-field:is(:has(> :is(input, select, textarea):focus), :has(> :is(input, textarea):not(:placeholder-shown)), :has(> select option:checked:not([value=""])), :has(> input:is([type="date"], [type="time"], [type="datetime-local"], [type="month"], [type="week"]))) > label {
+    margin-top: var(--_label-top-float);
+    translate: var(--_label-x-float) 0;
+    font-size: var(--md-sys-typescale-body-small-size);
+    line-height: var(--md-sys-typescale-body-small-line-height);
+    letter-spacing: var(--md-sys-typescale-body-small-tracking);
+  }
+  .s4-text-field:is(:has(> :is(input, select, textarea):focus), :has(> :is(input, textarea):not(:placeholder-shown)), :has(> select option:checked:not([value=""])), :has(> input:is([type="date"], [type="time"], [type="datetime-local"], [type="month"], [type="week"]))) > .s4-text-field-affix { opacity: 1; }
+  .s4-text-field:is(:has(> :is(input, select, textarea):focus), :has(> :is(input, textarea):not(:placeholder-shown)), :has(> select option:checked:not([value=""])), :has(> input:is([type="date"], [type="time"], [type="datetime-local"], [type="month"], [type="week"]))) > .s4-text-field-outline > legend { max-width: 100%; }
+  .s4-text-field:not(:has(> label)) > .s4-text-field-affix { opacity: 1; }
+
+  /* ---------- states (filled) ---------- */
+  @media (hover: hover) {
+    .s4-text-field:hover {
+      --_bg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-hover-state-layer-opacity) * 100%), var(--md-sys-color-surface-container-highest));
+      --_indicator: var(--md-sys-color-on-surface);
+    }
+  }
+  .s4-text-field:has(> :is(input, select, textarea):focus) {
+    --_indicator: var(--md-sys-color-primary);
+    --_indicator-h: 2px;
+    --_label: var(--md-sys-color-primary);
+  }
+  .s4-text-field:is([data-error], :has(> [aria-invalid="true"])) {
+    --_indicator: var(--md-sys-color-error);
+    --_label: var(--md-sys-color-error);
+    --_caret: var(--md-sys-color-error);
+    --_supporting: var(--md-sys-color-error);
+  }
+  .s4-text-field:is([data-error], :has(> [aria-invalid="true"])) > :is(input, select, textarea) ~ :is(.s4-icon, .s4-icon-button) { color: var(--md-sys-color-error); }
+  @media (hover: hover) {
+    .s4-text-field:is([data-error], :has(> [aria-invalid="true"])):hover:not(:focus-within) { --_indicator: var(--md-sys-color-on-error-container); --_label: var(--md-sys-color-on-error-container); }
+  }
+
+  /* ---------- disabled: container on-surface 4%, content 38% ---------- */
+  .s4-text-field:has(> :is(input, select, textarea):disabled) {
+    --_bg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100% / 3), transparent);
+    --_indicator: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
+    --_label: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
+    --_icon-color: var(--_label);
+    --_supporting: var(--_label);
+    color: var(--_label);
+    cursor: default;
+  }
+  .s4-text-field:has(> :is(input, select, textarea):disabled) > .s4-text-field-affix { color: var(--_label); }
+  .s4-text-field > :is(input, select, textarea):disabled { cursor: default; }
+
+  /* ---------- outlined ---------- */
+  .s4-text-field[data-variant="outlined"] {
+    --_bg: transparent;
+    --_outline: var(--md-sys-color-outline);
+    --_outline-w: 1px;
+    --_pad-top: var(--s4-space-4);
+    --_pad-bottom: var(--s4-space-4);
+    --_label-top-float: calc(var(--md-sys-typescale-body-small-line-height) / -2);
+  }
+  .s4-text-field[data-variant="outlined"]::after { display: none; }
+  .s4-text-field[data-variant="outlined"]::before { border-radius: var(--s4-shape-text-field); }
+  /* without JS (no fieldset yet) draw a plain outline */
+  .s4-text-field[data-variant="outlined"]:not(:has(> .s4-text-field-outline))::before { box-shadow: inset 0 0 0 var(--_outline-w) var(--_outline); }
+  /* the floated label of an outlined field sits at the container's start, above a leading icon */
+  .s4-text-field[data-variant="outlined"]:has(> .s4-icon ~ :is(input, select, textarea)) { --_label-x-float: calc((var(--s4-size-icon) + var(--s4-space-3)) * -1); }
+  @media (hover: hover) { .s4-text-field[data-variant="outlined"]:hover { --_bg: transparent; --_outline: var(--md-sys-color-on-surface); } }
+  .s4-text-field[data-variant="outlined"]:has(> :is(input, select, textarea):focus) { --_outline: var(--md-sys-color-primary); --_outline-w: 2px; }
+  .s4-text-field[data-variant="outlined"]:is([data-error], :has(> [aria-invalid="true"])) { --_outline: var(--md-sys-color-error); }
+  @media (hover: hover) {
+    .s4-text-field[data-variant="outlined"]:is([data-error], :has(> [aria-invalid="true"])):hover:not(:focus-within) { --_outline: var(--md-sys-color-on-error-container); }
+  }
+  .s4-text-field[data-variant="outlined"]:has(> :is(input, select, textarea):disabled) {
+    --_bg: transparent;
+    --_outline: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100%), transparent);
+  }
+
+  .s4-text-field-outline {
+    grid-row: 1;
+    grid-column: 1 / -1;
+    align-self: stretch;
+    min-width: 0;
+    margin: 0;
+    padding: 0 var(--s4-space-3);
+    border: var(--_outline-w) solid var(--_outline);
+    border-radius: var(--s4-shape-text-field);
+    pointer-events: none;
+    text-align: start;
+  }
+  .s4-text-field-outline > legend {
+    display: block;
+    max-width: 0.01px;   /* closed notch; the floated state opens it to 100% */
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    visibility: hidden;
+    font-family: var(--md-sys-typescale-body-small-font);
+    font-size: var(--md-sys-typescale-body-small-size);
+    letter-spacing: var(--md-sys-typescale-body-small-tracking);
+    line-height: 0;
+    white-space: nowrap;
+    transition: max-width var(--_motion);
+  }
+  .s4-text-field-outline > legend > span { display: inline-block; padding-inline: var(--s4-space-1); }
+
+  @media (forced-colors: active) {
+    .s4-text-field:not([data-variant="outlined"])::after { background: CanvasText; }
+    .s4-text-field:not([data-variant="outlined"])::before { border: 1px solid CanvasText; }
+    .s4-text-field-outline { border-color: CanvasText; }
+    .s4-text-field:focus-within .s4-text-field-outline { border-color: Highlight; }
+  }
+}

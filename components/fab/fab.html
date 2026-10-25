@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FAB · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / FAB</h1></header>
+<main class="ex-main">
+  <p>The floating action button holds the single most important action on a screen, like <b>Add Bill</b>. Use one per screen at most. It always shows an icon; the <b>extended</b> FAB adds a label and suits screens where the action isn't obvious from the icon alone.</p>
+
+  <section class="ex-sec">
+    <h2>Sizes</h2>
+    <p>FAB (56), medium (80) and large (96). Corners grow with the size: large, large-increased, extra-large.</p>
+    <div class="ex-board">
+      <button class="s4-fab" type="button" aria-label="Add Bill"><span class="s4-icon" data-icon="add"></span></button>
+      <button class="s4-fab" data-size="m" type="button" aria-label="Add Bill"><span class="s4-icon" data-icon="add"></span></button>
+      <button class="s4-fab" data-size="l" type="button" aria-label="Add Bill"><span class="s4-icon" data-icon="add"></span></button>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Colors</h2>
+    <p>Primary container is the default. Pick the role that fits the screen's color; containers are calmer, the base colors stronger.</p>
+    <div class="ex-board">
+      <button class="s4-fab" type="button" aria-label="Scan Receipt"><span class="s4-icon" data-icon="camera"></span></button>
+      <button class="s4-fab" data-color="secondary-container" type="button" aria-label="Scan Receipt"><span class="s4-icon" data-icon="camera"></span></button>
+      <button class="s4-fab" data-color="tertiary-container" type="button" aria-label="Scan Receipt"><span class="s4-icon" data-icon="camera"></span></button>
+      <button class="s4-fab" data-color="primary" type="button" aria-label="Scan Receipt"><span class="s4-icon" data-icon="camera"></span></button>
+      <button class="s4-fab" data-color="secondary" type="button" aria-label="Scan Receipt"><span class="s4-icon" data-icon="camera"></span></button>
+      <button class="s4-fab" data-color="tertiary" type="button" aria-label="Scan Receipt"><span class="s4-icon" data-icon="camera"></span></button>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Extended</h2>
+    <p>Add <code>.s4-fab-label</code>. The label is title medium, title large and headline small for the three sizes. <code>data-collapsed</code> folds it back to the icon, for example while a list scrolls: try the button.</p>
+    <div class="ex-board">
+      <button class="s4-fab" type="button" id="collapsible"><span class="s4-icon" data-icon="add"></span><span class="s4-fab-label">Add Bill</span></button>
+      <button class="s4-button" data-variant="outlined" type="button" onclick="var f=document.getElementById('collapsible');f.toggleAttribute('data-collapsed')">Collapse / Expand</button>
+    </div>
+    <div class="ex-board" style="margin-top:var(--s4-space-3)">
+      <button class="s4-fab" data-size="m" data-color="secondary-container" type="button"><span class="s4-icon" data-icon="camera"></span><span class="s4-fab-label">Scan Receipt</span></button>
+      <button class="s4-fab" data-size="l" data-color="tertiary-container" type="button"><span class="s4-icon" data-icon="transfer"></span><span class="s4-fab-label">Pay</span></button>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Placement</h2>
+    <p><code>data-fixed</code> pins the FAB 16dp from the bottom end corner, above the safe area. The FAB on this page is pinned.</p>
+  </section>
+  <button class="s4-fab" data-fixed type="button"><span class="s4-icon" data-icon="add"></span><span class="s4-fab-label">Add Bill</span></button>
+  <p class="ex-foot">Source: <code>components/fab/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+</body>
+</html>

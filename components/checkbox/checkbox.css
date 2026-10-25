@@ -1,0 +1,132 @@
+/* Checkbox (M3)
+   <label class="s4-checkbox"><input type="checkbox"><span class="s4-checkbox-box"></span>Remind Me</label>
+   Bare in a table cell: <label class="s4-checkbox"><input type="checkbox" aria-label="Select Electric Co."><span class="s4-checkbox-box"></span></label>
+   States: checked, indeterminate (input.indeterminate, or data-indeterminate on the label, set by checkbox.js),
+   data-error on the label, disabled. The native input sits invisibly on top, so keyboard, forms and screen readers work.
+   18dp box, 2dp corners, 2dp on-surface-variant border; checked = primary fill with an on-primary mark.
+   40dp circular state layer around the box; 48dp touch target. */
+@layer s4.components {
+  .s4-checkbox {
+    --_border: var(--md-sys-color-on-surface-variant);
+    --_fill: transparent;
+    --_mark: var(--md-sys-color-on-primary);
+    --_state: var(--md-sys-color-on-surface);
+    --_box: calc(var(--s4-space-4) + 2px);
+    --_layer: var(--s4-size-icon-button);
+    --_effects: var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s4-space-1);
+    min-height: var(--_layer);
+    color: var(--md-sys-color-on-surface);
+    font-family: var(--md-sys-typescale-body-large-font);
+    font-size: var(--md-sys-typescale-body-large-size);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+    letter-spacing: var(--md-sys-typescale-body-large-tracking);
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    vertical-align: middle;
+  }
+  /* 48dp touch target around the 40dp control */
+  .s4-checkbox::after {
+    content: "";
+    position: absolute;
+    inset: calc((var(--_layer) - var(--s4-size-touch-target)) / 2);
+  }
+  .s4-checkbox > input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .s4-checkbox-box {
+    position: relative;
+    flex: none;
+    width: var(--_box);
+    height: var(--_box);
+    margin: calc((var(--_layer) - var(--_box)) / 2);
+    border: 2px solid var(--_border);
+    border-radius: calc(var(--md-sys-shape-corner-extra-small) / 2);
+    background: var(--_fill);
+    transition: background-color var(--_effects), border-color var(--_effects);
+  }
+  /* state layer (40dp circle) and the 48dp touch target */
+  .s4-checkbox-box::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: var(--_layer);
+    height: var(--_layer);
+    border-radius: var(--md-sys-shape-corner-full);
+    background: var(--_state);
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: opacity var(--_effects);
+  }
+  /* the mark: a check or a dash, drawn with a mask so it takes --_mark; it wipes in from the start */
+  .s4-checkbox-box::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    background: var(--_mark);
+    mask: var(--_mask, none) center / 100% no-repeat;
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path var(--md-sys-motion-spring-fast-spatial-duration) var(--md-sys-motion-spring-fast-spatial);
+  }
+  .s4-checkbox:has(> input:checked),
+  .s4-checkbox:has(> input:indeterminate) {
+    --_border: var(--md-sys-color-primary);
+    --_fill: var(--md-sys-color-primary);
+    --_state: var(--md-sys-color-primary);
+  }
+  .s4-checkbox:has(> input:checked) { --_mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M7.2 13.2 3.6 9.6l1.3-1.3 2.3 2.3 5.9-5.9 1.3 1.3z'/%3E%3C/svg%3E"); }
+  .s4-checkbox:has(> input:indeterminate) { --_mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4 8h10v2H4z'/%3E%3C/svg%3E"); }
+  .s4-checkbox:has(> input:is(:checked, :indeterminate)) .s4-checkbox-box::after { clip-path: inset(0); }
+
+  /* ---------- hover, focus, pressed ---------- */
+  @media (hover: hover) {
+    .s4-checkbox:hover:not(:has(> input:disabled)) .s4-checkbox-box::before { opacity: var(--md-sys-state-hover-state-layer-opacity); }
+    .s4-checkbox:hover:not(:has(> input:disabled)):not(:has(> input:is(:checked, :indeterminate))) { --_border: var(--md-sys-color-on-surface); }
+  }
+  .s4-checkbox:has(> input:focus-visible) .s4-checkbox-box::before {
+    opacity: var(--md-sys-state-focus-state-layer-opacity);
+  }
+  .s4-checkbox:has(> input:focus-visible) .s4-checkbox-box {
+    outline: var(--s4-focus-ring-width) solid var(--s4-focus-ring-color);
+    outline-offset: var(--s4-focus-ring-offset);
+  }
+  .s4-checkbox:active:not(:has(> input:disabled)) .s4-checkbox-box::before { opacity: var(--md-sys-state-pressed-state-layer-opacity); }
+
+  /* ---------- error ---------- */
+  .s4-checkbox[data-error], .s4-checkbox:has(> input[aria-invalid="true"]) { --_border: var(--md-sys-color-error); --_state: var(--md-sys-color-error); }
+  .s4-checkbox:is([data-error], :has(> input[aria-invalid="true"])):has(> input:is(:checked, :indeterminate)) {
+    --_border: var(--md-sys-color-error); --_fill: var(--md-sys-color-error); --_mark: var(--md-sys-color-on-error);
+  }
+
+  /* ---------- disabled ---------- */
+  .s4-checkbox:has(> input:disabled) {
+    --_border: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
+    color: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
+    cursor: default;
+  }
+  .s4-checkbox:has(> input:disabled:is(:checked, :indeterminate)) {
+    --_border: transparent;
+    --_fill: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
+    --_mark: var(--md-sys-color-surface);
+  }
+
+  @media (forced-colors: active) {
+    .s4-checkbox-box { forced-color-adjust: none; border-color: CanvasText; background: Canvas; }
+    .s4-checkbox-box::before { display: none; }
+    .s4-checkbox:has(> input:is(:checked, :indeterminate)) .s4-checkbox-box { background: Highlight; border-color: Highlight; }
+    .s4-checkbox:has(> input:is(:checked, :indeterminate)) .s4-checkbox-box::after { background: HighlightText; }
+    .s4-checkbox:has(> input:disabled) .s4-checkbox-box { border-color: GrayText; }
+  }
+}

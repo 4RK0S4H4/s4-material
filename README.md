@@ -28,8 +28,8 @@ S4 Orion is being built phase by phase. Decisions are recorded in [`docs/decisio
 | 1 | Audit of S4 Material 1.3 and decisions | Done ([0001](docs/decisions/0001-phase-1-audit.md)) |
 | 2 | Repo structure | Done ([0002](docs/decisions/0002-repo-structure.md)) |
 | 3 | Tokens and build script | Done ([0003](docs/decisions/0003-tokens.md), [tokens page](https://4rk0s4h4.github.io/s4-material/tokens/)) |
-| 4 | Components and the glass layer | In progress ([glass lab](https://4rk0s4h4.github.io/s4-material/explore/glass.html)) |
-| 5 | Claude skill | Not started |
+| 4 | Components and the glass layer | Done ([0004](docs/decisions/0004-glass.md), [components](https://4rk0s4h4.github.io/s4-material/components/)) |
+| 5 | Claude skill | Next |
 | 6 | Demo and review against the skill | Not started |
 
 ## Building
@@ -37,8 +37,8 @@ S4 Orion is being built phase by phase. Decisions are recorded in [`docs/decisio
 Node 20+, no dependencies.
 
 ```sh
-npm run build          # tokens/src/*.tokens.json -> tokens/tokens.css, tokens.ts, tokens.json (with checks)
-npm run check          # the same checks, and fails if generated files are stale (runs in CI)
+npm run build          # tokens -> tokens.css/ts/json, icons -> icons.js, components -> orion.css/orion.js + skill assets
+npm run check          # token, contrast and glass-guarantee checks; fails if anything generated is stale (runs in CI)
 npm run generate:color # regenerate the default color roles from the seed in tokens/src/color.tokens.json
 ```
 

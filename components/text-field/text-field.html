@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Text Field · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+<style>
+  .ex-board:has(> .tf-grid) { display: block; }
+  .tf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); gap: var(--s4-space-6) var(--s4-space-4); align-items: start; }
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Text Field</h1></header>
+<main class="ex-main">
+  <p>Text fields let people enter and edit text. <b>Filled</b> fields stand out in forms and dialogs; <b>outlined</b> fields are lighter and suit dense forms. Both use a floating label, which shrinks above the text once the field has focus or a value. Labels are Title Case, helper text is a short sentence. Numbers use tabular figures.</p>
+
+  <section class="ex-sec">
+    <h2>Filled</h2>
+    <p>Default. Prefix and suffix appear once the label floats. Leading and trailing icons, a select and a growing textarea with a counter.</p>
+    <div class="ex-board col">
+      <div class="tf-grid">
+        <div class="s4-text-field">
+          <input id="f-vendor" autocomplete="organization" value="Electric Co.">
+          <label for="f-vendor">Vendor</label>
+          <div class="s4-text-field-supporting">As it appears on the bill.</div>
+        </div>
+        <div class="s4-text-field">
+          <span class="s4-text-field-affix" data-prefix>$</span>
+          <input id="f-amount" inputmode="decimal" value="1,240.00">
+          <label for="f-amount">Amount</label>
+          <span class="s4-text-field-affix" data-suffix>USD</span>
+        </div>
+        <div class="s4-text-field">
+          <input id="f-due" type="date" value="2026-11-03">
+          <label for="f-due">Due Date</label>
+        </div>
+        <div class="s4-text-field">
+          <select id="f-cat">
+            <option value=""></option>
+            <option>Utilities</option>
+            <option>Office</option>
+            <option>Travel</option>
+            <option>Software</option>
+          </select>
+          <label for="f-cat">Category</label>
+          <div class="s4-text-field-supporting">Used for reports.</div>
+        </div>
+        <div class="s4-text-field">
+          <span class="s4-icon" data-icon="search"></span>
+          <input id="f-search" type="search" placeholder="Vendor, amount or note">
+          <label for="f-search">Search Bills</label>
+          <button class="s4-icon-button" type="button" aria-label="Clear Search" onclick="var i=document.getElementById('f-search');i.value='';i.focus()"><span class="s4-icon" data-icon="close"></span></button>
+        </div>
+        <div class="s4-text-field" data-counter>
+          <textarea id="f-notes" rows="1" maxlength="120"></textarea>
+          <label for="f-notes">Notes</label>
+          <div class="s4-text-field-supporting">Visible to your team.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Outlined</h2>
+    <p><code>data-variant="outlined"</code>. The label floats into a notch in the outline, which works on any background.</p>
+    <div class="ex-board col">
+      <div class="tf-grid">
+        <div class="s4-text-field" data-variant="outlined">
+          <input id="o-vendor" value="Northwind Office Supply">
+          <label for="o-vendor">Vendor</label>
+          <div class="s4-text-field-supporting">As it appears on the bill.</div>
+        </div>
+        <div class="s4-text-field" data-variant="outlined">
+          <span class="s4-text-field-affix" data-prefix>$</span>
+          <input id="o-amount" inputmode="decimal">
+          <label for="o-amount">Amount</label>
+          <span class="s4-text-field-affix" data-suffix>USD</span>
+        </div>
+        <div class="s4-text-field" data-variant="outlined">
+          <span class="s4-icon" data-icon="calendar"></span>
+          <input id="o-due" type="date" value="2026-11-15">
+          <label for="o-due">Due Date</label>
+        </div>
+        <div class="s4-text-field" data-variant="outlined">
+          <select id="o-cat">
+            <option>Utilities</option>
+            <option selected>Travel</option>
+            <option>Office</option>
+          </select>
+          <label for="o-cat">Category</label>
+        </div>
+        <div class="s4-text-field" data-variant="outlined">
+          <span class="s4-icon" data-icon="mail"></span>
+          <input id="o-email" type="email" autocomplete="email">
+          <label for="o-email">Billing Email</label>
+        </div>
+        <div class="s4-text-field" data-variant="outlined" data-counter>
+          <textarea id="o-notes" rows="1" maxlength="120">Quarterly office lease, paid by card. Split with the design team.</textarea>
+          <label for="o-notes">Notes</label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Error and Disabled</h2>
+    <p><code>data-error="Message"</code> on the field (or <code>aria-invalid="true"</code> on the control) shows the error color and replaces the helper text. Type a number into the weight field to clear its error.</p>
+    <div class="ex-board col">
+      <div class="tf-grid">
+        <div class="s4-text-field" data-error="Enter an amount above $0.00.">
+          <span class="s4-text-field-affix" data-prefix>$</span>
+          <input id="e-amount" inputmode="decimal" value="0.00">
+          <label for="e-amount">Amount</label>
+          <div class="s4-text-field-supporting">Includes tax.</div>
+        </div>
+        <div class="s4-text-field" data-variant="outlined" data-error="Weight is required." id="weight-field">
+          <input id="e-weight" inputmode="decimal">
+          <label for="e-weight">Package Weight</label>
+          <span class="s4-text-field-affix" data-suffix>kg</span>
+          <span class="s4-icon" data-icon="error"></span>
+          <div class="s4-text-field-supporting">Used to estimate shipping.</div>
+        </div>
+        <div class="s4-text-field">
+          <input id="d-account" value="•••• 4021" disabled>
+          <label for="d-account">Pay From</label>
+          <div class="s4-text-field-supporting">Change accounts in Settings.</div>
+        </div>
+        <div class="s4-text-field" data-variant="outlined">
+          <input id="d-ref" disabled>
+          <label for="d-ref">Reference</label>
+        </div>
+      </div>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/text-field/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../text-field/text-field.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+<script>
+  document.getElementById('e-weight').addEventListener('input', function (e) {
+    var f = document.getElementById('weight-field');
+    if (/^\d+([.,]\d+)?$/.test(e.target.value.trim())) f.removeAttribute('data-error'); else f.setAttribute('data-error', 'Enter the weight as a number.');
+  });
+</script>
+</body>
+</html>

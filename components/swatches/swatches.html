@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Swatches · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Swatches</h1></header>
+<main class="ex-main">
+  <p>Swatches let people pick the seed color the whole app is themed from, like Android's Wallpaper &amp; style. Each swatch previews the palette its seed makes. <b>Mono</b> is S4 Orion's default monochrome theme. Pick one: the page re-themes, and the Color control in the bar above stays in step.</p>
+
+  <section class="ex-sec">
+    <h2>Theme Color</h2>
+    <p><code>data-theme-seed</code> on the group: a click calls <code>S4.theme({ seed, variant: 'vibrant' })</code>. Tab in, then use the arrow keys.</p>
+    <div class="ex-board col">
+      <div class="s4-swatches" data-theme-seed aria-label="Theme Color" id="theme-swatches">
+        <button class="s4-swatch" type="button" data-seed="#000000" aria-label="Mono"></button>
+        <button class="s4-swatch" type="button" data-seed="#4f46e5" aria-label="Indigo"></button>
+        <button class="s4-swatch" type="button" data-seed="#00796b" aria-label="Teal"></button>
+        <button class="s4-swatch" type="button" data-seed="#0b57d0" aria-label="Blue"></button>
+        <button class="s4-swatch" type="button" data-seed="#2e7d32" aria-label="Green"></button>
+        <button class="s4-swatch" type="button" data-seed="#c2410c" aria-label="Orange"></button>
+        <button class="s4-swatch" type="button" data-seed="#b3261e" aria-label="Red"></button>
+        <button class="s4-swatch" type="button" data-seed="#9c27b0" aria-label="Purple"></button>
+      </div>
+      <div class="s4-row">
+        <button class="s4-button" type="button"><span class="s4-icon" data-icon="add"></span>Add Bill</button>
+        <button class="s4-button" data-variant="tonal" type="button">Export</button>
+        <button class="s4-button" data-variant="outlined" type="button">Filter</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Picker Only</h2>
+    <p>Without <code>data-theme-seed</code> the group is a plain single choice that fires <code>s4-change { seed }</code>, for example a category color.</p>
+    <div class="ex-board col">
+      <div class="s4-swatches" aria-label="Category Color" id="cat-swatches">
+        <button class="s4-swatch" type="button" data-seed="#0b57d0" aria-label="Blue" aria-pressed="true"></button>
+        <button class="s4-swatch" type="button" data-seed="#2e7d32" aria-label="Green"></button>
+        <button class="s4-swatch" type="button" data-seed="#c2410c" aria-label="Orange"></button>
+        <button class="s4-swatch" type="button" data-seed="#9c27b0" aria-label="Purple"></button>
+        <button class="s4-swatch" type="button" data-seed="#6d6d6d" aria-label="Grey" disabled></button>
+      </div>
+      <p class="s4-body-medium s4-on-surface-variant" style="margin:0">Utilities color: <b id="cat-out">#0b57d0</b></p>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/swatches/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../swatches/swatches.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+<script>
+  document.getElementById('cat-swatches').addEventListener('s4-change', function (e) { document.getElementById('cat-out').textContent = e.detail.seed; });
+</script>
+</body>
+</html>

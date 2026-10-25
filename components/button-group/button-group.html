@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Button Group · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Button Group</h1></header>
+<main class="ex-main">
+  <p>Button groups put related buttons together. A <b>standard</b> group spaces buttons 8dp apart and reacts as one: press and hold a button to see it widen while its neighbours give way. A <b>connected</b> group joins buttons into one control for choosing between options, like a segmented button; the selected option morphs fully round.</p>
+
+  <section class="ex-sec">
+    <h2>Standard</h2>
+    <p>Actions for the current bill. Press and hold.</p>
+    <div class="ex-board">
+      <div class="s4-button-group">
+        <button class="s4-button" data-variant="tonal" type="button"><span class="s4-icon" data-icon="edit"></span>Edit</button>
+        <button class="s4-button" type="button"><span class="s4-icon" data-icon="check"></span>Mark Paid</button>
+        <button class="s4-button" data-variant="tonal" type="button">Snooze</button>
+      </div>
+    </div>
+    <div class="ex-board" style="margin-top:var(--s4-space-3)">
+      <div class="s4-button-group">
+        <button class="s4-icon-button" data-variant="tonal" data-size="m" type="button" aria-label="Previous Month"><span class="s4-icon" data-icon="chevron-left"></span></button>
+        <button class="s4-icon-button" data-variant="filled" data-size="m" data-width="wide" type="button" aria-label="Add Bill"><span class="s4-icon" data-icon="add"></span></button>
+        <button class="s4-icon-button" data-variant="tonal" data-size="m" type="button" aria-label="Next Month"><span class="s4-icon" data-icon="chevron-right"></span></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Connected, Single Select</h2>
+    <p><code>data-connected data-select="single"</code>: exactly one option is selected. Tab to the group, then use the arrow keys and Space. Stretches to fill its width by default.</p>
+    <div class="ex-board col">
+      <div class="s4-button-group" data-connected data-select="single" aria-label="Period" id="period">
+        <button class="s4-button" data-variant="tonal" type="button" value="week">Week</button>
+        <button class="s4-button" data-variant="tonal" type="button" value="month" aria-pressed="true">Month</button>
+        <button class="s4-button" data-variant="tonal" type="button" value="quarter">Quarter</button>
+        <button class="s4-button" data-variant="tonal" type="button" value="year">Year</button>
+      </div>
+      <p class="s4-body-medium s4-on-surface-variant" style="margin:0">Showing: <b id="period-out">month</b></p>
+      <div class="s4-button-group" data-connected data-select="single" aria-label="Bill Status">
+        <button class="s4-button" type="button" value="all" aria-pressed="true">All</button>
+        <button class="s4-button" type="button" value="due">Due</button>
+        <button class="s4-button" type="button" value="paid">Paid</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Connected, Multi Select and Fit Content</h2>
+    <p><code>data-select="multi"</code> toggles each option. <code>data-fit="content"</code> keeps the group as wide as its labels.</p>
+    <div class="ex-board col">
+      <div class="s4-button-group" data-connected data-select="multi" data-fit="content" aria-label="Notify By">
+        <button class="s4-button" data-variant="tonal" type="button" value="email" aria-pressed="true"><span class="s4-icon" data-icon="mail"></span>Email</button>
+        <button class="s4-button" data-variant="tonal" type="button" value="sms">SMS</button>
+        <button class="s4-button" data-variant="tonal" type="button" value="push" aria-pressed="true">Push</button>
+      </div>
+      <div class="s4-button-group" data-connected data-select="single" data-fit="content" aria-label="Layout">
+        <button class="s4-icon-button" data-variant="tonal" type="button" value="list" aria-label="List" aria-pressed="true"><span class="s4-icon" data-icon="bills"></span></button>
+        <button class="s4-icon-button" data-variant="tonal" type="button" value="grid" aria-label="Grid"><span class="s4-icon" data-icon="dashboard"></span></button>
+        <button class="s4-icon-button" data-variant="tonal" type="button" value="chart" aria-label="Chart"><span class="s4-icon" data-icon="chart"></span></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Sizes</h2>
+    <p>The group follows its buttons' <code>data-size</code>; inner corners grow with the size.</p>
+    <div class="ex-board col">
+      <div class="s4-button-group" data-connected data-select="single" data-fit="content" aria-label="Currency, extra small">
+        <button class="s4-button" data-size="xs" data-variant="tonal" type="button" aria-pressed="true">USD</button>
+        <button class="s4-button" data-size="xs" data-variant="tonal" type="button">EUR</button>
+        <button class="s4-button" data-size="xs" data-variant="tonal" type="button">GBP</button>
+      </div>
+      <div class="s4-button-group" data-connected data-select="single" data-fit="content" aria-label="Currency, medium">
+        <button class="s4-button" data-size="m" data-variant="tonal" type="button" aria-pressed="true">USD</button>
+        <button class="s4-button" data-size="m" data-variant="tonal" type="button">EUR</button>
+        <button class="s4-button" data-size="m" data-variant="tonal" type="button">GBP</button>
+      </div>
+      <div class="s4-button-group" data-connected data-select="single" data-fit="content" aria-label="Currency, large">
+        <button class="s4-button" data-size="l" data-variant="tonal" type="button" aria-pressed="true">USD</button>
+        <button class="s4-button" data-size="l" data-variant="tonal" type="button">EUR</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Disabled Option</h2>
+    <p>A disabled button is skipped by the arrow keys.</p>
+    <div class="ex-board col">
+      <div class="s4-button-group" data-connected data-select="single" aria-label="Pay From">
+        <button class="s4-button" data-variant="tonal" type="button" aria-pressed="true">Checking</button>
+        <button class="s4-button" data-variant="tonal" type="button" disabled>Savings</button>
+        <button class="s4-button" data-variant="tonal" type="button">Card</button>
+      </div>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/button-group/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../button/button.js"></script>
+<script src="../icon-button/icon-button.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+<script>
+  document.getElementById('period').addEventListener('s4-change', function (e) { document.getElementById('period-out').textContent = e.detail.value; });
+</script>
+</body>
+</html>

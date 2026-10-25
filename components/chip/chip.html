@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chip · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Chip</h1></header>
+<main class="ex-main">
+  <p>Chips are compact elements for filters, choices, entered values and quick actions. <b>Filter</b> chips narrow a list; <b>input</b> chips show values someone entered, like tags on a bill; <b>assist</b> chips start a related action; <b>suggestion</b> chips offer likely replies or values. Put chips in a <code>.s4-chip-set</code>.</p>
+
+  <section class="ex-sec">
+    <h2>Filter</h2>
+    <p>Multi-select by default. Selected chips turn secondary-container and a check slides in. With the keyboard: Tab, then Space.</p>
+    <div class="ex-board col">
+      <div class="s4-chip-set" aria-label="Categories" id="cats">
+        <button class="s4-chip" data-type="filter" type="button" aria-pressed="true">Utilities</button>
+        <button class="s4-chip" data-type="filter" type="button">Office</button>
+        <button class="s4-chip" data-type="filter" type="button">Travel</button>
+        <button class="s4-chip" data-type="filter" type="button"><span class="s4-icon" data-icon="card"></span>Software</button>
+        <button class="s4-chip" data-type="filter" type="button" disabled>Payroll</button>
+      </div>
+      <p class="s4-body-medium s4-on-surface-variant" style="margin:0">Showing: <b id="cats-out">Utilities</b></p>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Single Choice and Scrolling</h2>
+    <p><code>data-select="single"</code> keeps exactly one chip selected. <code>data-scroll</code> keeps the set on one scrolling row; narrow the window to see it scroll.</p>
+    <div class="ex-board col">
+      <div class="s4-chip-set" data-select="single" data-scroll aria-label="Status">
+        <button class="s4-chip" data-type="filter" type="button" aria-pressed="true">All Bills</button>
+        <button class="s4-chip" data-type="filter" type="button">Due This Week</button>
+        <button class="s4-chip" data-type="filter" type="button">Overdue</button>
+        <button class="s4-chip" data-type="filter" type="button">Paid</button>
+        <button class="s4-chip" data-type="filter" type="button">Autopay On</button>
+        <button class="s4-chip" data-type="filter" type="button">Needs Approval</button>
+        <button class="s4-chip" data-type="filter" type="button">Disputed</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Input</h2>
+    <p>Tags entered for this bill. The remove button fires <code>s4-remove</code> and the chip collapses away. An avatar can lead.</p>
+    <div class="ex-board col">
+      <div class="s4-chip-set" aria-label="Tags">
+        <span class="s4-chip" data-type="input">Utilities<button class="s4-chip-remove" type="button" aria-label="Remove Utilities"></button></span>
+        <span class="s4-chip" data-type="input">Office<button class="s4-chip-remove" type="button" aria-label="Remove Office"></button></span>
+        <span class="s4-chip" data-type="input"><span class="s4-icon" data-icon="location"></span>Chicago Branch<button class="s4-chip-remove" type="button" aria-label="Remove Chicago Branch"></button></span>
+        <span class="s4-chip" data-type="input"><span class="s4-chip-avatar">MR</span>Maya Rossi<button class="s4-chip-remove" type="button" aria-label="Remove Maya Rossi"></button></span>
+        <span class="s4-chip" data-type="input" aria-disabled="true">Q3 Close<button class="s4-chip-remove" type="button" aria-label="Remove Q3 Close" disabled></button></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Assist and Suggestion</h2>
+    <p>Assist chips have a primary-colored leading icon. <code>data-elevated</code> lifts a chip off busy backgrounds.</p>
+    <div class="ex-board col">
+      <div class="s4-chip-set">
+        <button class="s4-chip" type="button"><span class="s4-icon" data-icon="calendar"></span>Add to Calendar</button>
+        <button class="s4-chip" type="button"><span class="s4-icon" data-icon="share"></span>Share Invoice</button>
+        <button class="s4-chip" data-elevated type="button"><span class="s4-icon" data-icon="schedule"></span>Remind Me</button>
+        <button class="s4-chip" type="button" disabled><span class="s4-icon" data-icon="download"></span>Download PDF</button>
+      </div>
+      <div class="s4-chip-set">
+        <button class="s4-chip" data-type="suggestion" type="button">Pay in Full</button>
+        <button class="s4-chip" data-type="suggestion" type="button">Pay Minimum</button>
+        <button class="s4-chip" data-type="suggestion" type="button">$1,240.00</button>
+        <button class="s4-chip" data-type="suggestion" data-elevated type="button">Split Evenly</button>
+      </div>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/chip/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../chip/chip.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+<script>
+  document.getElementById('cats').addEventListener('s4-change', function () {
+    var on = Array.prototype.map.call(this.querySelectorAll('[aria-pressed="true"]'), function (c) { return c.textContent.trim(); });
+    document.getElementById('cats-out').textContent = on.join(', ') || 'Everything';
+  });
+</script>
+</body>
+</html>

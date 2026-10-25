@@ -21,6 +21,12 @@ The first version of S4 Orion, a leaner rebuild of S4 Material 1.3 on Material 3
 - CI workflow running `npm run check`.
 - Tokens reference page (`tokens/index.html`) and foundation docs for color, typography, shape, spacing, elevation and motion.
 
+- Glass layer ([0004](docs/decisions/0004-glass.md)): very clear 60% glass on chrome and overlays with a backdrop compression that guarantees AA text over any backdrop for every seed (`scripts/check-glass.mjs`), hairline edge, two-layer limit, solid fallbacks.
+- 33 components with reference pages and READMEs: button, icon button, button group, FAB, app shell, top app bar, nav bar, nav rail, tabs, toolbar, search, card, pane, list, divider, table, text field, chips, switch, checkbox, radio, slider, swatches, badge, status, progress, menu, dialog, bottom and side sheets, snackbar, tooltips.
+- Runtime (`orion.js`): auto-init, theme (seed, mode, contrast, saving), icons, and the transition patterns (container transform, unfold, shared axis, slide from edge).
+- Set-neutral icon vocabulary (`components/icons/names.json`) built from Solar.
+- `scripts/build.mjs`: bundles `components/orion.css` and `orion.js` and copies assets into the skill.
+
 ### Fixed (from S4 Material 1.3)
 
 - Reduced motion now wins over every motion scheme; medium/high contrast no longer leaks into other looks; the no-blur fallback now applies in dark mode. All mode blocks share zero specificity and a fixed order.

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Slider · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+<style>
+  .sl-row { display: flex; flex-direction: column; gap: var(--s4-space-2); width: 100%; max-width: 560px; }
+  .sl-head { display: flex; justify-content: space-between; font-size: var(--md-sys-typescale-title-small-size); font-weight: var(--md-sys-typescale-title-small-weight); }
+  .sl-head output { color: var(--md-sys-color-on-surface-variant); }
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Slider</h1></header>
+<main class="ex-main">
+  <p>Sliders pick a value from a range, when the exact number matters less than its position: a budget, a reminder lead time, a tip. Pair one with a text field when people need to type an exact amount. Drag, click the track, or focus and use the arrow keys.</p>
+
+  <section class="ex-sec">
+    <h2>Continuous</h2>
+    <p>The M3 Expressive slider: a thick track with a gap around a slim handle and a stop at the end.</p>
+    <div class="ex-board col">
+      <div class="sl-row">
+        <div class="sl-head"><label for="s-budget">Monthly Budget</label><output id="s-budget-out" class="s4-num">$1,240</output></div>
+        <div class="s4-slider" data-label data-prefix="$" id="budget">
+          <input type="range" id="s-budget" min="0" max="2000" step="10" value="1240">
+        </div>
+      </div>
+      <div class="sl-row">
+        <div class="sl-head"><label for="s-vol">Alert Volume</label></div>
+        <div class="s4-slider"><input type="range" id="s-vol" min="0" max="100" value="35"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Discrete</h2>
+    <p><code>data-stops</code> draws a dot for every step; with <code>data-label</code> the value shows above the handle while dragging.</p>
+    <div class="ex-board col">
+      <div class="sl-row">
+        <div class="sl-head"><label for="s-days">Remind Me Before Due Date</label></div>
+        <div class="s4-slider" data-stops data-label data-suffix=" d"><input type="range" id="s-days" min="0" max="10" step="1" value="3"></div>
+      </div>
+      <div class="sl-row">
+        <div class="sl-head"><label for="s-tip">Tip</label></div>
+        <div class="s4-slider" data-stops data-label data-suffix="%"><input type="range" id="s-tip" min="0" max="25" step="5" value="15"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Disabled</h2>
+    <p>Disabled sliders keep their value visible.</p>
+    <div class="ex-board col">
+      <div class="sl-row">
+        <div class="sl-head"><label for="s-limit">Card Limit</label></div>
+        <div class="s4-slider"><input type="range" id="s-limit" min="0" max="100" value="60" disabled></div>
+      </div>
+      <div class="sl-row">
+        <div class="s4-slider" data-stops><input type="range" aria-label="Approval Level" min="1" max="5" value="2" disabled></div>
+      </div>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/slider/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../slider/slider.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+<script>
+  document.getElementById('budget').addEventListener('s4-change', function (e) {
+    document.getElementById('s-budget-out').textContent = '$' + e.detail.value.toLocaleString();
+  });
+</script>
+</body>
+</html>

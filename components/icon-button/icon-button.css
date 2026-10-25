@@ -1,0 +1,126 @@
+/* Icon button (M3 Expressive)
+   <button class="s4-icon-button" type="button" aria-label="Edit Bill"
+           data-variant="standard|filled|tonal|outlined" data-size="xs|s|m|l|xl"
+           data-width="narrow|default|wide" data-shape="round|square">
+     <span class="s4-icon" data-icon="edit"></span>
+   </button>
+   Defaults: standard (no container), size s (40), default width, round. Toggle icon buttons add data-toggle and
+   aria-pressed (icon-button.js flips it). Like the button, the shape squares off while pressed, and a selected toggle
+   swaps shape (round -> square, square -> round). Every value comes from tokens. */
+@layer s4.components {
+  .s4-icon-button {
+    /* size s (default): 40 container, 24 icon */
+    --_h: var(--s4-size-icon-button);
+    --_w: var(--_h);
+    --_icon: var(--s4-size-icon);
+    --_radius-round: var(--s4-shape-icon-button);
+    --_radius-square: var(--md-sys-shape-corner-medium);
+    --_radius-pressed: var(--md-sys-shape-corner-small);
+    --_radius: var(--_radius-round);
+    --_outline-width: 1px;
+    /* standard (default) */
+    --_bg: transparent;
+    --_fg: var(--md-sys-color-on-surface-variant);
+    --_outline: transparent;
+
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: var(--_w);
+    height: var(--_h);
+    padding: 0;
+    border: 0;
+    border-radius: var(--_radius);
+    background: var(--_bg);
+    color: var(--_fg);
+    box-shadow: inset 0 0 0 var(--_outline-width) var(--_outline);
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
+    text-decoration: none;
+    --s4-icon-size: var(--_icon);
+    transition:
+      border-radius var(--md-sys-motion-spring-fast-spatial-duration) var(--md-sys-motion-spring-fast-spatial),
+      width var(--md-sys-motion-spring-fast-spatial-duration) var(--md-sys-motion-spring-fast-spatial),
+      background-color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects),
+      color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects),
+      box-shadow var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+  }
+  /* 48dp touch target in both directions, even for the 32dp and 40dp sizes */
+  .s4-icon-button::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, var(--s4-size-touch-target));
+    height: max(100%, var(--s4-size-touch-target));
+    transform: translate(-50%, -50%);
+  }
+  .s4-icon-button:active:not(:disabled) { border-radius: var(--_radius-pressed); }
+
+  /* ---------- variants ---------- */
+  .s4-icon-button[data-variant="filled"] { --_bg: var(--md-sys-color-primary); --_fg: var(--md-sys-color-on-primary); }
+  .s4-icon-button[data-variant="tonal"] { --_bg: var(--md-sys-color-secondary-container); --_fg: var(--md-sys-color-on-secondary-container); }
+  .s4-icon-button[data-variant="outlined"] { --_outline: var(--md-sys-color-outline-variant); }
+
+  /* ---------- sizes (M3 Expressive: xs 32, s 40, m 56, l 96, xl 136; icons 20 / 24 / 24 / 32 / 40) ----------
+     widths per size: narrow / default / wide = xs 28/32/40, s 32/40/52, m 48/56/72, l 64/96/128, xl 104/136/184 */
+  .s4-icon-button[data-size="xs"] {
+    --_h: var(--s4-size-button-small); --_icon: var(--s4-size-icon-small);
+    --_radius-square: var(--md-sys-shape-corner-medium); --_radius-pressed: var(--md-sys-shape-corner-small);
+  }
+  .s4-icon-button[data-size="m"] {
+    --_h: var(--s4-size-button-medium);
+    --_radius-square: var(--md-sys-shape-corner-large); --_radius-pressed: var(--md-sys-shape-corner-medium);
+  }
+  .s4-icon-button[data-size="l"] {
+    --_h: var(--s4-size-button-large); --_icon: var(--s4-size-icon-large); --_outline-width: 2px;
+    --_radius-square: var(--md-sys-shape-corner-extra-large); --_radius-pressed: var(--md-sys-shape-corner-large);
+  }
+  .s4-icon-button[data-size="xl"] {
+    --_h: var(--s4-size-button-extra-large); --_icon: var(--s4-space-10); --_outline-width: 3px;
+    --_radius-square: var(--md-sys-shape-corner-extra-large); --_radius-pressed: var(--md-sys-shape-corner-large);
+  }
+
+  /* ---------- widths ---------- */
+  .s4-icon-button[data-width="narrow"] { --_w: calc(var(--s4-size-button-small) - var(--s4-space-1)); }
+  .s4-icon-button[data-width="wide"] { --_w: calc(var(--s4-size-button-small) + var(--s4-space-2)); }
+  .s4-icon-button:not([data-size])[data-width="narrow"], .s4-icon-button[data-size="s"][data-width="narrow"] { --_w: var(--s4-size-button-small); }
+  .s4-icon-button:not([data-size])[data-width="wide"], .s4-icon-button[data-size="s"][data-width="wide"] { --_w: calc(var(--s4-size-icon-button) + var(--s4-space-3)); }
+  .s4-icon-button[data-size="m"][data-width="narrow"] { --_w: var(--s4-size-touch-target); }
+  .s4-icon-button[data-size="m"][data-width="wide"] { --_w: calc(var(--s4-size-button-medium) + var(--s4-space-4)); }
+  .s4-icon-button[data-size="l"][data-width="narrow"] { --_w: var(--s4-space-16); }
+  .s4-icon-button[data-size="l"][data-width="wide"] { --_w: calc(var(--s4-size-button-large) + var(--s4-space-8)); }
+  .s4-icon-button[data-size="xl"][data-width="narrow"] { --_w: calc(var(--s4-size-button-large) + var(--s4-space-2)); }
+  .s4-icon-button[data-size="xl"][data-width="wide"] { --_w: calc(var(--s4-size-button-extra-large) + var(--s4-space-12)); }
+
+  .s4-icon-button[data-shape="square"] { --_radius: var(--_radius-square); }
+
+  /* ---------- toggle icon buttons (aria-pressed) ----------
+     M3 Expressive: standard selected = primary icon; filled unselected = surface-container, selected = primary;
+     tonal unselected = secondary-container, selected = secondary; outlined selected = inverse-surface.
+     Selected swaps the shape: round -> square, square -> round. */
+  .s4-icon-button[aria-pressed="true"] { --_fg: var(--md-sys-color-primary); --_radius: var(--_radius-square); }
+  .s4-icon-button[aria-pressed="true"][data-shape="square"] { --_radius: var(--_radius-round); }
+  .s4-icon-button[data-variant="filled"][aria-pressed="false"] { --_bg: var(--md-sys-color-surface-container); --_fg: var(--md-sys-color-on-surface-variant); }
+  .s4-icon-button[data-variant="filled"][aria-pressed="true"] { --_bg: var(--md-sys-color-primary); --_fg: var(--md-sys-color-on-primary); }
+  .s4-icon-button[data-variant="tonal"][aria-pressed="true"] { --_bg: var(--md-sys-color-secondary); --_fg: var(--md-sys-color-on-secondary); }
+  .s4-icon-button[data-variant="outlined"][aria-pressed="true"] { --_bg: var(--md-sys-color-inverse-surface); --_fg: var(--md-sys-color-inverse-on-surface); --_outline: transparent; }
+
+  /* ---------- disabled (M3: on-surface at 12% container, 38% content) ---------- */
+  .s4-icon-button:is(:disabled, [aria-disabled="true"]) {
+    --_fg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
+  }
+  .s4-icon-button:is(:disabled, [aria-disabled="true"]):is([data-variant="filled"], [data-variant="tonal"]) {
+    --_bg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100%), transparent);
+  }
+  .s4-icon-button:is(:disabled, [aria-disabled="true"])[data-variant="outlined"] {
+    --_bg: transparent;
+    --_outline: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100%), transparent);
+  }
+
+  @media (forced-colors: active) {
+    .s4-icon-button:is([data-variant="filled"], [data-variant="tonal"], [data-variant="outlined"]) { border: 1px solid ButtonText; }
+    .s4-icon-button[aria-pressed="true"] { background: Highlight; color: HighlightText; }
+  }
+}

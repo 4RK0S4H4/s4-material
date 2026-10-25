@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Checkbox · S4 Orion</title>
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../_example/example.css">
+<style>
+  .cb-table { border-collapse: collapse; width: 100%; max-width: 560px; }
+  .cb-table th, .cb-table td { padding: 0 var(--s4-space-2); height: var(--s4-size-table-row); text-align: start; border-bottom: 1px solid var(--md-sys-color-outline-variant); }
+  .cb-table th { font-size: var(--md-sys-typescale-title-small-size); font-weight: var(--md-sys-typescale-title-small-weight); color: var(--md-sys-color-on-surface-variant); }
+  .cb-table td:last-child, .cb-table th:last-child { text-align: end; }
+  .cb-table td:first-child, .cb-table th:first-child { width: var(--s4-size-touch-target); padding: 0; }
+</style>
+</head>
+<body>
+<header class="ex-bar"><h1><a href="../">Components</a> / Checkbox</h1></header>
+<main class="ex-main">
+  <p>Checkboxes let people pick any number of options from a list, or confirm one thing before submitting a form. Use a switch instead when a setting applies immediately. Labels are Title Case; a sentence-length label (an agreement) is sentence case.</p>
+
+  <section class="ex-sec">
+    <h2>States</h2>
+    <p>Unchecked, checked, indeterminate, error and disabled.</p>
+    <div class="ex-board">
+      <label class="s4-checkbox"><input type="checkbox"><span class="s4-checkbox-box"></span>Remind Me</label>
+      <label class="s4-checkbox"><input type="checkbox" checked><span class="s4-checkbox-box"></span>Autopay</label>
+      <label class="s4-checkbox" data-indeterminate><input type="checkbox"><span class="s4-checkbox-box"></span>All Categories</label>
+      <label class="s4-checkbox" data-error><input type="checkbox" aria-invalid="true"><span class="s4-checkbox-box"></span>I approve this payment</label>
+      <label class="s4-checkbox" data-error><input type="checkbox" checked><span class="s4-checkbox-box"></span>Error, Checked</label>
+    </div>
+    <div class="ex-board" style="margin-top:var(--s4-space-3)">
+      <label class="s4-checkbox"><input type="checkbox" disabled><span class="s4-checkbox-box"></span>Remind Me</label>
+      <label class="s4-checkbox"><input type="checkbox" checked disabled><span class="s4-checkbox-box"></span>Autopay</label>
+      <label class="s4-checkbox" data-indeterminate><input type="checkbox" disabled><span class="s4-checkbox-box"></span>All Categories</label>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>Group</h2>
+    <p>A parent checkbox shows indeterminate when only some of its children are checked. Try it.</p>
+    <div class="ex-board col" style="align-items:flex-start">
+      <fieldset id="cats" style="border:0;margin:0;padding:0;display:flex;flex-direction:column">
+        <legend class="s4-title-small" style="padding:0;margin-bottom:var(--s4-space-2)">Categories in Report</legend>
+        <label class="s4-checkbox" data-indeterminate><input type="checkbox" id="cat-all"><span class="s4-checkbox-box"></span>All Categories</label>
+        <div style="display:flex;flex-direction:column;padding-inline-start:var(--s4-space-8)">
+          <label class="s4-checkbox"><input type="checkbox" class="cat" checked><span class="s4-checkbox-box"></span>Utilities</label>
+          <label class="s4-checkbox"><input type="checkbox" class="cat"><span class="s4-checkbox-box"></span>Office</label>
+          <label class="s4-checkbox"><input type="checkbox" class="cat" checked><span class="s4-checkbox-box"></span>Travel</label>
+        </div>
+      </fieldset>
+    </div>
+  </section>
+
+  <section class="ex-sec">
+    <h2>In a Table</h2>
+    <p>Bare checkboxes (no visible text) select rows; give each input an <code>aria-label</code>.</p>
+    <div class="ex-board">
+      <table class="cb-table">
+        <thead><tr><th><label class="s4-checkbox"><input type="checkbox" aria-label="Select All Bills"><span class="s4-checkbox-box"></span></label></th><th>Vendor</th><th>Amount</th></tr></thead>
+        <tbody>
+          <tr><td><label class="s4-checkbox"><input type="checkbox" aria-label="Select Electric Co." checked><span class="s4-checkbox-box"></span></label></td><td>Electric Co.</td><td class="s4-num">$1,240.00</td></tr>
+          <tr><td><label class="s4-checkbox"><input type="checkbox" aria-label="Select City Water"><span class="s4-checkbox-box"></span></label></td><td>City Water</td><td class="s4-num">$86.40</td></tr>
+          <tr><td><label class="s4-checkbox"><input type="checkbox" aria-label="Select Northwind Office Supply"><span class="s4-checkbox-box"></span></label></td><td>Northwind Office Supply</td><td class="s4-num">$312.75</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <p class="ex-foot">Source: <code>components/checkbox/</code> · Solar icons by 480 Design (CC BY 4.0)</p>
+</main>
+<script src="../assets/icons.js"></script>
+<script src="../core/core.js"></script>
+<script src="../checkbox/checkbox.js"></script>
+<script src="../button-group/button-group.js"></script>
+<script src="../_example/example.js"></script>
+<script>
+  (function () {
+    var all = document.getElementById('cat-all'), kids = document.querySelectorAll('#cats .cat');
+    function sync() { var n = Array.prototype.filter.call(kids, function (k) { return k.checked; }).length; all.checked = n === kids.length; all.indeterminate = n > 0 && n < kids.length; }
+    all.addEventListener('change', function () { kids.forEach(function (k) { k.checked = all.checked; }); sync(); });
+    kids.forEach(function (k) { k.addEventListener('change', sync); });
+    setTimeout(sync);
+  })();
+</script>
+</body>
+</html>

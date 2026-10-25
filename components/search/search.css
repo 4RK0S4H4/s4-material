@@ -17,6 +17,7 @@
     align-items: center;
     gap: var(--s4-space-1);
     inline-size: 100%;
+    min-inline-size: 0;
     max-inline-size: var(--s4-size-search-max);
     min-block-size: var(--s4-size-text-field);
     padding-inline: var(--s4-space-4) var(--s4-space-2);
