@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pocket Ledger</title>
+<script>/* theme before first paint: no flash of the wrong mode */
+(function (k) { try { var t = JSON.parse(localStorage.getItem(k) || 'null'); if (t && t.mode && t.mode !== 'system') document.documentElement.dataset.theme = t.mode; } catch (e) {} })('pocket-ledger-theme');
+</script>
+<link rel="preload" href="inter-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="orion.css">
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="s4-app">
+
+  <nav class="s4-nav-rail" aria-label="Main">
+    <div class="s4-nav-rail-header">
+      <button class="s4-icon-button" type="button" data-rail-toggle aria-expanded="false" aria-label="Expand Navigation"
+              data-label-expand="Expand Navigation" data-label-collapse="Collapse Navigation"><span class="s4-icon" data-icon="menu"></span></button>
+    </div>
+    <div class="s4-nav-rail-items">
+      <a class="s4-nav-item" href="#overview" data-view="overview" aria-current="page"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="dashboard"></span></span><span class="s4-nav-label">Overview</span></a>
+      <a class="s4-nav-item" href="#bills" data-view="bills"><span class="s4-nav-indicator"><span class="s4-badge-host"><span class="s4-icon" data-icon="bills"></span><span class="s4-badge" aria-hidden="true" data-due-count>3</span></span></span><span class="s4-nav-label">Bills</span></a>
+      <a class="s4-nav-item" href="#activity" data-view="activity"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="history"></span></span><span class="s4-nav-label">Activity</span></a>
+      <a class="s4-nav-item" href="#settings" data-view="settings"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="settings"></span></span><span class="s4-nav-label">Settings</span></a>
+    </div>
+  </nav>
+
+  <div class="s4-app-body">
+    <header class="s4-top-app-bar">
+      <div class="s4-app-bar-title-group"><h1 class="s4-app-bar-title">Overview</h1></div>
+      <div class="s4-app-bar-actions">
+        <button class="s4-icon-button" type="button" aria-label="Notifications, 3 new" data-tooltip="Notifications" id="notify-btn">
+          <span class="s4-badge-host"><span class="s4-icon" data-icon="notifications"></span><span class="s4-badge" aria-hidden="true">3</span></span>
+        </button>
+        <button class="s4-icon-button" type="button" aria-label="More Options" data-tooltip="More Options" data-menu="more-menu"><span class="s4-icon" data-icon="more-vert"></span></button>
+      </div>
+    </header>
+
+    <main class="s4-content">
+
+      <!-- Overview -->
+      <section class="s4-view" data-view="overview" data-title="Overview">
+        <div class="s4-stack">
+          <div class="s4-page-header">
+            <h2 class="s4-headline-small">October</h2>
+            <div class="s4-button-group" data-connected data-select="single" aria-label="Period" id="period">
+              <button class="s4-button" data-variant="tonal" type="button" value="week">Week</button>
+              <button class="s4-button" data-variant="tonal" type="button" value="month" aria-pressed="true">Month</button>
+              <button class="s4-button" data-variant="tonal" type="button" value="year">Year</button>
+            </div>
+          </div>
+
+          <div class="s4-grid ledger-kpis">
+            <section class="s4-pane" aria-labelledby="kpi-spent">
+              <h2 class="s4-label-large s4-on-surface-variant" id="kpi-spent">Spent</h2>
+              <span class="s4-headline-small s4-emphasized s4-num ledger-kpi-value" data-kpi="spent">$6,820.00</span>
+              <span class="s4-status" data-tone="primary" data-kpi-delta="spent">4% Under Budget</span>
+            </section>
+            <section class="s4-pane" aria-labelledby="kpi-upcoming">
+              <h2 class="s4-label-large s4-on-surface-variant" id="kpi-upcoming">Upcoming</h2>
+              <span class="s4-headline-small s4-emphasized s4-num ledger-kpi-value" data-kpi="upcoming">$2,408.95</span>
+              <span class="s4-status" data-tone="tertiary" data-kpi-delta="upcoming">3 Bills Due</span>
+            </section>
+            <section class="s4-pane" aria-labelledby="kpi-overdue">
+              <h2 class="s4-label-large s4-on-surface-variant" id="kpi-overdue">Overdue</h2>
+              <span class="s4-headline-small s4-emphasized s4-num ledger-kpi-value" data-kpi="overdue">$1,240.00</span>
+              <span class="s4-status" data-tone="error" data-dot data-kpi-delta="overdue">1 Overdue</span>
+            </section>
+            <section class="s4-pane" aria-labelledby="kpi-saved">
+              <h2 class="s4-label-large s4-on-surface-variant" id="kpi-saved">Saved</h2>
+              <span class="s4-headline-small s4-emphasized s4-num ledger-kpi-value" data-kpi="saved">$1,150.00</span>
+              <span class="s4-status" data-kpi-delta="saved">On Track</span>
+            </section>
+          </div>
+
+          <div class="ledger-overview">
+            <section class="s4-pane" aria-labelledby="trend-h">
+              <h2 class="s4-pane-title" id="trend-h">Spending Trend</h2>
+              <div class="s4-tabs" data-variant="secondary" role="tablist" aria-label="Trend Views">
+                <button class="s4-tab" type="button" role="tab" id="tab-spending" aria-controls="panel-spending" aria-selected="true">Spending</button>
+                <button class="s4-tab" type="button" role="tab" id="tab-budgets" aria-controls="panel-budgets" aria-selected="false">Budgets</button>
+              </div>
+              <div class="s4-tab-panel" role="tabpanel" id="panel-spending" aria-labelledby="tab-spending">
+                <div class="ledger-chart"><canvas id="chart" role="img" aria-label="Bar chart of monthly spending"></canvas></div>
+              </div>
+              <div class="s4-tab-panel" role="tabpanel" id="panel-budgets" aria-labelledby="tab-budgets" hidden>
+                <div class="ledger-budget">
+                  <div class="ledger-between"><span class="s4-label-large">Utilities</span><span class="s4-body-medium s4-on-surface-variant s4-num">$412.75 of $600.00</span></div>
+                  <div class="s4-progress" data-value="0.69" aria-label="Utilities Budget Used"></div>
+                </div>
+                <div class="ledger-budget">
+                  <div class="ledger-between"><span class="s4-label-large">Office</span><span class="s4-body-medium s4-on-surface-variant s4-num">$1,980.00 of $2,000.00</span></div>
+                  <div class="s4-progress" data-value="0.99" aria-label="Office Budget Used"></div>
+                </div>
+                <div class="ledger-budget">
+                  <div class="ledger-between"><span class="s4-label-large">Insurance</span><span class="s4-body-medium s4-on-surface-variant s4-num">$1,820.00 of $4,000.00</span></div>
+                  <div class="s4-progress" data-value="0.46" aria-label="Insurance Budget Used"></div>
+                </div>
+              </div>
+            </section>
+
+            <section class="s4-pane" aria-labelledby="due-h">
+              <h2 class="s4-pane-title" id="due-h">Due This Week</h2>
+              <ul class="s4-list" id="due-list" aria-label="Due this week"></ul>
+              <hr class="s4-divider">
+              <div class="ledger-stats">
+                <div><span class="s4-label-medium s4-on-surface-variant">Bills</span><span class="s4-title-medium s4-emphasized s4-num" id="stat-bills">7</span></div>
+                <hr class="s4-divider" data-orientation="vertical">
+                <div><span class="s4-label-medium s4-on-surface-variant">Paid</span><span class="s4-title-medium s4-emphasized s4-num" id="stat-paid">2</span></div>
+                <hr class="s4-divider" data-orientation="vertical">
+                <div><span class="s4-label-medium s4-on-surface-variant">Open</span><span class="s4-title-medium s4-emphasized s4-num" id="stat-open">5</span></div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bills -->
+      <section class="s4-view ledger-pad-bottom" data-view="bills" data-title="Bills" hidden>
+        <div class="s4-stack">
+          <div class="s4-page-header">
+            <div>
+              <h2 class="s4-headline-small">October</h2>
+              <span class="s4-num s4-title-large s4-emphasized" id="bills-total">$0.00</span>
+            </div>
+            <button class="s4-button" data-variant="tonal" type="button" data-menu="sort-menu"><span class="s4-icon" data-icon="sort"></span>Sort By</button>
+          </div>
+          <div class="s4-search" role="search" data-filter="#bill-list" data-filter-empty="#bill-empty">
+            <span class="s4-icon" data-icon="search"></span>
+            <input class="s4-search-input" type="search" placeholder="Search Bills" aria-label="Search bills">
+            <button class="s4-icon-button s4-search-clear" type="button" aria-label="Clear Search" hidden><span class="s4-icon" data-icon="close"></span></button>
+          </div>
+          <div class="s4-chip-set" data-select="single" data-scroll aria-label="Filter bills" id="bill-filters">
+            <button class="s4-chip" data-type="filter" aria-pressed="true" type="button" data-filter-value="all"><span class="s4-chip-check"></span>All</button>
+            <button class="s4-chip" data-type="filter" aria-pressed="false" type="button" data-filter-value="due"><span class="s4-chip-check"></span>Due</button>
+            <button class="s4-chip" data-type="filter" aria-pressed="false" type="button" data-filter-value="overdue"><span class="s4-chip-check"></span>Overdue</button>
+            <button class="s4-chip" data-type="filter" aria-pressed="false" type="button" data-filter-value="scheduled"><span class="s4-chip-check"></span>Scheduled</button>
+            <button class="s4-chip" data-type="filter" aria-pressed="false" type="button" data-filter-value="paid"><span class="s4-chip-check"></span>Paid</button>
+          </div>
+          <ul class="s4-list" data-style="segmented" id="bill-list" aria-label="Bills"></ul>
+          <div id="bill-empty" class="ledger-empty" hidden>
+            <span class="s4-icon" data-icon="bills"></span>
+            <h2 class="s4-title-large" id="empty-title">No Bills Yet</h2>
+            <p class="s4-body-medium s4-on-surface-variant" id="empty-text">Bills you add show up here.</p>
+            <button class="s4-button" data-variant="tonal" type="button" data-sheet="add-bill">Add Bill</button>
+          </div>
+        </div>
+        <button class="s4-fab" data-fixed data-sheet="add-bill" type="button"><span class="s4-icon" data-icon="add"></span><span class="s4-fab-label">Add Bill</span></button>
+      </section>
+
+      <!-- Activity -->
+      <section class="s4-view ledger-pad-bottom" data-view="activity" data-title="Activity" hidden>
+        <div class="s4-stack">
+          <div class="s4-page-header">
+            <h2 class="s4-headline-small">Recent Payments</h2>
+            <div class="ledger-progress-row" id="refresh-state" hidden>
+              <div class="s4-progress" data-type="circular" aria-label="Refreshing Activity"></div>
+            </div>
+          </div>
+          <div class="s4-table-wrap" data-sticky>
+            <table class="s4-table" id="activity-table">
+              <caption>October Activity</caption>
+              <thead><tr>
+                <th scope="col" data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select All Payments"><span class="s4-checkbox-box"></span></label></th>
+                <th scope="col" data-primary aria-sort="none"><button type="button" class="s4-table-sort">Vendor<span class="s4-icon" data-icon="chevron-down"></span></button></th>
+                <th scope="col" aria-sort="none"><button type="button" class="s4-table-sort">Date<span class="s4-icon" data-icon="chevron-down"></span></button></th>
+                <th scope="col">Method</th>
+                <th scope="col">Status</th>
+                <th scope="col" class="num" aria-sort="none"><button type="button" class="s4-table-sort">Amount<span class="s4-icon" data-icon="chevron-down"></span></button></th>
+              </tr></thead>
+              <tbody>
+                <tr><td data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select Office Landlord"><span class="s4-checkbox-box"></span></label></td><td>Office Landlord</td><td data-value="2026-10-01">Oct 1</td><td>Checking</td><td><span class="s4-status">Paid</span></td><td class="num" data-value="3400">$3,400.00</td></tr>
+                <tr><td data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select City Water"><span class="s4-checkbox-box"></span></label></td><td>City Water</td><td data-value="2026-10-20">Oct 20</td><td>Card</td><td><span class="s4-status">Paid</span></td><td class="num" data-value="94.2">$94.20</td></tr>
+                <tr><td data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select Gas Utility"><span class="s4-checkbox-box"></span></label></td><td>Gas Utility</td><td data-value="2026-10-12">Oct 12</td><td>Checking</td><td><span class="s4-status">Paid</span></td><td class="num" data-value="156.8">$156.80</td></tr>
+                <tr><td data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select Comcast Business"><span class="s4-checkbox-box"></span></label></td><td>Comcast Business</td><td data-value="2026-11-02">Nov 2</td><td>Card</td><td><span class="s4-status" data-tone="primary">Scheduled</span></td><td class="num" data-value="189">$189.00</td></tr>
+                <tr><td data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select Acme Insurance"><span class="s4-checkbox-box"></span></label></td><td>Acme Insurance</td><td data-value="2026-11-05">Nov 5</td><td>Checking</td><td><span class="s4-status" data-tone="secondary">In Review</span></td><td class="num" data-value="1820">$1,820.00</td></tr>
+                <tr><td data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select Card Processor"><span class="s4-checkbox-box"></span></label></td><td>Card Processor</td><td data-value="2026-10-18">Oct 18</td><td>Checking</td><td><span class="s4-status" data-tone="error" data-dot>Payment Failed</span></td><td class="num" data-value="412.5">$412.50</td></tr>
+                <tr><td data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select Staples"><span class="s4-checkbox-box"></span></label></td><td>Staples</td><td data-value="2026-10-09">Oct 9</td><td>Card</td><td><span class="s4-status">Paid</span></td><td class="num" data-value="72.4">$72.40</td></tr>
+                <tr><td data-check><label class="s4-checkbox"><input type="checkbox" aria-label="Select Electric Co."><span class="s4-checkbox-box"></span></label></td><td>Electric Co.</td><td data-value="2026-10-30">Oct 30</td><td>Checking</td><td><span class="s4-status" data-tone="tertiary">Due</span></td><td class="num" data-value="318.55">$318.55</td></tr>
+              </tbody>
+              <tfoot><tr><th scope="row" colspan="5">Total</th><td class="num">$6,463.45</td></tr></tfoot>
+            </table>
+          </div>
+        </div>
+        <div class="s4-toolbar-dock" data-position="bottom">
+          <div class="s4-toolbar" role="toolbar" aria-label="Activity Actions">
+            <button class="s4-icon-button" type="button" aria-label="Filter Activity" data-tooltip="Filter Activity" data-sheet="activity-filters"><span class="s4-icon" data-icon="filter"></span></button>
+            <button class="s4-icon-button" type="button" aria-label="Export to Excel" data-tooltip="Export to Excel" id="export-btn"><span class="s4-icon" data-icon="export"></span></button>
+            <span class="s4-toolbar-divider" role="separator"></span>
+            <button class="s4-icon-button" type="button" aria-label="Refresh Activity" data-tooltip="Refresh Activity" id="refresh-btn"><span class="s4-icon" data-icon="refresh"></span></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings -->
+      <section class="s4-view" data-view="settings" data-title="Settings" hidden>
+        <div class="s4-stack">
+          <section class="s4-pane" aria-labelledby="appearance">
+            <h2 class="s4-pane-title" id="appearance">Appearance</h2>
+            <div class="s4-stack">
+              <div class="s4-button-group" data-connected data-select="single" aria-label="Theme" id="mode">
+                <button class="s4-button" type="button" value="system" aria-pressed="true">System</button>
+                <button class="s4-button" type="button" value="light" aria-pressed="false">Light</button>
+                <button class="s4-button" type="button" value="dark" aria-pressed="false">Dark</button>
+              </div>
+              <div class="s4-swatches" data-theme-seed aria-label="Theme Color">
+                <button class="s4-swatch" type="button" data-seed="#000000" aria-label="Mono"></button>
+                <button class="s4-swatch" type="button" data-seed="#4f46e5" aria-label="Indigo"></button>
+                <button class="s4-swatch" type="button" data-seed="#00796b" aria-label="Teal"></button>
+                <button class="s4-swatch" type="button" data-seed="#c2185b" aria-label="Rose"></button>
+              </div>
+              <div class="s4-button-group" data-connected data-select="single" aria-label="Contrast" id="contrast">
+                <button class="s4-button" type="button" value="0" aria-pressed="true">Standard</button>
+                <button class="s4-button" type="button" value="0.5" aria-pressed="false">Medium</button>
+                <button class="s4-button" type="button" value="1" aria-pressed="false">High</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="s4-pane" aria-labelledby="notif-h">
+            <h2 class="s4-pane-title" id="notif-h">Notifications</h2>
+            <p class="s4-pane-supporting">Changes apply right away.</p>
+            <ul class="s4-list">
+              <li><label class="s4-list-item">
+                <span class="s4-list-content"><span class="s4-list-headline">Bill Reminders</span><span class="s4-list-supporting">Three days before a bill is due.</span></span>
+                <span class="s4-list-trailing"><span class="s4-switch"><input type="checkbox" role="switch" checked><span class="s4-switch-track"><span class="s4-switch-handle"></span></span></span></span>
+              </label></li>
+              <li><label class="s4-list-item">
+                <span class="s4-list-content"><span class="s4-list-headline">Overdue Alerts</span><span class="s4-list-supporting">Notify me the day a bill becomes overdue.</span></span>
+                <span class="s4-list-trailing"><span class="s4-switch"><input type="checkbox" role="switch" checked><span class="s4-switch-track"><span class="s4-switch-handle"></span></span></span></span>
+              </label></li>
+              <li><label class="s4-list-item">
+                <span class="s4-list-content"><span class="s4-list-headline">Weekly Summary</span><span class="s4-list-supporting">A short email every Monday.</span></span>
+                <span class="s4-list-trailing"><span class="s4-switch" data-icons><input type="checkbox" role="switch"><span class="s4-switch-track"><span class="s4-switch-handle"></span></span></span></span>
+              </label></li>
+              <li><button class="s4-list-item" type="button" data-menu="account-menu">
+                <span class="s4-list-content"><span class="s4-list-headline">Default Account</span></span>
+                <span class="s4-list-trailing"><span id="account-value">Checking •••• 4021</span><span class="s4-icon" data-icon="chevron-right"></span></span>
+              </button></li>
+            </ul>
+          </section>
+
+          <section class="s4-pane" aria-labelledby="pay-h">
+            <h2 class="s4-pane-title" id="pay-h">Payments</h2>
+            <p class="s4-pane-supporting">Choose how bills are paid and how much you plan to spend.</p>
+            <div class="s4-stack">
+              <div>
+                <label for="budget" class="s4-label-large">Monthly Budget</label>
+                <div class="s4-slider" data-label data-prefix="$">
+                  <input type="range" id="budget" min="0" max="12000" step="100" value="7000">
+                </div>
+              </div>
+              <fieldset>
+                <legend class="s4-label-large">Pay With</legend>
+                <label class="s4-radio"><input type="radio" name="pay" value="checking" checked><span class="s4-radio-ring"></span>Checking •••• 4021</label>
+                <label class="s4-radio"><input type="radio" name="pay" value="card"><span class="s4-radio-ring"></span>Card •••• 8830</label>
+              </fieldset>
+              <label class="s4-checkbox"><input type="checkbox" checked><span class="s4-checkbox-box"></span>Remind Me Before Autopay</label>
+              <div class="s4-row">
+                <button class="s4-button" data-variant="text" type="button" data-rich-tooltip="autopay-tip">What Is Autopay?</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="s4-pane" data-color="error" aria-labelledby="danger-h">
+            <h2 class="s4-pane-title" id="danger-h">Delete All Data</h2>
+            <p class="s4-pane-supporting">This deletes every bill saved in this browser. You can't undo this.</p>
+            <div class="s4-row"><button class="s4-button" data-variant="outlined" data-color="error" type="button" data-dialog="confirm-wipe">Delete All Data</button></div>
+          </section>
+
+          <p class="s4-body-small s4-on-surface-variant ledger-footer">Solar icons by 480 Design (CC BY 4.0)</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <nav class="s4-nav-bar" aria-label="Main">
+    <a class="s4-nav-item" href="#overview" data-view="overview" aria-current="page"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="dashboard"></span></span><span class="s4-nav-label">Overview</span></a>
+    <a class="s4-nav-item" href="#bills" data-view="bills"><span class="s4-nav-indicator"><span class="s4-badge-host"><span class="s4-icon" data-icon="bills"></span><span class="s4-badge" aria-hidden="true" data-due-count>3</span></span></span><span class="s4-nav-label">Bills</span></a>
+    <a class="s4-nav-item" href="#activity" data-view="activity"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="history"></span></span><span class="s4-nav-label">Activity</span></a>
+    <a class="s4-nav-item" href="#settings" data-view="settings"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="settings"></span></span><span class="s4-nav-label">Settings</span></a>
+  </nav>
+</div>
+
+<!-- Menus -->
+<div class="s4-menu" id="more-menu" data-align="end" aria-label="More options">
+  <button class="s4-menu-item" type="button" data-action="export"><span class="s4-icon" data-icon="export"></span>Export to Excel</button>
+  <button class="s4-menu-item" type="button" data-action="refresh"><span class="s4-icon" data-icon="refresh"></span>Refresh Data</button>
+  <hr class="s4-menu-divider">
+  <button class="s4-menu-item" type="button" data-action="help"><span class="s4-icon" data-icon="info"></span>Help</button>
+</div>
+<div class="s4-menu" id="sort-menu" aria-label="Sort by">
+  <div class="s4-menu-label">Sort By</div>
+  <button class="s4-menu-item" type="button" role="menuitemradio" aria-checked="true" data-value="due"><span class="s4-icon" data-icon="calendar"></span>Due Date</button>
+  <button class="s4-menu-item" type="button" role="menuitemradio" aria-checked="false" data-value="amount"><span class="s4-icon" data-icon="wallet"></span>Amount</button>
+  <button class="s4-menu-item" type="button" role="menuitemradio" aria-checked="false" data-value="vendor"><span class="s4-icon" data-icon="tag"></span>Vendor</button>
+</div>
+<div class="s4-menu" id="account-menu" data-align="end" aria-label="Default account">
+  <button class="s4-menu-item" type="button" role="menuitemradio" aria-checked="true" data-value="Checking •••• 4021">Checking •••• 4021</button>
+  <button class="s4-menu-item" type="button" role="menuitemradio" aria-checked="false" data-value="Card •••• 8830">Card •••• 8830</button>
+</div>
+
+<!-- Rich tooltip -->
+<div class="s4-rich-tooltip" id="autopay-tip" role="dialog" aria-label="About autopay">
+  <span class="s4-rich-tooltip-subhead">Autopay</span>
+  <span>Pays the bill from your default account on its due date.</span>
+</div>
+
+<!-- Add bill: bottom sheet -->
+<dialog class="s4-bottom-sheet" id="add-bill" aria-labelledby="add-bill-h">
+  <span class="s4-sheet-handle" aria-hidden="true"></span>
+  <h2 class="s4-sheet-title" id="add-bill-h">Add Bill</h2>
+  <div class="s4-sheet-content">
+    <form class="ledger-form" id="add-form" novalidate>
+      <div class="s4-text-field"><input id="vendor" autocomplete="off"><label for="vendor">Vendor</label></div>
+      <div class="s4-text-field"><span class="s4-text-field-affix" data-prefix>$</span><input id="amount" inputmode="decimal" autocomplete="off"><label for="amount">Amount</label></div>
+      <div class="s4-text-field"><input id="due" type="date"><label for="due">Due Date</label></div>
+      <div class="s4-text-field"><select id="cat"><option value=""></option><option>Utilities</option><option>Office</option><option>Insurance</option><option>Rent</option></select><label for="cat">Category</label></div>
+      <label class="s4-checkbox"><input type="checkbox" id="autopay"><span class="s4-checkbox-box"></span>Pay Automatically</label>
+    </form>
+  </div>
+  <div class="s4-sheet-actions"><button class="s4-button" data-variant="text" data-close="cancel" type="button">Cancel</button><button class="s4-button" type="button" id="save-bill">Save Bill</button></div>
+</dialog>
+
+<!-- Bill detail: container transform from the row -->
+<dialog class="s4-dialog" id="bill-detail" data-fullscreen="compact" aria-labelledby="bd-h">
+  <div class="s4-dialog-bar">
+    <button class="s4-icon-button" type="button" data-close="close" aria-label="Close"><span class="s4-icon" data-icon="close"></span></button>
+    <h2 class="s4-dialog-headline" data-bd-title></h2>
+    <button class="s4-button" data-variant="text" type="button" data-pay>Mark Paid</button>
+  </div>
+  <h2 class="s4-dialog-headline" id="bd-h" data-bd-title></h2>
+  <div class="s4-dialog-content">
+    <div class="ledger-detail">
+      <div class="ledger-detail-amount"><span class="s4-headline-small s4-emphasized s4-num" id="bd-amount"></span><span class="s4-status" id="bd-status"></span></div>
+      <ul class="s4-list" data-dividers>
+        <li><div class="s4-list-item"><span class="s4-list-leading"><span class="s4-icon" data-icon="calendar"></span></span><span class="s4-list-content"><span class="s4-list-overline">Due Date</span><span class="s4-list-headline" id="bd-due"></span></span></div></li>
+        <li><div class="s4-list-item"><span class="s4-list-leading"><span class="s4-icon" data-icon="tag"></span></span><span class="s4-list-content"><span class="s4-list-overline">Category</span><span class="s4-list-headline" id="bd-cat"></span></span></div></li>
+        <li><div class="s4-list-item"><span class="s4-list-leading"><span class="s4-icon" data-icon="card"></span></span><span class="s4-list-content"><span class="s4-list-overline">Pay With</span><span class="s4-list-headline">Checking •••• 4021</span></span></div></li>
+      </ul>
+      <div class="s4-row">
+        <button class="s4-button" data-variant="outlined" type="button" id="bd-edit">Edit Bill</button>
+        <button class="s4-icon-button" type="button" aria-label="Delete Bill" data-tooltip="Delete Bill" id="bd-delete"><span class="s4-icon" data-icon="delete"></span></button>
+      </div>
+    </div>
+  </div>
+  <div class="s4-dialog-actions">
+    <button class="s4-button" data-variant="text" data-close="close" type="button">Close</button>
+    <button class="s4-button" type="button" data-pay>Mark Paid</button>
+  </div>
+</dialog>
+
+<!-- Confirm destructive -->
+<dialog class="s4-dialog" id="confirm-wipe" aria-labelledby="cw-h">
+  <span class="s4-icon s4-dialog-icon" data-icon="delete"></span>
+  <h2 class="s4-dialog-headline" id="cw-h">Delete all data?</h2>
+  <div class="s4-dialog-content">Every bill saved in this browser is deleted. This can’t be undone.</div>
+  <div class="s4-dialog-actions">
+    <button class="s4-button" data-variant="text" data-close="cancel" type="button">Cancel</button>
+    <button class="s4-button" data-variant="text" data-color="error" data-close="delete" type="button">Delete</button>
+  </div>
+</dialog>
+
+<!-- Activity filters: side sheet -->
+<dialog class="s4-side-sheet" id="activity-filters" aria-labelledby="af-h">
+  <div class="s4-sheet-header"><h2 class="s4-sheet-title" id="af-h">Filters</h2><button class="s4-icon-button" data-close type="button" aria-label="Close"><span class="s4-icon" data-icon="close"></span></button></div>
+  <div class="s4-sheet-content">
+    <div class="ledger-form">
+      <fieldset>
+        <legend class="s4-label-large">Status</legend>
+        <label class="s4-checkbox"><input type="checkbox" data-af-status="paid" checked><span class="s4-checkbox-box"></span>Paid</label>
+        <label class="s4-checkbox"><input type="checkbox" data-af-status="open" checked><span class="s4-checkbox-box"></span>Scheduled and Due</label>
+        <label class="s4-checkbox"><input type="checkbox" data-af-status="problem" checked><span class="s4-checkbox-box"></span>Failed</label>
+      </fieldset>
+      <fieldset>
+        <legend class="s4-label-large">Method</legend>
+        <label class="s4-radio"><input type="radio" name="method" value="" checked><span class="s4-radio-ring"></span>Any</label>
+        <label class="s4-radio"><input type="radio" name="method" value="Checking"><span class="s4-radio-ring"></span>Checking</label>
+        <label class="s4-radio"><input type="radio" name="method" value="Card"><span class="s4-radio-ring"></span>Card</label>
+      </fieldset>
+      <div>
+        <label for="min-amt" class="s4-label-large">Minimum Amount</label>
+        <div class="s4-slider" data-label data-prefix="$"><input type="range" id="min-amt" min="0" max="2000" step="50" value="0"></div>
+      </div>
+    </div>
+  </div>
+  <div class="s4-sheet-actions"><button class="s4-button" data-variant="text" data-close="reset" type="button">Reset</button><button class="s4-button" data-close="apply" type="button">Apply Filters</button></div>
+</dialog>
+
+<script src="icons.js"></script>
+<script src="orion.js"></script>
+<script>S4.theme.restore('pocket-ledger-theme', { mode: 'system' });</script>
+<script src="demo.js"></script>
+</body>
+</html>

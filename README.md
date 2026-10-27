@@ -30,7 +30,7 @@ S4 Orion is being built phase by phase. Decisions are recorded in [`docs/decisio
 | 3 | Tokens and build script | Done ([0003](docs/decisions/0003-tokens.md), [tokens page](https://4rk0s4h4.github.io/s4-material/tokens/)) |
 | 4 | Components and the glass layer | Done ([0004](docs/decisions/0004-glass.md), [components](https://4rk0s4h4.github.io/s4-material/components/)) |
 | 5 | Claude skill | Done, approved ([skill](skill/), [download](skill/dist/s4-orion.skill)) |
-| 6 | Demo and review against the skill | Next |
+| 6 | Demo and review against the skill | Built, awaiting owner review ([0005](docs/decisions/0005-phase-6-review.md)) |
 
 ## Building
 

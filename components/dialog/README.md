@@ -21,7 +21,7 @@ the button. On glass, over a 32% scrim.
 |---|---|
 | `[data-dialog="id"]` | Opens the dialog from this element (container transform) |
 | `[data-close="value"]` | Closes it; the value comes back in `s4-close { value }` |
-| `data-fullscreen="compact"` | Full screen on phones, with `.s4-dialog-bar` (close, headline, confirm) |
+| `data-fullscreen="compact"` | Full screen on phones. Needs **both** markups: the normal headline + actions (wide screens) and a `.s4-dialog-bar` (phones) holding a close icon button (`data-close="cancel"`), a `.s4-dialog-headline` and a confirm text button; the other set is hidden at each size |
 | `data-persistent` | A click on the scrim doesn't close it (Escape still does) |
 | `data-origin="none"` | Fade in place instead of growing from the opener |
 | JS | `S4.dialog.open(id, { from })`, `S4.dialog.close(id, value)`; events `s4-open`, `s4-close` |

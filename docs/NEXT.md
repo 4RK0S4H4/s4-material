@@ -1,6 +1,6 @@
 # Where S4 Orion stands (resume here)
 
-Last updated: 2026-10-27. **Phase 5 approved. Next: Phase 6.** Working notes for Claude are in [`/CLAUDE.md`](../CLAUDE.md).
+Last updated: 2026-10-27. **Phase 6 demo built and published; awaiting owner review, then release 1.0.0.** Working notes for Claude are in [`/CLAUDE.md`](../CLAUDE.md).
 
 ## The brief (original plan, six phases)
 
@@ -14,11 +14,11 @@ Liquid Glass–inspired transparency layer. Pause for the owner's approval after
 | 3 | Tokens (W3C JSON → tokens.css/ts/json; color light/dark/contrast, shape, type, spacing, elevation, springs, glass) | Done, approved ([0003](decisions/0003-tokens.md)) |
 | 4 | Components and the glass layer (33 components, glass only on chrome, AA guaranteed, fallbacks) | Done ([0004](decisions/0004-glass.md)) |
 | 5 | Rewrite the skill (SKILL.md < 500 lines, trigger, philosophy, rules, references, mistakes, worked example) | Done, approved 2026-10-27 |
-| 6 | Demo built only from the skill + tokens; review against the skill; fix the skill wording where output drifted | **Next** |
+| 6 | Demo built only from the skill + tokens; review against the skill; fix the skill wording where output drifted | Built 2026-10-27, awaiting owner review ([0005](decisions/0005-phase-6-review.md)) |
 
 After Phase 6: release 1.0.0 (see "Release" below).
 
-## Phase 6 plan (do this next)
+## Phase 6 plan (steps 1-4 done; open items are in 0005)
 
 1. **Build the demo with only the skill.** Spawn a fresh agent (or work strictly from `skill/s4-orion/` yourself) with
    the prompt: build `demo/index.html` (+ `demo/demo.css`, `demo/demo.js` if needed) as one realistic app that uses
@@ -68,3 +68,4 @@ After Phase 6: release 1.0.0 (see "Release" below).
 - 2026-10-25: Phases 1–4 published.
 - 2026-10-27: Phase 5 (skill, references, check.mjs, inline.mjs, evals, packaged `.skill`); FAB-above-nav-bar fix;
   trigger narrowed; approved by the owner, who installed the skill. Owner will continue in new sessions (different model).
+- 2026-10-27: Phase 6: Pocket Ledger demo built from the skill alone, reviewed; skill/docs/snackbar fixes; hub linked. Next: owner reviews demo on iPhone, then fix the open items in 0005, run the evals (optional), release 1.0.0.

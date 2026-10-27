@@ -113,9 +113,9 @@ An app that offers appearance settings uses exactly these, so every app feels th
   <h2 class="s4-pane-title" id="appearance">Appearance</h2>
   <div class="s4-stack">
     <div class="s4-button-group" data-connected data-select="single" aria-label="Theme" id="mode">
-      <button class="s4-button" type="button" data-value="system" aria-pressed="true">System</button>
-      <button class="s4-button" type="button" data-value="light" aria-pressed="false">Light</button>
-      <button class="s4-button" type="button" data-value="dark" aria-pressed="false">Dark</button>
+      <button class="s4-button" type="button" value="system" aria-pressed="true">System</button>
+      <button class="s4-button" type="button" value="light" aria-pressed="false">Light</button>
+      <button class="s4-button" type="button" value="dark" aria-pressed="false">Dark</button>
     </div>
     <div class="s4-swatches" data-theme-seed aria-label="Theme Color">
       <button class="s4-swatch" type="button" data-seed="#000000" aria-label="Mono"></button>
@@ -124,9 +124,9 @@ An app that offers appearance settings uses exactly these, so every app feels th
       <button class="s4-swatch" type="button" data-seed="#c2185b" aria-label="Rose"></button>
     </div>
     <div class="s4-button-group" data-connected data-select="single" aria-label="Contrast" id="contrast">
-      <button class="s4-button" type="button" data-value="0" aria-pressed="true">Standard</button>
-      <button class="s4-button" type="button" data-value="0.5" aria-pressed="false">Medium</button>
-      <button class="s4-button" type="button" data-value="1" aria-pressed="false">High</button>
+      <button class="s4-button" type="button" value="0" aria-pressed="true">Standard</button>
+      <button class="s4-button" type="button" value="0.5" aria-pressed="false">Medium</button>
+      <button class="s4-button" type="button" value="1" aria-pressed="false">High</button>
     </div>
   </div>
 </section>
@@ -135,8 +135,8 @@ An app that offers appearance settings uses exactly these, so every app feels th
   document.getElementById('contrast').addEventListener('s4-change', (e) => S4.theme({ contrast: +e.detail.value }));
   /* reflect the restored theme in the groups */
   const t = S4.theme();
-  document.querySelectorAll('#mode [data-value]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.value === t.mode));
-  document.querySelectorAll('#contrast [data-value]').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.value === t.contrast));
+  document.querySelectorAll('#mode [value]').forEach((b) => b.setAttribute('aria-pressed', b.value === t.mode));
+  document.querySelectorAll('#contrast [value]').forEach((b) => b.setAttribute('aria-pressed', +b.value === t.contrast));
 </script>
 ```
 
@@ -172,3 +172,18 @@ S4.util.css('--md-sys-color-primary')          // read a token's current value (
 Set the seed once at start-up for an app with a brand color: `S4.theme.restore('app-theme', { seed: '#2e7d32', mode: 'system' })`.
 Color is generated with Material Color Utilities (`m3color.js`, loaded on demand from next to `orion.js`); it writes
 the same zero-specificity blocks as the token file, so dark mode, high contrast and glass keep working.
+
+## Build notes (from the Phase 6 demo)
+
+- **Rail FAB:** in the app shell the view's FAB is `data-fixed` inside its view. On wide screens put the same action in the
+  rail's FAB slot instead of a second FAB (the rail's slot is the only second place it may appear).
+- **List and detail on wide screens:** a list with a detail pane splits side by side from 840; below that the detail is a
+  container-transform dialog opened with `S4.dialog.open(id, { from: row })`.
+- **Validating before a sheet closes:** `data-close="save"` closes at once. To validate first, give Save no `data-close`,
+  check the fields, then call `S4.sheet.close(id, 'save')`.
+- **Search plus your own filters:** `data-filter-empty` needs an element of its own ("No bills match “zzz”"); keep the
+  first-run empty state in a different element. After re-rendering a filtered list, dispatch `input` on the search field.
+- **Charts in tabs or hidden views:** a canvas in a hidden panel has zero size; redraw on `s4-theme`, on tab change, or
+  with a `ResizeObserver`. Take sizes and colors from tokens (`S4.util.css`); don't hard-code pixels in canvas code.
+- **Status pills in panes:** a pane stacks its children, so a pill stretches; wrap it in `.s4-row` to keep it inline.
+- The page checker only inspects the view that is visible on load. Check the other views by hand.

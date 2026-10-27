@@ -1,0 +1,29 @@
+/* Pocket Ledger: the app's own layout. Tokens only; component look comes from orion.css. */
+
+.ledger-between { display: flex; align-items: center; justify-content: space-between; gap: var(--s4-space-4); flex-wrap: wrap; }
+.ledger-kpis { --s4-min: 200px; }
+.ledger-kpi-value { display: block; margin-block: var(--s4-space-1); }
+.ledger-overview { display: grid; gap: var(--s4-layout-gap); }
+@container s4-app (width >= 840px) {
+  .ledger-overview { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: start; }
+}
+
+.ledger-chart { position: relative; aspect-ratio: 16 / 9; width: 100%; }
+.ledger-chart canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+.ledger-budget { display: grid; gap: var(--s4-space-2); }
+.ledger-budget + .ledger-budget { margin-top: var(--s4-space-2); }
+
+.ledger-stats { display: flex; align-items: stretch; gap: var(--s4-space-4); }
+.ledger-stats > div { display: grid; gap: var(--s4-space-1); }
+
+.ledger-form { display: grid; gap: var(--s4-space-4); max-width: 35rem; }
+.ledger-detail { display: grid; gap: var(--s4-space-4); }
+.ledger-detail-amount { display: flex; align-items: center; gap: var(--s4-space-3); flex-wrap: wrap; }
+
+.ledger-empty { display: grid; justify-items: center; gap: var(--s4-space-3); text-align: center; padding-block: var(--s4-space-12); }
+.ledger-empty .s4-icon { --s4-icon-size: var(--s4-size-icon-large); }
+
+.ledger-progress-row { display: flex; align-items: center; gap: var(--s4-space-3); }
+.ledger-pad-bottom { padding-bottom: var(--s4-space-16); }
+.ledger-footer { margin-block: var(--s4-space-6); text-align: center; }

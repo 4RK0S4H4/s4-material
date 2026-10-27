@@ -12,6 +12,9 @@ The first version of S4 Orion, a leaner rebuild of S4 Material 1.3 on Material 3
 
 ### Added
 
+- `demo/`: Pocket Ledger, a personal finance app that uses every component, built from the skill alone (Phase 6). Review in `docs/decisions/0005-phase-6-review.md`.
+- Skill: "Build notes" in `patterns.md` (rail FAB, list/detail, sheet validation, search empty state, charts in hidden panels).
+
 - Repo structure: `tokens/`, `components/`, `docs/`, `skill/`, `demo/`, `explore/`, `scripts/`, `LICENSES/`.
 - Decision log: [0001](docs/decisions/0001-phase-1-audit.md) (audit and design decisions), [0002](docs/decisions/0002-repo-structure.md) (repo structure).
 - Review labs on GitHub Pages (`explore/`): States and Shape, Motion Lab, Transitions Lab, with a saved questionnaire.

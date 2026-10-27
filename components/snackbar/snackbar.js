@@ -11,10 +11,10 @@
     document.body.appendChild(host);
     return host;
   }
-  function offset() {   /* lift above anything fixed at the bottom */
+  function offset() {   /* lift above anything fixed in the lower half (a FAB sits above the nav bar, so it isn't flush with the edge) */
     var lift = 0, vh = window.innerHeight;
     document.querySelectorAll('.s4-nav-bar, .s4-toolbar[data-type="docked"], .s4-fab[data-fixed], .s4-toolbar-dock').forEach(function (el) {
-      var r = el.getBoundingClientRect(); if (r.height && getComputedStyle(el).display !== 'none' && r.bottom >= vh - 2) lift = Math.max(lift, vh - r.top);
+      var r = el.getBoundingClientRect(); if (r.height && getComputedStyle(el).display !== 'none' && r.top > vh / 2) lift = Math.max(lift, vh - r.top);
     });
     ensureHost().style.setProperty('--s4-snackbar-offset', lift + 'px');
   }
