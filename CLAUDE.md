@@ -25,6 +25,10 @@ something, so the next session can pick up cold.
 
 - Work on branch `s4-orion`; publish with `git push origin s4-orion && git push origin s4-orion:main` (fast-forward).
   No PRs needed for this repo; the owner reviews on Pages.
+- **A new session starts on its own branch** (e.g. `claude/<name>`). Ignore it: `git fetch origin s4-orion main &&
+  git checkout -B s4-orion origin/s4-orion`, work there, publish as above. Only if pushing to `s4-orion`/`main` is
+  refused, push the session branch and open a PR into `main` instead (Pages updates when it's merged).
+- Don't ask the owner which branch to use or whether to start the next phase: `docs/NEXT.md` says what's next.
 - Commit after each meaningful step with a clear message. Never put model names or IDs in commits, code or docs.
 - CI (`.github/workflows/check.yml`) runs `npm run check` on every push. It must stay green.
 
