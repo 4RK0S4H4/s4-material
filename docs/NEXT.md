@@ -13,7 +13,7 @@ Last updated: 2026-10-27, end of Phase 5 (awaiting approval).
 - `skill/s4-orion/SKILL.md` (~220 lines), `references/patterns.md` (hand-written), generated references
   (components, tokens, icons, foundations), `scripts/check.mjs`, `scripts/inline.mjs`, three evals.
 - Re-package after skill changes: skill-creator `package_skill.py` → `skill/dist/s4-orion.skill`.
-- Open question for the user: the S4 Glass skill also claims "house style / my design language"; which skill is the default?
+- S4 Glass is a separate, unrelated system; Orion only claims "my design system" for apps already on Orion or S4 Material.
 
 ## Next: Phase 6
 - Build `demo/index.html` using only the skill and tokens (ideally a fresh agent given only the skill); run
