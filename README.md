@@ -21,7 +21,7 @@ The flow is one way: **tokens → components → skill assets → demo**. Change
 
 ## Status
 
-S4 Orion is being built phase by phase. Decisions are recorded in [`docs/decisions/`](docs/decisions/).
+S4 Orion is being built phase by phase. Decisions are recorded in [`docs/decisions/`](docs/decisions/); the current plan, backlog and next steps are in [`docs/NEXT.md`](docs/NEXT.md).
 
 | Phase | What | State |
 |---|---|---|
@@ -29,7 +29,7 @@ S4 Orion is being built phase by phase. Decisions are recorded in [`docs/decisio
 | 2 | Repo structure | Done ([0002](docs/decisions/0002-repo-structure.md)) |
 | 3 | Tokens and build script | Done ([0003](docs/decisions/0003-tokens.md), [tokens page](https://4rk0s4h4.github.io/s4-material/tokens/)) |
 | 4 | Components and the glass layer | Done ([0004](docs/decisions/0004-glass.md), [components](https://4rk0s4h4.github.io/s4-material/components/)) |
-| 5 | Claude skill | Done, awaiting approval ([skill](skill/), [download](skill/dist/s4-orion.skill)) |
+| 5 | Claude skill | Done, approved ([skill](skill/), [download](skill/dist/s4-orion.skill)) |
 | 6 | Demo and review against the skill | Next |
 
 ## Building
