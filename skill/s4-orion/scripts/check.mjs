@@ -9,7 +9,7 @@
      warnings – more than one filled button in one area, labels that look sentence case
    Saves a full-page screenshot per viewport in --out (default ./s4-check). Exit code 1 when there are errors. */
 import { readFileSync, mkdirSync, existsSync } from 'node:fs';
-import { resolve, dirname, basename, join } from 'node:path';
+import { resolve, dirname, basename, join, parse, sep } from 'node:path';
 import { createServer } from 'node:http';
 import { createRequire } from 'node:module';
 
@@ -157,7 +157,7 @@ const VIEWS = [
   { name: '1280-light', viewport: { width: 1280, height: 800 }, colorScheme: 'light', deviceScaleFactor: 1 },
 ];
 mkdirSync(OUT, { recursive: true });
-/* serve each page's folder over http, as it will be deployed (file:// blocks font preloads and module fetches) */
+/* serve pages over http, as they will be deployed (file:// blocks font preloads and module fetches) */
 const TYPES = { html: 'text/html', css: 'text/css', js: 'text/javascript', mjs: 'text/javascript', json: 'application/json', svg: 'image/svg+xml', png: 'image/png', jpg: 'image/jpeg', webp: 'image/webp', woff2: 'font/woff2', ico: 'image/x-icon' };
 const servers = new Map();
 async function serve(dir) {
@@ -174,7 +174,9 @@ async function serve(dir) {
 const browser = await chromium.launch();
 let errorCount = 0, warnCount = 0;
 for (const page of pages) {
-  const url = /^https?:/.test(page) ? page : `${(await serve(dirname(resolve(page)))).base}/${encodeURIComponent(basename(page))}`;
+  /* serve from the filesystem root so ../ links resolve as they do on disk (localhost only, for this run) */
+  const abs = resolve(page), fsRoot = parse(abs).root;
+  const url = /^https?:/.test(page) ? page : `${(await serve(fsRoot)).base}/${abs.slice(fsRoot.length).split(sep).map(encodeURIComponent).join('/')}`;
   const label = basename(page).replace(/\.html?$/, '') || 'page';
   const errors = new Set(), warnings = new Set();
 
