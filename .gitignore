@@ -3,3 +3,4 @@ node_modules/
 .check-*
 check-shots/
 .DS_Store
+s4-check/

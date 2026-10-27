@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: expense-tracker-app
+expected_outcome: |
+  A multi-screen app in expense-tracker/ built on the S4 Orion assets copied from the skill: the .s4-app shell with a nav bar and nav rail and two views, a segmented list grouped by week with subtotals in tabular figures, one FAB that opens a bottom sheet to add an expense, and a budget view of panes with linear progress. Monochrome (no seed), Title Case labels, role colors only, data in localStorage, and the page checker run with its errors fixed.

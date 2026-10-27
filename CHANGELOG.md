@@ -26,6 +26,19 @@ The first version of S4 Orion, a leaner rebuild of S4 Material 1.3 on Material 3
 - Runtime (`orion.js`): auto-init, theme (seed, mode, contrast, saving), icons, and the transition patterns (container transform, unfold, shared axis, slide from edge).
 - Set-neutral icon vocabulary (`components/icons/names.json`) built from Solar.
 - `scripts/build.mjs`: bundles `components/orion.css` and `orion.js` and copies assets into the skill.
+- The S4 Orion skill (`skill/s4-orion/`, packaged as `skill/dist/s4-orion.skill`), replacing the S4 Material skill:
+  `SKILL.md` (trigger, philosophy, page shape, decision rules, common mistakes, worked example), hand-written
+  `references/patterns.md` (screen patterns, theme controls, saving data, theming API), and references generated from
+  the repo (components, tokens, icons, foundations).
+- `skill/s4-orion/scripts/check.mjs`: loads a page at 390px dark and 1280px light and reports console errors, unknown
+  icons, sideways scroll, rendered contrast (including worst case on glass), unnamed controls, glass on content, and app
+  CSS that breaks the rules; warns on extra filled buttons and non-Title Case labels; saves screenshots.
+- `skill/s4-orion/scripts/inline.mjs`: turns a page into one self-contained HTML file (CSS, JS, icons, font, color).
+- Three eval cases for the skill (`skill/s4-orion/evals/`).
+
+### Fixed (during 1.0.0)
+
+- A fixed FAB inside the app shell now floats above the nav bar instead of covering it (`--s4-app-inset-bottom`).
 
 ### Fixed (from S4 Material 1.3)
 

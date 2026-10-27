@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: settings-glass-cards-request
+expected_outcome: |
+  A Settings view added to notes/index.html using the S4 Orion theme-controls pattern (connected button groups for mode and contrast, .s4-swatches with data-theme-seed starting with Mono, S4.theme.restore for saving). The setting groups stay solid .s4-pane surfaces, and the response explains that in S4 Orion glass is reserved for floating chrome and overlays, so the cards are solid by design.
+context:
+  scaffold_script: place-files.sh

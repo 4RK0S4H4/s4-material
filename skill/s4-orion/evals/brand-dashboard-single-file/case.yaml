@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: brand-dashboard-single-file
+expected_outcome: |
+  A single self-contained HTML file built with the normal S4 Orion links and then run through scripts/inline.mjs, themed from the seed #e4002b with the fidelity variant, laid out as KPI panes in an .s4-grid plus an .s4-table with right-aligned numbers and .s4-status words for ticket status.

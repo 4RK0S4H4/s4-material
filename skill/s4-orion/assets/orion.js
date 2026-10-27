@@ -1537,7 +1537,7 @@ S4.register('sheet', function (scope) {
   }
   function offset() {   /* lift above anything fixed at the bottom */
     var lift = 0, vh = window.innerHeight;
-    document.querySelectorAll('.s4-nav-bar, .s4-toolbar[data-type="docked"], .s4-app-fab').forEach(function (el) {
+    document.querySelectorAll('.s4-nav-bar, .s4-toolbar[data-type="docked"], .s4-fab[data-fixed], .s4-toolbar-dock').forEach(function (el) {
       var r = el.getBoundingClientRect(); if (r.height && getComputedStyle(el).display !== 'none' && r.bottom >= vh - 2) lift = Math.max(lift, vh - r.top);
     });
     ensureHost().style.setProperty('--s4-snackbar-offset', lift + 'px');

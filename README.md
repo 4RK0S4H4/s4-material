@@ -14,7 +14,7 @@ A personal design language for web apps and pages, built on **Material 3 Express
 | [`skill/`](skill/) | The Claude skill (`skill/s4-orion/`): `SKILL.md`, reference files loaded on demand, and the built assets an app copies in. | `SKILL.md` and references are source; `assets/` is generated |
 | [`demo/`](demo/) | One showcase page that uses every component, built only from the skill and tokens. | Source |
 | [`explore/`](explore/) | Review labs used to make design decisions (States and Shape, Motion, Transitions). Not part of the system. | Source |
-| [`scripts/`](scripts/) | Build and check scripts (tokens → CSS/TS, skill packaging, contrast checks). | Source |
+| [`scripts/`](scripts/) | Build and check scripts (tokens → CSS/TS, bundle, skill references, contrast and glass checks). | Source |
 | [`LICENSES/`](LICENSES/) | Third-party licences for bundled fonts, icons and libraries. | — |
 
 The flow is one way: **tokens → components → skill assets → demo**. Change a value in `tokens/src`, run the build, and everything downstream picks it up. Generated files are committed so GitHub Pages can serve them, and are never edited by hand.
@@ -29,8 +29,8 @@ S4 Orion is being built phase by phase. Decisions are recorded in [`docs/decisio
 | 2 | Repo structure | Done ([0002](docs/decisions/0002-repo-structure.md)) |
 | 3 | Tokens and build script | Done ([0003](docs/decisions/0003-tokens.md), [tokens page](https://4rk0s4h4.github.io/s4-material/tokens/)) |
 | 4 | Components and the glass layer | Done ([0004](docs/decisions/0004-glass.md), [components](https://4rk0s4h4.github.io/s4-material/components/)) |
-| 5 | Claude skill | Next |
-| 6 | Demo and review against the skill | Not started |
+| 5 | Claude skill | Done, awaiting approval ([skill](skill/), [download](skill/dist/s4-orion.skill)) |
+| 6 | Demo and review against the skill | Next |
 
 ## Building
 

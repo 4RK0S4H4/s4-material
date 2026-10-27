@@ -17,7 +17,7 @@ large 96, each also as an extended FAB with a label.
 | `data-color` | `primary-container`, `secondary-container`, `tertiary-container`, `primary`, `secondary`, `tertiary` | `primary-container` |
 | `.s4-fab-label` | makes it an extended FAB | — |
 | `data-collapsed` | folds an extended FAB back to its icon (width animation), e.g. while a list scrolls | — |
-| `data-fixed` | pins it 16dp from the bottom end corner, above the safe area, at `--s4-z-fab` | — |
+| `data-fixed` | pins it 16dp from the bottom end corner, above the nav bar (inside `.s4-app`, put it in its view) and the safe area, at `--s4-z-fab` | — |
 | `aria-label` | required when there's no label | — |
 
 Elevation level 3, level 4 on hover; the shared state layer for hover / focus / press.

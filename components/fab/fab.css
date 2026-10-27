@@ -105,7 +105,7 @@
   /* ---------- pinned to the bottom end corner of the window ---------- */
   .s4-fab[data-fixed] {
     position: fixed;
-    inset-block-end: calc(var(--s4-space-4) + env(safe-area-inset-bottom, 0px));
+    inset-block-end: calc(var(--s4-space-4) + var(--s4-app-inset-bottom, env(safe-area-inset-bottom, 0px)));   /* above the nav bar inside .s4-app */
     inset-inline-end: calc(var(--s4-space-4) + env(safe-area-inset-right, 0px));
     z-index: var(--s4-z-fab);
   }
