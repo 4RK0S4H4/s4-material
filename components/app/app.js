@@ -7,7 +7,7 @@
    - S4.app.go(app, name) switches views from code (e.g. a "See All" link). */
 (function () {
   /* shared axis lives in motion/motion.js (S4.transition.sharedAxis) */
-  function sharedAxis(from, to, dir, state) { return S4.transition.sharedAxis(from, to, dir, state); }
+  function sharedAxis(from, to, dir, state, onSwap) { return S4.transition.sharedAxis(from, to, dir, state, onSwap); }
 
   function views(app) { return Array.prototype.slice.call(app.querySelectorAll('.s4-view[data-view]')); }
 
@@ -19,10 +19,12 @@
     /* any other view still visible from an interrupted switch goes away now */
     list.forEach(function (v) { if (v !== to && v !== from) v.hidden = true; });
     if (to === from || (!from && !to.hidden)) return true;
-    sharedAxis(from, to, dir || 1, state);
-    var title = to.dataset.title, bar = app.querySelector('.s4-top-app-bar .s4-app-bar-title');
-    if (title && bar) bar.textContent = title;
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    /* the title and the scroll reset wait for the moment of the swap, so the old view doesn't jump while it fades out */
+    sharedAxis(from, to, dir || 1, state, function () {
+      var title = to.dataset.title, bar = app.querySelector('.s4-top-app-bar .s4-app-bar-title');
+      if (title && bar) bar.textContent = title;
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    });
     S4.util.emit(app, 's4-change', { view: name, previous: from ? from.dataset.view : null });
     return true;
   }

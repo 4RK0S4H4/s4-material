@@ -1,6 +1,6 @@
 # Where S4 Orion stands (resume here)
 
-Last updated: 2026-10-27. **Phase 6 demo built and published; awaiting owner review, then release 1.0.0.** Working notes for Claude are in [`/CLAUDE.md`](../CLAUDE.md).
+Last updated: 2026-10-28. **Phase 6 demo built and published; awaiting owner review, then release 1.0.0.** Working notes for Claude are in [`/CLAUDE.md`](../CLAUDE.md).
 
 ## The brief (original plan, six phases)
 
@@ -44,6 +44,14 @@ After Phase 6: release 1.0.0 (see "Release" below).
 - Set the CHANGELOG date for 1.0.0, tag `v1.0.0`, re-package `skill/dist/s4-orion.skill`, tell the owner to re-download it.
 - Consider restyling the hub `index.html` with orion.css (it still uses hand-written pre-Orion styles).
 
+## Owner feedback on the demo (2026-10-28) and what was done
+
+"Some animations seem glitchy; button group angles too sharp; feels unpolished." Fixed in motion.js, app.js and
+button-group.css (see CHANGELOG "Fixed"). Verified in Chromium only, by pausing animations and stepping frames. **Still
+needs the iPhone check**: Safari handling of `clip-path` over `backdrop-filter` (the glass sheet/dialog morph) is the
+remaining suspect. If it still flickers there, the fallback is to make the surface solid for the duration of the morph.
+Ask the owner which animations felt worst (sheet from the FAB, dialog, menu, view switch) if any remain.
+
 ## Backlog (open items, not blocking)
 
 - Filled toggle buttons (unselected = surface-container) look faint on surface-container-low in dark mode.
@@ -69,3 +77,4 @@ After Phase 6: release 1.0.0 (see "Release" below).
 - 2026-10-27: Phase 5 (skill, references, check.mjs, inline.mjs, evals, packaged `.skill`); FAB-above-nav-bar fix;
   trigger narrowed; approved by the owner, who installed the skill. Owner will continue in new sessions (different model).
 - 2026-10-27: Phase 6: Pocket Ledger demo built from the skill alone, reviewed; skill/docs/snackbar fixes; hub linked. Next: owner reviews demo on iPhone, then fix the open items in 0005, run the evals (optional), release 1.0.0.
+- 2026-10-28: polish pass on motion and connected button group corners after owner review (see above); demo bundle refreshed. Next: owner re-checks on iPhone, then 0005 open items, evals, release 1.0.0.

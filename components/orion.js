@@ -165,6 +165,29 @@
   var S4 = window.S4, M = S4.motion;
   var done = function (a) { return a && a.finished ? a.finished.catch(function () {}) : Promise.resolve(); };
   function rect(el) { return el.getBoundingClientRect(); }
+  /* room around a surface that its own shadow needs, so a clip that has "finished" opening doesn't cut the shadow and pop it in */
+  var SHADOW_ROOM = 48;
+  function parseColor(s) {
+    var v, m;
+    if (/^color\(srgb/.test(s)) { v = s.replace(/^color\(srgb\s*|\)$/g, '').split(/[\s/]+/).map(parseFloat); return [v[0] * 255, v[1] * 255, v[2] * 255, v.length > 3 ? v[3] : 1]; }
+    m = s.match(/rgba?\(([^)]+)\)/);
+    if (!m) return null;
+    v = m[1].split(/[\s,/]+/).map(parseFloat);
+    return [v[0], v[1], v[2], v.length > 3 ? v[3] : 1];
+  }
+  /* what the eye sees at an element: its own background laid over its ancestors' until something is opaque. A transparent
+     source (outlined or text button, list row) otherwise makes the morphing surface see-through. */
+  function visibleBg(el, fallback) {
+    var layers = [], n, c, out = parseColor(getComputedStyle(document.documentElement).backgroundColor) || [255, 255, 255, 1];
+    for (n = el; n; n = n.parentElement) {
+      c = parseColor(getComputedStyle(n).backgroundColor);
+      if (c && c[3] > 0) { layers.push(c); if (c[3] >= 1) break; }
+    }
+    if (!layers.length) return fallback;
+    out = [out[0], out[1], out[2]];
+    for (var i = layers.length - 1; i >= 0; i--) { c = layers[i]; out = [c[0] * c[3] + out[0] * (1 - c[3]), c[1] * c[3] + out[1] * (1 - c[3]), c[2] * c[3] + out[2] * (1 - c[3])]; }
+    return 'rgb(' + Math.round(out[0]) + ',' + Math.round(out[1]) + ',' + Math.round(out[2]) + ')';
+  }
 
   /* ---------- container transform ----------
      The source becomes the surface at real size (nothing stretches): the surface is clipped to the source's rect, radius and
@@ -179,13 +202,14 @@
     var cs = getComputedStyle(source), ce = getComputedStyle(surface);
     var radius = opts.radius || ce.borderTopLeftRadius;
     var from = 'inset(' + (s.top - e.top) + 'px ' + (e.right - s.right) + 'px ' + (e.bottom - s.bottom) + 'px ' + (s.left - e.left) + 'px round ' + cs.borderTopLeftRadius + ')';
-    var to = 'inset(0px 0px 0px 0px round ' + radius + ')';
-    var bgFrom = cs.backgroundColor, bgTo = ce.backgroundColor;
+    var to = 'inset(-' + SHADOW_ROOM + 'px round calc(' + radius + ' + ' + SHADOW_ROOM + 'px))';
+    var bgFrom = visibleBg(source, cs.backgroundColor), bgTo = ce.backgroundColor, blur = ce.backdropFilter;
     /* the source's label rides along inside the surface */
     var ghost = source.cloneNode(true);
     ghost.removeAttribute('id'); ghost.className = 's4-ct-ghost'; ghost.setAttribute('aria-hidden', 'true'); ghost.removeAttribute('data-dialog'); ghost.removeAttribute('data-sheet');
     Object.assign(ghost.style, { left: (s.left - e.left) + 'px', top: (s.top - e.top) + 'px', width: s.width + 'px', height: s.height + 'px',
-      padding: cs.padding, font: cs.font, color: cs.color, justifyContent: cs.justifyContent, gap: cs.gap });
+      padding: cs.padding, font: cs.font, color: cs.color, justifyContent: cs.justifyContent, gap: cs.gap,
+      border: cs.borderTopWidth + ' ' + cs.borderTopStyle + ' ' + cs.borderTopColor, borderRadius: cs.borderTopLeftRadius });   /* an outlined source keeps its ring until it fades */
     surface.appendChild(ghost);
     var content = Array.prototype.filter.call(surface.children, function (c) { return c !== ghost; });
     var open = opts.open !== false, name = open ? (opts.spring || 'spatial') : 'spatial-calm';
@@ -195,6 +219,11 @@
     var dur = M.spring(name).duration;
     surface.animate(open ? [{ backgroundColor: bgFrom }, { backgroundColor: bgTo, offset: 0.6 }, { backgroundColor: bgTo }]
                          : [{ backgroundColor: bgTo }, { backgroundColor: bgTo, offset: 0.4 }, { backgroundColor: bgFrom }], { duration: dur, easing: 'linear', fill: 'both' });
+    /* glass surfaces arrive with their blur: it fades in with the color instead of popping on when the morph ends */
+    if (blur && blur !== 'none') {
+      var on = { backdropFilter: blur, webkitBackdropFilter: blur }, off = { backdropFilter: 'none', webkitBackdropFilter: 'none' };
+      surface.animate(open ? [off, Object.assign({ offset: 0.4 }, off), on] : [on, Object.assign({ offset: 0.6 }, off), off], { duration: dur, easing: 'linear', fill: 'both' });
+    }
     ghost.animate(open ? [{ opacity: 1 }, { opacity: 0, offset: 0.3 }, { opacity: 0 }] : [{ opacity: 0 }, { opacity: 0, offset: 0.3 }, { opacity: 1, offset: 0.8 }, { opacity: 1 }], { duration: dur, easing: 'linear', fill: 'both' });
     content.forEach(function (c) {
       c.animate(open ? [{ opacity: 0 }, { opacity: 0, offset: 0.35 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0, offset: 0.35 }, { opacity: 0 }], { duration: dur, easing: 'linear', fill: 'both' });
@@ -220,18 +249,19 @@
     var up = opts.from === 'bottom', r = getComputedStyle(el).borderTopLeftRadius;
     if (opts.open === false) return done(M.animate(el, [{ opacity: 1 }, { opacity: 0 }], 'fast-effects'));
     var closed = up ? 'inset(100% 0 0 0 round ' + r + ')' : 'inset(0 0 100% 0 round ' + r + ')';
+    var opened = 'inset(-' + SHADOW_ROOM + 'px round calc(' + r + ' + ' + SHADOW_ROOM + 'px))';
     M.animate(el, [{ opacity: 0 }, { opacity: 1 }], 'fast-effects');
-    return done(M.animate(el, [{ clipPath: closed }, { clipPath: 'inset(0 0 0 0 round ' + r + ')' }], 'spatial')).then(function () {
+    return done(M.animate(el, [{ clipPath: closed }, { clipPath: opened }], 'spatial')).then(function () {
       el.getAnimations().forEach(function (a) { a.cancel(); });
     });
   }
 
   /* ---------- shared axis: switching sibling views (tabs, destinations, steps) ----------
      The old view slides 30px away and fades out (fast-effects), then the new one is shown, slides in from the side you're
-     heading and fades in (spatial / effects). Views stay in normal page flow: only one is visible at a time (hidden).
+     heading and fades in (spatial / effects). onSwap (optional) runs at the moment of the swap. Views stay in normal page flow: only one is visible at a time (hidden).
      dir 1 = forward (new comes from the end side), -1 = back. state: an object kept per container so an interrupted switch
      is cancelled cleanly. */
-  function sharedAxis(from, to, dir, state) {
+  function sharedAxis(from, to, dir, state, onSwap) {
     state = state || {};
     (state.anims || []).forEach(function (a) { a.cancel(); });
     state.anims = [];
@@ -240,6 +270,7 @@
     return new Promise(function (resolve) {
       var enter = function () {
         if (from && from !== to) from.hidden = true;
+        if (onSwap) onSwap();   /* title and scroll position change here, once the old view is gone */
         if (!to) return resolve();
         to.hidden = false;
         var move = M.animate(to, [{ transform: 'translateX(' + d + 'px)' }, { transform: 'none' }], 'spatial');
@@ -405,7 +436,7 @@ S4.register('button-group', function (scope) {
    - S4.app.go(app, name) switches views from code (e.g. a "See All" link). */
 (function () {
   /* shared axis lives in motion/motion.js (S4.transition.sharedAxis) */
-  function sharedAxis(from, to, dir, state) { return S4.transition.sharedAxis(from, to, dir, state); }
+  function sharedAxis(from, to, dir, state, onSwap) { return S4.transition.sharedAxis(from, to, dir, state, onSwap); }
 
   function views(app) { return Array.prototype.slice.call(app.querySelectorAll('.s4-view[data-view]')); }
 
@@ -417,10 +448,12 @@ S4.register('button-group', function (scope) {
     /* any other view still visible from an interrupted switch goes away now */
     list.forEach(function (v) { if (v !== to && v !== from) v.hidden = true; });
     if (to === from || (!from && !to.hidden)) return true;
-    sharedAxis(from, to, dir || 1, state);
-    var title = to.dataset.title, bar = app.querySelector('.s4-top-app-bar .s4-app-bar-title');
-    if (title && bar) bar.textContent = title;
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    /* the title and the scroll reset wait for the moment of the swap, so the old view doesn't jump while it fades out */
+    sharedAxis(from, to, dir || 1, state, function () {
+      var title = to.dataset.title, bar = app.querySelector('.s4-top-app-bar .s4-app-bar-title');
+      if (title && bar) bar.textContent = title;
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    });
     S4.util.emit(app, 's4-change', { view: name, previous: from ? from.dataset.view : null });
     return true;
   }

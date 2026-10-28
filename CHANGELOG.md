@@ -10,6 +10,12 @@ All notable changes to S4 Orion are recorded here. The format follows [Keep a Ch
 
 The first version of S4 Orion, a leaner rebuild of S4 Material 1.3 on Material 3 Expressive.
 
+### Fixed (owner review of the demo: animations glitchy, button group corners too sharp)
+
+- Container transform: a transparent source (outlined or text button, list row) no longer makes the morphing surface see-through; it starts from the color the eye sees there. An outlined source keeps its ring until it fades. The clip now leaves room for the surface's shadow, so the shadow no longer pops in when the morph ends (same for menus). Glass surfaces fade their blur in with the color instead of switching it on at the end.
+- Shared axis: the app bar title and the scroll reset now happen at the moment of the swap, so the old view no longer jumps to the top while it fades out (`sharedAxis` takes an optional `onSwap`).
+- Connected button groups: inner corners are medium (xs small, l large-increased, xl extra-large) instead of small, so they sit softly next to the fully round selected button.
+
 ### Added
 
 - `demo/`: Pocket Ledger, a personal finance app that uses every component, built from the skill alone (Phase 6). Review in `docs/decisions/0005-phase-6-review.md`.
