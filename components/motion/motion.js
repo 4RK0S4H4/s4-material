@@ -50,9 +50,10 @@
     var bgFrom = visibleBg(source, cs.backgroundColor), bgTo = ce.backgroundColor, blur = ce.backdropFilter;
     /* the source's label rides along inside the surface */
     var ghost = source.cloneNode(true);
-    ghost.removeAttribute('id'); ghost.className = 's4-ct-ghost'; ghost.setAttribute('aria-hidden', 'true'); ghost.removeAttribute('data-dialog'); ghost.removeAttribute('data-sheet');
+    ghost.removeAttribute('id'); ghost.className = source.className + ' s4-ct-ghost';   /* keep the source's own classes: its icon sizes, gaps and type must lay out exactly as on the real thing */ ghost.setAttribute('aria-hidden', 'true'); ghost.removeAttribute('data-dialog'); ghost.removeAttribute('data-sheet');
     Object.assign(ghost.style, { left: (s.left - e.left) + 'px', top: (s.top - e.top) + 'px', width: s.width + 'px', height: s.height + 'px',
-      padding: cs.padding, font: cs.font, color: cs.color, justifyContent: cs.justifyContent, gap: cs.gap,
+      background: 'transparent', boxShadow: 'none', transition: 'none', animation: 'none', transform: 'none', minWidth: '0', maxWidth: 'none',
+      padding: cs.padding, font: cs.font, letterSpacing: cs.letterSpacing, color: cs.color, justifyContent: cs.justifyContent, gap: cs.gap,
       border: cs.borderTopWidth + ' ' + cs.borderTopStyle + ' ' + cs.borderTopColor, borderRadius: cs.borderTopLeftRadius });   /* an outlined source keeps its ring until it fades */
     surface.appendChild(ghost);
     var content = Array.prototype.filter.call(surface.children, function (c) { return c !== ghost; });
