@@ -27,3 +27,5 @@
 .ledger-progress-row { display: flex; align-items: center; gap: var(--s4-space-3); }
 .ledger-pad-bottom { padding-bottom: var(--s4-space-16); }
 .ledger-footer { margin-block: var(--s4-space-6); text-align: center; }
+
+.ledger-kpis [data-kpi-delta] { align-self: flex-start; }   /* pills hug their label instead of stretching across the card */

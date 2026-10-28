@@ -5,6 +5,15 @@
    20dp ring, 2dp stroke, on-surface-variant; selected = primary ring with a 10dp dot that grows in on fast-spatial.
    40dp circular state layer; 48dp touch target. */
 @layer s4.components {
+  /* a labelled group of radios or checkboxes: a soft outlined box instead of the browser's square fieldset */
+  fieldset:has(> :is(.s4-radio, .s4-checkbox)) {
+    min-inline-size: 0;
+    margin: 0;
+    padding: var(--s4-space-1) var(--s4-space-4) var(--s4-space-2);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-medium);
+  }
+  fieldset:has(> :is(.s4-radio, .s4-checkbox)) > legend { padding-inline: var(--s4-space-2); color: var(--md-sys-color-on-surface-variant); }
   .s4-radio {
     --_ring: var(--md-sys-color-on-surface-variant);
     --_state: var(--md-sys-color-on-surface);

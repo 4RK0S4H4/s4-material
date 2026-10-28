@@ -2,7 +2,7 @@
    Standard: <div class="s4-button-group"> <button class="s4-button">…</button> … </div>
      Buttons 8dp apart. Pressing one widens it a little while its neighbours give way (M3 Expressive press interaction).
    Connected: <div class="s4-button-group" data-connected data-select="single|multi" aria-label="View">
-     Buttons 2dp apart, outer corners full, inner corners medium (xs small, l large-increased, xl extra-large); the selected button morphs fully round.
+     Buttons 2dp apart, outer corners full, inner corners large (xs medium, l extra-large, xl extra-extra-large); the selected button morphs fully round.
      Connected groups stretch to fill their width (equal weights); data-fit="content" keeps them as wide as their labels.
    Works with .s4-button and .s4-icon-button children. The size comes from the buttons' own data-size.
    button-group.js manages aria-pressed (data-select), arrow-key navigation and the s4-change event. */
@@ -38,16 +38,17 @@
 
   /* ---------- connected group ---------- */
   .s4-button-group[data-connected] {
-    --_inner: var(--md-sys-shape-corner-medium);   /* soft enough to sit next to a fully round selected button (8dp read as sharp) */
-    --_inner-pressed: var(--md-sys-shape-corner-small);
+    --_inner: var(--md-sys-shape-corner-large);   /* soft enough to sit next to a fully round selected button (8dp, then 12dp, still read as sharp) */
+    --_inner-pressed: var(--md-sys-shape-corner-medium);
     gap: 2px;   /* M3 Expressive connected groups: 2dp between buttons */
   }
-  .s4-button-group[data-connected]:has(> [data-size="xs"]) { --_inner: var(--md-sys-shape-corner-small); --_inner-pressed: var(--md-sys-shape-corner-extra-small); }
-  .s4-button-group[data-connected]:has(> [data-size="l"]) { --_inner: var(--md-sys-shape-corner-large-increased); --_inner-pressed: var(--md-sys-shape-corner-large); }
-  .s4-button-group[data-connected]:has(> [data-size="xl"]) { --_inner: var(--md-sys-shape-corner-extra-large); --_inner-pressed: var(--md-sys-shape-corner-large-increased); }
+  .s4-button-group[data-connected]:has(> [data-size="xs"]) { --_inner: var(--md-sys-shape-corner-medium); --_inner-pressed: var(--md-sys-shape-corner-small); }
+  .s4-button-group[data-connected]:has(> [data-size="l"]) { --_inner: var(--md-sys-shape-corner-extra-large); --_inner-pressed: var(--md-sys-shape-corner-large-increased); }
+  .s4-button-group[data-connected]:has(> [data-size="xl"]) { --_inner: var(--md-sys-shape-corner-extra-extra-large); --_inner-pressed: var(--md-sys-shape-corner-extra-large); }
 
   .s4-button-group[data-connected] > :is(.s4-button, .s4-icon-button) {
     --_r: var(--_inner);
+    --_full: calc(var(--_h) / 2);   /* a finite "full": with 9999px the browser scales every corner of the button down to nothing, so the inner corners rendered square */
     flex: 1 1 0;
     min-width: max-content;
     border-radius: var(--_r);
@@ -55,15 +56,15 @@
   .s4-button-group[data-connected][data-fit="content"] > :is(.s4-button, .s4-icon-button) { flex: none; }
   .s4-button-group[data-connected] > :is(.s4-button, .s4-icon-button):active:not(:disabled) { --_r: var(--_inner-pressed); }
   .s4-button-group[data-connected] > :is(.s4-button, .s4-icon-button):first-child {
-    border-start-start-radius: var(--md-sys-shape-corner-full);
-    border-end-start-radius: var(--md-sys-shape-corner-full);
+    border-start-start-radius: var(--_full);
+    border-end-start-radius: var(--_full);
   }
   .s4-button-group[data-connected] > :is(.s4-button, .s4-icon-button):last-child {
-    border-start-end-radius: var(--md-sys-shape-corner-full);
-    border-end-end-radius: var(--md-sys-shape-corner-full);
+    border-start-end-radius: var(--_full);
+    border-end-end-radius: var(--_full);
   }
   /* the selected button morphs fully round */
-  .s4-button-group[data-connected] > :is(.s4-button, .s4-icon-button)[aria-pressed="true"] { border-radius: var(--md-sys-shape-corner-full); }
+  .s4-button-group[data-connected] > :is(.s4-button, .s4-icon-button)[aria-pressed="true"] { border-radius: var(--_full); }
   /* a disabled option of a toggle group: button.css's aria-pressed colors would otherwise win over its disabled colors */
   .s4-button-group > :is(.s4-button, .s4-icon-button)[aria-pressed]:is(:disabled, [aria-disabled="true"]) {
     --_bg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-container-opacity) * 100%), transparent);

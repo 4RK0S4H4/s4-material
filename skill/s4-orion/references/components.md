@@ -128,7 +128,7 @@ single control for choosing between options (M3 Expressive's replacement for seg
 
 | Attribute (on the group) | Values | Default |
 |---|---|---|
-| `data-connected` | buttons 2dp apart, outer corners full, inner corners medium (xs small, l large-increased, xl extra-large); the selected button morphs fully round | standard: 8dp apart |
+| `data-connected` | buttons 2dp apart, outer corners full, inner corners large (xs medium, l extra-large, xl extra-extra-large); the selected button morphs fully round | standard: 8dp apart |
 | `data-select` | `single` (exactly one pressed, radio-like), `multi` (each toggles) | none: plain buttons |
 | `data-fit` | `content`: as wide as the labels | connected groups stretch to fill (equal weights) |
 | `aria-label` | names the choice ("Period") | — |

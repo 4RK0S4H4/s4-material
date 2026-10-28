@@ -17,7 +17,8 @@
     position: relative;
     display: flex;
     align-items: stretch;
-    background: var(--md-sys-color-surface);
+    background: transparent;   /* the tabs sit on whatever surface holds them: a slab of another color reads as a square cut-out */
+    border-radius: var(--md-sys-shape-corner-medium) var(--md-sys-shape-corner-medium) 0 0;
     box-shadow: inset 0 calc(-1 * var(--s4-size-divider)) 0 var(--md-sys-color-surface-variant);   /* divider */
   }
   .s4-tabs[data-variant="secondary"] { --_stroke: 2px; }
@@ -35,6 +36,7 @@
     margin: 0;
     padding: 0 var(--s4-space-4);
     border: 0;
+    border-radius: var(--md-sys-shape-corner-medium) var(--md-sys-shape-corner-medium) 0 0;
     background: none;
     color: var(--_fg);
     font-family: var(--md-sys-typescale-title-small-font);

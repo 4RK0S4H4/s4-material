@@ -12,10 +12,15 @@ The first version of S4 Orion, a leaner rebuild of S4 Material 1.3 on Material 3
 
 ### Fixed (owner review of the demo: animations glitchy, button group corners too sharp)
 
+- Root cause of the "sharp angles" and of jumpy press/toggle animations: buttons used a literal 9999px for "fully round". Browsers scale all of an element's corner radii down together when two on one side add up to more than the side, so in a connected group the inner corners collapsed to square whatever their value, and press/toggle morphs between 9999px and 8-28px sat unseen until their last few percent and then snapped. Buttons, icon buttons and group buttons now use half their height as "full".
+- Tabs: no more filled slab behind the tab row (it read as a square cut-out); the row and each tab have soft top corners.
+- Radio and checkbox groups in a `<fieldset>`: a soft outlined box (medium corners) instead of the browser's square one.
+- Demo: KPI status pills hug their label instead of stretching across the card.
+
 - Container transform: a transparent source (outlined or text button, list row) no longer makes the morphing surface see-through; it starts from the color the eye sees there. An outlined source keeps its ring until it fades. The clip now leaves room for the surface's shadow, so the shadow no longer pops in when the morph ends (same for menus). Glass surfaces fade their blur in with the color instead of switching it on at the end.
 - Container transform: the source's label and icon no longer shift when the morph starts. The carried copy keeps the source's own classes (icon size, gap, letter spacing), so it lays out exactly like the real button.
 - Shared axis: the app bar title and the scroll reset now happen at the moment of the swap, so the old view no longer jumps to the top while it fades out (`sharedAxis` takes an optional `onSwap`).
-- Connected button groups: inner corners are medium (xs small, l large-increased, xl extra-large) instead of small, so they sit softly next to the fully round selected button.
+- Connected button groups: inner corners are large (xs medium, l extra-large, xl extra-extra-large) instead of small, so they sit softly next to the fully round selected button.
 
 ### Added
 

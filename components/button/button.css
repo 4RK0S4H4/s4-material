@@ -13,7 +13,7 @@
     --_pad: var(--s4-space-4);
     --_gap: var(--s4-space-2);
     --_icon: var(--s4-size-icon-small);
-    --_radius: var(--s4-shape-button);
+    --_radius: calc(var(--_h) / 2);   /* fully round = half the height. A literal 9999px makes the press/toggle morph sit unseen until its last few percent, then snap, and in a connected group squashes the other corners */
     --_radius-pressed: var(--s4-shape-button-pressed);
     --_radius-selected: var(--md-sys-shape-corner-medium);
     --_font: var(--md-sys-typescale-label-large-font);

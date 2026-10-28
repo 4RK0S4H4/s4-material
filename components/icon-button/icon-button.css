@@ -13,7 +13,7 @@
     --_h: var(--s4-size-icon-button);
     --_w: var(--_h);
     --_icon: var(--s4-size-icon);
-    --_radius-round: var(--s4-shape-icon-button);
+    --_radius-round: calc(var(--_h) / 2);   /* half the height, not 9999px: see button.css */
     --_radius-square: var(--md-sys-shape-corner-medium);
     --_radius-pressed: var(--md-sys-shape-corner-small);
     --_radius: var(--_radius-round);
