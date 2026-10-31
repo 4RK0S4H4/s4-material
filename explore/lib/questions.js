@@ -41,4 +41,15 @@ window.S4_REVIEW_DEMOS = [
       { id: 'surfaces', label: 'Where glass goes', options: [{ v: 'A', label: 'Chrome and overlays' }, { v: 'B', label: 'Chrome only' }, { v: 'C', label: 'Overlays only' }, { v: 'Other', label: 'Describe in notes' }] }
     ]
   }
+  ,
+  {
+    id: 'liquid', title: 'Liquid Glass Lab', href: 'explore/liquid-glass.html',
+    questions: [
+      { id: 'look', label: 'Refraction', options: [{ v: 'A', label: 'Subtle' }, { v: 'B', label: 'Liquid' }, { v: 'C', label: 'Extra liquid' }, { v: 'D', label: 'Keep today’s glass (no refraction)' }, { v: 'Tuned', label: 'My tuned values' }] },
+      { id: 'text', label: 'Keeping text readable', options: [{ v: 'A', label: 'Fixed tint (today’s guarantee)' }, { v: 'B', label: 'Adaptive tint' }, { v: 'C', label: 'Apple-clear, not guaranteed' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'melt', label: 'Shapes melting together', options: [{ v: 'A', label: 'Melt' }, { v: 'B', label: 'Stay separate' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'where', label: 'Where liquid glass goes', options: [{ v: 'A', label: 'Every glass surface' }, { v: 'B', label: 'Floating pills and buttons only' }, { v: 'C', label: 'Opt-in per app' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'device', label: 'On your iPhone', options: [{ v: 'A', label: 'Smooth and right' }, { v: 'B', label: 'Looks right but slow' }, { v: 'C', label: 'Looks wrong or broken' }, { v: 'Other', label: 'Describe in notes' }] }
+    ]
+  }
 ];

@@ -8,8 +8,9 @@ reviewed, and they save answers in the browser so several labs can be worked thr
 |---|---|
 | `states-shape.html` | States A (stock M3), Shape A (stock M3 Expressive), default color Mono |
 | `motion.html` | Springs D (M3 Expressive) |
+| `liquid-glass.html` | Open: liquid glass (refraction at curved edges, specular rim, melting shapes), text legibility, where it goes |
 | `transitions.html` | Unfold menus, container transform for dialogs, sheets and list-to-detail, shared axis between views, snackbars slide from the edge |
 
 `lib/` holds the shared review tooling: `review.js` and `questions.js` (the questionnaire), `theme.js` (seed to M3 roles),
-`springs.js` (spring presets as CSS `linear()` easings), plus copies of `m3color.js`, Inter and a few Solar icons. Once the
+`springs.js` (spring presets as CSS `linear()` easings), `liquid-glass.js` (the liquid glass engine: WebGL2 refraction over a canvas backdrop everywhere, SVG `backdrop-filter` refraction in Chromium), plus copies of `m3color.js`, Inter and a few Solar icons. Once the
 build exists, the labs will load these from the built assets instead.

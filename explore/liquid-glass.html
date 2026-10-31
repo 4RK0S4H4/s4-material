@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>S4 Orion: Liquid Glass Lab</title>
+<link rel="stylesheet" href="../tokens/tokens.css?v=2">
+<style>
+@font-face{font-family:Inter;font-weight:100 900;font-display:swap;src:url(../components/assets/inter-variable.woff2) format("woff2")}
+*{box-sizing:border-box}
+body{margin:0;background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface);font-family:var(--md-ref-typeface-plain);font-size:16px;line-height:24px}
+h1,h2,h3,p{margin:0}
+button{font:inherit;color:inherit}
+.bar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;padding:12px 24px;background:var(--md-sys-color-surface-container);border-bottom:1px solid var(--md-sys-color-outline-variant)}
+.bar h1{font-size:22px;line-height:28px;font-weight:500;margin-right:auto}
+.ctl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ctl > span{font-size:12px;font-weight:500;letter-spacing:.5px}
+.seg{display:inline-flex;flex-wrap:wrap;gap:2px;padding:2px;border-radius:999px}
+.seg button{border:0;font-weight:500;padding:6px 14px;min-height:36px;border-radius:999px;background:transparent;cursor:pointer}
+.seg button:disabled{opacity:.4;cursor:default}
+.page{max-width:1500px;margin:0 auto;padding:24px 24px 64px;display:flex;flex-direction:column;gap:48px}
+.intro{max-width:80ch;color:var(--md-sys-color-on-surface-variant);display:flex;flex-direction:column;gap:12px}
+.intro b{color:var(--md-sys-color-on-surface)}
+.sec > h2{font-size:28px;line-height:36px;font-weight:500;margin-bottom:6px}
+.sec > p{color:var(--md-sys-color-on-surface-variant);max-width:85ch;margin-bottom:16px}
+.cards{--rv-min:290px}
+.cards .rv-titles{min-height:92px}
+.pv{padding:14px 10px 10px;display:grid;place-items:center}
+.note{font:600 12px/18px var(--rv-font);color:var(--rv-ink-2)}
+.note .bad{color:#b3261e} .note .ok{color:#146c2e}
+:root[data-theme=dark] .note .bad{color:#ffb4ab} :root[data-theme=dark] .note .ok{color:#6dd58c}
+.try{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:900px){.try{grid-template-columns:1fr}}
+@media (max-width:600px){.bar{position:static;padding:12px 16px}.page{padding:16px 16px 48px}.phone{height:min(720px,calc(100svh - 32px))}}
+.tune{display:flex;flex-direction:column;gap:16px}
+.tune .rows{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px 20px}
+.tune label{display:grid;grid-template-columns:1fr auto;gap:2px 8px;font:500 13px/18px var(--rv-font,inherit);color:var(--rv-ink-2,inherit)}
+.tune label output{font-variant-numeric:tabular-nums}
+.tune input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--rv-accent,#1a5fd1)}
+.tune .hint{font:400 13px/19px var(--rv-font,inherit);color:var(--rv-ink-2,inherit);max-width:80ch}
+.how{max-width:85ch;color:var(--md-sys-color-on-surface-variant);display:flex;flex-direction:column;gap:10px}
+.how ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.how b,.how code{color:var(--md-sys-color-on-surface)}
+footer{max-width:1500px;margin:0 auto;padding:0 24px 32px;font-size:12px;color:var(--md-sys-color-on-surface-variant)}
+footer a{color:inherit}
+
+/* ================= stages (the demo, all S4 Orion tokens) ================= */
+.lg-stage{--lg-tint:var(--md-sys-color-surface-container);--lg-text:var(--md-sys-color-on-surface);
+  position:relative;overflow:hidden;isolation:isolate;background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface);
+  -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.lg-scroll{position:absolute;inset:0;overflow:auto;scrollbar-width:none;overscroll-behavior:contain}
+.lg-scroll::-webkit-scrollbar{display:none}
+.lg-scroll canvas,.lg-scene{display:block}
+.lg-out{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.lgx{position:absolute;z-index:2;color:var(--md-sys-color-on-surface);--md-sys-color-on-surface-variant:var(--md-sys-color-on-surface);border-radius:999px;
+  transition:transform var(--md-sys-motion-spring-fast-spatial-duration) var(--md-sys-motion-spring-fast-spatial)}
+.lgx svg{width:24px;height:24px;display:block}
+.lgx svg [opacity]{opacity:.8}
+:root[data-theme=dark] .lgx svg [opacity]{opacity:.65}
+/* engine: SVG backdrop refraction (Chromium) */
+[data-lg-mode=svg] .lgx{background:color-mix(in srgb,var(--md-sys-color-surface-container) var(--lg-tint-a,20%),transparent);box-shadow:0 4px 18px rgb(0 0 0/.14)}
+[data-lg-mode=svg] .lgx::after{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--lg-spec) 0 0/100% 100% no-repeat;pointer-events:none}
+/* engine off: S4 Orion glass as shipped today (decision 0004) */
+[data-lg-mode=off] .lgx{background-color:color-mix(in srgb,var(--s4-glass-tint-float) calc(var(--s4-glass-tint-opacity-float) * 100%),transparent);
+  -webkit-backdrop-filter:blur(var(--s4-glass-blur-float)) saturate(var(--s4-glass-saturation-float)) contrast(var(--s4-glass-backdrop-contrast-float)) brightness(var(--s4-glass-backdrop-brightness-float));
+  backdrop-filter:blur(var(--s4-glass-blur-float)) saturate(var(--s4-glass-saturation-float)) contrast(var(--s4-glass-backdrop-contrast-float)) brightness(var(--s4-glass-backdrop-brightness-float));
+  box-shadow:inset 0 1px 0 var(--s4-glass-highlight-color),var(--md-sys-elevation-level2)}
+[data-lg-mode=off] [data-lg=lens]{display:none}
+
+/* the phone app */
+.phone{width:100%;max-width:390px;height:min(760px,calc(100svh - 120px));min-height:560px;border-radius:32px;box-shadow:0 0 0 1px var(--md-sys-color-outline-variant)}
+.phone.mini{max-width:280px;height:380px;min-height:0;border-radius:28px}
+.ib{width:48px;height:48px;border:0;border-radius:24px;display:grid;place-items:center;background:transparent;cursor:pointer;color:inherit;padding:0}
+.top-l{left:16px;top:16px;width:48px;height:48px;display:grid;place-items:center}
+.top-r{right:16px;top:16px;height:48px;display:flex}
+.mini .top-r{right:12px;top:12px}
+.top-l:active,.top-r:active,.lgx.pressed{transform:scale(1.08)}
+.nav{left:16px;right:16px;bottom:16px;height:64px;display:flex;align-items:center;padding:0 4px;touch-action:none}
+.mini .nav{left:12px;right:12px;bottom:12px;height:60px}
+.nav .tab{flex:1;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;padding:0;cursor:pointer;font-size:12px;line-height:16px;font-weight:500;letter-spacing:.3px}
+.nav .tab i{display:grid;place-items:center;width:56px;height:32px;border-radius:16px;transition:background-color var(--md-sys-motion-spring-effects-duration) linear}
+.mini .nav .tab{font-size:11px}
+.mini .nav .tab i{width:48px}
+.nav .tab[aria-selected=true]{font-weight:700}
+.nav .tab[aria-selected=true] i{background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container)}
+[data-lg-mode=webgl] .nav .tab[aria-selected=true] i,[data-lg-mode=svg] .nav .tab[aria-selected=true] i{background:color-mix(in srgb,var(--md-sys-color-secondary-container) 85%,transparent)}
+.nav.dragging .tab[aria-selected=true] i{background:transparent}
+.lens{z-index:3;top:0;left:0;width:84px;height:76px;border-radius:38px;pointer-events:none;transform:scale(.2);opacity:0;
+  transition:transform var(--md-sys-motion-spring-fast-spatial-duration) var(--md-sys-motion-spring-fast-spatial),opacity var(--md-sys-motion-spring-fast-effects-duration) linear}
+.lens.on{transform:scale(1);opacity:1}
+[data-lg-mode=svg] .lens,[data-lg-mode=off] .lens{display:none}
+.menu{right:16px;top:72px;width:216px;height:0;overflow:hidden;border-radius:24px;padding:0 6px;
+  transition:height var(--md-sys-motion-spring-spatial-duration) var(--md-sys-motion-spring-spatial)}
+.menu.closing{transition:height var(--md-sys-motion-spring-fast-effects-duration) linear}
+.menu small{display:block;padding:14px 12px 4px;font-size:12px;line-height:16px;font-weight:500;letter-spacing:.5px}
+.menu button{display:flex;width:100%;align-items:center;gap:12px;min-height:44px;padding:0 12px;border:0;border-radius:16px;background:transparent;text-align:left;cursor:pointer;font-size:15px}
+.menu button svg{width:20px;height:20px}
+.menu button[aria-checked=true]{background:color-mix(in srgb,var(--md-sys-color-on-surface) 10%,transparent);font-weight:600}
+.menu button:last-child{margin-bottom:6px}
+
+/* playground */
+.play{height:420px;border-radius:28px;box-shadow:0 0 0 1px var(--md-sys-color-outline-variant);touch-action:none}
+.play.small{height:300px;width:100%;border-radius:24px}
+.drag{cursor:grab;touch-action:none;display:flex;align-items:center;justify-content:space-around;color:var(--md-sys-color-on-surface)}
+.drag:active{cursor:grabbing}
+.drag.pill{width:216px;height:64px}
+.drag.ball{width:84px;height:84px}
+.drag.tile{width:132px;height:132px;border-radius:40px;flex-direction:column;justify-content:center;gap:2px;font-size:13px;line-height:18px;font-weight:600}
+.drag.tile b{font-size:28px;line-height:34px;font-weight:600}
+.drag.dot{width:76px;height:76px}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>S4 Orion: Liquid Glass Lab</h1>
+  <div class="ctl"><span>Theme</span><div class="seg" id="theme"><button value="light" aria-pressed="true">Light</button><button value="dark" aria-pressed="false">Dark</button></div></div>
+  <div class="ctl"><span>Color</span><div class="seg" id="seed"><button value="mono" aria-pressed="true">Mono</button><button value="#4f46e5" aria-pressed="false">Indigo</button><button value="#0f766e" aria-pressed="false">Teal</button></div></div>
+</div>
+<main class="page">
+  <div class="intro">
+    <p>Today’s S4 Orion glass is a blur with a tint. This lab tries a <b>liquid</b> glass, close to Apple’s Liquid Glass: each glass shape behaves like a thick slab whose edges curve down, so what’s behind it <b>bends</b> near the rim (light refracts as it would through real glass), with a light blur, a specular highlight on the edge and a soft shadow. Nearby glass shapes can <b>melt</b> into each other like drops.</p>
+    <p><b>Try it below:</b> scroll the app so photos and text slide under the bars, open the menu (top right), press and slide along the nav bar, and drag the shapes in the playground. Switch theme and color at the top. Then pick one option per question by tapping its card (not the preview); answers are saved with your other labs.</p>
+    <p id="engineNote"></p>
+  </div>
+
+  <section class="sec">
+    <h2>Try It</h2>
+    <p>The app on the left uses the S4 Orion color roles, type and icons; only the glass is new. The controls change both the app and the playground.</p>
+    <div class="try">
+      <div class="lg-stage phone" id="app">
+        <div class="lg-scroll"><canvas class="lg-scene"></canvas></div>
+        <div class="lgx top-l" data-lg><button class="ib" aria-label="Account" data-icon="user-circle"></button></div>
+        <div class="lgx top-r" data-lg><button class="ib" aria-label="Filter" data-icon="filter"></button><button class="ib" aria-label="More" aria-haspopup="menu" aria-expanded="false" data-icon="menu-dots" id="moreBtn"></button></div>
+        <div class="lgx menu" data-lg role="menu" aria-label="Sort by" hidden><small>Sort By</small>
+          <button role="menuitemradio" aria-checked="true"><span data-icon="check"></span>Date Added</button>
+          <button role="menuitemradio" aria-checked="false"><span></span>Name</button>
+          <button role="menuitemradio" aria-checked="false"><span></span>Amount</button>
+          <button role="menuitemradio" aria-checked="false"><span></span>Vendor</button>
+        </div>
+        <div class="lgx nav" data-lg role="tablist" aria-label="Main"></div>
+        <div class="lgx lens" data-lg="lens" aria-hidden="true"></div>
+      </div>
+      <div class="tune rv">
+        <div class="lg-stage play" id="play"><canvas class="lg-scene"></canvas>
+          <div class="lgx drag pill" data-lg style="left:24px;top:30px"><span data-icon="home-2"></span><span data-icon="magnifer"></span><span data-icon="bell"></span><span data-icon="settings"></span></div>
+          <div class="lgx drag ball" data-lg style="left:270px;top:24px"><span data-icon="star"></span></div>
+          <div class="lgx drag tile" data-lg style="left:60px;top:200px"><b>21°</b>Lisbon</div>
+          <div class="lgx drag dot" data-lg style="left:230px;top:250px"><span data-icon="add-circle"></span></div>
+        </div>
+        <div class="ctl"><span>Look</span><div class="seg" id="look"><button value="subtle" aria-pressed="false">Subtle</button><button value="liquid" aria-pressed="true">Liquid</button><button value="extra" aria-pressed="false">Extra Liquid</button></div></div>
+        <div class="ctl"><span>Text</span><div class="seg" id="textMode"><button value="fixed" aria-pressed="false">Fixed Tint</button><button value="adaptive" aria-pressed="true">Adaptive Tint</button><button value="clear" aria-pressed="false">Apple-Clear</button></div></div>
+        <div class="ctl"><span>Engine</span><div class="seg" id="engine"><button value="webgl" aria-pressed="true">Liquid (WebGL)</button><button value="svg" aria-pressed="false">Liquid (SVG, Chrome)</button><button value="off" aria-pressed="false">Today’s Glass</button></div></div>
+        <div class="rows" id="sliders"></div>
+        <p class="hint" id="contrastNote"></p>
+      </div>
+    </div>
+  </section>
+
+  <div id="sections"></div>
+
+  <section class="sec how">
+    <h2>How It Would Ship in S4 Orion</h2>
+    <ul>
+      <li><b>Same places as today.</b> Liquid glass replaces the material of the surfaces decision 0004 already makes glass (nav bar, toolbars, top app bar when scrolled, menus, sheets, dialogs). Content stays solid.</li>
+      <li><b>Same guarantee.</b> Text on glass stays <code>on-surface</code> at WCAG AA. “Fixed Tint” reuses today’s proof unchanged; “Adaptive Tint” checks every pixel and raises the tint only where needed, so the floor holds by construction.</li>
+      <li><b>Chrome and Edge:</b> real refraction over any page through an SVG filter on <code>backdrop-filter</code> (the “SVG” engine here). Shapes don’t melt in this engine.</li>
+      <li><b>Safari (iPhone, Mac) and Firefox:</b> they don’t support SVG filters in <code>backdrop-filter</code> yet (WebKit has a fix in review). Until then, liquid glass needs WebGL, which only works over things the app draws itself (photos, maps, charts, canvas). Everywhere else they get today’s glass plus the new specular rim and shadow, so the look stays close.</li>
+      <li><b>Fallbacks unchanged:</b> high contrast, reduced transparency and <code>data-glass="off"</code> make every glass surface solid; reduced motion keeps melting and lens effects off.</li>
+    </ul>
+  </section>
+</main>
+<footer><a href="../">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0) · Material Color Utilities (Apache 2.0)</footer>
+
+<script src="../components/assets/m3color.js"></script>
+<script src="lib/theme.js?v=3"></script>
+<script src="lib/icons.js?v=2"></script>
+<script src="lib/questions.js?v=7"></script>
+<script src="lib/review.js?v=7"></script>
+<script src="lib/liquid-glass.js?v=1"></script>
+<script>
+const h=html=>{const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild};
+const ic=n=>`<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]||''}</svg>`;
+const fillIcons=root=>root.querySelectorAll('[data-icon]').forEach(e=>{e.insertAdjacentHTML('afterbegin',ic(e.dataset.icon));e.removeAttribute('data-icon')});
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const C=n=>css('--md-sys-color-'+n);
+const px=n=>parseFloat(css(n))||16;
+const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+const dark=()=>document.documentElement.dataset.theme==='dark';
+
+/* ---------------- what the glass sits on: drawn into canvases ---------------- */
+function rr(ctx,x,y,w,hh,r){ctx.beginPath();ctx.roundRect(x,y,w,hh,r)}
+const ART={
+  sunset(ctx,x,y,w,hh){let g=ctx.createLinearGradient(0,y,0,y+hh);g.addColorStop(0,'#241a6b');g.addColorStop(.45,'#e0457b');g.addColorStop(.62,'#ffb14e');g.addColorStop(.63,'#2b2160');g.addColorStop(1,'#120c33');ctx.fillStyle=g;ctx.fillRect(x,y,w,hh);
+    ctx.fillStyle='#ffe28a';ctx.beginPath();ctx.arc(x+w*.68,y+hh*.5,hh*.16,0,7);ctx.fill();
+    ctx.fillStyle='#4a1f6e';ctx.beginPath();ctx.moveTo(x,y+hh*.63);[[.12,.42],[.25,.55],[.4,.36],[.55,.63]].forEach(([a,b])=>ctx.lineTo(x+w*a,y+hh*b));ctx.fill();
+    ctx.fillStyle='#2f1450';ctx.beginPath();ctx.moveTo(x+w*.45,y+hh*.63);[[.7,.47],[.85,.56],[1,.44],[1,.63]].forEach(([a,b])=>ctx.lineTo(x+w*a,y+hh*b));ctx.fill();
+    ctx.strokeStyle='#ffd27a';for(let i=0;i<9;i++){const yy=y+hh*(.67+i*.035),ww=w*(.22-i*.018);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x+w*.68-ww/2,yy);ctx.lineTo(x+w*.68+ww/2,yy);ctx.stroke()}},
+  rings(ctx,x,y,w,hh){const cx=x+w/2,cy=y+hh/2,cols=['#ff5e62','#ffd166','#06d6a0','#118ab2','#7b2ff7'];for(let r=Math.hypot(w,hh)/2,i=0;r>0;r-=10,i++){ctx.fillStyle=cols[i%5];ctx.beginPath();ctx.arc(cx,cy,r,0,7);ctx.fill()}},
+  stripes(ctx,x,y,w,hh){ctx.fillStyle='#0b132b';ctx.fillRect(x,y,w,hh);const cols=['#f72585','#4cc9f0','#ffd60a','#80ffdb'];ctx.lineWidth=9;for(let i=-hh;i<w+hh;i+=18){ctx.strokeStyle=cols[(i/18|0)&3];ctx.beginPath();ctx.moveTo(x+i,y);ctx.lineTo(x+i-hh,y+hh);ctx.stroke()}},
+  city(ctx,x,y,w,hh){let g=ctx.createLinearGradient(0,y,0,y+hh);g.addColorStop(0,'#0d1b4c');g.addColorStop(1,'#3a0f4f');ctx.fillStyle=g;ctx.fillRect(x,y,w,hh);
+    let s=7;const rnd=()=>(s=(s*9301+49297)%233280)/233280;let bx=x;while(bx<x+w){const bw=26+rnd()*40,bh=hh*(.35+rnd()*.5);ctx.fillStyle='#10102a';ctx.fillRect(bx,y+hh-bh,bw-3,bh);
+      for(let wy=y+hh-bh+8;wy<y+hh-6;wy+=12)for(let wx=bx+5;wx<bx+bw-9;wx+=9)if(rnd()>.45){ctx.fillStyle=['#ffd166','#ff70a6','#70d6ff'][(rnd()*3)|0];ctx.fillRect(wx,wy,4,6)}bx+=bw}},
+  ocean(ctx,x,y,w,hh){let g=ctx.createLinearGradient(0,y,0,y+hh);g.addColorStop(0,'#8ee3ef');g.addColorStop(.35,'#1aa6b7');g.addColorStop(1,'#033f63');ctx.fillStyle=g;ctx.fillRect(x,y,w,hh);
+    ctx.strokeStyle='rgba(255,255,255,.75)';ctx.lineWidth=2.5;for(let yy=y+hh*.4;yy<y+hh;yy+=13){ctx.beginPath();for(let xx=0;xx<=w;xx+=6)ctx.lineTo(x+xx,yy+Math.sin(xx/18+yy)*4);ctx.stroke()}}
+};
+const ROWS=[['IM','Iron Mountain','Due Oct 28','$1,240.00','primary'],['CB','Comcast Business','Due Oct 30','$389.17','tertiary'],['ST','Staples','Overdue','$72.40','error'],['AD','Adobe','Due Nov 3','$59.99','secondary'],['UL','Uline','Due Nov 5','$218.30','primary'],['FX','FedEx','Due Nov 9','$46.12','tertiary']];
+const TEXT='Liquid glass bends what’s behind it near the edges, the way a thick piece of glass does when it curves down to meet the table. In the flat middle nothing moves; at the rim, lines bow and colors smear into a bright edge. Scroll this paragraph under the nav bar to watch the letters curve.';
+function wrap(ctx,text,w){const words=text.split(' '),lines=[];let l='';words.forEach(wd=>{const t=l?l+' '+wd:wd;if(ctx.measureText(t).width>w&&l){lines.push(l);l=wd}else l=t});if(l)lines.push(l);return lines}
+function drawFeed(cv,w,scale,mini){
+  const ctx=cv.getContext('2d'),pad=mini?12:16,cw=w-pad*2,rCard=px('--md-sys-shape-corner-large'),rGroup=px('--md-sys-shape-corner-large');
+  const blocks=mini?[['title'],['photo','sunset',.62,'Lisbon · 48 photos'],['list',ROWS.slice(0,3)],['tiles','rings','stripes'],['text'],['photo','city',.7,'Night Shots'],['list',ROWS.slice(3)]]
+    :[['title'],['photo','sunset',.62,'Lisbon · 48 photos'],['tiles','rings','stripes'],['header','This Month'],['hero'],['list',ROWS],['photo','city',.7,'Night Shots'],['text'],['photo','ocean',.62,'Sagres Coast'],['list',ROWS.slice(1,5)]];
+  ctx.font='400 16px Inter';const tl=wrap(ctx,TEXT,cw-32);
+  const H=b=>({title:mini?84:104,photo:cw*b[2],tiles:(cw-8)/2,header:36,hero:176,list:b[1]&&b[1].length*66,text:tl.length*24+40}[b[0]]);
+  let total=(mini?60:72)+blocks.reduce((a,b)=>a+H(b)+12,0)+(mini?80:100);
+  cv.width=Math.round(w*scale);cv.height=Math.round(total*scale);cv.style.width=w+'px';cv.style.height=total+'px';
+  ctx.setTransform(scale,0,0,scale,0,0);ctx.fillStyle=C('surface');ctx.fillRect(0,0,w,total);ctx.textBaseline='alphabetic';
+  let y=mini?60:72;
+  blocks.forEach(b=>{const bh=H(b);ctx.save();
+    if(b[0]==='title'){ctx.fillStyle=C('on-surface');ctx.font=`600 ${mini?28:34}px Inter`;ctx.fillText('Library',pad,y+(mini?34:40));ctx.font='400 15px Inter';ctx.fillStyle=C('on-surface-variant');ctx.fillText('Shared with you · 248 items',pad,y+(mini?60:70))}
+    if(b[0]==='photo'){rr(ctx,pad,y,cw,bh,rCard);ctx.clip();ART[b[1]](ctx,pad,y,cw,bh);ctx.font='600 14px Inter';const tw=ctx.measureText(b[3]).width;ctx.fillStyle='rgba(0,0,0,.45)';rr(ctx,pad+12,y+bh-44,tw+24,32,16);ctx.fill();ctx.fillStyle='#fff';ctx.fillText(b[3],pad+24,y+bh-23)}
+    if(b[0]==='tiles'){const tw=(cw-8)/2;[b[1],b[2]].forEach((a,i)=>{ctx.save();rr(ctx,pad+i*(tw+8),y,tw,tw,rCard);ctx.clip();ART[a](ctx,pad+i*(tw+8),y,tw,tw);ctx.restore()})}
+    if(b[0]==='header'){ctx.fillStyle=C('on-surface');ctx.font='600 22px Inter';ctx.fillText(b[1],pad,y+28)}
+    if(b[0]==='hero'){ctx.fillStyle=C('primary');rr(ctx,pad,y,cw,bh,rCard);ctx.fill();ctx.fillStyle=C('on-primary');ctx.font='500 14px Inter';ctx.fillText('Spent in October',pad+16,y+28);ctx.font='600 36px Inter';ctx.fillText('$4,459.13',pad+16,y+70);
+      const vals=[40,62,30,80,55,90,48,70,36,64],bw=(cw-32-9*6)/10;vals.forEach((v,i)=>{ctx.fillStyle=i%3===2?C('tertiary-container'):C('on-primary');ctx.globalAlpha=i%3===2?1:.85;const bhh=70*v/100;rr(ctx,pad+16+i*(bw+6),y+bh-16-bhh,bw,bhh,[4,4,0,0]);ctx.fill()});ctx.globalAlpha=1}
+    if(b[0]==='list'){rr(ctx,pad,y,cw,bh-2,rGroup);ctx.clip();b[1].forEach((r,i)=>{const ry=y+i*66;ctx.fillStyle=C('surface-container-low');ctx.fillRect(pad,ry,cw,64);
+      ctx.fillStyle=C(r[4]+'-container');ctx.beginPath();ctx.arc(pad+32,ry+32,20,0,7);ctx.fill();ctx.fillStyle=C('on-'+r[4]+'-container');ctx.font='600 14px Inter';ctx.textAlign='center';ctx.fillText(r[0],pad+32,ry+37);ctx.textAlign='left';
+      ctx.fillStyle=C('on-surface');ctx.font='500 16px Inter';ctx.fillText(r[1],pad+64,ry+28);ctx.fillStyle=r[2]==='Overdue'?C('error'):C('on-surface-variant');ctx.font='400 14px Inter';ctx.fillText(r[2],pad+64,ry+48);
+      if(!mini){ctx.fillStyle=C('on-surface');ctx.font='500 16px Inter';ctx.textAlign='right';ctx.fillText(r[3],pad+cw-16,ry+38);ctx.textAlign='left'}})}
+    if(b[0]==='text'){ctx.fillStyle=C('surface-container-low');rr(ctx,pad,y,cw,bh,rCard);ctx.fill();ctx.fillStyle=C('on-surface');ctx.font='400 16px Inter';tl.forEach((l,i)=>ctx.fillText(l,pad+16,y+32+i*24))}
+    ctx.restore();y+=bh+12});
+}
+function drawWall(cv,w,hh,scale){
+  const ctx=cv.getContext('2d');cv.width=Math.round(w*scale);cv.height=Math.round(hh*scale);cv.style.width=w+'px';cv.style.height=hh+'px';ctx.setTransform(scale,0,0,scale,0,0);
+  ART.sunset(ctx,0,0,w,hh);
+  ctx.save();ctx.beginPath();ctx.arc(w*.82,hh*.78,120,0,7);ctx.clip();ART.rings(ctx,w*.82-120,hh*.78-120,240,240);ctx.restore();
+  ctx.save();ctx.beginPath();ctx.rect(0,hh*.83,w*.62,hh*.17);ctx.clip();ART.stripes(ctx,0,hh*.83,w*.62,hh*.17);ctx.restore();
+  ctx.fillStyle='#fff';ctx.font=`800 ${Math.min(76,w/7)}px Inter`;ctx.fillText('Liquid Glass',24,hh*.32);
+  ctx.font='500 17px Inter';ctx.fillStyle='rgba(255,255,255,.92)';wrap(ctx,'Thick glass bends straight lines near its edge. Drag a shape over this text, the stripes or the rings.',Math.min(w-48,520)).forEach((l,i)=>ctx.fillText(l,24,hh*.32+34+i*24));
+  ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=1;for(let x=24;x<w;x+=32){ctx.beginPath();ctx.moveTo(x,hh*.52);ctx.lineTo(x,hh*.8);ctx.stroke()}
+}
+
+/* ---------------- tuning ---------------- */
+const SLIDERS=[['bezel','Bezel Width',2,40,1,'px'],['thick','Thickness',0,60,1,'px'],['ior','Index of Refraction',1.1,2.2,.05,''],['blur','Blur',0,20,.5,'px'],['ca','Color Split',0,.6,.02,''],['spec','Highlight',0,1.5,.05,''],['sat','Saturation',1,2,.05,''],['merge','Melt Distance',0,40,1,'px']];
+const TEXTMODES={
+  fixed:()=>({tint:.6,contrast:dark()?1:.74,bright:dark()?.8:1.1,adaptive:false}),
+  adaptive:()=>({tint:.12,contrast:1,bright:1,adaptive:true}),
+  clear:()=>({tint:.22,contrast:1,bright:1,adaptive:false})};
+const state={look:'liquid',text:'adaptive',engine:'webgl',params:{...LiquidGlass.PRESETS.liquid},seed:'mono',mode:'light'};
+const stages=[];
+
+/* worst-case contrast of on-surface text on fixed-tint glass over pure black or white */
+function rgbOf(c){const x=document.createElement('i');x.style.color=c;document.body.appendChild(x);const v=getComputedStyle(x).color.match(/[\d.]+/g).slice(0,3).map(Number);x.remove();return v}
+const lum=c=>{const [r,g,b]=c.map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4});return .2126*r+.7152*g+.0722*b};
+const cr=(a,b)=>{const [x,y]=[lum(a),lum(b)].sort((p,q)=>q-p);return (x+.05)/(y+.05)};
+function worst(tm){const t=TEXTMODES[tm]();const tint=rgbOf('var(--md-sys-color-surface-container)'),txt=rgbOf('var(--md-sys-color-on-surface)');
+  const f=v=>Math.min(255,Math.max(0,((v-127.5)*t.contrast+127.5)*t.bright)),mix=(v)=>tint.map(c=>c*t.tint+v*(1-t.tint));return Math.min(cr(txt,mix(f(0))),cr(txt,mix(f(255))))}
+function contrastText(tm){if(tm==='adaptive')return '<span class="ok">Text ≥ 4.5:1 over anything ✓</span> (tint rises only where the content behind would make text hard to read)';
+  const w=worst(tm);return `<span class="${w>=4.5?'ok':'bad'}">Worst case over black or white: ${w.toFixed(1)}:1 ${w>=4.5?'✓':'✗ (fails AA)'}</span>`}
+
+/* ---------------- stages ---------------- */
+function feedStage(root,mini){
+  const scene=root.querySelector('.lg-scene');
+  fillIcons(root);
+  const nav=root.querySelector('.nav');
+  if(nav&&!nav.children.length)[['home-2','Home'],['bill-list','Bills'],['wallet','Budget'],['settings','Settings']].forEach(([i,l],k)=>nav.appendChild(h(`<button class="tab" role="tab" aria-selected="${k===1}"><i>${ic(i)}</i>${l}</button>`)));
+  const st=LiquidGlass.stage({root,scene,mode:'webgl'});st.draw=()=>{drawFeed(scene,root.clientWidth,Math.min(devicePixelRatio||1,mini?1.5:2),mini);st.sceneChanged()};
+  setupNav(root);return st}
+function setupNav(root){
+  const nav=root.querySelector('.nav'),lens=root.querySelector('.lens');if(!nav)return;
+  const tabs=[...nav.querySelectorAll('.tab')];let down=null;
+  const select=t=>tabs.forEach(x=>x.setAttribute('aria-selected',x===t));
+  const place=x=>{if(!lens)return;const r=nav.getBoundingClientRect(),rr=root.getBoundingClientRect(),w=lens.offsetWidth,hh=lens.offsetHeight;
+    const cx=Math.max(r.left+w/2-6,Math.min(r.right-w/2+6,x));lens.style.left=(cx-rr.left-w/2)+'px';lens.style.top=(r.top-rr.top+r.height/2-hh/2)+'px'};
+  nav.addEventListener('pointerdown',e=>{down={x:e.clientX,t:e.target.closest('.tab')};nav.setPointerCapture(e.pointerId);
+    if(lens&&!reduced.matches){nav.classList.add('dragging');place(e.clientX);lens.style.transition='none';lens.getBoundingClientRect();lens.style.transition='';lens.classList.add('on')}});
+  nav.addEventListener('pointermove',e=>{if(!down)return;place(e.clientX);const t=tabs.find(x=>{const r=x.getBoundingClientRect();return e.clientX>=r.left&&e.clientX<r.right});if(t)select(t)});
+  const up=e=>{if(!down)return;const t=tabs.find(x=>{const r=x.getBoundingClientRect();return e.clientX>=r.left&&e.clientX<r.right})||down.t;if(t){select(t);if(lens){const r=t.getBoundingClientRect();place(r.left+r.width/2)}}
+    down=null;nav.classList.remove('dragging');if(lens)lens.classList.remove('on')};
+  nav.addEventListener('pointerup',up);nav.addEventListener('pointercancel',up);
+}
+function setupMenu(root){
+  const btn=root.querySelector('#moreBtn'),menu=root.querySelector('.menu');let open=false;
+  const close=()=>{if(!open)return;open=false;btn.setAttribute('aria-expanded','false');menu.classList.add('closing');menu.style.height='0px';
+    setTimeout(()=>{if(!open){menu.hidden=true;menu.classList.remove('closing')}},reduced.matches?0:260)};
+  btn.addEventListener('click',e=>{e.stopPropagation();if(open)return close();open=true;btn.setAttribute('aria-expanded','true');menu.classList.remove('closing');menu.hidden=false;menu.style.height='0px';
+    const target=[...menu.children].reduce((a,c)=>a+c.offsetHeight,0)+6;menu.getBoundingClientRect();menu.style.height=target+'px';menu.querySelector('button').focus({preventScroll:true})});
+  menu.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;menu.querySelectorAll('button').forEach(x=>{x.setAttribute('aria-checked',x===b);const s=x.querySelector('span');s.innerHTML=x===b?ic('check'):''});close();btn.focus()});
+  document.addEventListener('click',e=>{if(!menu.contains(e.target))close()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&open){close();btn.focus()}});
+}
+function makeDraggable(root){
+  root.querySelectorAll('.drag').forEach(el=>{let s=null;
+    el.addEventListener('pointerdown',e=>{el.setPointerCapture(e.pointerId);el.classList.add('pressed');s={x:e.clientX,y:e.clientY,l:el.offsetLeft,t:el.offsetTop}});
+    el.addEventListener('pointermove',e=>{if(!s)return;const W=root.clientWidth-el.offsetWidth,H=root.clientHeight-el.offsetHeight;
+      el.style.left=Math.max(-20,Math.min(W+20,s.l+e.clientX-s.x))+'px';el.style.top=Math.max(-20,Math.min(H+20,s.t+e.clientY-s.y))+'px'});
+    const end=()=>{s=null;el.classList.remove('pressed')};el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end)})}
+function wallStage(root){
+  const scene=root.querySelector('.lg-scene');fillIcons(root);makeDraggable(root);
+  const st=LiquidGlass.stage({root,scene,mode:'webgl'});st.draw=()=>{drawWall(scene,root.clientWidth,root.clientHeight,Math.min(devicePixelRatio||1,2));st.sceneChanged()};return st}
+
+/* the app and playground follow the tuning controls */
+const app=feedStage(document.getElementById('app'),false);setupMenu(document.getElementById('app'));
+const play=wallStage(document.getElementById('play'));
+const live=[app,play];
+function liveParams(){return {...state.params,...TEXTMODES[state.text]()}}
+function applyLive(){live.forEach(s=>{s.set(liveParams());if(s.mode!==state.engine)s.setMode(state.engine)});
+  document.getElementById('contrastNote').innerHTML=state.engine==='off'?'Today’s glass: 60% tint with the backdrop compressed, text ≥ 4.5:1 over anything.':contrastText(state.text)+(state.engine==='svg'&&state.text==='adaptive'?' (the SVG engine can’t adapt per pixel; it uses the base tint)':'')}
+const sl=document.getElementById('sliders');
+SLIDERS.forEach(([k,label,min,max,step,unit])=>{const l=h(`<label>${label}<output></output><input type="range" min="${min}" max="${max}" step="${step}"></label>`);const inp=l.querySelector('input'),out=l.querySelector('output');
+  inp.value=state.params[k];out.textContent=state.params[k]+unit;inp.addEventListener('input',()=>{state.params[k]=+inp.value;out.textContent=inp.value+unit;applyLive()});l.dataset.k=k;sl.appendChild(l)});
+const syncSliders=()=>sl.querySelectorAll('label').forEach(l=>{const k=l.dataset.k,u=SLIDERS.find(s=>s[0]===k)[5];l.querySelector('input').value=state.params[k];l.querySelector('output').textContent=state.params[k]+u});
+
+/* ---------------- question previews ---------------- */
+function miniPhone(){return h(`<div class="lg-stage phone mini"><div class="lg-scroll"><canvas class="lg-scene"></canvas></div>
+  <div class="lgx top-r" data-lg><button class="ib" aria-label="Filter" data-icon="filter"></button><button class="ib" aria-label="More" data-icon="menu-dots"></button></div>
+  <div class="lgx nav" data-lg role="tablist" aria-label="Main"></div><div class="lgx lens" data-lg="lens" aria-hidden="true"></div></div>`)}
+function miniPlay(){return h(`<div class="lg-stage play small"><canvas class="lg-scene"></canvas>
+  <div class="lgx drag pill" data-lg style="left:20px;top:20px;width:150px;height:56px"><span data-icon="home-2"></span><span data-icon="magnifer"></span><span data-icon="bell"></span></div>
+  <div class="lgx drag ball" data-lg style="left:0;top:0;width:64px;height:64px" data-orbit><span data-icon="star"></span></div>
+  <div class="lgx drag dot" data-lg style="left:0;top:0;width:56px;height:56px" data-orbit="2"><span data-icon="add-circle"></span></div></div>`)}
+const LOOKS={A:{look:'subtle'},B:{look:'liquid'},C:{look:'extra'},D:{engine:'off'}};
+const SECTIONS=[
+ {id:'look',title:'Refraction',desc:'How much the glass bends what’s behind it. Scroll each app so the photos and the paragraph pass under the nav bar; press and slide along the nav bar for the lens.',opts:[
+  {k:'A',name:'Subtle',desc:'A thin bevel that bends only the outer few pixels, with more blur. Calm, close to frosted glass with a lit edge.',set:{look:'subtle'}},
+  {k:'B',name:'Liquid',tag:'Closest to Apple',desc:'A wide, rounded bevel: lines bow noticeably near the rim, light blur, a bright edge and a hint of color split.',set:{look:'liquid'}},
+  {k:'C',name:'Extra Liquid',desc:'Thick glass: strong bending, almost no blur and visible color fringes at the edge. The most dramatic.',set:{look:'extra'}},
+  {k:'D',name:'Keep Today’s Glass',tag:'S4 Orion today',desc:'No refraction: 60% tint over a 16px blur with a hairline edge.',set:{engine:'off'}}]},
+ {id:'text',title:'Keeping Text Readable',desc:'Clearer glass shows more of the bending, but text on it must stay readable. Each option shows its guarantee for the current theme and color.',opts:[
+  {k:'A',name:'Fixed Tint',tag:'Today’s guarantee',desc:'60% tint and the backdrop is gently compressed, exactly as today. AA over anything, but the tint hides much of the refraction.',set:{text:'fixed'}},
+  {k:'B',name:'Adaptive Tint',desc:'Very clear (12% tint) over calm content; wherever what’s behind would make text hard to read, the tint rises just enough to keep 4.5:1. Clear and guaranteed.',set:{text:'adaptive'}},
+  {k:'C',name:'Apple-Clear',desc:'22% tint everywhere, like iOS. The clearest look, but text can fall below AA over busy or very light content.',set:{text:'clear'}}]},
+ {id:'melt',title:'Shapes Melting Together',desc:'In Liquid Glass, glass shapes that come close merge like drops, and menus grow out of their button. Watch the shapes drift, or drag them.',opts:[
+  {k:'A',name:'Melt',tag:'Apple-like',desc:'Shapes within about 22px pull together and fuse; the menu in the app above grows out of its button pill.',set:{merge:22}},
+  {k:'B',name:'Stay Separate',desc:'Each glass shape keeps its own outline, even when touching.',set:{merge:0}}]},
+ {id:'where',title:'Where Liquid Glass Goes',desc:'Glass stays off content either way; this decides which glass surfaces get the liquid material.',noPreview:true,opts:[
+  {k:'A',name:'Every Glass Surface',desc:'Nav bar, toolbars, top app bar, menus, sheets, dialogs and rich tooltips all become liquid.'},
+  {k:'B',name:'Floating Pills and Buttons Only',desc:'Floating nav bar, toolbars and glass icon buttons are liquid; menus, sheets and dialogs keep today’s glass.'},
+  {k:'C',name:'Opt-In Per App',desc:'Today’s glass stays the default; an app turns liquid glass on with one attribute (data-glass="liquid").'}]},
+ {id:'device',title:'On Your iPhone',desc:'Please open this page on your iPhone too. The refraction there runs through WebGL; tell me how it feels.',noPreview:true,opts:[
+  {k:'A',name:'Smooth and Right',desc:'Scrolling, the nav bar lens and dragging all feel fluid, and it looks like the screenshots of Liquid Glass.'},
+  {k:'B',name:'Looks Right but Slow',desc:'The look is right, but scrolling or dragging stutters.'},
+  {k:'C',name:'Looks Wrong or Broken',desc:'Blank, black or misplaced glass, or no bending at all. A screenshot in the notes helps.'}]}];
+const previews=[];   /* [stage, set, sectionId] */
+const sharedFeed=document.createElement('canvas'),sharedWall=document.createElement('canvas');
+const host=document.getElementById('sections');
+SECTIONS.forEach(sec=>{
+  const el=h(`<section class="sec"><h2>${sec.title}</h2><p>${sec.desc}</p><div class="cards rv-group" role="radiogroup" aria-label="${sec.title}"></div></section>`);host.appendChild(el);
+  sec.opts.forEach(o=>{let pv=null,side=null;
+    if(!sec.noPreview){pv=h('<div class="pv"></div>');const root=sec.id==='melt'?miniPlay():miniPhone();pv.appendChild(root);
+      if(sec.id==='text'){side=h('<div class="note" aria-live="polite"></div>')}
+      previews.push({root,set:o.set,sec:sec.id,side})}
+    const card=S4Review.card({pick:`${sec.id}:${o.k}`,letter:o.k,title:o.name,desc:o.desc,tag:o.tag||'',preview:pv,side});
+    if(side)side.parentElement.removeAttribute('data-no-pick');
+    el.querySelector('.cards').appendChild(card)})});
+previews.forEach(p=>{const scene=p.root.querySelector('.lg-scene');fillIcons(p.root);
+  if(p.sec==='melt'){makeDraggable(p.root);p.stage=LiquidGlass.stage({root:p.root,scene,source:sharedWall,mode:'webgl'})}
+  else{p.stage=LiquidGlass.stage({root:p.root,scene,source:sharedFeed,mode:'webgl'});const nav=p.root.querySelector('.nav');
+    [['home-2','Home'],['bill-list','Bills'],['wallet','Budget'],['settings','Settings']].forEach(([i,l],k)=>nav.appendChild(h(`<button class="tab" role="tab" aria-selected="${k===1}"><i>${ic(i)}</i>${l}</button>`)));setupNav(p.root)}});
+function previewParams(p){
+  if(p.sec==='look'){const look=p.set.look||'liquid';return {...LiquidGlass.PRESETS[look],...TEXTMODES.adaptive()}}
+  if(p.sec==='text')return {...LiquidGlass.PRESETS.liquid,...TEXTMODES[p.set.text]()};
+  return {...LiquidGlass.PRESETS.liquid,...TEXTMODES.adaptive(),merge:p.set.merge}}
+function refreshPreviews(){previews.forEach(p=>{p.stage.set(previewParams(p));p.stage.setMode(p.set.engine||'webgl');if(p.side)p.side.innerHTML=contrastText(p.set.text)})}
+function copyInto(cv,src,w){cv.width=src.width;cv.height=src.height;cv.style.width=w+'px';cv.style.height=(src.height/src.width*w)+'px';cv.getContext('2d').drawImage(src,0,0)}
+function drawAll(){
+  app.draw();play.draw();
+  const m=previews.find(p=>p.sec!=='melt'),mw=m.root.clientWidth;drawFeed(sharedFeed,mw,Math.min(devicePixelRatio||1,1.5),true);LiquidGlass.touch(sharedFeed);
+  const pp=previews.find(p=>p.sec==='melt');drawWall(sharedWall,pp.root.clientWidth,pp.root.clientHeight,1.5);LiquidGlass.touch(sharedWall);
+  previews.forEach(p=>{copyInto(p.root.querySelector('.lg-scene'),p.sec==='melt'?sharedWall:sharedFeed,p.root.clientWidth);p.stage.invalidate();p.stage.colors=null});
+  LiquidGlass.invalidateAll();
+}
+/* melt previews: two shapes drift toward the pill and away again */
+let t0=performance.now();
+(function orbit(now){if(!reduced.matches){const t=(now-t0)/1000;previews.filter(p=>p.sec==='melt').forEach(p=>{const W=p.root.clientWidth,Hh=p.root.clientHeight;
+  p.root.querySelectorAll('[data-orbit]').forEach(el=>{if(el.classList.contains('pressed')||el.dataset.moved)return;const k=el.dataset.orbit==='2'?1.3:0,a=t*.7+k;
+    el.style.left=(W*.5+Math.cos(a)*W*.28-el.offsetWidth/2)+'px';el.style.top=(Hh*.55+Math.sin(a*1.4)*Hh*.3-el.offsetHeight/2)+'px'})})}
+  requestAnimationFrame(orbit)})(t0);
+document.addEventListener('pointerdown',e=>{const o=e.target.closest('[data-orbit]');if(o)o.dataset.moved='1'});
+
+/* ---------------- controls ---------------- */
+function seg(id,fn){document.getElementById(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));fn(b.value)})}
+function pressSeg(id,v){document.getElementById(id).querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.value===v))}
+seg('theme',v=>{state.mode=v;S4Theme.apply(state.seed,v);drawAll();applyLive();refreshPreviews()});
+seg('seed',v=>{state.seed=v;S4Theme.apply(v,state.mode);drawAll();applyLive();refreshPreviews()});
+seg('look',v=>{state.look=v;state.params={...LiquidGlass.PRESETS[v]};syncSliders();applyLive()});
+seg('textMode',v=>{state.text=v;applyLive()});
+seg('engine',v=>{state.engine=v;applyLive()});
+const eng=document.getElementById('engine'),note=document.getElementById('engineNote');
+if(!LiquidGlass.svgSupported)eng.querySelector('[value=svg]').disabled=true;
+if(!LiquidGlass.webglSupported()){eng.querySelector('[value=webgl]').disabled=true;state.engine=LiquidGlass.svgSupported?'svg':'off';pressSeg('engine',state.engine)}
+note.innerHTML=LiquidGlass.webglSupported()?'This browser runs the <b>WebGL</b> engine'+(LiquidGlass.svgSupported?' and the <b>SVG</b> engine (Chrome only).':'. The SVG engine is Chrome-only, so it’s greyed out here.'):'This browser has no WebGL2, so the liquid previews fall back to today’s glass.';
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{drawAll()},150)});
+S4Theme.apply(state.seed,state.mode);
+document.fonts.load('600 16px Inter').then(()=>document.fonts.ready).then(()=>{drawAll();applyLive();refreshPreviews();
+  const sc=document.querySelector('#app .lg-scroll');sc.scrollTop=60;previews.forEach(p=>{const s=p.root.querySelector('.lg-scroll');if(s)s.scrollTop=90})});
+S4Review.page('liquid',{capture:{'look:Tuned':()=>SLIDERS.map(([k,l,,,,u])=>`${l} ${state.params[k]}${u}`).join(', ')+`; text: ${state.text}`}});
+</script>
+</body>
+</html>

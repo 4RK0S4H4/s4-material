@@ -10,6 +10,10 @@ All notable changes to S4 Orion are recorded here. The format follows [Keep a Ch
 
 The first version of S4 Orion, a leaner rebuild of S4 Material 1.3 on Material 3 Expressive.
 
+### Explored (not part of 1.0.0 yet)
+
+- Liquid Glass Lab (`explore/liquid-glass.html`, engine in `explore/lib/liquid-glass.js`): glass that refracts like a thick slab with curved edges (squircle bevel, Snell's law), light blur, specular rim, soft shadow, shapes that melt together and a magnifying lens on the nav bar. WebGL2 engine (all browsers, over app-drawn backdrops) and SVG `backdrop-filter` engine (Chromium, over any DOM). Proposes an adaptive tint that keeps text at AA per pixel. Awaiting the owner's picks.
+
 ### Fixed (owner review of the demo: animations glitchy, button group corners too sharp)
 
 - Root cause of the "sharp angles" and of jumpy press/toggle animations: buttons used a literal 9999px for "fully round". Browsers scale all of an element's corner radii down together when two on one side add up to more than the side, so in a connected group the inner corners collapsed to square whatever their value, and press/toggle morphs between 9999px and 8-28px sat unseen until their last few percent and then snapped. Buttons, icon buttons and group buttons now use half their height as "full".
