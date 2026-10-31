@@ -58,6 +58,8 @@ The owner asked for glass that looks like Apple's Liquid Glass (light bending at
 [`explore/liquid-glass.html`](../explore/liquid-glass.html) has a working version: try-it app + playground with
 tuning sliders, and questions on refraction strength, text legibility (fixed / adaptive / Apple-clear tint), melting,
 where it goes, and how it runs on the iPhone. Engine: `explore/lib/liquid-glass.js`.
+Owner's first reaction: "looks really good"; asked for no rainbow refraction on white and a slight blur against
+pixelation (done: color split removed, blur floor ~4px plus extra blur along the rim). Still to answer: the questions.
 
 - **Browser reality:** SVG filters in `backdrop-filter` (refraction over any DOM) work only in Chromium; Safari and
   Firefox parse them and render nothing (WebKit fix in review as of mid-2026). WebGL2 works everywhere but only over

@@ -176,7 +176,7 @@ footer a{color:inherit}
 <script src="lib/icons.js?v=2"></script>
 <script src="lib/questions.js?v=7"></script>
 <script src="lib/review.js?v=7"></script>
-<script src="lib/liquid-glass.js?v=1"></script>
+<script src="lib/liquid-glass.js?v=2"></script>
 <script>
 const h=html=>{const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild};
 const ic=n=>`<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]||''}</svg>`;
@@ -206,7 +206,7 @@ const ART={
 const ROWS=[['IM','Iron Mountain','Due Oct 28','$1,240.00','primary'],['CB','Comcast Business','Due Oct 30','$389.17','tertiary'],['ST','Staples','Overdue','$72.40','error'],['AD','Adobe','Due Nov 3','$59.99','secondary'],['UL','Uline','Due Nov 5','$218.30','primary'],['FX','FedEx','Due Nov 9','$46.12','tertiary']];
 const TEXT='Liquid glass bends what’s behind it near the edges, the way a thick piece of glass does when it curves down to meet the table. In the flat middle nothing moves; at the rim, lines bow and colors smear into a bright edge. Scroll this paragraph under the nav bar to watch the letters curve.';
 function wrap(ctx,text,w){const words=text.split(' '),lines=[];let l='';words.forEach(wd=>{const t=l?l+' '+wd:wd;if(ctx.measureText(t).width>w&&l){lines.push(l);l=wd}else l=t});if(l)lines.push(l);return lines}
-function drawFeed(cv,w,scale,mini){
+function drawFeed(cv,w,scale,mini){/* scale >= 2 keeps the stretched rim from pixelating */
   const ctx=cv.getContext('2d'),pad=mini?12:16,cw=w-pad*2,rCard=px('--md-sys-shape-corner-large'),rGroup=px('--md-sys-shape-corner-large');
   const blocks=mini?[['title'],['photo','sunset',.62,'Lisbon · 48 photos'],['list',ROWS.slice(0,3)],['tiles','rings','stripes'],['text'],['photo','city',.7,'Night Shots'],['list',ROWS.slice(3)]]
     :[['title'],['photo','sunset',.62,'Lisbon · 48 photos'],['tiles','rings','stripes'],['header','This Month'],['hero'],['list',ROWS],['photo','city',.7,'Night Shots'],['text'],['photo','ocean',.62,'Sagres Coast'],['list',ROWS.slice(1,5)]];
@@ -241,7 +241,7 @@ function drawWall(cv,w,hh,scale){
 }
 
 /* ---------------- tuning ---------------- */
-const SLIDERS=[['bezel','Bezel Width',2,40,1,'px'],['thick','Thickness',0,60,1,'px'],['ior','Index of Refraction',1.1,2.2,.05,''],['blur','Blur',0,20,.5,'px'],['ca','Color Split',0,.6,.02,''],['spec','Highlight',0,1.5,.05,''],['sat','Saturation',1,2,.05,''],['merge','Melt Distance',0,40,1,'px']];
+const SLIDERS=[['bezel','Bezel Width',2,40,1,'px'],['thick','Thickness',0,60,1,'px'],['ior','Index of Refraction',1.1,2.2,.05,''],['blur','Blur',0,20,.5,'px'],['spec','Highlight',0,1.5,.05,''],['sat','Saturation',1,2,.05,''],['merge','Melt Distance',0,40,1,'px']];
 const TEXTMODES={
   fixed:()=>({tint:.6,contrast:dark()?1:.74,bright:dark()?.8:1.1,adaptive:false}),
   adaptive:()=>({tint:.12,contrast:1,bright:1,adaptive:true}),
@@ -264,7 +264,7 @@ function feedStage(root,mini){
   fillIcons(root);
   const nav=root.querySelector('.nav');
   if(nav&&!nav.children.length)[['home-2','Home'],['bill-list','Bills'],['wallet','Budget'],['settings','Settings']].forEach(([i,l],k)=>nav.appendChild(h(`<button class="tab" role="tab" aria-selected="${k===1}"><i>${ic(i)}</i>${l}</button>`)));
-  const st=LiquidGlass.stage({root,scene,mode:'webgl'});st.draw=()=>{drawFeed(scene,root.clientWidth,Math.min(devicePixelRatio||1,mini?1.5:2),mini);st.sceneChanged()};
+  const st=LiquidGlass.stage({root,scene,mode:'webgl'});st.draw=()=>{drawFeed(scene,root.clientWidth,2,mini);st.sceneChanged()};
   setupNav(root);return st}
 function setupNav(root){
   const nav=root.querySelector('.nav'),lens=root.querySelector('.lens');if(!nav)return;
@@ -297,7 +297,7 @@ function makeDraggable(root){
     const end=()=>{s=null;el.classList.remove('pressed')};el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end)})}
 function wallStage(root){
   const scene=root.querySelector('.lg-scene');fillIcons(root);makeDraggable(root);
-  const st=LiquidGlass.stage({root,scene,mode:'webgl'});st.draw=()=>{drawWall(scene,root.clientWidth,root.clientHeight,Math.min(devicePixelRatio||1,2));st.sceneChanged()};return st}
+  const st=LiquidGlass.stage({root,scene,mode:'webgl'});st.draw=()=>{drawWall(scene,root.clientWidth,root.clientHeight,2);st.sceneChanged()};return st}
 
 /* the app and playground follow the tuning controls */
 const app=feedStage(document.getElementById('app'),false);setupMenu(document.getElementById('app'));
@@ -323,8 +323,8 @@ const LOOKS={A:{look:'subtle'},B:{look:'liquid'},C:{look:'extra'},D:{engine:'off
 const SECTIONS=[
  {id:'look',title:'Refraction',desc:'How much the glass bends what’s behind it. Scroll each app so the photos and the paragraph pass under the nav bar; press and slide along the nav bar for the lens.',opts:[
   {k:'A',name:'Subtle',desc:'A thin bevel that bends only the outer few pixels, with more blur. Calm, close to frosted glass with a lit edge.',set:{look:'subtle'}},
-  {k:'B',name:'Liquid',tag:'Closest to Apple',desc:'A wide, rounded bevel: lines bow noticeably near the rim, light blur, a bright edge and a hint of color split.',set:{look:'liquid'}},
-  {k:'C',name:'Extra Liquid',desc:'Thick glass: strong bending, almost no blur and visible color fringes at the edge. The most dramatic.',set:{look:'extra'}},
+  {k:'B',name:'Liquid',tag:'Closest to Apple',desc:'A wide, rounded bevel: lines bow noticeably near the rim, a slight blur so nothing looks pixelated, and a bright edge.',set:{look:'liquid'}},
+  {k:'C',name:'Extra Liquid',desc:'Thick glass: strong bending with a slight blur. The most dramatic.',set:{look:'extra'}},
   {k:'D',name:'Keep Today’s Glass',tag:'S4 Orion today',desc:'No refraction: 60% tint over a 16px blur with a hairline edge.',set:{engine:'off'}}]},
  {id:'text',title:'Keeping Text Readable',desc:'Clearer glass shows more of the bending, but text on it must stay readable. Each option shows its guarantee for the current theme and color.',opts:[
   {k:'A',name:'Fixed Tint',tag:'Today’s guarantee',desc:'60% tint and the backdrop is gently compressed, exactly as today. AA over anything, but the tint hides much of the refraction.',set:{text:'fixed'}},
@@ -365,8 +365,8 @@ function refreshPreviews(){previews.forEach(p=>{p.stage.set(previewParams(p));p.
 function copyInto(cv,src,w){cv.width=src.width;cv.height=src.height;cv.style.width=w+'px';cv.style.height=(src.height/src.width*w)+'px';cv.getContext('2d').drawImage(src,0,0)}
 function drawAll(){
   app.draw();play.draw();
-  const m=previews.find(p=>p.sec!=='melt'),mw=m.root.clientWidth;drawFeed(sharedFeed,mw,Math.min(devicePixelRatio||1,1.5),true);LiquidGlass.touch(sharedFeed);
-  const pp=previews.find(p=>p.sec==='melt');drawWall(sharedWall,pp.root.clientWidth,pp.root.clientHeight,1.5);LiquidGlass.touch(sharedWall);
+  const m=previews.find(p=>p.sec!=='melt'),mw=m.root.clientWidth;drawFeed(sharedFeed,mw,2,true);LiquidGlass.touch(sharedFeed);
+  const pp=previews.find(p=>p.sec==='melt');drawWall(sharedWall,pp.root.clientWidth,pp.root.clientHeight,2);LiquidGlass.touch(sharedWall);
   previews.forEach(p=>{copyInto(p.root.querySelector('.lg-scene'),p.sec==='melt'?sharedWall:sharedFeed,p.root.clientWidth);p.stage.invalidate();p.stage.colors=null});
   LiquidGlass.invalidateAll();
 }

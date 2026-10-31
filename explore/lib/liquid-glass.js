@@ -19,9 +19,9 @@ window.LiquidGlass = (function () {
   'use strict';
   var MAX = 8;
   var PRESETS = {
-    subtle: { bezel: 10, thick: 10, ior: 1.5, blur: 9, ca: 0, spec: 0.55, sat: 1.5, merge: 18, mag: 1.08 },
-    liquid: { bezel: 20, thick: 24, ior: 1.5, blur: 2.5, ca: 0.18, spec: 0.9, sat: 1.6, merge: 22, mag: 1.18 },
-    extra:  { bezel: 28, thick: 44, ior: 1.6, blur: 0.8, ca: 0.4, spec: 1, sat: 1.7, merge: 28, mag: 1.3 }
+    subtle: { bezel: 10, thick: 10, ior: 1.5, blur: 8, ca: 0, spec: 0.55, sat: 1.5, merge: 18, mag: 1.08 },
+    liquid: { bezel: 20, thick: 24, ior: 1.5, blur: 4, ca: 0, spec: 0.9, sat: 1.6, merge: 22, mag: 1.18 },
+    extra:  { bezel: 28, thick: 44, ior: 1.6, blur: 3, ca: 0, spec: 1, sat: 1.7, merge: 28, mag: 1.3 }
   };
 
   /* ---------------- shared math (also used for the SVG maps) ---------------- */
@@ -58,10 +58,12 @@ window.LiquidGlass = (function () {
     'float shift(float depth,float bez,float thick){if(depth>=bez||bez<=0.)return 0.;float t=max(depth/bez,0.);',
     ' float th=atan(slope(t)*thick/bez);return thick*tan(th-asin(sin(th)/uIor));}',
     'vec3 tap(vec2 q,float lod){return textureLod(uScene,(q-uSceneRect.xy)/uSceneRect.zw,lod).rgb;}',
-    'vec3 blurAt(vec2 q){if(uBlur<.4)return tap(q,0.);',
-    ' float lod=max(log2(uBlur*.3*uTexScale),0.);vec3 acc=vec3(0.);',
-    ' for(int i=0;i<12;i++){float a=float(i)*2.39996;float r=sqrt((float(i)+.5)/12.)*uBlur;acc+=tap(q+vec2(cos(a),sin(a))*r,lod);}',
-    ' return acc/12.;}',
+    'float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}',
+    /* golden-angle disc of 16 taps, rotated per pixel so it never bands; mip level matched to the tap spacing */
+    'vec3 blurAt(vec2 q,float rad){if(rad<.4)return tap(q,0.);',
+    ' float lod=max(log2(rad*.28*uTexScale),0.);float rot=hash(gl_FragCoord.xy)*6.2832;vec3 acc=vec3(0.);',
+    ' for(int i=0;i<16;i++){float a=float(i)*2.39996+rot;float r=sqrt((float(i)+.5)/16.)*rad;acc+=tap(q+vec2(cos(a),sin(a))*r,lod);}',
+    ' return acc/16.;}',
     'float lin(float c){return c<=.04045?c/12.92:pow((c+.055)/1.055,2.4);}',
     'float lum(vec3 c){return .2126*lin(c.r)+.7152*lin(c.g)+.0722*lin(c.b);}',
     'float cr(vec3 a,vec3 b){float x=lum(a)+.05,y=lum(b)+.05;return max(x,y)/min(x,y);}',
@@ -82,10 +84,11 @@ window.LiquidGlass = (function () {
     ' float m=shift(depth,bez,uThick*(layer>.5?1.2:1.));',
     ' vec2 q=p-n*m;',
     ' if(layer>.5){vec2 c=uRect[int(f.z)].xy;q=c+(q-c)/uMag;}',
+    ' float rad=uBlur+min(m*.3,6.)+(layer>.5?1.:0.);',
     ' vec3 col;',
-    ' if(uCA>0.&&m>.05){col=vec3(blurAt(p-n*m*(1.+uCA)).r,blurAt(q).g,blurAt(p-n*m*(1.-uCA)).b);',
-    '  if(layer>.5){vec2 c=uRect[int(f.z)].xy;col=vec3(blurAt(c+(p-n*m*(1.+uCA)-c)/uMag).r,blurAt(q).g,blurAt(c+(p-n*m*(1.-uCA)-c)/uMag).b);}}',
-    ' else col=blurAt(q);',
+    ' if(uCA>0.&&m>.05){col=vec3(blurAt(p-n*m*(1.+uCA),rad).r,blurAt(q,rad).g,blurAt(p-n*m*(1.-uCA),rad).b);',
+    '  if(layer>.5){vec2 c=uRect[int(f.z)].xy;col=vec3(blurAt(c+(p-n*m*(1.+uCA)-c)/uMag,rad).r,blurAt(q,rad).g,blurAt(c+(p-n*m*(1.-uCA)-c)/uMag,rad).b);}}',
+    ' else col=blurAt(q,rad);',
     ' col=grade(col);',
     ' float ta=uTintA*(layer>.5?.6:1.);',
     ' if(uAdaptive>.5){vec3 soft=grade(tap(q,max(log2(18.*uTexScale),0.)));ta=max(ta,max(need(col),need(soft)));}',
@@ -264,7 +267,7 @@ window.LiquidGlass = (function () {
     f.id = id; f.setAttribute('x', 0); f.setAttribute('y', 0); f.setAttribute('width', w); f.setAttribute('height', h);
     f.setAttribute('filterUnits', 'userSpaceOnUse'); f.setAttribute('primitiveUnits', 'userSpaceOnUse'); f.setAttribute('color-interpolation-filters', 'sRGB');
     var c = P.contrast == null ? 1 : P.contrast, b = P.bright == null ? 1 : P.bright;
-    f.innerHTML = '<feGaussianBlur in="SourceGraphic" stdDeviation="' + (P.blur / 2) + '" result="b"/>' +
+    f.innerHTML = '<feGaussianBlur in="SourceGraphic" stdDeviation="' + (P.blur / 2 + 1) + '" result="b"/>' +
       '<feImage href="' + m.disp + '" x="0" y="0" width="' + w + '" height="' + h + '" preserveAspectRatio="none" result="map"/>' +
       '<feDisplacementMap in="b" in2="map" scale="' + m.scale + '" xChannelSelector="R" yChannelSelector="G" result="d"/>' +
       '<feColorMatrix in="d" type="saturate" values="' + P.sat + '" result="s"/>' +
