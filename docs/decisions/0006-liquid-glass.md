@@ -1,6 +1,10 @@
 # 0006: Liquid glass, the Material way
 
-Status: accepted, which raised surfaces pending (Liquid Glass Lab, 2026-11-03, second round)
+Status: **not adopted** (2026-11-03). The owner shelved liquid glass: "I basically just wanted some transparency on raised
+things to show some depth (not shadows). If what we have is good then that's that." The glass of [0004](0004-glass.md) stays
+as is. This record keeps what was explored in case the idea returns; the lab stays at `explore/liquid-glass.html`.
+
+Previously: accepted, which raised surfaces pending (Liquid Glass Lab, 2026-11-03, second round)
 Builds on [0004](0004-glass.md): same places, same fallbacks, same "text on glass is `on-surface` at AA or better" promise.
 
 ## What the owner said

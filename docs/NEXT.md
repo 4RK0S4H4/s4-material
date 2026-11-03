@@ -1,6 +1,6 @@
 # Where S4 Orion stands (resume here)
 
-Last updated: 2026-11-03 (liquid glass: Material-first direction, FAB question pending, see below). **Phase 6 demo built and published; awaiting owner review, then release 1.0.0.** Working notes for Claude are in [`/CLAUDE.md`](../CLAUDE.md).
+Last updated: 2026-11-03 (liquid glass shelved; next is the end-to-end review, see below). **Phase 6 demo built and published; awaiting owner review, then release 1.0.0.** Working notes for Claude are in [`/CLAUDE.md`](../CLAUDE.md).
 
 ## The brief (original plan, six phases)
 
@@ -52,18 +52,12 @@ needs the iPhone check**: Safari handling of `clip-path` over `backdrop-filter` 
 remaining suspect. If it still flickers there, the fallback is to make the surface solid for the duration of the morph.
 Ask the owner which animations felt worst (sheet from the FAB, dialog, menu, view switch) if any remain.
 
-## Liquid glass (decision 0006, 2026-11-03, round 2)
+## Next session: end-to-end review and bug fixing (owner request, 2026-11-03)
 
-Owner direction: **Material first**: refraction + frosted transparency on raised surfaces, in M3 shapes and elevation;
-no Apple effects (melting, lens, edge highlights, floating pills). Built as the `material` preset in
-`explore/lib/liquid-glass.js` (soft-edge bend, `data-lg-edges` for full-width bars) and the M3 app in
-[`explore/liquid-glass.html`](../explore/liquid-glass.html). Recorded in [0006](decisions/0006-liquid-glass.md).
-Pending: "Material With Liquid Glass" question (FAB glass or solid).
-
-Next, after that answer: build it into the system per 0006's "How it ships": tokens in `tokens/src`, frost values in
-`components/glass/glass.css`, SVG refraction in Chromium (JS in `components/glass/`), WebGL helper for media surfaces,
-gallery + demo, skill wording, `check-glass.mjs` for the 7:1 fixed-tint path. Browser reality: SVG `backdrop-filter:
-url()` is Chromium-only; Safari/Firefox get frosted glass without the bend over DOM.
+Liquid glass is **not adopted** ([0006](decisions/0006-liquid-glass.md)); 0004 glass stays. The owner asked for a fresh
+session to review S4 Orion end to end, fix all bugs, and review this plan. Known: animation bugs, especially the
+**container transform, where symbols (icons, labels) move around** during the morph. Check every component in the
+gallery and every flow in the demo at 390 and 1280, in Chromium, and say plainly what couldn't be checked in Safari.
 
 ## Backlog (open items, not blocking)
 
@@ -90,6 +84,7 @@ url()` is Chromium-only; Safari/Firefox get frosted glass without the bend over 
 - 2026-10-27: Phase 5 (skill, references, check.mjs, inline.mjs, evals, packaged `.skill`); FAB-above-nav-bar fix;
   trigger narrowed; approved by the owner, who installed the skill. Owner will continue in new sessions (different model).
 - 2026-10-27: Phase 6: Pocket Ledger demo built from the skill alone, reviewed; skill/docs/snackbar fixes; hub linked. Next: owner reviews demo on iPhone, then fix the open items in 0005, run the evals (optional), release 1.0.0.
+- 2026-11-03 (end): liquid glass shelved by the owner (0006 not adopted). Next: end-to-end review + bug fixing in a new session.
 - 2026-11-03 (later): round 2: Material-first liquid glass (refraction + frost only), 0006 rewritten; FAB question pending.
 - 2026-11-03: Liquid glass picks recorded (0006); frosted extra liquid material + Frost Level question added. Next: owner picks frost, then build into the system.
 - 2026-10-31: Liquid Glass Lab built (WebGL + SVG refraction engines); awaiting owner picks and an iPhone check. Phase 6 / 1.0.0 status unchanged.

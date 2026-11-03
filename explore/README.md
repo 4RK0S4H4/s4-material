@@ -8,7 +8,7 @@ reviewed, and they save answers in the browser so several labs can be worked thr
 |---|---|
 | `states-shape.html` | States A (stock M3), Shape A (stock M3 Expressive), default color Mono |
 | `motion.html` | Springs D (M3 Expressive) |
-| `liquid-glass.html` | Material with liquid glass: refraction + frost on raised M3 surfaces, adaptive tint 7:1, no Apple effects ([0006](../docs/decisions/0006-liquid-glass.md)); FAB pending |
+| `liquid-glass.html` | Not adopted: liquid glass (refraction + frost) was explored and shelved; 0004 glass stays ([0006](../docs/decisions/0006-liquid-glass.md)) |
 | `transitions.html` | Unfold menus, container transform for dialogs, sheets and list-to-detail, shared axis between views, snackbars slide from the edge |
 
 `lib/` holds the shared review tooling: `review.js` and `questions.js` (the questionnaire), `theme.js` (seed to M3 roles),
