@@ -6,10 +6,18 @@
     var g = document.createElement('div'); g.className = 's4-button-group'; g.setAttribute('data-connected', ''); g.setAttribute('aria-label', label);
     opts.forEach(function (o, i) {
       var b = document.createElement('button'); b.type = 'button'; b.className = 's4-button'; b.dataset.size = 'xs'; b.dataset.variant = 'tonal';
-      b.setAttribute('aria-pressed', i === 0 ? 'true' : 'false'); b.textContent = o[0];
-      b.addEventListener('click', function () { g.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x === b); }); var t = {}; t[key] = o[1]; S4.theme(t); });
+      b.textContent = o[0];
+      b.addEventListener('click', function () { var t = {}; t[key] = o[1]; S4.theme(t); sync(); });
       g.appendChild(b);
     });
+    /* pressed state follows the theme, whoever changed it (a swatch on the page, a saved theme) */
+    function norm(v) { return v == null || v === '' ? 'none' : String(v).toLowerCase(); }
+    function sync() {
+      var cur = norm((S4.theme() || {})[key]);
+      Array.prototype.forEach.call(g.children, function (x, i) { x.setAttribute('aria-pressed', String(norm(opts[i][1]) === cur)); });
+    }
+    sync();
+    document.addEventListener('s4-theme', sync);
     w.appendChild(g); bar.appendChild(w);
   }
   group('Theme', 'mode', [['Device', 'system'], ['Light', 'light'], ['Dark', 'dark']]);

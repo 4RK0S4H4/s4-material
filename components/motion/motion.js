@@ -51,15 +51,16 @@
   }
 
   /* ---------- container transform ----------
-     The source becomes the surface at real size (nothing stretches or reflows): the surface is clipped to the source's
-     rect, corners and color, then its edges open to its own shape. Everything inside rides on the container: the source's
-     label (carried as a copy) and the surface's content are pinned to the container's top center, so nothing slides
-     across it while it grows or shrinks. Opening, the label fades out by 30% and the content fades in from 35%; closing, the content is gone by 20% and the
-     label is back by 60%. Glass surfaces stay
-     solid (no blur, nothing showing through) while the shape moves and turn to glass once it has landed, so nothing
-     behind them is ever seen double, and the shadow fades in after landing instead of being cut by the clip.
-     Closing runs it backwards on the calm (critically damped) spring, so it lands exactly on the source, then the real
-     source is shown again. */
+     The source becomes the surface at real size (nothing stretches or reflows). The surface starts moved onto the source
+     (its top center on the source's top center) and clipped to the source's rect, corners and color; then it travels
+     home while its edges open to its own shape. Everything inside rides on the container: the source's label (carried as
+     a copy) and the surface's content move with it, so nothing slides across it while it grows or shrinks. Where the
+     source reaches past the surface's box (a wide row opening a narrow dialog), a spread shadow in the container color
+     paints the rest. Opening, the label fades out by 30% and the content fades in from 35%; closing, the content is gone
+     by 20% and the label is back by 60%. Glass surfaces stay solid (no blur, nothing showing through) while the shape
+     moves and turn to glass once it has landed, so nothing behind them is ever seen double; the shadow fades in after
+     landing instead of being cut by the clip. Closing runs it backwards on the calm (critically damped) spring, so it
+     lands exactly on the source, then the real source is shown again. */
   function containerTransform(surface, source, opts) {
     opts = opts || {};
     if (!source || !source.isConnected || M.reduced()) return fadeOnly(surface, opts.open);
@@ -68,56 +69,62 @@
     var cs = getComputedStyle(source), ce = getComputedStyle(surface);
     var open = opts.open !== false, name = open ? (opts.spring || 'spatial') : 'spatial-calm';
     var sp = M.spring(name), dur = sp.duration, geo = { duration: dur, easing: landing(sp.easing), fill: 'both' }, lin = { duration: dur, easing: 'linear', fill: 'both' };
-    var from = 'inset(' + (s.top - e.top) + 'px ' + (e.right - s.right) + 'px ' + (e.bottom - s.bottom) + 'px ' + (s.left - e.left) + 'px round ' + corners(cs, s) + ')';
+    /* the surface's box moved so its top center sits on the source's top center */
+    var dx = (s.left + s.width / 2) - (e.left + e.width / 2), dy = s.top - e.top;
+    var at = { top: e.top + dy, left: e.left + dx, right: e.right + dx, bottom: e.bottom + dy };
+    var ins = [s.top - at.top, at.right - s.right, at.bottom - s.bottom, s.left - at.left];
+    var over = Math.max(0, -Math.min.apply(null, ins));   /* how far the source reaches past the moved box */
+    var from = 'inset(' + ins.join('px ') + 'px round ' + corners(cs, s) + ')';
     var to = 'inset(0px 0px 0px 0px round ' + (opts.radius ? [opts.radius, opts.radius, opts.radius, opts.radius].join(' ') : corners(ce, e)) + ')';
-    /* the container's top center travels by (dx, dy) */
-    var dx = (e.left + e.width / 2) - (s.left + s.width / 2), dy = e.top - s.top;
+    var moved = 'translate(' + dx + 'px, ' + dy + 'px)';
     var bgFrom = visibleBg(source), glass = rgba(ce.backgroundColor) || [0, 0, 0, 1], bgTo = ce.backgroundColor, solid = rgb(glass);
     var blur = ce.backdropFilter || ce.webkitBackdropFilter, glassy = glass[3] < 0.999, shadow = ce.boxShadow;
+    var spread = over ? over + parseFloat(corners(ce, e)) + 2 : 0;
+    var paint = function (c) { return spread ? '0 0 0 ' + spread + 'px ' + c : 'none'; };
     /* the source's label rides along inside the surface */
     var ghost = source.cloneNode(true);
     ghost.removeAttribute('id'); ghost.className = source.className + ' s4-ct-ghost';   /* keep the source's own classes: its icon sizes, gaps and type must lay out exactly as on the real thing */
     ghost.setAttribute('aria-hidden', 'true'); ghost.removeAttribute('data-dialog'); ghost.removeAttribute('data-sheet');
-    Object.assign(ghost.style, { left: (s.left - e.left + surface.scrollLeft) + 'px', top: (s.top - e.top + surface.scrollTop) + 'px', width: s.width + 'px', height: s.height + 'px',
+    Object.assign(ghost.style, { left: (s.left - at.left + surface.scrollLeft) + 'px', top: (s.top - at.top + surface.scrollTop) + 'px', width: s.width + 'px', height: s.height + 'px',
       visibility: 'visible',   /* a closing source is hidden (inline) while its surface is open; the copy must not inherit that */
       background: 'transparent', boxShadow: 'none', transition: 'none', animation: 'none', transform: 'none', translate: 'none', scale: 'none', minWidth: '0', maxWidth: 'none',
       padding: cs.padding, fontFamily: cs.fontFamily, fontSize: cs.fontSize, fontWeight: cs.fontWeight, lineHeight: cs.lineHeight, fontFeatureSettings: cs.fontFeatureSettings,
       fontVariantNumeric: cs.fontVariantNumeric, letterSpacing: cs.letterSpacing, textTransform: cs.textTransform, color: cs.color, justifyContent: cs.justifyContent, gap: cs.gap,
       border: cs.borderTopWidth + ' ' + cs.borderTopStyle + ' ' + cs.borderTopColor, borderRadius: cs.borderTopLeftRadius });   /* an outlined source keeps its ring until it fades */
+    var overflow = surface.style.overflow, overflowX = surface.style.overflowX;
+    if (over) {   /* let the copy show past the box (clipped by the shape) without making the surface scroll sideways */
+      if (surface.scrollHeight > surface.clientHeight + 1) surface.style.overflowX = 'hidden'; else surface.style.overflow = 'visible';
+    }
     surface.appendChild(ghost);
     /* the copy is laid out outside the source's own container (list, group…): put anything that landed elsewhere back
-       exactly where it is on the source */
+       exactly where it sits on the source */
+    var gr = rect(ghost);
     Array.prototype.forEach.call(ghost.children, function (g, i) {
       var o = source.children[i]; if (!o) return;
-      var a = o.getBoundingClientRect(), b = g.getBoundingClientRect(), ox = a.left - b.left, oy = a.top - b.top;
+      var a = o.getBoundingClientRect(), b = g.getBoundingClientRect(), ox = (a.left - s.left) - (b.left - gr.left), oy = (a.top - s.top) - (b.top - gr.top);
       if (Math.abs(ox) > 0.5 || Math.abs(oy) > 0.5) g.style.translate = ox + 'px ' + oy + 'px';
     });
     var content = Array.prototype.filter.call(surface.children, function (c) { return c !== ghost; });
-    var overflow = surface.style.overflow;
-    surface.style.overflow = 'hidden';   /* content riding on the container must not make the surface scrollable mid-morph */
     source.style.visibility = 'hidden';
-    var pin = 'translate(' + (-dx) + 'px, ' + (-dy) + 'px)', carry = 'translate(' + dx + 'px, ' + dy + 'px)';
-    var shape = surface.animate(open ? [{ clipPath: from }, { clipPath: to }] : [{ clipPath: to }, { clipPath: from }], geo);
-    ghost.animate(open ? [{ transform: 'none' }, { transform: carry }] : [{ transform: carry }, { transform: 'none' }], geo);
-    content.forEach(function (c) { c.animate(open ? [{ transform: pin }, { transform: 'none' }] : [{ transform: 'none' }, { transform: pin }], geo); });
-    /* color on the same timeline, linear so it can't overshoot either color; solid while the shape moves */
-    surface.animate(open ? [{ backgroundColor: bgFrom }, { backgroundColor: solid, offset: 0.5 }, { backgroundColor: solid }]
-                         : [{ backgroundColor: bgTo }, { backgroundColor: solid, offset: 0.15 }, { backgroundColor: solid, offset: 0.5 }, { backgroundColor: bgFrom }], lin);
-    var still = { boxShadow: 'none', backdropFilter: 'none', webkitBackdropFilter: 'none' };
-    surface.animate(open ? [still, still] : [{ boxShadow: shadow, backdropFilter: blur, webkitBackdropFilter: blur }, Object.assign({ offset: 0.15 }, { boxShadow: 'none', backdropFilter: blur, webkitBackdropFilter: blur }), Object.assign({ offset: 0.1501 }, still), still], lin);
+    var shape = surface.animate(open ? [{ clipPath: from, transform: moved }, { clipPath: to, transform: 'none' }] : [{ clipPath: to, transform: 'none' }, { clipPath: from, transform: moved }], geo);
+    /* color on the same timeline, linear so it can't overshoot either color; solid (no blur, no elevation) while the shape moves */
+    var k = function (bg, edge, offset) { var f = { backgroundColor: bg, boxShadow: paint(edge), backdropFilter: 'none', webkitBackdropFilter: 'none' }; if (offset != null) f.offset = offset; return f; };
+    surface.animate(open ? [k(bgFrom, bgFrom), k(solid, solid, 0.5), k(solid, solid)]
+      : [{ backgroundColor: bgTo, boxShadow: shadow, backdropFilter: blur, webkitBackdropFilter: blur },
+         { backgroundColor: solid, boxShadow: shadow, backdropFilter: blur, webkitBackdropFilter: blur, offset: 0.15 }, k(solid, solid, 0.1501), k(solid, solid, 0.5), k(bgFrom, bgFrom)], lin);
     ghost.animate(open ? [{ opacity: 1 }, { opacity: 0, offset: 0.3 }, { opacity: 0 }] : [{ opacity: 0 }, { opacity: 0, offset: 0.2 }, { opacity: 1, offset: 0.6 }, { opacity: 1 }], lin);
     content.forEach(function (c) {
       c.animate(open ? [{ opacity: 0 }, { opacity: 0, offset: 0.35 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0, offset: 0.2 }, { opacity: 0 }], lin);
     });
     return done(shape).then(function () {
       ghost.remove();
-      surface.style.overflow = overflow;
+      surface.style.overflow = overflow; surface.style.overflowX = overflowX;
       surface.getAnimations().forEach(function (a) { a.cancel(); });
       content.forEach(function (c) { c.getAnimations().forEach(function (a) { a.cancel(); }); });
       if (open) {
         /* the source stays hidden while the surface "is" the source. Landed: the shadow rises and glass turns clear (the
            blur comes on under a still-solid surface, so it never pops) */
-        var settle = M.spring('effects'), o = { duration: settle.duration, easing: 'linear' };
+        var o = { duration: M.spring('effects').duration, easing: 'linear' };
         if (shadow && shadow !== 'none') surface.animate([{ boxShadow: 'none' }, { boxShadow: shadow }], o);
         if (glassy) surface.animate([{ backgroundColor: solid }, { backgroundColor: bgTo }], o);
       }
