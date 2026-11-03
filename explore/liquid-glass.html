@@ -147,7 +147,7 @@ footer a{color:inherit}
           <div class="lgx drag tile" data-lg style="left:60px;top:200px"><b>21°</b>Lisbon</div>
           <div class="lgx drag dot" data-lg style="left:230px;top:250px"><span data-icon="add-circle"></span></div>
         </div>
-        <div class="ctl"><span>Look</span><div class="seg" id="look"><button value="subtle" aria-pressed="false">Subtle</button><button value="liquid" aria-pressed="true">Liquid</button><button value="extra" aria-pressed="false">Extra Liquid</button></div></div>
+        <div class="ctl"><span>Look</span><div class="seg" id="look"><button value="frosted" aria-pressed="true">Frosted Extra Liquid</button><button value="extra" aria-pressed="false">Extra Liquid</button><button value="liquid" aria-pressed="false">Liquid</button><button value="subtle" aria-pressed="false">Subtle</button></div></div>
         <div class="ctl"><span>Text</span><div class="seg" id="textMode"><button value="fixed" aria-pressed="false">Fixed Tint</button><button value="adaptive" aria-pressed="true">Adaptive Tint</button><button value="clear" aria-pressed="false">Apple-Clear</button></div></div>
         <div class="ctl"><span>Engine</span><div class="seg" id="engine"><button value="webgl" aria-pressed="true">Liquid (WebGL)</button><button value="svg" aria-pressed="false">Liquid (SVG, Chrome)</button><button value="off" aria-pressed="false">Today’s Glass</button></div></div>
         <div class="rows" id="sliders"></div>
@@ -174,9 +174,9 @@ footer a{color:inherit}
 <script src="../components/assets/m3color.js"></script>
 <script src="lib/theme.js?v=3"></script>
 <script src="lib/icons.js?v=2"></script>
-<script src="lib/questions.js?v=7"></script>
+<script src="lib/questions.js?v=8"></script>
 <script src="lib/review.js?v=7"></script>
-<script src="lib/liquid-glass.js?v=2"></script>
+<script src="lib/liquid-glass.js?v=3"></script>
 <script>
 const h=html=>{const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild};
 const ic=n=>`<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]||''}</svg>`;
@@ -241,12 +241,14 @@ function drawWall(cv,w,hh,scale){
 }
 
 /* ---------------- tuning ---------------- */
-const SLIDERS=[['bezel','Bezel Width',2,40,1,'px'],['thick','Thickness',0,60,1,'px'],['ior','Index of Refraction',1.1,2.2,.05,''],['blur','Blur',0,20,.5,'px'],['spec','Highlight',0,1.5,.05,''],['sat','Saturation',1,2,.05,''],['merge','Melt Distance',0,40,1,'px']];
+const SLIDERS=[['bezel','Bezel Width',2,40,1,'px'],['thick','Thickness',0,60,1,'px'],['ior','Index of Refraction',1.1,2.2,.05,''],['blur','Blur',0,20,.5,'px'],['spec','Highlight',0,1.5,.05,''],['sat','Saturation',1,2,.05,''],['merge','Melt Distance',0,40,1,'px'],['tint','Frost (Base Tint)',0,.7,.01,''],['minCR','Text Contrast Target',4.5,10,.5,':1']];
 const TEXTMODES={
   fixed:()=>({tint:.6,contrast:dark()?1:.74,bright:dark()?.8:1.1,adaptive:false}),
-  adaptive:()=>({tint:.12,contrast:1,bright:1,adaptive:true}),
+  adaptive:(p)=>({tint:p&&p.tint!=null?p.tint:.12,minCR:p&&p.minCR||4.5,contrast:1,bright:1,adaptive:true}),
   clear:()=>({tint:.22,contrast:1,bright:1,adaptive:false})};
-const state={look:'liquid',text:'adaptive',engine:'webgl',params:{...LiquidGlass.PRESETS.liquid},seed:'mono',mode:'light'};
+const DEF={tint:.12,minCR:4.5};
+const preset=k=>({...DEF,...LiquidGlass.PRESETS[k]});
+const state={look:'frosted',text:'adaptive',engine:'webgl',params:preset('frosted'),seed:'mono',mode:'light'};
 const stages=[];
 
 /* worst-case contrast of on-surface text on fixed-tint glass over pure black or white */
@@ -255,7 +257,7 @@ const lum=c=>{const [r,g,b]=c.map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/
 const cr=(a,b)=>{const [x,y]=[lum(a),lum(b)].sort((p,q)=>q-p);return (x+.05)/(y+.05)};
 function worst(tm){const t=TEXTMODES[tm]();const tint=rgbOf('var(--md-sys-color-surface-container)'),txt=rgbOf('var(--md-sys-color-on-surface)');
   const f=v=>Math.min(255,Math.max(0,((v-127.5)*t.contrast+127.5)*t.bright)),mix=(v)=>tint.map(c=>c*t.tint+v*(1-t.tint));return Math.min(cr(txt,mix(f(0))),cr(txt,mix(f(255))))}
-function contrastText(tm){if(tm==='adaptive')return '<span class="ok">Text ≥ 4.5:1 over anything ✓</span> (tint rises only where the content behind would make text hard to read)';
+function contrastText(tm,p){if(tm==='adaptive')return `<span class="ok">Text ≥ ${((p&&p.minCR)||4.5)}:1 over anything ✓</span> (tint rises only where the content behind would make text hard to read)`;
   const w=worst(tm);return `<span class="${w>=4.5?'ok':'bad'}">Worst case over black or white: ${w.toFixed(1)}:1 ${w>=4.5?'✓':'✗ (fails AA)'}</span>`}
 
 /* ---------------- stages ---------------- */
@@ -303,13 +305,13 @@ function wallStage(root){
 const app=feedStage(document.getElementById('app'),false);setupMenu(document.getElementById('app'));
 const play=wallStage(document.getElementById('play'));
 const live=[app,play];
-function liveParams(){return {...state.params,...TEXTMODES[state.text]()}}
+function liveParams(){return {...state.params,...TEXTMODES[state.text](state.params)}}
 function applyLive(){live.forEach(s=>{s.set(liveParams());if(s.mode!==state.engine)s.setMode(state.engine)});
-  document.getElementById('contrastNote').innerHTML=state.engine==='off'?'Today’s glass: 60% tint with the backdrop compressed, text ≥ 4.5:1 over anything.':contrastText(state.text)+(state.engine==='svg'&&state.text==='adaptive'?' (the SVG engine can’t adapt per pixel; it uses the base tint)':'')}
+  document.getElementById('contrastNote').innerHTML=state.engine==='off'?'Today’s glass: 60% tint with the backdrop compressed, text ≥ 4.5:1 over anything.':contrastText(state.text,state.params)+(state.engine==='svg'&&state.text==='adaptive'?' (the SVG engine can’t adapt per pixel; it uses the base tint)':'')}
 const sl=document.getElementById('sliders');
 SLIDERS.forEach(([k,label,min,max,step,unit])=>{const l=h(`<label>${label}<output></output><input type="range" min="${min}" max="${max}" step="${step}"></label>`);const inp=l.querySelector('input'),out=l.querySelector('output');
-  inp.value=state.params[k];out.textContent=state.params[k]+unit;inp.addEventListener('input',()=>{state.params[k]=+inp.value;out.textContent=inp.value+unit;applyLive()});l.dataset.k=k;sl.appendChild(l)});
-const syncSliders=()=>sl.querySelectorAll('label').forEach(l=>{const k=l.dataset.k,u=SLIDERS.find(s=>s[0]===k)[5];l.querySelector('input').value=state.params[k];l.querySelector('output').textContent=state.params[k]+u});
+  inp.value=state.params[k]??DEF[k];out.textContent=(state.params[k]??DEF[k])+unit;inp.addEventListener('input',()=>{state.params[k]=+inp.value;out.textContent=inp.value+unit;applyLive()});l.dataset.k=k;sl.appendChild(l)});
+const syncSliders=()=>sl.querySelectorAll('label').forEach(l=>{const k=l.dataset.k,u=SLIDERS.find(s=>s[0]===k)[5];const v=state.params[k]??DEF[k];l.querySelector('input').value=v;l.querySelector('output').textContent=v+u});
 
 /* ---------------- question previews ---------------- */
 function miniPhone(){return h(`<div class="lg-stage phone mini"><div class="lg-scroll"><canvas class="lg-scene"></canvas></div>
@@ -321,7 +323,11 @@ function miniPlay(){return h(`<div class="lg-stage play small"><canvas class="lg
   <div class="lgx drag dot" data-lg style="left:0;top:0;width:56px;height:56px" data-orbit="2"><span data-icon="add-circle"></span></div></div>`)}
 const LOOKS={A:{look:'subtle'},B:{look:'liquid'},C:{look:'extra'},D:{engine:'off'}};
 const SECTIONS=[
- {id:'look',title:'Refraction',desc:'How much the glass bends what’s behind it. Scroll each app so the photos and the paragraph pass under the nav bar; press and slide along the nav bar for the lens.',opts:[
+ {id:'frost',title:'Frost Level',tag:'New',desc:'Your picks: extra liquid edges, adaptive tint, melting, on every glass surface. You asked for more blur and more frost so colors behind never make text hard to read. All three keep the extra liquid bend at the rim; they differ in blur, how firm the glass is, how much color comes through, and the contrast the text is guaranteed (adaptive tint raises the frost wherever needed to reach it).',opts:[
+  {k:'A',name:'Light Frost',desc:'8px blur, 24% base tint, colors a little calmer. Text at least 5.5:1 over anything; the outer rim stays clearer so the bend shows.',set:{frost:'frostLight'}},
+  {k:'B',name:'Frosted',tag:'Suggested',desc:'12px blur, 34% base tint, colors muted. Text at least 7:1 (AAA) over anything.',set:{frost:'frosted'}},
+  {k:'C',name:'Heavy Frost',desc:'18px blur, 46% base tint, no extra color. Text at least 7:1; closest to frosted glass, the bend shows mostly at the rim.',set:{frost:'frostHeavy'}}]},
+ {id:'look',title:'Refraction',desc:'Answered: C, Extra Liquid. How much the glass bends what’s behind it. Scroll each app so the photos and the paragraph pass under the nav bar; press and slide along the nav bar for the lens.',opts:[
   {k:'A',name:'Subtle',desc:'A thin bevel that bends only the outer few pixels, with more blur. Calm, close to frosted glass with a lit edge.',set:{look:'subtle'}},
   {k:'B',name:'Liquid',tag:'Closest to Apple',desc:'A wide, rounded bevel: lines bow noticeably near the rim, a slight blur so nothing looks pixelated, and a bright edge.',set:{look:'liquid'}},
   {k:'C',name:'Extra Liquid',desc:'Thick glass: strong bending with a slight blur. The most dramatic.',set:{look:'extra'}},
@@ -348,7 +354,7 @@ SECTIONS.forEach(sec=>{
   const el=h(`<section class="sec"><h2>${sec.title}</h2><p>${sec.desc}</p><div class="cards rv-group" role="radiogroup" aria-label="${sec.title}"></div></section>`);host.appendChild(el);
   sec.opts.forEach(o=>{let pv=null,side=null;
     if(!sec.noPreview){pv=h('<div class="pv"></div>');const root=sec.id==='melt'?miniPlay():miniPhone();pv.appendChild(root);
-      if(sec.id==='text'){side=h('<div class="note" aria-live="polite"></div>')}
+      if(sec.id==='text'||sec.id==='frost'){side=h('<div class="note" aria-live="polite"></div>')}
       previews.push({root,set:o.set,sec:sec.id,side})}
     const card=S4Review.card({pick:`${sec.id}:${o.k}`,letter:o.k,title:o.name,desc:o.desc,tag:o.tag||'',preview:pv,side});
     if(side)side.parentElement.removeAttribute('data-no-pick');
@@ -358,10 +364,11 @@ previews.forEach(p=>{const scene=p.root.querySelector('.lg-scene');fillIcons(p.r
   else{p.stage=LiquidGlass.stage({root:p.root,scene,source:sharedFeed,mode:'webgl'});const nav=p.root.querySelector('.nav');
     [['home-2','Home'],['bill-list','Bills'],['wallet','Budget'],['settings','Settings']].forEach(([i,l],k)=>nav.appendChild(h(`<button class="tab" role="tab" aria-selected="${k===1}"><i>${ic(i)}</i>${l}</button>`)));setupNav(p.root)}});
 function previewParams(p){
-  if(p.sec==='look'){const look=p.set.look||'liquid';return {...LiquidGlass.PRESETS[look],...TEXTMODES.adaptive()}}
-  if(p.sec==='text')return {...LiquidGlass.PRESETS.liquid,...TEXTMODES[p.set.text]()};
-  return {...LiquidGlass.PRESETS.liquid,...TEXTMODES.adaptive(),merge:p.set.merge}}
-function refreshPreviews(){previews.forEach(p=>{p.stage.set(previewParams(p));p.stage.setMode(p.set.engine||'webgl');if(p.side)p.side.innerHTML=contrastText(p.set.text)})}
+  if(p.sec==='frost'){const q=preset(p.set.frost);return {...q,...TEXTMODES.adaptive(q)}}
+  if(p.sec==='look'){const q=preset(p.set.look||'liquid');return {...q,...TEXTMODES.adaptive(q)}}
+  if(p.sec==='text')return {...preset('frosted'),...TEXTMODES[p.set.text](preset('frosted'))};
+  return {...preset('frosted'),...TEXTMODES.adaptive(preset('frosted')),merge:p.set.merge}}
+function refreshPreviews(){previews.forEach(p=>{p.stage.set(previewParams(p));p.stage.setMode(p.set.engine||'webgl');if(p.side)p.side.innerHTML=p.sec==='frost'?contrastText('adaptive',preset(p.set.frost)):contrastText(p.set.text)})}
 function copyInto(cv,src,w){cv.width=src.width;cv.height=src.height;cv.style.width=w+'px';cv.style.height=(src.height/src.width*w)+'px';cv.getContext('2d').drawImage(src,0,0)}
 function drawAll(){
   app.draw();play.draw();
@@ -383,7 +390,7 @@ function seg(id,fn){document.getElementById(id).addEventListener('click',e=>{con
 function pressSeg(id,v){document.getElementById(id).querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.value===v))}
 seg('theme',v=>{state.mode=v;S4Theme.apply(state.seed,v);drawAll();applyLive();refreshPreviews()});
 seg('seed',v=>{state.seed=v;S4Theme.apply(v,state.mode);drawAll();applyLive();refreshPreviews()});
-seg('look',v=>{state.look=v;state.params={...LiquidGlass.PRESETS[v]};syncSliders();applyLive()});
+seg('look',v=>{state.look=v;state.params=preset(v);syncSliders();applyLive()});
 seg('textMode',v=>{state.text=v;applyLive()});
 seg('engine',v=>{state.engine=v;applyLive()});
 const eng=document.getElementById('engine'),note=document.getElementById('engineNote');
@@ -394,7 +401,7 @@ let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{drawAl
 S4Theme.apply(state.seed,state.mode);
 document.fonts.load('600 16px Inter').then(()=>document.fonts.ready).then(()=>{drawAll();applyLive();refreshPreviews();
   const sc=document.querySelector('#app .lg-scroll');sc.scrollTop=60;previews.forEach(p=>{const s=p.root.querySelector('.lg-scroll');if(s)s.scrollTop=90})});
-S4Review.page('liquid',{capture:{'look:Tuned':()=>SLIDERS.map(([k,l,,,,u])=>`${l} ${state.params[k]}${u}`).join(', ')+`; text: ${state.text}`}});
+S4Review.page('liquid',{capture:{'frost:Tuned':()=>SLIDERS.map(([k,l,,,,u])=>`${l} ${state.params[k]??DEF[k]}${u}`).join(', '),'look:Tuned':()=>SLIDERS.map(([k,l,,,,u])=>`${l} ${state.params[k]}${u}`).join(', ')+`; text: ${state.text}`}});
 </script>
 </body>
 </html>

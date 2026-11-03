@@ -1,6 +1,6 @@
 # Where S4 Orion stands (resume here)
 
-Last updated: 2026-10-31 (Liquid Glass Lab added, see below). **Phase 6 demo built and published; awaiting owner review, then release 1.0.0.** Working notes for Claude are in [`/CLAUDE.md`](../CLAUDE.md).
+Last updated: 2026-11-03 (liquid glass decided, frost level pending, see below). **Phase 6 demo built and published; awaiting owner review, then release 1.0.0.** Working notes for Claude are in [`/CLAUDE.md`](../CLAUDE.md).
 
 ## The brief (original plan, six phases)
 
@@ -52,23 +52,18 @@ needs the iPhone check**: Safari handling of `clip-path` over `backdrop-filter` 
 remaining suspect. If it still flickers there, the fallback is to make the surface solid for the duration of the morph.
 Ask the owner which animations felt worst (sheet from the FAB, dialog, menu, view switch) if any remain.
 
-## Liquid Glass Lab (2026-10-31, awaiting owner picks)
+## Liquid glass (decision 0006, 2026-11-03)
 
-The owner asked for glass that looks like Apple's Liquid Glass (light bending at curved edges, not just blur).
-[`explore/liquid-glass.html`](../explore/liquid-glass.html) has a working version: try-it app + playground with
-tuning sliders, and questions on refraction strength, text legibility (fixed / adaptive / Apple-clear tint), melting,
-where it goes, and how it runs on the iPhone. Engine: `explore/lib/liquid-glass.js`.
-Owner's first reaction: "looks really good"; asked for no rainbow refraction on white and a slight blur against
-pixelation (done: color split removed, blur floor ~4px plus extra blur along the rim). Still to answer: the questions.
+Owner picked in [`explore/liquid-glass.html`](../explore/liquid-glass.html): extra liquid refraction, adaptive tint,
+melting, every glass surface; smooth on iPhone. Note: "more blur and slightly more frost, colors sometimes make text
+hard to read". Done: added the frosted extra liquid material (`frosted` preset in `explore/lib/liquid-glass.js`) and a
+**Frost Level** question (light / frosted / heavy). Recorded in [0006](decisions/0006-liquid-glass.md).
 
-- **Browser reality:** SVG filters in `backdrop-filter` (refraction over any DOM) work only in Chromium; Safari and
-  Firefox parse them and render nothing (WebKit fix in review as of mid-2026). WebGL2 works everywhere but only over
-  backdrops the page draws itself (the lab draws its feed into a canvas). Verified in headless Chromium only (both
-  engines); the iPhone (WebGL path) is unverified until the owner answers the "On your iPhone" question.
-- **If adopted:** record a decision 0006; add `--s4-glass-liquid-*` tokens (bezel, thickness, index, blur, color
-  split, highlight, melt); ship SVG refraction in Chromium + today's glass with the specular rim elsewhere, and a
-  WebGL helper for media surfaces (photos, maps, charts). Extend `check-glass.mjs` if the adaptive tint is chosen
-  (it holds per pixel by construction, but the fallback paths still need the fixed-tint proof).
+Next: when the owner answers Frost Level, finalize 0006 and build it into the system per 0006's "How it ships":
+`--s4-glass-liquid-*` tokens in `tokens/src`, liquid rim + shadow in `components/glass/glass.css`, SVG refraction in
+Chromium (JS in `components/glass/`), a WebGL helper for media surfaces, gallery + demo update, skill wording,
+`check-glass.mjs` coverage for the SVG path's fixed tint. Browser reality: SVG `backdrop-filter: url()` is Chromium-only;
+Safari/Firefox render nothing (WebKit fix in review), so they keep 0004 glass + rim over DOM.
 
 ## Backlog (open items, not blocking)
 
@@ -95,5 +90,6 @@ pixelation (done: color split removed, blur floor ~4px plus extra blur along the
 - 2026-10-27: Phase 5 (skill, references, check.mjs, inline.mjs, evals, packaged `.skill`); FAB-above-nav-bar fix;
   trigger narrowed; approved by the owner, who installed the skill. Owner will continue in new sessions (different model).
 - 2026-10-27: Phase 6: Pocket Ledger demo built from the skill alone, reviewed; skill/docs/snackbar fixes; hub linked. Next: owner reviews demo on iPhone, then fix the open items in 0005, run the evals (optional), release 1.0.0.
+- 2026-11-03: Liquid glass picks recorded (0006); frosted extra liquid material + Frost Level question added. Next: owner picks frost, then build into the system.
 - 2026-10-31: Liquid Glass Lab built (WebGL + SVG refraction engines); awaiting owner picks and an iPhone check. Phase 6 / 1.0.0 status unchanged.
 - 2026-10-28: polish pass on motion and connected button group corners after owner review (see above); demo bundle refreshed. Next: owner re-checks on iPhone, then 0005 open items, evals, release 1.0.0.

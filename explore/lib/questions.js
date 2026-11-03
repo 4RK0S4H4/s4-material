@@ -45,6 +45,7 @@ window.S4_REVIEW_DEMOS = [
   {
     id: 'liquid', title: 'Liquid Glass Lab', href: 'explore/liquid-glass.html',
     questions: [
+      { id: 'frost', label: 'Frost level', options: [{ v: 'A', label: 'Light frost' }, { v: 'B', label: 'Frosted' }, { v: 'C', label: 'Heavy frost' }, { v: 'Tuned', label: 'My tuned values' }] },
       { id: 'look', label: 'Refraction', options: [{ v: 'A', label: 'Subtle' }, { v: 'B', label: 'Liquid' }, { v: 'C', label: 'Extra liquid' }, { v: 'D', label: 'Keep today’s glass (no refraction)' }, { v: 'Tuned', label: 'My tuned values' }] },
       { id: 'text', label: 'Keeping text readable', options: [{ v: 'A', label: 'Fixed tint (today’s guarantee)' }, { v: 'B', label: 'Adaptive tint' }, { v: 'C', label: 'Apple-clear, not guaranteed' }, { v: 'Other', label: 'Describe in notes' }] },
       { id: 'melt', label: 'Shapes melting together', options: [{ v: 'A', label: 'Melt' }, { v: 'B', label: 'Stay separate' }, { v: 'Other', label: 'Describe in notes' }] },

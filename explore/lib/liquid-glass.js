@@ -21,7 +21,12 @@ window.LiquidGlass = (function () {
   var PRESETS = {
     subtle: { bezel: 10, thick: 10, ior: 1.5, blur: 8, ca: 0, spec: 0.55, sat: 1.5, merge: 18, mag: 1.08 },
     liquid: { bezel: 20, thick: 24, ior: 1.5, blur: 4, ca: 0, spec: 0.9, sat: 1.6, merge: 22, mag: 1.18 },
-    extra:  { bezel: 28, thick: 44, ior: 1.6, blur: 3, ca: 0, spec: 1, sat: 1.7, merge: 28, mag: 1.3 }
+    extra:  { bezel: 28, thick: 44, ior: 1.6, blur: 3, ca: 0, spec: 1, sat: 1.7, merge: 28, mag: 1.3 },
+    /* the owner's pick (2026-11-03): extra-liquid edges, frosted. Frost = more blur, a firmer base tint, calmer colors
+       and a higher text contrast target for the adaptive tint. Light / medium / heavy are on the lab's Frost question. */
+    frostLight:  { bezel: 28, thick: 44, ior: 1.6, blur: 8, ca: 0, spec: 1, sat: 1.3, merge: 28, mag: 1.3, tint: 0.24, minCR: 5.5 },
+    frosted:     { bezel: 28, thick: 44, ior: 1.6, blur: 12, ca: 0, spec: 1, sat: 1.15, merge: 28, mag: 1.3, tint: 0.34, minCR: 7 },
+    frostHeavy:  { bezel: 28, thick: 44, ior: 1.6, blur: 18, ca: 0, spec: 1, sat: 1, merge: 28, mag: 1.3, tint: 0.46, minCR: 7 }
   };
 
   /* ---------------- shared math (also used for the SVG maps) ---------------- */
@@ -92,6 +97,9 @@ window.LiquidGlass = (function () {
     ' col=grade(col);',
     ' float ta=uTintA*(layer>.5?.6:1.);',
     ' if(uAdaptive>.5){vec3 soft=grade(tap(q,max(log2(18.*uTexScale),0.)));ta=max(ta,max(need(col),need(soft)));}',
+    /* nothing is ever placed in the outer 8px of a glass shape (padding), so the guarantee can relax there:
+       the rim, where the bend is strongest, stays clearer and keeps the liquid edge visible under heavy frost */
+    ' if(uAdaptive>.5)ta*=mix(.3,1.,smoothstep(1.,8.,depth));',
     ' col=mix(col,uTint,ta);',
     ' vec2 L=normalize(vec2(-.55,-.85));float k=dot(n,L);',
     ' float lit=pow(max(k,0.),1.5)+.55*pow(max(-k,0.),1.5);',
