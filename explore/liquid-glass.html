@@ -98,6 +98,25 @@ footer a{color:inherit}
 .menu button[aria-checked=true]{background:color-mix(in srgb,var(--md-sys-color-on-surface) 10%,transparent);font-weight:600}
 .menu button:last-child{margin-bottom:6px}
 
+/* Material layout: full-width M3 top app bar and nav bar, M3 menu, solid FAB; glass refracts only at the edge that
+   faces content; M3 elevation shadows, no glow and no specular edge */
+.m3 .appbar{left:0;right:0;top:0;height:64px;border-radius:0;display:flex;align-items:center;gap:0;padding:0 4px}
+.m3 .appbar .t{flex:1;font-size:22px;line-height:28px;padding-left:4px}
+.m3 .navbar{left:0;right:0;bottom:0;height:80px;border-radius:0;padding:0 8px;display:flex;align-items:flex-start;padding-top:12px;touch-action:auto}
+.m3 .navbar .tab{gap:4px}
+.m3 .menu{right:8px;top:60px;width:200px;border-radius:var(--md-sys-shape-corner-large);padding:0 4px;box-shadow:var(--md-sys-elevation-level2)}
+.m3 .menu button{border-radius:var(--md-sys-shape-corner-medium)}
+.m3 .fab{position:absolute;z-index:2;right:16px;bottom:96px;width:56px;height:56px;border:0;display:grid;place-items:center;cursor:pointer;
+  border-radius:var(--md-sys-shape-corner-large);background:var(--md-sys-color-primary-container);color:var(--md-sys-color-on-primary-container);box-shadow:var(--md-sys-elevation-level3)}
+.m3 .fab.lgx{background:transparent;color:var(--md-sys-color-on-surface)}
+.m3 .fab svg{width:24px;height:24px}
+[data-lg-mode=svg] .m3 .lgx,[data-lg-mode=svg].m3 .lgx{box-shadow:none}
+[data-lg-mode=svg].m3 .menu,[data-lg-mode=svg].m3 .fab.lgx{box-shadow:var(--md-sys-elevation-level2)}
+.mini.m3 .appbar{height:56px}.mini.m3 .appbar .t{font-size:18px}
+.mini.m3 .navbar{height:72px;padding-top:10px}
+.mini.m3 .menu{top:52px;width:168px}.mini.m3 .menu button{min-height:38px;font-size:14px}
+.mini.m3 .fab{bottom:84px;right:12px}
+
 /* playground */
 .play{height:420px;border-radius:28px;box-shadow:0 0 0 1px var(--md-sys-color-outline-variant);touch-action:none}
 .play.small{height:300px;width:100%;border-radius:24px}
@@ -125,20 +144,19 @@ footer a{color:inherit}
 
   <section class="sec">
     <h2>Try It</h2>
-    <p>The app on the left uses the S4 Orion color roles, type and icons; only the glass is new. The controls change both the app and the playground.</p>
+    <p>The app on the left is plain S4 Orion (M3 app bar, nav bar, menu and FAB); only the glass material is new: content bends at the edge of each raised surface and shows through, frosted. Open the menu (filter icon). The controls change both the app and the playground.</p>
     <div class="try">
-      <div class="lg-stage phone" id="app">
+      <div class="lg-stage phone m3" id="app">
         <div class="lg-scroll"><canvas class="lg-scene"></canvas></div>
-        <div class="lgx top-l" data-lg><button class="ib" aria-label="Account" data-icon="user-circle"></button></div>
-        <div class="lgx top-r" data-lg><button class="ib" aria-label="Filter" data-icon="filter"></button><button class="ib" aria-label="More" aria-haspopup="menu" aria-expanded="false" data-icon="menu-dots" id="moreBtn"></button></div>
+        <div class="lgx appbar" data-lg data-lg-edges="bottom"><button class="ib" aria-label="Menu" data-icon="menu-dots"></button><span class="t">Library</span><button class="ib" aria-label="Search" data-icon="magnifer"></button><button class="ib" aria-label="More" aria-haspopup="menu" aria-expanded="false" data-icon="filter" id="moreBtn"></button></div>
         <div class="lgx menu" data-lg role="menu" aria-label="Sort by" hidden><small>Sort By</small>
           <button role="menuitemradio" aria-checked="true"><span data-icon="check"></span>Date Added</button>
           <button role="menuitemradio" aria-checked="false"><span></span>Name</button>
           <button role="menuitemradio" aria-checked="false"><span></span>Amount</button>
           <button role="menuitemradio" aria-checked="false"><span></span>Vendor</button>
         </div>
-        <div class="lgx nav" data-lg role="tablist" aria-label="Main"></div>
-        <div class="lgx lens" data-lg="lens" aria-hidden="true"></div>
+        <button class="fab" aria-label="Add" data-icon="add-circle"></button>
+        <div class="lgx nav navbar" data-lg data-lg-edges="top" role="tablist" aria-label="Main"></div>
       </div>
       <div class="tune rv">
         <div class="lg-stage play" id="play"><canvas class="lg-scene"></canvas>
@@ -147,7 +165,7 @@ footer a{color:inherit}
           <div class="lgx drag tile" data-lg style="left:60px;top:200px"><b>21°</b>Lisbon</div>
           <div class="lgx drag dot" data-lg style="left:230px;top:250px"><span data-icon="add-circle"></span></div>
         </div>
-        <div class="ctl"><span>Look</span><div class="seg" id="look"><button value="frosted" aria-pressed="true">Frosted Extra Liquid</button><button value="extra" aria-pressed="false">Extra Liquid</button><button value="liquid" aria-pressed="false">Liquid</button><button value="subtle" aria-pressed="false">Subtle</button></div></div>
+        <div class="ctl"><span>Look</span><div class="seg" id="look"><button value="material" aria-pressed="true">Material Liquid</button><button value="frosted" aria-pressed="false">Frosted Extra Liquid</button><button value="extra" aria-pressed="false">Extra Liquid</button><button value="liquid" aria-pressed="false">Liquid</button><button value="subtle" aria-pressed="false">Subtle</button></div></div>
         <div class="ctl"><span>Text</span><div class="seg" id="textMode"><button value="fixed" aria-pressed="false">Fixed Tint</button><button value="adaptive" aria-pressed="true">Adaptive Tint</button><button value="clear" aria-pressed="false">Apple-Clear</button></div></div>
         <div class="ctl"><span>Engine</span><div class="seg" id="engine"><button value="webgl" aria-pressed="true">Liquid (WebGL)</button><button value="svg" aria-pressed="false">Liquid (SVG, Chrome)</button><button value="off" aria-pressed="false">Today’s Glass</button></div></div>
         <div class="rows" id="sliders"></div>
@@ -174,9 +192,9 @@ footer a{color:inherit}
 <script src="../components/assets/m3color.js"></script>
 <script src="lib/theme.js?v=3"></script>
 <script src="lib/icons.js?v=2"></script>
-<script src="lib/questions.js?v=8"></script>
+<script src="lib/questions.js?v=9"></script>
 <script src="lib/review.js?v=7"></script>
-<script src="lib/liquid-glass.js?v=3"></script>
+<script src="lib/liquid-glass.js?v=5"></script>
 <script>
 const h=html=>{const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild};
 const ic=n=>`<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]||''}</svg>`;
@@ -248,7 +266,7 @@ const TEXTMODES={
   clear:()=>({tint:.22,contrast:1,bright:1,adaptive:false})};
 const DEF={tint:.12,minCR:4.5};
 const preset=k=>({...DEF,...LiquidGlass.PRESETS[k]});
-const state={look:'frosted',text:'adaptive',engine:'webgl',params:preset('frosted'),seed:'mono',mode:'light'};
+const state={look:'material',text:'adaptive',engine:'webgl',params:preset('material'),seed:'mono',mode:'light'};
 const stages=[];
 
 /* worst-case contrast of on-surface text on fixed-tint glass over pure black or white */
@@ -314,20 +332,25 @@ SLIDERS.forEach(([k,label,min,max,step,unit])=>{const l=h(`<label>${label}<outpu
 const syncSliders=()=>sl.querySelectorAll('label').forEach(l=>{const k=l.dataset.k,u=SLIDERS.find(s=>s[0]===k)[5];const v=state.params[k]??DEF[k];l.querySelector('input').value=v;l.querySelector('output').textContent=v+u});
 
 /* ---------------- question previews ---------------- */
-function miniPhone(){return h(`<div class="lg-stage phone mini"><div class="lg-scroll"><canvas class="lg-scene"></canvas></div>
-  <div class="lgx top-r" data-lg><button class="ib" aria-label="Filter" data-icon="filter"></button><button class="ib" aria-label="More" data-icon="menu-dots"></button></div>
-  <div class="lgx nav" data-lg role="tablist" aria-label="Main"></div><div class="lgx lens" data-lg="lens" aria-hidden="true"></div></div>`)}
+function miniPhone(o={}){return h(`<div class="lg-stage phone mini m3"><div class="lg-scroll"><canvas class="lg-scene"></canvas></div>
+  <div class="lgx appbar" data-lg data-lg-edges="bottom"><button class="ib" aria-label="Menu" data-icon="menu-dots"></button><span class="t">Library</span><button class="ib" aria-label="Filter" data-icon="filter"></button></div>
+  ${o.menu?`<div class="lgx menu" data-lg role="menu" aria-label="Sort by" style="height:auto"><small>Sort By</small><button aria-checked="true"><span data-icon="check"></span>Date Added</button><button><span></span>Name</button><button><span></span>Amount</button></div>`:''}
+  <button class="fab${o.glassFab?' lgx':''}" ${o.glassFab?'data-lg':''} aria-label="Add" data-icon="add-circle"></button>
+  <div class="lgx nav navbar" data-lg data-lg-edges="top" role="tablist" aria-label="Main"></div></div>`)}
 function miniPlay(){return h(`<div class="lg-stage play small"><canvas class="lg-scene"></canvas>
   <div class="lgx drag pill" data-lg style="left:20px;top:20px;width:150px;height:56px"><span data-icon="home-2"></span><span data-icon="magnifer"></span><span data-icon="bell"></span></div>
   <div class="lgx drag ball" data-lg style="left:0;top:0;width:64px;height:64px" data-orbit><span data-icon="star"></span></div>
   <div class="lgx drag dot" data-lg style="left:0;top:0;width:56px;height:56px" data-orbit="2"><span data-icon="add-circle"></span></div></div>`)}
 const LOOKS={A:{look:'subtle'},B:{look:'liquid'},C:{look:'extra'},D:{engine:'off'}};
 const SECTIONS=[
- {id:'frost',title:'Frost Level',tag:'New',desc:'Your picks: extra liquid edges, adaptive tint, melting, on every glass surface. You asked for more blur and more frost so colors behind never make text hard to read. All three keep the extra liquid bend at the rim; they differ in blur, how firm the glass is, how much color comes through, and the contrast the text is guaranteed (adaptive tint raises the frost wherever needed to reach it).',opts:[
+ {id:'raised',title:'Material With Liquid Glass',desc:'Your direction: Material first, with glass that bends light and lets content show through, on raised surfaces only. No melting, no lens, no edge highlights, no floating pills: M3 bars, menu and FAB, with M3 elevation shadows. Only the edge that faces content bends (the bottom of the app bar, the top of the nav bar). Uses your picks: Liquid refraction, Frosted, adaptive tint (text ≥ 7:1). Which raised surfaces get it?',opts:[
+  {k:'A',name:'Bars, Menus, Sheets, Dialogs',tag:'Same places as today',desc:'The surfaces that float over content (app bar, nav bar, toolbars, menus, sheets, dialogs). Buttons and the FAB stay solid color.',set:{fab:false}},
+  {k:'B',name:'Also the FAB',desc:'As A, and the FAB becomes glass too, with its icon in the text color. Content stays solid.',set:{fab:true}}]},
+ {id:'frost',title:'Frost Level',desc:'Answered: B, Frosted. Your picks: extra liquid edges, adaptive tint, melting, on every glass surface. You asked for more blur and more frost so colors behind never make text hard to read. All three keep the extra liquid bend at the rim; they differ in blur, how firm the glass is, how much color comes through, and the contrast the text is guaranteed (adaptive tint raises the frost wherever needed to reach it).',opts:[
   {k:'A',name:'Light Frost',desc:'8px blur, 24% base tint, colors a little calmer. Text at least 5.5:1 over anything; the outer rim stays clearer so the bend shows.',set:{frost:'frostLight'}},
   {k:'B',name:'Frosted',tag:'Suggested',desc:'12px blur, 34% base tint, colors muted. Text at least 7:1 (AAA) over anything.',set:{frost:'frosted'}},
   {k:'C',name:'Heavy Frost',desc:'18px blur, 46% base tint, no extra color. Text at least 7:1; closest to frosted glass, the bend shows mostly at the rim.',set:{frost:'frostHeavy'}}]},
- {id:'look',title:'Refraction',desc:'Answered: C, Extra Liquid. How much the glass bends what’s behind it. Scroll each app so the photos and the paragraph pass under the nav bar; press and slide along the nav bar for the lens.',opts:[
+ {id:'look',title:'Refraction',desc:'Answered: B, Liquid. How much the glass bends what’s behind it. Scroll each app so the photos and the paragraph pass under the nav bar; press and slide along the nav bar for the lens.',opts:[
   {k:'A',name:'Subtle',desc:'A thin bevel that bends only the outer few pixels, with more blur. Calm, close to frosted glass with a lit edge.',set:{look:'subtle'}},
   {k:'B',name:'Liquid',tag:'Closest to Apple',desc:'A wide, rounded bevel: lines bow noticeably near the rim, a slight blur so nothing looks pixelated, and a bright edge.',set:{look:'liquid'}},
   {k:'C',name:'Extra Liquid',desc:'Thick glass: strong bending with a slight blur. The most dramatic.',set:{look:'extra'}},
@@ -336,7 +359,7 @@ const SECTIONS=[
   {k:'A',name:'Fixed Tint',tag:'Today’s guarantee',desc:'60% tint and the backdrop is gently compressed, exactly as today. AA over anything, but the tint hides much of the refraction.',set:{text:'fixed'}},
   {k:'B',name:'Adaptive Tint',desc:'Very clear (12% tint) over calm content; wherever what’s behind would make text hard to read, the tint rises just enough to keep 4.5:1. Clear and guaranteed.',set:{text:'adaptive'}},
   {k:'C',name:'Apple-Clear',desc:'22% tint everywhere, like iOS. The clearest look, but text can fall below AA over busy or very light content.',set:{text:'clear'}}]},
- {id:'melt',title:'Shapes Melting Together',desc:'In Liquid Glass, glass shapes that come close merge like drops, and menus grow out of their button. Watch the shapes drift, or drag them.',opts:[
+ {id:'melt',title:'Shapes Melting Together',desc:'Dropped (your note: refraction and transparency, not the liquid effects). '+'In Liquid Glass, glass shapes that come close merge like drops, and menus grow out of their button. Watch the shapes drift, or drag them.',opts:[
   {k:'A',name:'Melt',tag:'Apple-like',desc:'Shapes within about 22px pull together and fuse; the menu in the app above grows out of its button pill.',set:{merge:22}},
   {k:'B',name:'Stay Separate',desc:'Each glass shape keeps its own outline, even when touching.',set:{merge:0}}]},
  {id:'where',title:'Where Liquid Glass Goes',desc:'Glass stays off content either way; this decides which glass surfaces get the liquid material.',noPreview:true,opts:[
@@ -353,7 +376,7 @@ const host=document.getElementById('sections');
 SECTIONS.forEach(sec=>{
   const el=h(`<section class="sec"><h2>${sec.title}</h2><p>${sec.desc}</p><div class="cards rv-group" role="radiogroup" aria-label="${sec.title}"></div></section>`);host.appendChild(el);
   sec.opts.forEach(o=>{let pv=null,side=null;
-    if(!sec.noPreview){pv=h('<div class="pv"></div>');const root=sec.id==='melt'?miniPlay():miniPhone();pv.appendChild(root);
+    if(!sec.noPreview){pv=h('<div class="pv"></div>');const root=sec.id==='melt'?miniPlay():miniPhone(sec.id==='raised'?{menu:true,glassFab:o.set.fab}:{});pv.appendChild(root);
       if(sec.id==='text'||sec.id==='frost'){side=h('<div class="note" aria-live="polite"></div>')}
       previews.push({root,set:o.set,sec:sec.id,side})}
     const card=S4Review.card({pick:`${sec.id}:${o.k}`,letter:o.k,title:o.name,desc:o.desc,tag:o.tag||'',preview:pv,side});
@@ -364,6 +387,7 @@ previews.forEach(p=>{const scene=p.root.querySelector('.lg-scene');fillIcons(p.r
   else{p.stage=LiquidGlass.stage({root:p.root,scene,source:sharedFeed,mode:'webgl'});const nav=p.root.querySelector('.nav');
     [['home-2','Home'],['bill-list','Bills'],['wallet','Budget'],['settings','Settings']].forEach(([i,l],k)=>nav.appendChild(h(`<button class="tab" role="tab" aria-selected="${k===1}"><i>${ic(i)}</i>${l}</button>`)));setupNav(p.root)}});
 function previewParams(p){
+  if(p.sec==='raised'){const q=preset('material');return {...q,...TEXTMODES.adaptive(q)}}
   if(p.sec==='frost'){const q=preset(p.set.frost);return {...q,...TEXTMODES.adaptive(q)}}
   if(p.sec==='look'){const q=preset(p.set.look||'liquid');return {...q,...TEXTMODES.adaptive(q)}}
   if(p.sec==='text')return {...preset('frosted'),...TEXTMODES[p.set.text](preset('frosted'))};

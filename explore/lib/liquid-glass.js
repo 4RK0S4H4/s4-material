@@ -26,6 +26,9 @@ window.LiquidGlass = (function () {
        and a higher text contrast target for the adaptive tint. Light / medium / heavy are on the lab's Frost question. */
     frostLight:  { bezel: 28, thick: 44, ior: 1.6, blur: 8, ca: 0, spec: 1, sat: 1.3, merge: 28, mag: 1.3, tint: 0.24, minCR: 5.5 },
     frosted:     { bezel: 28, thick: 44, ior: 1.6, blur: 12, ca: 0, spec: 1, sat: 1.15, merge: 28, mag: 1.3, tint: 0.34, minCR: 7 },
+    /* the owner's direction (2026-11-03): Material first. Refraction and frosted transparency on raised surfaces, in
+       M3 shapes and elevation; no melting, no lens, no specular edge, no glow shadow (M3 elevation shadows instead). */
+    material:    { soft: 1, bezel: 20, thick: 24, ior: 1.5, blur: 12, ca: 0, spec: 0, sat: 1.15, merge: 0, mag: 1, tint: 0.34, minCR: 7, shadow: 0 },
     frostHeavy:  { bezel: 28, thick: 44, ior: 1.6, blur: 18, ca: 0, spec: 1, sat: 1, merge: 28, mag: 1.3, tint: 0.46, minCR: 7 }
   };
 
@@ -48,7 +51,7 @@ window.LiquidGlass = (function () {
     'precision highp float;',
     'uniform sampler2D uScene;uniform vec2 uSize;uniform float uScale;uniform vec4 uSceneRect;uniform float uTexScale;',
     'uniform int uCount;uniform vec4 uRect[' + MAX + '];uniform vec4 uShape[' + MAX + '];',
-    'uniform float uMerge,uBezel,uThick,uIor,uBlur,uCA,uSpec,uSat,uContrast,uBright,uTintA,uAdaptive,uMinCR,uShadow,uMag,uDark;',
+    'uniform float uSoft,uMerge,uBezel,uThick,uIor,uBlur,uCA,uSpec,uSat,uContrast,uBright,uTintA,uAdaptive,uMinCR,uShadow,uMag,uDark;',
     'uniform vec3 uTint,uText;',
     'out vec4 o;',
     'float sdRR(vec2 p,vec2 b,float r){vec2 q=abs(p)-b+r;return length(max(q,0.))+min(max(q.x,q.y),0.)-r;}',
@@ -87,6 +90,8 @@ window.LiquidGlass = (function () {
     ' vec2 n=length(g)>1e-6?normalize(g):vec2(0.);',
     ' float depth=max(-f.x,0.);float bez=min(uBezel*(layer>.5?1.3:1.),f.y);',
     ' float m=shift(depth,bez,uThick*(layer>.5?1.2:1.));',
+    /* soft edge: the bend eases in from zero at the very edge, so what's under the rim joins what's outside it (no seam) */
+    ' m*=mix(1.,smoothstep(0.,.5,depth/max(bez,1.)),uSoft);',
     ' vec2 q=p-n*m;',
     ' if(layer>.5){vec2 c=uRect[int(f.z)].xy;q=c+(q-c)/uMag;}',
     ' float rad=uBlur+min(m*.3,6.)+(layer>.5?1.:0.);',
@@ -107,7 +112,7 @@ window.LiquidGlass = (function () {
     ' float band=1.-smoothstep(0.,bez,depth);',
     ' float s=uSpec*((rim*(.18+.82*lit))*(uDark>.5?.55:.85)+band*band*lit*(uDark>.5?.07:.16));',
     ' col=1.-(1.-col)*(1.-clamp(s,0.,1.));',
-    ' if(uDark<.5)col*=1.-.06*band*band*pow(max(-dot(n,vec2(0.,-1.)),0.),2.);',
+    ' if(uDark<.5&&uSpec>0.)col*=1.-.06*band*band*pow(max(-dot(n,vec2(0.,-1.)),0.),2.);',
     ' o=vec4(col*cov,cov)+vec4(0.,0.,0.,sh*(1.-cov));',
     '}'].join('\n');
 
@@ -127,7 +132,7 @@ window.LiquidGlass = (function () {
     var b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
     var loc = gl.getAttribLocation(prog, 'a'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    ['uScene', 'uSize', 'uScale', 'uSceneRect', 'uTexScale', 'uCount', 'uRect', 'uShape', 'uMerge', 'uBezel', 'uThick', 'uIor', 'uBlur', 'uCA', 'uSpec', 'uSat',
+    ['uSoft', 'uScene', 'uSize', 'uScale', 'uSceneRect', 'uTexScale', 'uCount', 'uRect', 'uShape', 'uMerge', 'uBezel', 'uThick', 'uIor', 'uBlur', 'uCA', 'uSpec', 'uSat',
      'uContrast', 'uBright', 'uTintA', 'uAdaptive', 'uMinCR', 'uShadow', 'uMag', 'uDark', 'uTint', 'uText'].forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
     gl.uniform1i(U.uScene, 0);
     glCanvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); texCache.clear(); stages.forEach(function (s) { s.key = ''; }); });
@@ -185,13 +190,19 @@ window.LiquidGlass = (function () {
     this.mode = m; this.root.dataset.lgMode = m; this.out.hidden = m !== 'webgl'; this.key = '';
     if (m === 'svg') svgRefresh(this); else svgClear(this);
   };
+  var BLEED = 400;
+  function bleed(el) {   /* how far the glass continues past each side; sides named in data-lg-edges stay put */
+    var e = el.dataset.lgEdges; if (!e) return { l: 0, t: 0, r: 0, b: 0 };
+    var has = function (s) { return e.indexOf(s) >= 0 ? 0 : BLEED; };
+    return { l: has('left'), t: has('top'), r: has('right'), b: has('bottom') };
+  }
   Stage.prototype.shapes = function () {
     var rr = this.root.getBoundingClientRect(), out = [];
     this.root.querySelectorAll('[data-lg]').forEach(function (el) {
       if (out.length >= MAX || el.closest('[hidden]')) return;
       var r = el.getBoundingClientRect(); if (r.width < 1 || r.height < 1) return;
-      out.push({ x: r.left - rr.left + r.width / 2, y: r.top - rr.top + r.height / 2, hw: r.width / 2, hh: r.height / 2,
-        r: radiusOf(el, r.width, r.height), layer: el.dataset.lg === 'lens' ? 1 : 0 });
+      var b = bleed(el), L = r.left - rr.left - b.l, T = r.top - rr.top - b.t, W = r.width + b.l + b.r, H = r.height + b.t + b.b;
+      out.push({ x: L + W / 2, y: T + H / 2, hw: W / 2, hh: H / 2, r: radiusOf(el, r.width, r.height), layer: el.dataset.lg === 'lens' ? 1 : 0 });
     });
     return { rr: rr, list: out };
   };
@@ -213,7 +224,7 @@ window.LiquidGlass = (function () {
     s.list.forEach(function (o, i) { rect.set([o.x, o.y, o.hw, o.hh], i * 4); shp.set([o.r, o.layer, 0, 0], i * 4); });
     gl.uniform1i(U.uCount, s.list.length); gl.uniform4fv(U.uRect, rect); gl.uniform4fv(U.uShape, shp);
     var dark = document.documentElement.dataset.theme === 'dark';
-    gl.uniform1f(U.uMerge, P.merge); gl.uniform1f(U.uBezel, P.bezel); gl.uniform1f(U.uThick, P.thick); gl.uniform1f(U.uIor, P.ior);
+    gl.uniform1f(U.uSoft, P.soft ? 1 : 0); gl.uniform1f(U.uMerge, P.merge); gl.uniform1f(U.uBezel, P.bezel); gl.uniform1f(U.uThick, P.thick); gl.uniform1f(U.uIor, P.ior);
     gl.uniform1f(U.uBlur, P.blur); gl.uniform1f(U.uCA, P.ca); gl.uniform1f(U.uSpec, P.spec); gl.uniform1f(U.uSat, P.sat);
     gl.uniform1f(U.uContrast, P.contrast == null ? 1 : P.contrast); gl.uniform1f(U.uBright, P.bright == null ? 1 : P.bright);
     gl.uniform1f(U.uTintA, P.tint == null ? 0.2 : P.tint); gl.uniform1f(U.uAdaptive, P.adaptive ? 1 : 0); gl.uniform1f(U.uMinCR, P.minCR || 4.5);
@@ -245,17 +256,20 @@ window.LiquidGlass = (function () {
     document.body.appendChild(svgRoot); return svgRoot;
   }
   /* displacement map (R = x, G = y, 128 = none) and a specular image for one rounded rectangle */
-  function maps(w, h, r, P, dark) {
-    var W = Math.max(1, Math.round(w)), H = Math.max(1, Math.round(h)), bez = Math.min(P.bezel, Math.min(w, h) / 2);
+  function maps(w, h, r, P, dark, b) {
+    b = b || { l: 0, t: 0, r: 0, b: 0 };
+    var ox = (b.r - b.l) / 2, oy = (b.b - b.t) / 2, ew = w + b.l + b.r, eh = h + b.t + b.b;   /* extended shape, relative to the element center */
+    var W = Math.max(1, Math.round(w)), H = Math.max(1, Math.round(h)), bez = Math.min(P.bezel, Math.min(ew, eh) / 2);
     var maxD = Math.max(shift(0, bez, P.thick, P.ior), 1);
     var c1 = document.createElement('canvas'), c2 = document.createElement('canvas'); c1.width = c2.width = W; c1.height = c2.height = H;
     var d1 = c1.getContext('2d').createImageData(W, H), d2 = c2.getContext('2d').createImageData(W, H);
     var lx = -0.55, ly = -0.85, ll = Math.hypot(lx, ly); lx /= ll; ly /= ll;
     for (var y = 0; y < H; y++) for (var x = 0; x < W; x++) {
-      var px = x + 0.5 - w / 2, py = y + 0.5 - h / 2, d = sdRR(px, py, w / 2, h / 2, r), i = (y * W + x) * 4;
-      var gx = sdRR(px + 0.5, py, w / 2, h / 2, r) - sdRR(px - 0.5, py, w / 2, h / 2, r), gy = sdRR(px, py + 0.5, w / 2, h / 2, r) - sdRR(px, py - 0.5, w / 2, h / 2, r);
+      var px = x + 0.5 - w / 2 - ox, py = y + 0.5 - h / 2 - oy, hw = ew / 2, hh = eh / 2, d = sdRR(px, py, hw, hh, r), i = (y * W + x) * 4;
+      var gx = sdRR(px + 0.5, py, hw, hh, r) - sdRR(px - 0.5, py, hw, hh, r), gy = sdRR(px, py + 0.5, hw, hh, r) - sdRR(px, py - 0.5, hw, hh, r);
       var gl_ = Math.hypot(gx, gy) || 1; gx /= gl_; gy /= gl_;
       var depth = Math.max(-d, 0), m = d > 0 ? 0 : shift(depth, bez, P.thick, P.ior);
+      if (P.soft) { var st = Math.min(Math.max(depth / bez / 0.5, 0), 1); m *= st * st * (3 - 2 * st); }
       d1.data[i] = 128 + (-gx * m / maxD) * 127; d1.data[i + 1] = 128 + (-gy * m / maxD) * 127; d1.data[i + 2] = 128; d1.data[i + 3] = 255;
       var k = gx * lx + gy * ly, lit = Math.pow(Math.max(k, 0), 1.5) + 0.55 * Math.pow(Math.max(-k, 0), 1.5);
       var rim = Math.exp(-depth / 0.8) + 0.45 * Math.exp(-depth / 2.2), band = 1 - Math.min(depth / bez, 1); band = band * band * (3 - 2 * band);
@@ -269,7 +283,7 @@ window.LiquidGlass = (function () {
     var r = el.getBoundingClientRect(), w = el.offsetWidth, h = el.offsetHeight; if (!w || !h) return;
     var rad = radiusOf(el, w, h), sig = [w, h, rad, JSON.stringify(P), dark].join('|');
     if (el._lgSig === sig) return; el._lgSig = sig;
-    var m = maps(w, h, rad, P, dark), id = el._lgId || (el._lgId = 'lg' + (++uid)), ns = 'http://www.w3.org/2000/svg';
+    var m = maps(w, h, rad, P, dark, bleed(el)), id = el._lgId || (el._lgId = 'lg' + (++uid)), ns = 'http://www.w3.org/2000/svg';
     var f = document.getElementById(id); if (f) f.remove();
     f = document.createElementNS(ns, 'filter');
     f.id = id; f.setAttribute('x', 0); f.setAttribute('y', 0); f.setAttribute('width', w); f.setAttribute('height', h);
