@@ -1,6 +1,6 @@
 # Where S4 Orion stands (resume here)
 
-Last updated: 2026-11-03 (liquid glass shelved; next is the end-to-end review, see below). **Phase 6 demo built and published; awaiting owner review, then release 1.0.0.** Working notes for Claude are in [`/CLAUDE.md`](../CLAUDE.md).
+Last updated: 2026-11-03 (end-to-end review done, container transform rebuilt; see below). **Phase 6 demo built and published; awaiting the owner's iPhone check, then release 1.0.0.** Working notes for Claude are in [`/CLAUDE.md`](../CLAUDE.md).
 
 ## The brief (original plan, six phases)
 
@@ -52,17 +52,37 @@ needs the iPhone check**: Safari handling of `clip-path` over `backdrop-filter` 
 remaining suspect. If it still flickers there, the fallback is to make the surface solid for the duration of the morph.
 Ask the owner which animations felt worst (sheet from the FAB, dialog, menu, view switch) if any remain.
 
-## Next session: end-to-end review and bug fixing (owner request, 2026-11-03)
+## End-to-end review (2026-11-03) and what's next
 
-Liquid glass is **not adopted** ([0006](decisions/0006-liquid-glass.md)); 0004 glass stays. The owner asked for a fresh
-session to review S4 Orion end to end, fix all bugs, and review this plan. Known: animation bugs, especially the
-**container transform, where symbols (icons, labels) move around** during the morph. Check every component in the
-gallery and every flow in the demo at 390 and 1280, in Chromium, and say plainly what couldn't be checked in Safari.
+Done in Chromium (Playwright), 390 dark and 1280 light, animations paused and stepped frame by frame: every overlay in
+the demo and in the dialog/menu/sheet reference pages opened and closed (also under reduced motion), view switches,
+list to detail, theme seed/mode/contrast, reduced transparency (CDP emulation: glass turns solid). Page checker clean on
+the gallery, the demo and all 31 reference pages (the only hits are the deliberate colorful backdrops on the glass pages).
+
+**Root cause of "symbols moving around" in the container transform** (fixed in `components/motion/motion.js`):
+1. The surface's content sat still at its final layout while the clip window travelled across it, so icons and labels
+   seemed to slide through the container. Now the whole surface travels from the source (transform + clip) and the
+   content and carried label ride on it.
+2. A source outside the surface's box (FAB beside a centered sheet, button below a dialog, wide row into a narrower
+   dialog) could only be drawn where it overlapped the box: the morph started from the surface's edge and the label
+   was clipped away. Fixed by 1, plus a spread shadow in the container color for any part reaching past the box.
+3. Closing, the carried label copied the hidden source's inline `visibility: hidden`, so it never faded back and the
+   real source popped in at the end.
+4. Glass went see-through before its blur was on, so the page behind showed through sharp (double image). The surface
+   now stays solid with no blur while the shape moves and turns to glass after landing. This also takes `clip-path`
+   over `backdrop-filter` (the Safari suspect from 2026-10-28) out of the moving part entirely.
+5. `oklab()`/`color-mix()` colors weren't parsed, so list rows started from the wrong color.
+
+**Couldn't check here:** Safari/WebKit (not available in the sandbox). Everything above is Chromium only.
+
+**Next (in order):**
+1. Owner tries the demo on the iPhone: FAB to sheet, row to detail, Delete All Data to dialog, menus, view switches.
+2. If it's good: release 1.0.0 (below). The remaining 0005 items are small and optional before 1.0.0: a rail FAB in
+   the demo on desktop and the wide-screen list/detail split; the checker still only inspects the view visible on load.
 
 ## Backlog (open items, not blocking)
 
 - Filled toggle buttons (unselected = surface-container) look faint on surface-container-low in dark mode.
-- `components/_example/example.js` Color group doesn't follow swatch clicks (swatches do follow the bar).
 - Possible tokens: connected-group gap 2px, 18dp checkbox/chip check size, switch track 52, FAB-m 80, slider handle 44.
 - Container queries use literal 600/840px (var() isn't allowed in @container conditions).
 - Untested in Safari/WebKit (not available in the build sandbox): container transform, `display: contents` nav pills,
@@ -80,6 +100,7 @@ gallery and every flow in the demo at 390 and 1280, in Chromium, and say plainly
 
 ## Session log
 
+- 2026-11-03 (review): end-to-end review in Chromium; container transform rebuilt (content and label ride on the container, starts on the source even outside the surface's box, label fades back on close, glass solid while moving); gallery theme bar follows swatches. Next: owner's iPhone check, then 1.0.0.
 - 2026-10-25: Phases 1–4 published.
 - 2026-10-27: Phase 5 (skill, references, check.mjs, inline.mjs, evals, packaged `.skill`); FAB-above-nav-bar fix;
   trigger narrowed; approved by the owner, who installed the skill. Owner will continue in new sessions (different model).

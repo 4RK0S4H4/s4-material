@@ -26,7 +26,7 @@ spatial durations become 0 and fades remain.
 ## Transition patterns
 | Situation | Pattern |
 |---|---|
-| A surface opened from something you touched: dialog from a button, sheet from a FAB, detail from a row | **Container transform**: the source becomes the container at real size. It starts and ends with the source's rect, corner, color and label; the label fades out by 30%, content fades in from 35%; collapse uses the calm spring; then the real source reappears. |
+| A surface opened from something you touched: dialog from a button, sheet from a FAB, detail from a row | **Container transform**: the source becomes the container at real size. It starts and ends with the source's rect, corners, color and label; the container travels from the source and its edges open, and the label and content ride on it (nothing slides across the container). Opening, the label fades out by 30% and content fades in from 35%; closing, content is gone by 20% and the label is back by 60%. Glass stays solid while the shape moves and clears once it has landed; the shadow rises after landing. Collapse uses the calm spring; then the real source reappears. |
 | Menus | **Unfold**: the menu's shape opens downward from its top edge; items don't move |
 | Switching between sibling views: tabs, nav destinations, steps | **Shared axis**: old view slides 30px out and fades, new one slides in from the side you're heading |
 | Sheets not opened from a FAB, snackbars | **Slide from edge**: they come from the edge where they live |
