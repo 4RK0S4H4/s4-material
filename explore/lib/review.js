@@ -44,7 +44,7 @@
 
   /* review.css sits next to this script */
   var BASE = (document.currentScript && document.currentScript.src || '').replace(/review\.js.*$/, '');
-  function injectCSS() { if (document.getElementById('rv-css')) return; var l = document.createElement('link'); l.id = 'rv-css'; l.rel = 'stylesheet'; l.href = BASE + 'review.css?v=7'; document.head.appendChild(l); }
+  function injectCSS() { if (document.getElementById('rv-css')) return; var l = document.createElement('link'); l.id = 'rv-css'; l.rel = 'stylesheet'; l.href = BASE + 'review.css?v=8'; document.head.appendChild(l); }
   injectCSS();
 
   /* An option card: the whole card is the answer. o = { pick:'qid:v', letter, title, desc, tag?, preview?: Element, side?: Element } */
