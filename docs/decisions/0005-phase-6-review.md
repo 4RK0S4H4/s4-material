@@ -17,9 +17,9 @@ sheet validation); no console errors, no horizontal scroll.
 
 ## Open (not fixed, for the owner)
 
-- The checker only inspects the view visible on load; other views are not contrast-checked at runtime.
+- ~~The checker only inspects the view visible on load~~ Fixed 2026-11-04: it audits every app-shell view.
 - The demo uses the container-transform dialog for bill detail at every width; the wide-screen split pattern is not shown.
-- The demo has no rail FAB on desktop (the build note now says to add one).
+- ~~The demo has no rail FAB on desktop~~ Fixed 2026-11-04 (and the shell hides pinned FABs when the rail has one).
 - Playwright's reduced-transparency emulation had no effect; `data-glass="off"` was checked by computed style only.
 - Reduced-motion was only partly exercised; Safari/WebKit untested (please try on the iPhone).
 - Minor: sort and export icons read poorly at small sizes; KPI status pills stretch on phone.

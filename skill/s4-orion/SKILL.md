@@ -201,7 +201,7 @@ sentence-case nothing here; amounts in tabular figures; no colors, sizes or moti
 ## Check before handing over
 
 Run `node <skill>/scripts/check.mjs page.html` (Playwright). It loads the page as a 390px dark phone and a 1280px light
-desktop and reports console errors, unknown icons, sideways scroll, text below WCAG AA as rendered (including on glass),
+desktop (every app-shell view, not just the first) and reports console errors, unknown icons, sideways scroll, text below WCAG AA as rendered (including on glass),
 and app CSS that breaks the rules above (hex colors, `!important`, glass on content, raw durations, bare element
 selectors). Look at the two screenshots it saves too. Fix what it reports, run it once more, then hand over.
 

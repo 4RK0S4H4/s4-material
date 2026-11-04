@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>S4 Orion: Icon Lab</title>
+<link rel="stylesheet" href="../components/orion.css?v=1">
+<style>
+body{margin:0;background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface)}
+h1,h2,p{margin:0}
+.bar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;padding:12px 24px;background:var(--md-sys-color-surface-container);border-bottom:1px solid var(--md-sys-color-outline-variant)}
+.bar h1{font-size:22px;line-height:28px;font-weight:500;margin-right:auto}
+.ctl{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;letter-spacing:.5px}
+.page{max-width:1200px;margin:0 auto;padding:24px 24px 64px;display:flex;flex-direction:column;gap:48px}
+.intro{max-width:80ch;color:var(--md-sys-color-on-surface-variant);display:flex;flex-direction:column;gap:12px}
+.sec > h2{font-size:28px;line-height:36px;font-weight:500;margin-bottom:6px}
+.sec > p{color:var(--md-sys-color-on-surface-variant);max-width:85ch;margin-bottom:16px}
+.cards{--rv-min:320px}
+.pv{padding:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;background:var(--md-sys-color-surface-container-low);border-radius:16px}
+.pv .s4-fab{position:static}
+footer{padding:24px;text-align:center;font-size:12px;color:var(--md-sys-color-on-surface-variant)}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>S4 Orion: Icon Lab</h1>
+  <div class="ctl">Theme <div class="s4-button-group" data-connected data-select="single" data-fit="content" id="theme" aria-label="Theme">
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="light" aria-pressed="true">Light</button>
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="dark">Dark</button></div></div>
+</div>
+<main class="page">
+  <div class="intro">
+    <p>Solar’s Bold Duotone set draws some everyday glyphs inside their own circle or rounded square: add, close, check and menu. Inside a FAB, a button or an icon button that gives a shape inside a shape, and at 24px the close and add circles read as grey dots.</p>
+    <p>Both options stay in Solar Bold Duotone (arrows stay Linear); only the glyph behind four names changes. Tap the card (above its preview) to pick one; answers are saved with your other labs.</p>
+  </div>
+  <div id="sections"></div>
+</main>
+<footer><a href="../">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0)</footer>
+
+<script src="../components/assets/m3color.js"></script>
+<script src="../components/assets/icons.js"></script>
+<script src="../components/orion.js?v=1"></script>
+<script src="lib/icon-options.js?v=1"></script>
+<script src="lib/questions.js?v=10"></script>
+<script src="lib/review.js?v=7"></script>
+<script>
+const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+const ic = n => `<span class="s4-icon"><svg viewBox="0 0 24 24" aria-hidden="true">${ICON_OPTIONS[n]}</svg></span>`;
+function strip(g) {
+  return h(`<div class="pv">
+    <button class="s4-fab" type="button">${ic(g.add)}<span class="s4-fab-label">Add Bill</span></button>
+    <button class="s4-fab" type="button" aria-label="Add">${ic(g.add)}</button>
+    <button class="s4-icon-button" type="button" aria-label="Menu">${ic(g.menu)}</button>
+    <button class="s4-icon-button" type="button" aria-label="Close">${ic(g.close)}</button>
+    <button class="s4-icon-button" data-variant="filled" type="button" aria-label="Close">${ic(g.close)}</button>
+    <button class="s4-button" type="button">${ic(g.check)}Mark Paid</button>
+    <button class="s4-button" data-variant="tonal" type="button">${ic(g.check)}Mark Paid</button>
+    <button class="s4-button" data-variant="outlined" type="button">${ic(g.add)}Add Bill</button>
+  </div>`);
+}
+const SECTIONS = [
+  { id: 'glyphs', title: 'Glyphs in Controls', desc: 'add, close and check, as they appear on FABs and buttons all over an app.', opts: [
+    { k: 'A', name: 'Boxed', tag: 'Today', desc: 'add-circle, close-circle, check-circle.', g: { add: 'add-circle', close: 'close-circle', check: 'check-circle', menu: 'hamburger-menu' } },
+    { k: 'B', name: 'Plain', tag: 'Recommended', desc: 'add, close, check: the bare duotone glyph, like M3’s own icons. The container already gives the shape.', g: { add: 'add', close: 'close', check: 'check', menu: 'hamburger-menu' } }]},
+  { id: 'menu', title: 'Menu Button', desc: 'Solar has no plain duotone hamburger. The rail’s menu button can keep the boxed one or use the three dots.', opts: [
+    { k: 'A', name: 'Boxed Hamburger', tag: 'Today', desc: 'hamburger-menu: three lines inside a rounded square.', g: { add: 'add', close: 'close', check: 'check', menu: 'hamburger-menu' } },
+    { k: 'B', name: 'Dots', desc: 'menu-dots, the same glyph as More. Lighter, but More and Menu then look alike.', g: { add: 'add', close: 'close', check: 'check', menu: 'menu-dots' } }]}
+];
+const host = document.getElementById('sections');
+SECTIONS.forEach(sec => {
+  const el = h(`<section class="sec"><h2>${sec.title}</h2><p>${sec.desc}</p><div class="cards rv-group" role="radiogroup" aria-label="${sec.title}"></div></section>`);
+  host.appendChild(el);
+  sec.opts.forEach(o => el.querySelector('.cards').appendChild(S4Review.card({ pick: `${sec.id}:${o.k}`, letter: o.k, title: o.name, desc: o.desc, tag: o.tag || '', preview: strip(o.g) })));
+});
+document.getElementById('theme').addEventListener('s4-change', e => S4.theme({ mode: e.detail.value }));
+S4.theme({ mode: 'light' });
+S4Review.page('icons');
+</script>
+</body>
+</html>

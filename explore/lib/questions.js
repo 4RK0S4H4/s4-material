@@ -54,4 +54,12 @@ window.S4_REVIEW_DEMOS = [
       { id: 'device', label: 'On your iPhone', options: [{ v: 'A', label: 'Smooth and right' }, { v: 'B', label: 'Looks right but slow' }, { v: 'C', label: 'Looks wrong or broken' }, { v: 'Other', label: 'Describe in notes' }] }
     ]
   }
+  ,
+  {
+    id: 'icons', title: 'Icon Lab', href: 'explore/icons.html',
+    questions: [
+      { id: 'glyphs', label: 'Glyphs in controls', options: [{ v: 'A', label: 'Boxed (today)' }, { v: 'B', label: 'Plain' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'menu', label: 'Menu button', options: [{ v: 'A', label: 'Boxed hamburger' }, { v: 'B', label: 'Dots' }, { v: 'Other', label: 'Describe in notes' }] }
+    ]
+  }
 ];

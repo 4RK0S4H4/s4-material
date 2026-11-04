@@ -211,15 +211,26 @@ for (const page of pages) {
     await p.goto(url, { waitUntil: 'load' });
     await p.evaluate(() => document.fonts && document.fonts.ready);
     await p.waitForTimeout(700);                                            /* springs and dynamic color settle */
-    const r = await p.evaluate(audit);
-    r.overflow.forEach((x) => errors.add(`[${v.name}] sideways scroll: ${x}`));
-    r.contrast.forEach((x) => errors.add(`[${v.name}] low contrast ${x}`));
-    r.names.forEach((x) => errors.add(`[${v.name}] control with no accessible name (add aria-label): ${x}`));
-    r.glassContent.forEach((x) => errors.add(`[${v.name}] glass on content: ${x}`));
-    r.filled.forEach((x) => warnings.add(`more than one filled button in an area: ${x}`));
-    r.caseWarn.forEach((x) => warnings.add(`label may not be Title Case: ${x}`));
+    const report = (r, where) => {
+      const at = where ? `[${v.name}, ${where}]` : `[${v.name}]`;
+      r.overflow.forEach((x) => errors.add(`${at} sideways scroll: ${x}`));
+      r.contrast.forEach((x) => errors.add(`${at} low contrast ${x}`));
+      r.names.forEach((x) => errors.add(`${at} control with no accessible name (add aria-label): ${x}`));
+      r.glassContent.forEach((x) => errors.add(`${at} glass on content: ${x}`));
+      r.filled.forEach((x) => warnings.add(`more than one filled button in an area: ${x}`));
+      r.caseWarn.forEach((x) => warnings.add(`label may not be Title Case: ${x}`));
+    };
+    report(await p.evaluate(audit));
     const shot = join(OUT, `${label}-${v.name}.png`);
     await p.screenshot({ path: shot, fullPage: true });
+    /* app shell views that were hidden on load get the same audit (screenshots show the first view only) */
+    const views = await p.evaluate(() => window.S4 && S4.app && document.querySelector('.s4-app') ? [...document.querySelectorAll('.s4-app .s4-view[data-view][hidden]')].map((x) => x.dataset.view) : []);
+    if (process.env.S4_CHECK_DEBUG) console.log(`  (${v.name}: also checked views ${views.join(", ")})`);
+    for (const name of views) {
+      await p.evaluate((n) => S4.app.go(document.querySelector('.s4-app'), n), name);
+      await p.waitForTimeout(900);
+      report(await p.evaluate(audit), `view "${name}"`);
+    }
     await ctx.close();
   }
 

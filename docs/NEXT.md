@@ -1,6 +1,6 @@
 # Where S4 Orion stands (resume here)
 
-Last updated: 2026-11-03 (end-to-end review done, container transform rebuilt; see below). **Phase 6 demo built and published; awaiting the owner's iPhone check, then release 1.0.0.** Working notes for Claude are in [`/CLAUDE.md`](../CLAUDE.md).
+Last updated: 2026-11-04 (owner liked the demo; button groups angular again, plan reviewed; see below). **Phase 6 demo built and published; awaiting the owner's iPhone check, then release 1.0.0.** Working notes for Claude are in [`/CLAUDE.md`](../CLAUDE.md).
 
 ## The brief (original plan, six phases)
 
@@ -75,10 +75,25 @@ the gallery, the demo and all 31 reference pages (the only hits are the delibera
 
 **Couldn't check here:** Safari/WebKit (not available in the sandbox). Everything above is Chromium only.
 
+## Owner review (2026-11-04) and plan review
+
+Owner: likes the demo; connected button groups felt too rounded (should be angular, round when selected). Done: inner
+corners back to the M3 Expressive values. Also found and fixed in the review: the pinned FAB floated over list content on
+desktop (rail FAB now replaces it), a trailing value + chevron stacked awkwardly, the copied label of a collapsed rail
+FAB showed its hidden text during the morph; the page checker now audits every view.
+
+Plan review: the six phases still hold; nothing in the plan needs to change except what's left before 1.0.0, which is
+now short. Glass (0004) and motion decisions stand. Liquid glass stays shelved (0006).
+
 **Next (in order):**
-1. Owner tries the demo on the iPhone: FAB to sheet, row to detail, Delete All Data to dialog, menus, view switches.
-2. If it's good: release 1.0.0 (below). The remaining 0005 items are small and optional before 1.0.0: a rail FAB in
-   the demo on desktop and the wide-screen list/detail split; the checker still only inspects the view visible on load.
+1. Owner: try the demo on the iPhone (FAB to sheet, row to detail, Delete All Data to dialog, menus, view switches,
+   the button groups). Safari/WebKit is still unchecked by us.
+2. Owner: answer the [Icon Lab](../explore/icons.html) (plain vs boxed add/close/check glyphs; menu button). Then map
+   the names in `components/icons/names.json`, rebuild, and record it in a new decision 0007.
+3. Release 1.0.0 (below).
+
+Optional, not blocking 1.0.0: the wide-screen list/detail split in the demo (0005); restyle the hub with orion.css; the
+labs could load `components/assets/` instead of their own copies.
 
 ## Backlog (open items, not blocking)
 
@@ -100,6 +115,7 @@ the gallery, the demo and all 31 reference pages (the only hits are the delibera
 
 ## Session log
 
+- 2026-11-04: button groups angular (M3E inner corners), rail FAB replaces pinned FABs on wide screens, list trailing value + icon in a row, checker audits all views, Icon Lab added. Next: owner's iPhone check and Icon Lab, then 1.0.0.
 - 2026-11-03 (review): end-to-end review in Chromium; container transform rebuilt (content and label ride on the container, starts on the source even outside the surface's box, label fades back on close, glass solid while moving); gallery theme bar follows swatches. Next: owner's iPhone check, then 1.0.0.
 - 2026-10-25: Phases 1–4 published.
 - 2026-10-27: Phase 5 (skill, references, check.mjs, inline.mjs, evals, packaged `.skill`); FAB-above-nav-bar fix;

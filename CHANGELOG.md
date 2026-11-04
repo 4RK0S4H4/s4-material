@@ -14,6 +14,15 @@ The first version of S4 Orion, a leaner rebuild of S4 Material 1.3 on Material 3
 
 - Liquid Glass Lab (`explore/liquid-glass.html`, engine in `explore/lib/liquid-glass.js`): glass that refracts like a thick slab with curved edges (squircle bevel, Snell's law), light blur, specular rim, soft shadow, shapes that melt together and a magnifying lens on the nav bar. WebGL2 engine (all browsers, over app-drawn backdrops) and SVG `backdrop-filter` engine (Chromium, over any DOM). Proposes an adaptive tint that keeps text at AA per pixel. Awaiting the owner's picks. After the first look: no color split (no rainbow fringes on white), a slight blur that's always on, and extra softening along the rim where the bend stretches content, so it never pixelates. Owner picks recorded in decision 0006 (extra liquid, adaptive tint, melt, every glass surface); added the frosted extra liquid material (more blur, firmer base tint, calmer colors, 7:1 text target, clearer outer rim) and a Frost Level question. Second round (owner: Material first, refraction and transparency only): new Material Liquid material (Liquid bend with a soft, seamless edge; frosted; no melting, lens, edge highlight or glow), M3 layout in the lab (full-width bars bend only along the content-facing edge), and a question on which raised surfaces get it. 0006 rewritten. Then shelved by the owner: today's glass (0004) already gives raised surfaces the transparency and depth wanted; liquid glass is not adopted.
 
+### Changed (owner review, 2026-11-04)
+
+- Connected button groups are angular again: inner corners use the M3 Expressive values (xs 4, s and m 8, l 16, xl 20; tighter while pressed) and the selected button morphs fully round. The "too sharp" look from 2026-10-28 came from the 9999px bug, fixed then, not from the small corners.
+- App shell: from 840 a FAB in the rail's slot hides the views' pinned (`data-fixed`) FABs, which otherwise floated over list content. The demo has a rail FAB.
+- List: a trailing value followed by an icon sits on one line instead of stacking.
+- Container transform: parts of the source hidden by its context (the label of a FAB in a collapsed rail) stay hidden in the carried copy.
+- Page checker: also audits every app-shell view that was hidden on load (contrast, names, sideways scroll, glass on content), not just the first one.
+- Icon Lab (`explore/icons.html`): plain or boxed glyphs for add, close, check and menu; awaiting the owner's pick.
+
 ### Fixed (end-to-end review, 2026-11-03: "symbols moving around" in the container transform)
 
 - The surface now travels from the source (transform + clip) instead of being revealed by a clip window moving across still content, so icons and labels ride on the container instead of sliding through it.
@@ -33,7 +42,7 @@ The first version of S4 Orion, a leaner rebuild of S4 Material 1.3 on Material 3
 - Container transform: a transparent source (outlined or text button, list row) no longer makes the morphing surface see-through; it starts from the color the eye sees there. An outlined source keeps its ring until it fades. The clip now leaves room for the surface's shadow, so the shadow no longer pops in when the morph ends (same for menus). Glass surfaces fade their blur in with the color instead of switching it on at the end.
 - Container transform: the source's label and icon no longer shift when the morph starts. The carried copy keeps the source's own classes (icon size, gap, letter spacing), so it lays out exactly like the real button.
 - Shared axis: the app bar title and the scroll reset now happen at the moment of the swap, so the old view no longer jumps to the top while it fades out (`sharedAxis` takes an optional `onSwap`).
-- Connected button groups: inner corners are large (xs medium, l extra-large, xl extra-extra-large) instead of small, so they sit softly next to the fully round selected button.
+- Connected button groups: inner corners are large (xs medium, l extra-large, xl extra-extra-large) instead of small, so they sit softly next to the fully round selected button. (Reverted 2026-11-04: angular inner corners again, see above.)
 
 ### Added
 
