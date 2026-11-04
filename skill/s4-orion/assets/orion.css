@@ -1216,7 +1216,7 @@
    Standard: <div class="s4-button-group"> <button class="s4-button">…</button> … </div>
      Buttons 8dp apart. Pressing one widens it a little while its neighbours give way (M3 Expressive press interaction).
    Connected: <div class="s4-button-group" data-connected data-select="single|multi" aria-label="View">
-     Buttons 2dp apart, outer corners full, inner corners large (xs medium, l extra-large, xl extra-extra-large); the selected button morphs fully round.
+     Buttons 2dp apart, outer corners full, inner corners small and angular (xs 4, s/m 8, l 16, xl 20; tighter while pressed); the selected button morphs fully round.
      Connected groups stretch to fill their width (equal weights); data-fit="content" keeps them as wide as their labels.
    Works with .s4-button and .s4-icon-button children. The size comes from the buttons' own data-size.
    button-group.js manages aria-pressed (data-select), arrow-key navigation and the s4-change event. */
@@ -1252,13 +1252,13 @@
 
   /* ---------- connected group ---------- */
   .s4-button-group[data-connected] {
-    --_inner: var(--md-sys-shape-corner-large);   /* soft enough to sit next to a fully round selected button (8dp, then 12dp, still read as sharp) */
-    --_inner-pressed: var(--md-sys-shape-corner-medium);
+    --_inner: var(--md-sys-shape-corner-small);   /* M3 Expressive: angular inner corners, fully round once selected */
+    --_inner-pressed: var(--md-sys-shape-corner-extra-small);
     gap: 2px;   /* M3 Expressive connected groups: 2dp between buttons */
   }
-  .s4-button-group[data-connected]:has(> [data-size="xs"]) { --_inner: var(--md-sys-shape-corner-medium); --_inner-pressed: var(--md-sys-shape-corner-small); }
-  .s4-button-group[data-connected]:has(> [data-size="l"]) { --_inner: var(--md-sys-shape-corner-extra-large); --_inner-pressed: var(--md-sys-shape-corner-large-increased); }
-  .s4-button-group[data-connected]:has(> [data-size="xl"]) { --_inner: var(--md-sys-shape-corner-extra-extra-large); --_inner-pressed: var(--md-sys-shape-corner-extra-large); }
+  .s4-button-group[data-connected]:has(> [data-size="xs"]) { --_inner: var(--md-sys-shape-corner-extra-small); --_inner-pressed: calc(var(--md-sys-shape-corner-extra-small) / 2); }
+  .s4-button-group[data-connected]:has(> [data-size="l"]) { --_inner: var(--md-sys-shape-corner-large); --_inner-pressed: var(--md-sys-shape-corner-medium); }
+  .s4-button-group[data-connected]:has(> [data-size="xl"]) { --_inner: var(--md-sys-shape-corner-large-increased); --_inner-pressed: var(--md-sys-shape-corner-large); }
 
   .s4-button-group[data-connected] > :is(.s4-button, .s4-icon-button) {
     --_r: var(--_inner);
@@ -1508,6 +1508,8 @@
   @container s4-app (width >= 840px) {
     .s4-app > .s4-nav-bar { display: none; }
     .s4-app:has(> .s4-nav-rail) .s4-content { padding-inline-start: var(--_margin); }
+    /* a FAB in the rail's slot replaces the views' pinned FABs, which would otherwise float over content */
+    .s4-app:has(> .s4-nav-rail .s4-fab) .s4-view .s4-fab[data-fixed] { display: none; }
   }
 
   /* ---------- views: sibling destinations switched by app.js with the shared axis pattern ---------- */
@@ -2649,6 +2651,8 @@
     white-space: nowrap;
   }
   /* three-line items align their leading and trailing content to the top */
+  /* a value with an icon after it (Checking •••• 4021 ›) sits on one line, not stacked */
+  .s4-list-trailing:has(> .s4-icon) { flex-direction: row; align-items: center; gap: var(--s4-space-2); }
   .s4-list-item:is(:has(.s4-list-supporting):has(.s4-list-overline), [data-lines="3"]) :is(.s4-list-leading, .s4-list-trailing),
   .s4-list[data-lines="3"] .s4-list-item :is(.s4-list-leading, .s4-list-trailing) { align-self: flex-start; }
 

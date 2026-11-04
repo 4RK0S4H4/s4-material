@@ -162,6 +162,8 @@
     white-space: nowrap;
   }
   /* three-line items align their leading and trailing content to the top */
+  /* a value with an icon after it (Checking •••• 4021 ›) sits on one line, not stacked */
+  .s4-list-trailing:has(> .s4-icon) { flex-direction: row; align-items: center; gap: var(--s4-space-2); }
   .s4-list-item:is(:has(.s4-list-supporting):has(.s4-list-overline), [data-lines="3"]) :is(.s4-list-leading, .s4-list-trailing),
   .s4-list[data-lines="3"] .s4-list-item :is(.s4-list-leading, .s4-list-trailing) { align-self: flex-start; }
 

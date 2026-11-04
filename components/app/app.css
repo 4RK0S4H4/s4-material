@@ -88,6 +88,8 @@
   @container s4-app (width >= 840px) {
     .s4-app > .s4-nav-bar { display: none; }
     .s4-app:has(> .s4-nav-rail) .s4-content { padding-inline-start: var(--_margin); }
+    /* a FAB in the rail's slot replaces the views' pinned FABs, which would otherwise float over content */
+    .s4-app:has(> .s4-nav-rail .s4-fab) .s4-view .s4-fab[data-fixed] { display: none; }
   }
 
   /* ---------- views: sibling destinations switched by app.js with the shared axis pattern ---------- */

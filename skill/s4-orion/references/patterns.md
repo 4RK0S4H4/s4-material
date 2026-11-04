@@ -176,7 +176,8 @@ the same zero-specificity blocks as the token file, so dark mode, high contrast 
 ## Build notes (from the Phase 6 demo)
 
 - **Rail FAB:** in the app shell the view's FAB is `data-fixed` inside its view. On wide screens put the same action in the
-  rail's FAB slot instead of a second FAB (the rail's slot is the only second place it may appear).
+  rail's FAB slot instead of a second FAB (the rail's slot is the only second place it may appear). From 840 the app
+  shell hides the views' `data-fixed` FABs when the rail has one, so the pinned FAB never floats over content.
 - **List and detail on wide screens:** a list with a detail pane splits side by side from 840; below that the detail is a
   container-transform dialog opened with `S4.dialog.open(id, { from: row })`.
 - **Validating before a sheet closes:** `data-close="save"` closes at once. To validate first, give Save no `data-close`,

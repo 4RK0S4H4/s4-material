@@ -98,9 +98,12 @@
     surface.appendChild(ghost);
     /* the copy is laid out outside the source's own container (list, group…): put anything that landed elsewhere back
        exactly where it sits on the source */
+    Array.prototype.forEach.call(ghost.children, function (g, i) {   /* parts hidden by the source's context (a collapsed rail hides the FAB's label) stay hidden */
+      var o = source.children[i]; if (o && !o.getClientRects().length) g.style.display = 'none';
+    });
     var gr = rect(ghost);
     Array.prototype.forEach.call(ghost.children, function (g, i) {
-      var o = source.children[i]; if (!o) return;
+      var o = source.children[i]; if (!o || g.style.display === 'none') return;
       var a = o.getBoundingClientRect(), b = g.getBoundingClientRect(), ox = (a.left - s.left) - (b.left - gr.left), oy = (a.top - s.top) - (b.top - gr.top);
       if (Math.abs(ox) > 0.5 || Math.abs(oy) > 0.5) g.style.translate = ox + 'px ' + oy + 'px';
     });
