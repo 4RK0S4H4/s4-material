@@ -165,3 +165,4 @@ Lab 4 glitched on iPhone, most likely because WebKit taints canvases that drew a
 **Transparency Lab 2 (2026-11-07):** the owner rejected the shiny/glowing edges (Lab 1 A-J) and wants a **super thin line, slightly more frosted than the glass**, like other apps. [Lab 2](../explore/transparency2.html) has 7 variants of exactly that. Waiting on the pick.
 Owner picked a mix of C (thinness) and D (inner fade): Lab 2 now has H/I/J combos. Next: pick one, record as 0013, apply to glass.css (tokens: edge line + inner fade; re-run check-glass).
 Lab 3 (transparency3.html) shows the C+D edge (H/I/J) on real Orion components with the real glass tokens. Waiting on the pick, then 0013 and glass.css.
+Lab 3 reworked (2026-11-07): thin frost line only (no fade), 20-50% strengths + outer hairline, four real screens (library, menu, dialog, bottom sheet). Waiting on the pick, then 0013 and glass.css.

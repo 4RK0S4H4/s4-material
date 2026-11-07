@@ -11,48 +11,55 @@ h1,h2,p{margin:0}
 .bar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;padding:12px 24px;background:var(--md-sys-color-surface-container);border-bottom:1px solid var(--md-sys-color-outline-variant)}
 .bar h1{font-size:22px;line-height:28px;font-weight:500;margin-right:auto}
 .ctl{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;letter-spacing:.5px}
-.page{max-width:1000px;margin:0 auto;padding:24px 16px 64px;display:flex;flex-direction:column;gap:32px}
+.page{max-width:1400px;margin:0 auto;padding:24px 16px 64px;display:flex;flex-direction:column;gap:32px}
 .intro{max-width:80ch;color:var(--md-sys-color-on-surface-variant);display:flex;flex-direction:column;gap:12px}
 .sec > h2{font-size:24px;line-height:32px;font-weight:500;margin-bottom:6px}
 .sec > p{color:var(--md-sys-color-on-surface-variant);max-width:85ch;margin-bottom:16px}
-.frames{display:flex;flex-wrap:wrap;gap:24px;justify-content:center}
-.fr{position:relative;width:360px;height:660px;border-radius:32px;overflow:hidden;background:var(--md-sys-color-surface);box-shadow:0 0 0 6px var(--md-sys-color-surface-container-highest);isolation:isolate}
+.frames{display:flex;flex-wrap:wrap;gap:28px 20px;justify-content:center}
+.fw{display:flex;flex-direction:column;align-items:center;gap:10px;font-size:12px;font-weight:600;color:var(--md-sys-color-on-surface-variant)}
+.fr{position:relative;width:314px;height:660px;border-radius:34px;overflow:hidden;background:var(--md-sys-color-surface);box-shadow:0 0 0 6px var(--md-sys-color-surface-container-highest);isolation:isolate}
 .fr .sc{position:absolute;inset:0;overflow:auto;scrollbar-width:none;overscroll-behavior:contain}
 .fr .sc::-webkit-scrollbar{display:none}
-.in{padding:76px 14px 190px;display:flex;flex-direction:column;gap:12px}
-.ph{height:150px;border-radius:24px;display:flex;align-items:flex-end;padding:14px;color:#fff;font-weight:600;font-size:16px;background:linear-gradient(150deg,#ff7a59,#c13584 55%,#3b4cca)}
-.ph.b{background:linear-gradient(150deg,#43aa8b,#277da1 60%,#1b263b);height:120px}
-.ph.c{background:linear-gradient(150deg,#f9c74f,#f3722c 60%,#7b2cbf)}
+.in{padding:64px 14px 200px;display:flex;flex-direction:column;gap:12px}
+.ph{height:190px;border-radius:26px;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;padding:16px;color:#fff;font-weight:700;font-size:22px;background:linear-gradient(150deg,#ff7a59,#c13584 55%,#3b4cca)}
+.ph small{font-weight:500;font-size:13px;opacity:.9}
+.ph.b{background:linear-gradient(150deg,#43aa8b,#277da1 60%,#1b263b);height:130px}
+.ph.c{background:linear-gradient(150deg,#f9c74f,#f3722c 60%,#7b2cbf);height:150px}
+.chips{display:flex;gap:8px;overflow:hidden}
+.kp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kp .s4-card{padding:14px;display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--md-sys-color-on-surface-variant)}
+.kp b{font-size:22px;color:var(--md-sys-color-on-surface);font-weight:600}
 .fr .s4-top-app-bar,.fr .s4-nav-bar{position:absolute;left:0;right:0}
 .fr .s4-top-app-bar{top:0}.fr .s4-nav-bar{bottom:0}
-.fr .s4-toolbar.fl{position:absolute;left:50%;bottom:100px;transform:translateX(-50%)}
-/* overlays frame: a colourful backdrop with a menu and a dialog laid out in place */
-.bd{position:absolute;inset:0;background:linear-gradient(160deg,#ff7a59,#c13584 35%,#3b4cca 70%,#00b4d8);overflow:hidden}
-.bd .blob{position:absolute;border-radius:50%;filter:blur(2px)}
-.bd .t{position:absolute;left:20px;right:20px;color:#fff;font-weight:700;font-size:44px;line-height:1;letter-spacing:-1px;opacity:.9}
-.fr .s4-menu{position:absolute;left:24px;top:36px;display:flex}
-.fr dialog.s4-dialog{position:absolute;inset:auto;left:24px;right:24px;top:300px;margin:0;width:auto;max-width:none;display:flex}
-/* fill options (token overrides, same variables glass.css reads) */
-.fr[data-fill=clearer]{--s4-glass-tint-opacity-float:.38;--s4-glass-blur-float:10px;--s4-glass-backdrop-contrast-float:.8;--s4-glass-saturation-float:1.7}
-/* THE PROPOSED EDGE: a 1px frost line (::before, ring mask) plus a short frosty fade just inside (::after) */
-.fr[data-edge]{--ew:1px;--ea:.3;--fa:.2;--fb:4px}
-.fr[data-edge=I]{--ea:.26;--fa:.13;--fb:5px}
-.fr[data-edge=J]{--ea:.30;--fa:.16;--fb:8px}
-.fr[data-edge] :where(.s4-top-app-bar[data-scrolled],.s4-nav-bar,.s4-toolbar,.s4-menu,.s4-dialog)::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:var(--ew);pointer-events:none;z-index:2;background:rgb(255 255 255/var(--ea));
- -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);mask-composite:exclude}
-.fr[data-edge] :where(.s4-top-app-bar[data-scrolled],.s4-nav-bar,.s4-toolbar,.s4-menu,.s4-dialog)::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;box-shadow:inset 0 0 var(--fb) 0 rgb(255 255 255/var(--fa))}
-.fr .s4-menu{overflow:visible}
+.fr .s4-toolbar.fl{position:absolute;left:50%;bottom:104px;transform:translateX(-50%)}
+.fr .s4-fab{position:absolute;right:16px;bottom:182px}
+.fr .scrim{position:absolute;inset:0;background:rgb(0 0 0/.32);z-index:5}
+.fr .s4-menu{position:absolute;right:14px;top:58px;display:flex;overflow:visible;z-index:6;left:auto}
+.fr dialog.s4-dialog{position:absolute;inset:auto;left:20px;right:20px;top:220px;margin:0;width:auto;max-width:none;display:flex;z-index:6}
+.fr dialog.s4-bottom-sheet{position:absolute;inset:auto 0 0;left:20px;right:20px;bottom:40px;margin:0;width:auto;max-width:none;display:flex;z-index:6}
 .fr .s4-nav-bar{border-radius:0}
+/* fill (token overrides; same variables glass.css reads) */
+.fr[data-fill=clearer]{--s4-glass-tint-opacity-float:.38;--s4-glass-blur-float:10px;--s4-glass-backdrop-contrast-float:.8;--s4-glass-saturation-float:1.7}
+/* THE EDGE: only a 1px frosted line, no fade */
+.fr[data-edge]{--ea:.3}
+.fr[data-edge="20"]{--ea:.2}.fr[data-edge="40"]{--ea:.4}.fr[data-edge="50"]{--ea:.5}
+.fr[data-edge] :where(.s4-top-app-bar[data-scrolled],.s4-nav-bar,.s4-toolbar,.s4-menu,.s4-dialog,.s4-bottom-sheet)::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;z-index:2;background:rgb(255 255 255/var(--ea));
+ -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);mask-composite:exclude}
+/* optional faint dark hairline just outside, so the edge also holds over white content in light mode */
+.fr[data-outer] :where(.s4-top-app-bar[data-scrolled],.s4-nav-bar,.s4-toolbar,.s4-menu,.s4-dialog,.s4-bottom-sheet){outline:1px solid rgb(0 0 0/.07);outline-offset:0}
+.fr .s4-nav-bar::before{border-radius:0}
 </style>
 </head>
 <body>
 <div class="bar">
   <h1>S4 Orion: Transparency Lab 3</h1>
-  <div class="ctl">Edge <div class="s4-button-group" data-connected data-select="single" data-fit="content" id="edge" aria-label="Edge">
-    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="" aria-pressed="false">Off</button>
-    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="H" aria-pressed="true">H</button>
-    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="I">I</button>
-    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="J">J</button></div></div>
+  <div class="ctl">Edge line <div class="s4-button-group" data-connected data-select="single" data-fit="content" id="edge" aria-label="Edge line">
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="">Off</button>
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="20">20%</button>
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="30" aria-pressed="true">30%</button>
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="40">40%</button>
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="50">50%</button>
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="30o">30% + Outer</button></div></div>
   <div class="ctl">Glass <div class="s4-button-group" data-connected data-select="single" data-fit="content" id="fill" aria-label="Glass fill">
     <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="today">Today</button>
     <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="clearer" aria-pressed="true">Clearer</button></div></div>
@@ -62,12 +69,12 @@ h1,h2,p{margin:0}
 </div>
 <main class="page">
   <div class="intro">
-    <p>Your C + D edge (a 1px frost line plus a short frosty fade just inside it) on the <b>real Orion components</b>, with the real glass tokens: top app bar, navigation bar, floating toolbar, menu and dialog. The buttons in the bar switch the edge (Off, H Tight, I Fainter, J Softer Fade), the glass fill (today's, or the clearer one from the last lab) and the theme.</p>
-    <p>Scroll the left phone: photos and list rows pass under the bars. The right phone is a menu and a dialog over a colorful backdrop. Then answer below.</p>
+    <p>Just the thin frosted line, no fade. It is a 1px line in milky white; the buttons in the bar change its strength (20 to 50%), add a faint dark hairline outside it, switch between today's glass fill and the clearer one, and flip light and dark.</p>
+    <p>Four screens of a small bills app built from the real Orion components and glass tokens: the library (top app bar, floating toolbar, FAB, nav bar over photos and list rows; scroll it), a menu, a dialog and a bottom sheet over the same screen. Check both themes and over both the white-ish and the colorful areas.</p>
   </div>
   <section class="sec"><h2>Real UI</h2><div class="frames" id="frames"></div></section>
-  <section class="sec"><h2>Your Pick</h2><p>Settings above are only for looking; this answer is what I will apply.</p>
-    <div class="cards rv-group" role="radiogroup" aria-label="Edge" id="cards" style="--rv-min:260px"></div></section>
+  <section class="sec"><h2>Your Pick</h2><p>The settings above are only for looking; this answer is what I will apply.</p>
+    <div class="cards rv-group" role="radiogroup" aria-label="Edge" id="cards" style="--rv-min:240px"></div></section>
 </main>
 <footer style="padding:24px;text-align:center;font-size:12px;color:var(--md-sys-color-on-surface-variant)"><a href="../">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0)</footer>
 
@@ -75,36 +82,47 @@ h1,h2,p{margin:0}
 <script src="../components/assets/icons.js"></script>
 <script src="../components/orion.js?v=1"></script>
 <script src="lib/icon-options.js?v=1"></script>
-<script src="lib/questions.js?v=19"></script>
+<script src="lib/questions.js?v=20"></script>
 <script src="lib/review.js?v=8"></script>
 <script>
 const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
 const ROWS = [['Iron Mountain', 'Due Oct 24', '$1,240.00'], ['Staples', 'Due Oct 29', '$72.40'], ['Electric Co.', 'Due Oct 30', '$318.55'], ['Comcast Business', 'Due Nov 2', '$189.00'], ['Acme Insurance', 'Due Nov 5', '$1,820.00'], ['Slack', 'Due Nov 9', '$96.00']];
 const row = r => `<div class="s4-list-item"><span class="s4-list-leading">${r[0].slice(0, 2).toUpperCase()}</span><span class="s4-list-content"><span class="s4-list-headline">${r[0]}</span><span class="s4-list-supporting">${r[1]}</span></span><span class="s4-list-trailing">${r[2]}</span></div>`;
-const frames = document.getElementById('frames');
-const app = h(`<div class="fr" data-fill="clearer" data-edge="H"><div class="sc"><div class="in">
-  <div class="ph">Lisbon · 48 photos</div><div class="s4-list">${ROWS.slice(0, 3).map(row).join('')}</div>
-  <div class="ph b">Night Shots</div><div class="s4-list">${ROWS.slice(3).map(row).join('')}</div><div class="ph c">Ocean</div><div class="ph">Market</div></div></div>
-  <header class="s4-top-app-bar" data-scrolled><button class="s4-icon-button" type="button" aria-label="Open Menu"><span class="s4-icon" data-icon="menu"></span></button><div class="s4-app-bar-title-group"><h3 class="s4-app-bar-title">Library</h3></div><div class="s4-app-bar-actions"><button class="s4-icon-button" type="button" aria-label="Search"><span class="s4-icon" data-icon="search"></span></button><button class="s4-icon-button" type="button" aria-label="More"><span class="s4-icon" data-icon="more-vert"></span></button></div></header>
+const chrome = `
+  <header class="s4-top-app-bar" data-scrolled><button class="s4-icon-button" type="button" aria-label="Open Menu"><span class="s4-icon" data-icon="menu"></span></button><div class="s4-app-bar-title-group"><h3 class="s4-app-bar-title">Pocket Ledger</h3></div><div class="s4-app-bar-actions"><button class="s4-icon-button" type="button" aria-label="Search"><span class="s4-icon" data-icon="search"></span></button><button class="s4-icon-button" type="button" aria-label="More"><span class="s4-icon" data-icon="more-vert"></span></button></div></header>
+  <button class="s4-fab" type="button" aria-label="Add Bill"><span class="s4-icon" data-icon="add"></span></button>
   <div class="s4-toolbar fl" role="toolbar" aria-label="Actions"><button class="s4-icon-button" type="button" aria-label="Filter"><span class="s4-icon" data-icon="filter"></span></button><button class="s4-icon-button" type="button" aria-label="Sort"><span class="s4-icon" data-icon="sort"></span></button><button class="s4-icon-button" type="button" aria-label="Share"><span class="s4-icon" data-icon="share"></span></button></div>
   <nav class="s4-nav-bar" aria-label="Main">
     <button class="s4-nav-item" type="button" aria-current="page"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="home"></span></span><span class="s4-nav-label">Home</span></button>
     <button class="s4-nav-item" type="button"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="bills"></span></span><span class="s4-nav-label">Bills</span></button>
     <button class="s4-nav-item" type="button"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="wallet"></span></span><span class="s4-nav-label">Budget</span></button>
-    <button class="s4-nav-item" type="button"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="settings"></span></span><span class="s4-nav-label">Settings</span></button></nav></div>`);
-const over = h(`<div class="fr" data-fill="clearer" data-edge="H"><div class="bd"><div class="blob" style="width:220px;height:220px;right:-60px;top:160px;background:#ffd166"></div><div class="blob" style="width:260px;height:260px;left:-80px;bottom:-60px;background:#06d6a0"></div><div class="t" style="top:430px">Bright<br>things<br>behind.</div></div>
-  <div class="s4-menu" data-open role="menu" aria-label="Actions"><button class="s4-menu-item" type="button"><span class="s4-icon" data-icon="edit"></span><span class="s4-menu-item-text">Edit</span><span class="s4-menu-item-trailing">E</span></button><button class="s4-menu-item" type="button"><span class="s4-icon" data-icon="copy"></span><span class="s4-menu-item-text">Duplicate</span></button><button class="s4-menu-item" type="button"><span class="s4-icon" data-icon="export"></span><span class="s4-menu-item-text">Export to Excel</span></button><hr class="s4-menu-divider"><button class="s4-menu-item" data-color="error" type="button"><span class="s4-icon" data-icon="delete"></span>Delete</button></div>
-  <dialog class="s4-dialog" open aria-labelledby="dh"><span class="s4-icon s4-dialog-icon" data-icon="delete"></span><h2 class="s4-dialog-headline" id="dh">Delete this bill?</h2><div class="s4-dialog-content">Staples, $72.40, due Nov 2. This can’t be undone.</div><div class="s4-dialog-actions"><button class="s4-button" data-variant="text" type="button">Cancel</button><button class="s4-button" data-variant="text" data-color="error" type="button">Delete</button></div></dialog></div>`);
-frames.append(app, over);
+    <button class="s4-nav-item" type="button"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="settings"></span></span><span class="s4-nav-label">Settings</span></button></nav>`;
+const content = `<div class="sc"><div class="in">
+  <div class="ph">October<small>$3,639.95 due · 6 bills</small></div>
+  <div class="chips"><button class="s4-chip" data-type="filter" type="button" aria-pressed="true">All</button><button class="s4-chip" data-type="filter" type="button">Utilities</button><button class="s4-chip" data-type="filter" type="button">Office</button><button class="s4-chip" data-type="filter" type="button">Insurance</button></div>
+  <div class="kp"><article class="s4-card"><span>Due This Week</span><b>$1,631.00</b></article><article class="s4-card"><span>Paid</span><b>$12,480</b></article></div>
+  <div class="s4-list">${ROWS.slice(0, 3).map(row).join('')}</div>
+  <div class="ph b">Receipts<small>48 scans</small></div>
+  <div class="s4-list">${ROWS.slice(3).map(row).join('')}</div>
+  <div class="ph c">Year in Review</div></div></div>`;
+const menu = `<div class="scrim"></div><div class="s4-menu" data-open role="menu" aria-label="Actions"><button class="s4-menu-item" type="button"><span class="s4-icon" data-icon="edit"></span><span class="s4-menu-item-text">Edit</span><span class="s4-menu-item-trailing">E</span></button><button class="s4-menu-item" type="button"><span class="s4-icon" data-icon="copy"></span><span class="s4-menu-item-text">Duplicate</span></button><button class="s4-menu-item" type="button"><span class="s4-icon" data-icon="export"></span><span class="s4-menu-item-text">Export to Excel</span></button><hr class="s4-menu-divider"><button class="s4-menu-item" data-color="error" type="button"><span class="s4-icon" data-icon="delete"></span>Delete</button></div>`;
+const dialog = `<div class="scrim"></div><dialog class="s4-dialog" open aria-labelledby="dh"><span class="s4-icon s4-dialog-icon" data-icon="delete"></span><h2 class="s4-dialog-headline" id="dh">Delete this bill?</h2><div class="s4-dialog-content">Staples, $72.40, due Nov 2. This can’t be undone.</div><div class="s4-dialog-actions"><button class="s4-button" data-variant="text" type="button">Cancel</button><button class="s4-button" data-variant="text" data-color="error" type="button">Delete</button></div></dialog>`;
+const sheet = `<div class="scrim"></div><dialog class="s4-bottom-sheet" open aria-labelledby="sh"><h2 class="s4-sheet-title" id="sh" style="padding-top:20px">Add Expense</h2><div class="s4-sheet-content"><div class="s4-text-field"><span class="s4-text-field-affix" data-prefix>$</span><input id="s-amt" inputmode="decimal" value="18.50"><label for="s-amt">Amount</label></div><div class="s4-text-field"><input id="s-vendor" value="Blue Bottle Coffee"><label for="s-vendor">Vendor</label></div></div><div class="s4-sheet-actions"><button class="s4-button" data-variant="text" type="button">Cancel</button><button class="s4-button" type="button">Save</button></div></dialog>`;
+const frames = document.getElementById('frames'), all = [];
+[['Library (scroll it)', ''], ['Menu', menu], ['Dialog', dialog], ['Bottom sheet', sheet]].forEach(([label, extra], i) => {
+  const fr = h(`<div class="fr" data-fill="clearer" data-edge="30">${content}${chrome}${extra}</div>`), w = h(`<div class="fw"></div>`);
+  w.append(fr, document.createTextNode(label)); frames.appendChild(w); all.push(fr);
+  fr.querySelector('.sc').scrollTop = i === 0 ? 70 : 150;
+  if (extra) fr.querySelectorAll('.sc, .s4-top-app-bar, .s4-fab, .s4-toolbar, .s4-nav-bar').forEach(el => el.inert = true);
+});
 S4.init(document.body);
-const all = [app, over];
-function setAttr(a, v) { all.forEach(f => v ? f.setAttribute(a, v) : f.removeAttribute(a)); }
-document.getElementById('edge').addEventListener('s4-change', e => setAttr('data-edge', e.detail.value));
-document.getElementById('fill').addEventListener('s4-change', e => setAttr('data-fill', e.detail.value));
+const set = (a, v) => all.forEach(f => v ? f.setAttribute(a, v) : f.removeAttribute(a));
+document.getElementById('edge').addEventListener('s4-change', e => { const v = e.detail.value; set('data-edge', v.replace('o', '')); set('data-outer', v.endsWith('o') ? '1' : ''); });
+document.getElementById('fill').addEventListener('s4-change', e => set('data-fill', e.detail.value));
 document.getElementById('theme').addEventListener('s4-change', e => S4.theme({ mode: e.detail.value }));
 S4.theme({ mode: 'light' });
-const OPT = { H: ['C + D: Tight', 'Line 30%, 4px fade at 20%.'], I: ['C + D: Fainter', 'Line 26%, 5px fade at 13%.'], J: ['C + D: Softer Fade', 'Line 30%, 8px fade at 16%.'] };
-Object.keys(OPT).forEach(k => document.getElementById('cards').appendChild(S4Review.card({ pick: `edge:${k}`, letter: k, title: OPT[k][0], desc: OPT[k][1], tag: k === 'H' ? 'Suggested' : '' })));
+const OPT = { '20': ['Frost Line 20%', 'Barely there.'], '30': ['Frost Line 30%', 'Quiet but visible. Suggested.'], '40': ['Frost Line 40%', 'Clearly a frame.'], '50': ['Frost Line 50%', 'Strong; still flat.'], '30o': ['30% + Outer Hairline', 'Adds a faint dark line outside so it holds over white.'] };
+Object.keys(OPT).forEach(k => document.getElementById('cards').appendChild(S4Review.card({ pick: `edge:${k}`, letter: k.toUpperCase(), title: OPT[k][0], desc: OPT[k][1], tag: k === '30' ? 'Suggested' : '' })));
 S4Review.page('transparency3');
 </script>
 </body>
