@@ -57,7 +57,7 @@ Arrows and chevrons are Linear, everything else Bold Duotone. Unknown names log 
 | `hidden` | eye-closed |
 | `light-mode` | sun |
 | `dark-mode` | moon |
-| `menu` | hamburger-menu |
+| `menu` | menu-dots |
 | `sidebar` | sidebar-minimalistic |
 | `refresh` | refresh |
 | `undo` | undo-left |

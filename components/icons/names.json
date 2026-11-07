@@ -15,7 +15,7 @@
     "star": "star", "favorite": "heart", "bookmark": "bookmark", "chart": "chart-2", "dashboard": "widget-5", "document": "document-text",
     "folder": "folder", "card": "card", "transfer": "card-transfer", "tag": "tag", "schedule": "clock-circle", "history": "history",
     "lock": "lock-keyhole-minimalistic", "visible": "eye", "hidden": "eye-closed", "light-mode": "sun", "dark-mode": "moon",
-    "menu": "hamburger-menu", "sidebar": "sidebar-minimalistic", "refresh": "refresh", "undo": "undo-left", "logout": "logout",
+    "menu": "menu-dots", "sidebar": "sidebar-minimalistic", "refresh": "refresh", "undo": "undo-left", "logout": "logout",
     "sparkle": "stars", "magic": "magic-stick", "mail": "letter", "chat": "chat-round-dots", "phone": "phone", "location": "map-point",
     "camera": "camera", "image": "gallery", "play": "play", "pause": "pause"
   }

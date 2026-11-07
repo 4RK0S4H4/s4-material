@@ -88,8 +88,8 @@ now short. Glass (0004) and motion decisions stand. Liquid glass stays shelved (
 **Next (in order):**
 1. Owner: try the demo on the iPhone (FAB to sheet, row to detail, Delete All Data to dialog, menus, view switches,
    the button groups). Safari/WebKit is still unchecked by us.
-2. Owner: answer the [Icon Lab](../explore/icons.html) (plain vs boxed add/close/check glyphs; menu button). Then map
-   the names in `components/icons/names.json`, rebuild, and record it in a new decision 0007.
+2. ~~Icon Lab~~ answered 2026-11-07: menu button = Dots (done, [0007](decisions/0007-icons.md)); add/close/check glyphs
+   unanswered, left boxed.
 3. Release 1.0.0 (below).
 
 Optional, not blocking 1.0.0: the wide-screen list/detail split in the demo (0005); restyle the hub with orion.css; the
@@ -115,6 +115,7 @@ labs could load `components/assets/` instead of their own copies.
 
 ## Session log
 
+- 2026-11-07: repo renamed to s4-orion (links updated, skill re-packaged); Icon Lab answered, `menu` now menu-dots (0007). Next: owner's iPhone check, then 1.0.0; optional items meanwhile.
 - 2026-11-04: button groups angular (M3E inner corners), rail FAB replaces pinned FABs on wide screens, list trailing value + icon in a row, checker audits all views, Icon Lab added. Next: owner's iPhone check and Icon Lab, then 1.0.0.
 - 2026-11-03 (review): end-to-end review in Chromium; container transform rebuilt (content and label ride on the container, starts on the source even outside the surface's box, label fades back on close, glass solid while moving); gallery theme bar follows swatches. Next: owner's iPhone check, then 1.0.0.
 - 2026-10-25: Phases 1–4 published.
