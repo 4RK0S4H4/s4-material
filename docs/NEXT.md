@@ -79,8 +79,7 @@ the gallery, the demo and all 31 reference pages (the only hits are the delibera
 
 Fixed and published: faster springs, glass timing in container transforms, no white glass edge, menu toggle + menu motion,
 table sort, checkbox uncheck, slider end dot. **Open:** "still looks very Material" (text fields, checkboxes, tables, tab
-headers): build a Style Lab (`explore/style.html`, questionnaire style) with 2-3 directions per component (text field,
-checkbox, table, tabs, maybe buttons/chips), get the owner's picks, then restyle, record in 0009. Still needs the iPhone
+headers): **Style Lab built** (`explore/style.html`: text fields, checkboxes, tables, tabs; A is today). Waiting for the owner's picks, then restyle the components, add buttons/chips/sliders in a second round if wanted, record in 0009. Still needs the iPhone
 check for the glass-during-transform change (Safari). 1.0.0 waits for this.
 
 ## Owner review (2026-11-04) and plan review

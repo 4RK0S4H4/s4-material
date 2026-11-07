@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>S4 Orion: Style Lab</title>
+<link rel="stylesheet" href="../components/orion.css?v=1">
+<style>
+body{margin:0;background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface)}
+h1,h2,p{margin:0}
+.bar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;padding:12px 24px;background:var(--md-sys-color-surface-container);border-bottom:1px solid var(--md-sys-color-outline-variant)}
+.bar h1{font-size:22px;line-height:28px;font-weight:500;margin-right:auto}
+.ctl{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;letter-spacing:.5px}
+.page{max-width:1200px;margin:0 auto;padding:24px 24px 64px;display:flex;flex-direction:column;gap:48px}
+.intro{max-width:80ch;color:var(--md-sys-color-on-surface-variant);display:flex;flex-direction:column;gap:12px}
+.sec > h2{font-size:28px;line-height:36px;font-weight:500;margin-bottom:6px}
+.sec > p{color:var(--md-sys-color-on-surface-variant);max-width:85ch;margin-bottom:16px}
+.cards{--rv-min:320px}
+.pv{padding:20px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;background:var(--md-sys-color-surface-container-low);border-radius:16px;min-height:120px}
+.pv.col{flex-direction:column;align-items:stretch}
+footer{padding:24px;text-align:center;font-size:12px;color:var(--md-sys-color-on-surface-variant)}
+
+/* ---- candidate looks (lab only; the winner goes into the components) ---- */
+/* text fields */
+.tfb,.tfu{display:flex;flex-direction:column;gap:6px;flex:none;min-width:0}
+.tfb label,.tfu label{font-size:12px;line-height:16px;font-weight:500;color:var(--md-sys-color-on-surface-variant)}
+.tfb input,.tfu input{font:inherit;font-size:16px;color:var(--md-sys-color-on-surface);height:44px;padding:0 14px;box-sizing:border-box;outline:0;caret-color:var(--md-sys-color-on-surface)}
+.tfb input{border:1px solid var(--md-sys-color-outline-variant);border-radius:10px;background:var(--md-sys-color-surface)}
+.tfb input:focus{border-color:var(--md-sys-color-on-surface);box-shadow:0 0 0 1px var(--md-sys-color-on-surface)}
+.tfu input{border:0;border-bottom:1px solid var(--md-sys-color-outline);background:transparent;border-radius:0;padding:0 2px}
+.tfu input:focus{border-bottom:2px solid var(--md-sys-color-on-surface);margin-bottom:-1px}
+.tfb input::placeholder,.tfu input::placeholder{color:var(--md-sys-color-on-surface-variant);opacity:.7}
+/* checkboxes */
+.ck{display:inline-flex;align-items:center;gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;font-size:16px}
+.ck input{position:absolute;opacity:0;pointer-events:none}
+.ck i{flex:none;width:22px;height:22px;box-sizing:border-box;border:1.5px solid var(--md-sys-color-outline);display:grid;place-items:center;transition:background-color 90ms linear,border-color 90ms linear,transform 140ms var(--md-sys-motion-spring-fast-spatial)}
+.ck i svg{width:14px;height:14px;fill:none;stroke:var(--md-sys-color-surface);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:20;stroke-dashoffset:20;transition:stroke-dashoffset 120ms ease-out}
+.ck input:checked + i svg{stroke-dashoffset:0}
+.ck input:focus-visible + i{outline:2px solid var(--s4-focus-ring-color);outline-offset:2px}
+.ck:active i{transform:scale(.92)}
+.ck.round i{border-radius:50%}
+.ck.round input:checked + i{background:var(--md-sys-color-on-surface);border-color:var(--md-sys-color-on-surface)}
+.ck.soft i{border-radius:6px}
+.ck.soft input:checked + i{background:var(--md-sys-color-primary);border-color:var(--md-sys-color-primary)}
+.ck.soft i svg{stroke:var(--md-sys-color-on-primary);stroke-width:2}
+/* tables */
+.tb{width:100%;border-collapse:separate;border-spacing:0;font-size:14px}
+.tb th{font-weight:500;font-size:12px;text-align:start;color:var(--md-sys-color-on-surface-variant);padding:10px 14px}
+.tb td{padding:0 14px;height:52px;white-space:nowrap}
+.tb .num{text-align:end;font-variant-numeric:tabular-nums}
+.tb.hair th{border-bottom:1px solid var(--md-sys-color-outline-variant);padding-inline:6px}
+.tb.hair td{border-bottom:1px solid color-mix(in srgb,var(--md-sys-color-outline-variant) 55%,transparent);padding-inline:6px}
+.tb.hair tbody tr:hover td{background:color-mix(in srgb,var(--md-sys-color-on-surface) 4%,transparent)}
+.tb.soft{border-spacing:0 4px}
+.tb.soft th{padding-block:4px}
+.tb.soft td{background:var(--md-sys-color-surface-container-low)}
+.tb.soft td:first-child{border-radius:12px 0 0 12px}.tb.soft td:last-child{border-radius:0 12px 12px 0}
+.tb.soft tbody tr:hover td{background:var(--md-sys-color-surface-container)}
+.tbw{overflow-x:auto;width:100%}
+/* tabs */
+.tabs{display:flex;gap:4px;max-width:100%;overflow-x:auto}
+.tabs button{white-space:nowrap;font:inherit;font-size:14px;font-weight:500;border:0;background:transparent;color:var(--md-sys-color-on-surface-variant);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background-color 120ms linear,color 120ms linear}
+.tabs button:focus-visible{outline:2px solid var(--s4-focus-ring-color);outline-offset:2px}
+.tabs.pills button{height:36px;padding:0 16px;border-radius:999px}
+.tabs.pills button[aria-selected=true]{background:var(--md-sys-color-on-surface);color:var(--md-sys-color-surface)}
+.tabs.quiet{gap:20px;border-bottom:1px solid var(--md-sys-color-outline-variant)}
+.tabs.quiet button{height:40px;padding:0 2px;position:relative;font-weight:400}
+.tabs.quiet button[aria-selected=true]{color:var(--md-sys-color-on-surface);font-weight:600}
+.tabs.quiet button[aria-selected=true]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;border-radius:2px;background:var(--md-sys-color-on-surface)}
+.tabs.tray{gap:2px;padding:3px;border-radius:14px;background:var(--md-sys-color-surface-container-high);display:inline-flex}
+.tabs.tray button{height:34px;padding:0 16px;border-radius:11px}
+.tabs.tray button[aria-selected=true]{background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface);box-shadow:0 1px 2px color-mix(in srgb,var(--md-sys-color-shadow) 25%,transparent)}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>S4 Orion: Style Lab</h1>
+  <div class="ctl">Theme <div class="s4-button-group" data-connected data-select="single" data-fit="content" id="theme" aria-label="Theme">
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="light" aria-pressed="true">Light</button>
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="dark">Dark</button></div></div>
+</div>
+<main class="page">
+  <div class="intro">
+    <p>The demo still reads as Material 3 Expressive. These are alternative looks for the parts that give it away most: text fields, checkboxes, tables and tab headers. Each card shows a live preview; option A is how it looks today. The new looks stay monochrome (ink on paper) and keep every state, size and contrast rule; only the styling changes.</p>
+    <p>Tap the card (above its preview) to pick one. If none is right, pick Other and say what you want in the notes. Answers are saved with your other labs.</p>
+  </div>
+  <div id="sections"></div>
+</main>
+<footer><a href="../">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0)</footer>
+
+<script src="../components/assets/m3color.js"></script>
+<script src="../components/assets/icons.js"></script>
+<script src="../components/orion.js?v=1"></script>
+<script src="lib/icon-options.js?v=1"></script>
+<script src="lib/questions.js?v=11"></script>
+<script src="lib/review.js?v=8"></script>
+<script>
+const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+const tick = '<svg viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7"/></svg>';
+const ck = (cls, label, checked, extra) => `<label class="${cls}"><input type="checkbox"${checked ? ' checked' : ''}${extra || ''}><i>${tick}</i>${label}</label>`;
+const rows = [['Iron Mountain', 'Oct 28', 'Due', '$1,240.00'], ['Comcast Business', 'Oct 12', 'Paid', '$389.95'], ['Staples', 'Oct 3', 'Overdue', '$212.48'], ['Xcel Energy', 'Oct 9', 'Paid', '$806.00']];
+const tbl = cls => `<div class="tbw"><table class="${cls}"><thead><tr><th>Vendor</th><th>Due</th><th>Status</th><th class="num">Amount</th></tr></thead><tbody>${rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="num">${r[3]}</td></tr>`).join('')}</tbody></table></div>`;
+const tabs = (cls, names) => `<div class="tabs ${cls}" role="tablist">${names.map((n, i) => `<button type="button" role="tab" aria-selected="${i === 0}">${n}</button>`).join('')}</div>`;
+const T = ['All', 'Due Soon', 'Paid', 'Overdue'];
+const SECTIONS = [
+  { id: 'field', title: 'Text Fields', desc: 'Today: Material’s floating label inside a filled or outlined box. The alternatives put the label above, drop the floating motion and the tinted fill, and use ink for focus.', opts: [
+    { k: 'A', name: 'Material (today)', tag: 'Today', desc: 'Floating label, filled box, primary indicator.', html: () => `<div class="pv col"><div class="s4-text-field"><input id="a1" value="Electric Co."><label for="a1">Vendor</label></div><div class="s4-text-field" data-variant="outlined"><input id="a2" value="1,240.00"><label for="a2">Amount</label></div></div>` },
+    { k: 'B', name: 'Quiet Box', desc: 'Label above, thin outline, 10px corners, focus turns the outline to ink. Calm and familiar.', html: () => `<div class="pv col"><div class="tfb"><label for="b1">Vendor</label><input id="b1" value="Electric Co."></div><div class="tfb"><label for="b2">Amount</label><input id="b2" placeholder="0.00"></div></div>` },
+    { k: 'C', name: 'Underline', desc: 'Label above, no box, only a bottom line that thickens to ink on focus. The lightest option.', html: () => `<div class="pv col"><div class="tfu"><label for="c1">Vendor</label><input id="c1" value="Electric Co."></div><div class="tfu"><label for="c2">Amount</label><input id="c2" placeholder="0.00"></div></div>` }]},
+  { id: 'check', title: 'Checkboxes', desc: 'Today: an 18dp square with a primary fill. Try them: tap to check and uncheck. The new marks draw in (and out) with a stroke instead of wiping.', opts: [
+    { k: 'A', name: 'Material (today)', tag: 'Today', desc: 'Small rounded square, primary fill.', html: () => `<div class="pv"><label class="s4-checkbox"><input type="checkbox" checked><span class="s4-checkbox-box"></span>Remind Me</label><label class="s4-checkbox"><input type="checkbox"><span class="s4-checkbox-box"></span>Auto-Pay</label></div>` },
+    { k: 'B', name: 'Round Ink', desc: 'A circle that fills with ink (on-surface), check drawn as a stroke. Reads like a selection dot, not a form box.', html: () => `<div class="pv">${ck('ck round', 'Remind Me', true)}${ck('ck round', 'Auto-Pay')}</div>` },
+    { k: 'C', name: 'Soft Square', desc: 'A larger 6px-corner square with a thin outline; fills with the seed color (or ink in a monochrome app).', html: () => `<div class="pv">${ck('ck soft', 'Remind Me', true)}${ck('ck soft', 'Auto-Pay')}</div>` }]},
+  { id: 'table', title: 'Tables', desc: 'Today: a header row with a divider and compact rows, M3 style. The alternatives remove the header weight and let whitespace do the work.', opts: [
+    { k: 'A', name: 'Material (today)', tag: 'Today', desc: 'Divided rows, bold header.', html: () => `<div class="pv"><div class="s4-table-wrap" style="width:100%"><table class="s4-table"><thead><tr><th scope="col">Vendor</th><th scope="col">Due</th><th scope="col">Status</th><th scope="col" class="num">Amount</th></tr></thead><tbody>${rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="num">${r[3]}</td></tr>`).join('')}</tbody></table></div></div>` },
+    { k: 'B', name: 'Hairline', desc: 'No header fill: small muted column names, very light row lines, a soft highlight on hover. Editorial.', html: () => `<div class="pv">${tbl('tb hair')}</div>` },
+    { k: 'C', name: 'Soft Rows', desc: 'Each row is its own rounded bar with a small gap; no lines at all. Friendlier, takes more room.', html: () => `<div class="pv">${tbl('tb soft')}</div>` }]},
+  { id: 'tabs', title: 'Tab Headers', desc: 'Today: M3 primary tabs with a sliding indicator and state layers. Tap the tabs in each preview.', opts: [
+    { k: 'A', name: 'Material (today)', tag: 'Today', desc: 'Indicator bar under the selected label.', html: () => `<div class="pv"><div class="s4-tabs" role="tablist">${T.map((n, i) => `<button class="s4-tab" role="tab" aria-selected="${i === 0}" type="button">${n}</button>`).join('')}</div></div>` },
+    { k: 'B', name: 'Ink Pills', desc: 'The selected tab is a solid ink pill; the rest are plain text. No underline.', html: () => `<div class="pv">${tabs('pills', T)}</div>` },
+    { k: 'C', name: 'Quiet Underline', desc: 'Plain text; the selected one turns bolder with a short ink underline over a hairline.', html: () => `<div class="pv">${tabs('quiet', T)}</div>` },
+    { k: 'D', name: 'Segmented Tray', desc: 'Tabs sit in a soft tray and the selected one is a raised chip, like iOS.', html: () => `<div class="pv">${tabs('tray', T)}</div>` }]}
+];
+const host = document.getElementById('sections');
+SECTIONS.forEach(sec => {
+  const el = h(`<section class="sec"><h2>${sec.title}</h2><p>${sec.desc}</p><div class="cards rv-group" role="radiogroup" aria-label="${sec.title}"></div></section>`);
+  host.appendChild(el);
+  sec.opts.forEach(o => el.querySelector('.cards').appendChild(S4Review.card({ pick: `${sec.id}:${o.k}`, letter: o.k, title: o.name, desc: o.desc, tag: o.tag || '', preview: h(o.html()) })));
+});
+document.addEventListener('click', e => {
+  const t = e.target.closest('.tabs button[role=tab]'); if (!t) return;
+  t.parentNode.querySelectorAll('button').forEach(b => b.setAttribute('aria-selected', b === t));
+});
+document.getElementById('theme').addEventListener('s4-change', e => S4.theme({ mode: e.detail.value }));
+S4.theme({ mode: 'light' });
+S4Review.page('style');
+</script>
+</body>
+</html>

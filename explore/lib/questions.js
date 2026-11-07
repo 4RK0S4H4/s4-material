@@ -62,4 +62,14 @@ window.S4_REVIEW_DEMOS = [
       { id: 'menu', label: 'Menu button', options: [{ v: 'A', label: 'Boxed hamburger' }, { v: 'B', label: 'Dots' }, { v: 'Other', label: 'Describe in notes' }] }
     ]
   }
+  ,
+  {
+    id: 'style', title: 'Style Lab', href: 'explore/style.html',
+    questions: [
+      { id: 'field', label: 'Text fields', options: [{ v: 'A', label: 'Material (today)' }, { v: 'B', label: 'Quiet Box' }, { v: 'C', label: 'Underline' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'check', label: 'Checkboxes', options: [{ v: 'A', label: 'Material (today)' }, { v: 'B', label: 'Round Ink' }, { v: 'C', label: 'Soft Square' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'table', label: 'Tables', options: [{ v: 'A', label: 'Material (today)' }, { v: 'B', label: 'Hairline' }, { v: 'C', label: 'Soft Rows' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'tabs', label: 'Tab headers', options: [{ v: 'A', label: 'Material (today)' }, { v: 'B', label: 'Ink Pills' }, { v: 'C', label: 'Quiet Underline' }, { v: 'D', label: 'Segmented Tray' }, { v: 'Other', label: 'Describe in notes' }] }
+    ]
+  }
 ];
