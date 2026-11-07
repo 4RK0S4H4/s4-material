@@ -28,7 +28,7 @@ Everything ships in this skill's `assets/` folder: `orion.css` (tokens, every co
 - **One self-contained HTML file** (only when asked for a single file): build the page with the normal links, then run
   `node <skill>/scripts/inline.mjs page.html` to inline the CSS, JS, icons and font. Run it again after edits.
 - **Never edit `orion.css` for one app.** Everything sits in `@layer s4.*`, so the app's own unlayered CSS wins; override
-  with tokens and documented attributes instead. The source of truth is the repo (github.com/4rk0s4h4/s4-material).
+  with tokens and documented attributes instead. The source of truth is the repo (github.com/4rk0s4h4/s4-orion).
 
 ## Page shape
 

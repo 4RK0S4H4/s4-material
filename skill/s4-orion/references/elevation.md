@@ -1,7 +1,7 @@
 <!-- GENERATED copy of docs/foundations/elevation.md (scripts/build.mjs). Edit the original. -->
 # Elevation
 
-**Tokens:** `--md-sys-elevation-level0` … `level5` · live: [tokens page](https://4rk0s4h4.github.io/s4-material/tokens/#elevation)
+**Tokens:** `--md-sys-elevation-level0` … `level5` · live: [tokens page](https://4rk0s4h4.github.io/s4-orion/tokens/#elevation)
 
 M3 shows depth with **tonal surfaces first**: a card is `surface-container-low` on a `surface` page, a dialog is
 `surface-container-high`. Shadows are only for components M3 gives them to:

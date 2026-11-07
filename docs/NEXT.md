@@ -107,7 +107,7 @@ labs could load `components/assets/` instead of their own copies.
 
 ## Settled questions
 
-- Name: **S4 Orion** (repo name `s4-material` is historical). It replaces the S4 Material skill.
+- Name: **S4 Orion** (the repo was renamed from `s4-material` to `s4-orion`; Pages is now https://4rk0s4h4.github.io/s4-orion/). It replaces the S4 Material skill.
 - S4 Glass is unrelated. The Orion skill claims "my design system" only for apps already on S4 Orion / S4 Material.
 - Owner's picks so far: one seed per app, monochrome default; Inter; Solar duotone + linear mix; Title Case; stock M3
   states and M3 Expressive shapes; solid cards; M3 sizes everywhere; web only; M3 Expressive springs; container

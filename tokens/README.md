@@ -27,4 +27,4 @@ Rules:
 - **Modes live on the token** in `$extensions["com.s4.modes"]` (dark, high-contrast, dark-high-contrast, reduced-motion, reduced-transparency). The build writes one block per mode; device settings apply automatically and `data-theme`, `data-contrast`, `data-motion`, `data-glass` on `<html>` override them.
 - **Springs are physics.** A group marked `"com.s4.spring": true` holds stiffness, damping and duration; the build emits the group as a CSS `linear()` easing.
 
-See [decision 0003](../docs/decisions/0003-tokens.md) and the [reference page](https://4rk0s4h4.github.io/s4-material/tokens/).
+See [decision 0003](../docs/decisions/0003-tokens.md) and the [reference page](https://4rk0s4h4.github.io/s4-orion/tokens/).

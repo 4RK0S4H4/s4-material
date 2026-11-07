@@ -2,7 +2,7 @@
 
 A personal design language for web apps and pages, built on **Material 3 Expressive**, with a **glass layer** reserved for floating chrome. It is the successor to the S4 Material skill (1.3) and is designed to be applied consistently by Claude, through the skill in [`/skill`](skill/), and by hand.
 
-**Live site:** https://4rk0s4h4.github.io/s4-material/ (demos, review labs and reference)
+**Live site:** https://4rk0s4h4.github.io/s4-orion/ (demos, review labs and reference)
 
 ## What's in the repo
 
@@ -27,8 +27,8 @@ S4 Orion is being built phase by phase. Decisions are recorded in [`docs/decisio
 |---|---|---|
 | 1 | Audit of S4 Material 1.3 and decisions | Done ([0001](docs/decisions/0001-phase-1-audit.md)) |
 | 2 | Repo structure | Done ([0002](docs/decisions/0002-repo-structure.md)) |
-| 3 | Tokens and build script | Done ([0003](docs/decisions/0003-tokens.md), [tokens page](https://4rk0s4h4.github.io/s4-material/tokens/)) |
-| 4 | Components and the glass layer | Done ([0004](docs/decisions/0004-glass.md), [components](https://4rk0s4h4.github.io/s4-material/components/)) |
+| 3 | Tokens and build script | Done ([0003](docs/decisions/0003-tokens.md), [tokens page](https://4rk0s4h4.github.io/s4-orion/tokens/)) |
+| 4 | Components and the glass layer | Done ([0004](docs/decisions/0004-glass.md), [components](https://4rk0s4h4.github.io/s4-orion/components/)) |
 | 5 | Claude skill | Done, approved ([skill](skill/), [download](skill/dist/s4-orion.skill)) |
 | 6 | Demo and review against the skill | Built; end-to-end review and motion fixes done 2026-11-03; awaiting the owner's iPhone check ([0005](docs/decisions/0005-phase-6-review.md)) |
 

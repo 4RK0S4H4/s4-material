@@ -34,4 +34,4 @@ index.html   GitHub Pages hub
 ## Publishing
 
 `main` is the published branch (GitHub Pages: deploy from branch `main`, folder `/`). Work happens on `s4-orion` and is
-fast-forwarded to `main` when something is ready to review. The site lives at https://4rk0s4h4.github.io/s4-material/.
+fast-forwarded to `main` when something is ready to review. The site lives at https://4rk0s4h4.github.io/s4-orion/.

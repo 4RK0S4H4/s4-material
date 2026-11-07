@@ -1,7 +1,7 @@
 # Typography
 
 **Tokens:** `--md-sys-typescale-<role>-{font,size,line-height,tracking,weight}`, `--md-sys-typescale-emphasized-<role>-weight`,
-`--md-ref-typeface-{brand,plain,mono}` · live: [tokens page](https://4rk0s4h4.github.io/s4-material/tokens/#type)
+`--md-ref-typeface-{brand,plain,mono}` · live: [tokens page](https://4rk0s4h4.github.io/s4-orion/tokens/#type)
 
 - **Typeface:** Inter (variable, all OpenType features), bundled as `inter-variable.woff2`. Load it from the bundle, not
   Google Fonts, so `tnum`, `case`, `zero` and `frac` work. Inter plays with its default glyphs.

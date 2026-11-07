@@ -1,7 +1,7 @@
 # Shape
 
 **Tokens:** `--md-sys-shape-corner-*` (scale) and `--s4-shape-*` (which step each component uses) · live:
-[tokens page](https://4rk0s4h4.github.io/s4-material/tokens/#shape)
+[tokens page](https://4rk0s4h4.github.io/s4-orion/tokens/#shape)
 
 S4 Orion uses the **stock M3 Expressive corner scale** (decision 0001: Shape A): none 0, extra-small 4, small 8, medium 12,
 large 16, large-increased 20, extra-large 28, extra-large-increased 32, extra-extra-large 48, full.
