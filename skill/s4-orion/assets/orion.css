@@ -1212,11 +1212,11 @@
 }
 
 /* ---- button-group/button-group.css ---- */
-/* Button group (M3 Expressive)
+/* Button group (S4 Orion: Notched connected groups)
    Standard: <div class="s4-button-group"> <button class="s4-button">…</button> … </div>
      Buttons 8dp apart. Pressing one widens it a little while its neighbours give way (M3 Expressive press interaction).
    Connected: <div class="s4-button-group" data-connected data-select="single|multi" aria-label="View">
-     Buttons 2dp apart, outer corners full, inner corners small and angular (xs 4, s/m 8, l 16, xl 20; tighter while pressed); the selected button morphs fully round.
+     Buttons 2dp apart, outer corners full, inner corners are soft squares, the Notched look (xs 4, s/m 6, l 12, xl 16; tighter while pressed); the selected button morphs into a full pill.
      Connected groups stretch to fill their width (equal weights); data-fit="content" keeps them as wide as their labels.
    Works with .s4-button and .s4-icon-button children. The size comes from the buttons' own data-size.
    button-group.js manages aria-pressed (data-select), arrow-key navigation and the s4-change event. */
@@ -1252,13 +1252,13 @@
 
   /* ---------- connected group ---------- */
   .s4-button-group[data-connected] {
-    --_inner: var(--md-sys-shape-corner-small);   /* M3 Expressive: angular inner corners, fully round once selected */
-    --_inner-pressed: var(--md-sys-shape-corner-extra-small);
+    --_inner: calc(var(--md-sys-shape-corner-extra-small) * 1.5);   /* Notched (decision 0011): soft-square joins (6dp), fully round ends, a fully round pill once selected */
+    --_inner-pressed: calc(var(--md-sys-shape-corner-extra-small) / 1.5);
     gap: 2px;   /* M3 Expressive connected groups: 2dp between buttons */
   }
   .s4-button-group[data-connected]:has(> [data-size="xs"]) { --_inner: var(--md-sys-shape-corner-extra-small); --_inner-pressed: calc(var(--md-sys-shape-corner-extra-small) / 2); }
-  .s4-button-group[data-connected]:has(> [data-size="l"]) { --_inner: var(--md-sys-shape-corner-large); --_inner-pressed: var(--md-sys-shape-corner-medium); }
-  .s4-button-group[data-connected]:has(> [data-size="xl"]) { --_inner: var(--md-sys-shape-corner-large-increased); --_inner-pressed: var(--md-sys-shape-corner-large); }
+  .s4-button-group[data-connected]:has(> [data-size="l"]) { --_inner: var(--md-sys-shape-corner-medium); --_inner-pressed: var(--md-sys-shape-corner-small); }
+  .s4-button-group[data-connected]:has(> [data-size="xl"]) { --_inner: var(--md-sys-shape-corner-large); --_inner-pressed: var(--md-sys-shape-corner-medium); }
 
   .s4-button-group[data-connected] > :is(.s4-button, .s4-icon-button) {
     --_r: var(--_inner);
@@ -4585,7 +4585,8 @@
    </dialog>
    <dialog class="s4-side-sheet" id="filters">… same parts, opens from the end edge …</dialog>
    Opened from a FAB: container transform (the FAB becomes the sheet). Otherwise: slides from its edge.
-   The bottom sheet can be dragged down to dismiss. Solid here; glass.css makes both glass. */
+   From 600 wide the bottom sheet is docked to the bottom and can be dragged down to dismiss; on a phone it is a centered
+   card (like a dialog, no handle) that opens by container transform from any opener. Solid here; glass.css makes both glass. */
 @layer s4.components {
   .s4-bottom-sheet, .s4-side-sheet {
     margin: 0;
@@ -4611,6 +4612,21 @@
     padding-bottom: max(var(--s4-space-6), env(safe-area-inset-bottom));
     border-radius: var(--s4-shape-sheet) var(--s4-shape-sheet) 0 0;
     touch-action: pan-x;
+  }
+  /* On a phone (under 600) the bottom sheet is a centered card, shaped like a dialog (decision 0011): no handle, no drag */
+  @media (max-width: 599.98px) {
+    .s4-bottom-sheet {
+      inset: 0;
+      width: min(calc(100vw - 2 * var(--s4-space-4)), 560px);
+      max-width: none;
+      height: fit-content;
+      max-height: calc(100dvh - 2 * var(--s4-space-4));
+      margin: auto;
+      padding-top: var(--s4-space-6);
+      border-radius: var(--md-sys-shape-corner-extra-large);
+      touch-action: auto;
+    }
+    .s4-bottom-sheet > .s4-sheet-handle { display: none; }
   }
   .s4-sheet-handle {
     flex: none;

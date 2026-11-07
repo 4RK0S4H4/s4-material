@@ -1,7 +1,8 @@
 # Sheets
 
-A short task without leaving the screen. **Bottom sheets** grow out of a FAB (container transform) or, opened from anything
-else, **slide from the bottom edge**; drag the handle down to dismiss. **Side sheets** slide from the end edge. Both on glass.
+A short task without leaving the screen. From 600 wide, **bottom sheets** grow out of a FAB (container transform) or, opened
+from anything else, slide from the bottom edge; drag the handle down to dismiss. **On a phone (under 600) the bottom sheet is a
+centered card**, shaped and animated like a dialog (container transform from any opener, no handle, no drag; decision 0011). **Side sheets** slide from the end edge. Both on glass.
 
 ```html
 <button class="s4-fab" data-sheet="add-expense" aria-label="Add expense"><span class="s4-icon" data-icon="add"></span></button>

@@ -6,6 +6,7 @@ S4.register('sheet', function (scope) {
     if (!S4.util.once(sheet, 'sheetDrag')) return;
     var startY = 0, lastY = 0, lastT = 0, v = 0, dragging = false;
     sheet.addEventListener('pointerdown', function (e) {
+      if (window.matchMedia('(max-width: 599.98px)').matches) return;   /* a centered card on a phone: no drag */
       var onHandle = e.target.closest('.s4-sheet-handle');
       var nearTop = e.clientY - sheet.getBoundingClientRect().top < 56 && !e.target.closest('button, input, select, textarea, a');
       if (!onHandle && !nearTop) return;

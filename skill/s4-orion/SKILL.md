@@ -105,7 +105,7 @@ Everything ships in this skill's `assets/` folder: `orion.css` (tokens, every co
 
 **Overlays**
 - A short list of choices from a button: **menu**. A decision or a short input: **dialog**. A short task without leaving:
-  **bottom sheet** (phones, quick add) or **side sheet** (filters, details on wide screens). Confirmation after an
+  **bottom sheet** (quick add; on a phone it renders as a centered card) or **side sheet** (filters, details on wide screens). Confirmation after an
   action: **snackbar** with Undo. Naming an icon: **tooltip**.
 - Confirm only what can't be undone. Prefer Undo in a snackbar.
 

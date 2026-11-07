@@ -15,21 +15,24 @@
     var all = Array.prototype.slice.call(d.querySelectorAll(FOCUSABLE));
     return all.find(function (x) { return x.getAttribute('data-color') !== 'error' && !x.closest('.s4-ct-ghost'); }) || all[0] || d;
   }
+  function narrow() { return window.matchMedia && window.matchMedia('(max-width: 599.98px)').matches; }
   function open(id, opts) {
     var d = el(id); if (!d || d.open) return;
     opts = opts || {};
     var from = opts.from || null;
     /* decision 0001: dialogs grow from any opener; bottom sheets only from a FAB (otherwise they slide from the edge);
        side sheets always slide from their edge */
-    var isSheet = d.classList.contains('s4-bottom-sheet') || d.classList.contains('s4-side-sheet');
+    var phoneSheet = d.classList.contains('s4-bottom-sheet') && narrow();   /* a centered card on a phone: behaves like a dialog */
+    var isSheet = !phoneSheet && (d.classList.contains('s4-bottom-sheet') || d.classList.contains('s4-side-sheet'));
     var transformFrom = from && d.dataset.origin !== 'none' && (!isSheet || (d.classList.contains('s4-bottom-sheet') && from.matches('.s4-fab'))) ? from : null;
+    d._s4phone = phoneSheet;
     d._s4from = from; d._s4transform = transformFrom; d.style.visibility = '';
     d.showModal();
     initialFocus(d).focus({ preventScroll: true });
     S4.transition.restore(d);
     d.animate([{ opacity: 0 }, { opacity: 1 }], { duration: S4.motion.spring('effects').duration, easing: S4.motion.spring('effects').easing, pseudoElement: '::backdrop' });
-    var p = transformFrom ? S4.transition.containerTransform(d, transformFrom, { open: true, spring: d.classList.contains('s4-dialog') ? 'spatial' : 'slow-spatial' })
-                                                : d.classList.contains('s4-bottom-sheet') ? S4.transition.slide(d, { open: true, edge: 'bottom' })
+    var p = transformFrom ? S4.transition.containerTransform(d, transformFrom, { open: true, spring: d.classList.contains('s4-dialog') || phoneSheet ? 'spatial' : 'slow-spatial' })
+                                                : d.classList.contains('s4-bottom-sheet') && !phoneSheet ? S4.transition.slide(d, { open: true, edge: 'bottom' })
                                                 : d.classList.contains('s4-side-sheet') ? S4.transition.slide(d, { open: true, edge: 'end', spring: 'spatial' })
                                                 : S4.transition.fade(d, true);
     S4.util.emit(d, 's4-open', { from: from });
@@ -42,7 +45,7 @@
     d.animate([{ opacity: 1 }, { opacity: 0 }], { duration: S4.motion.spring('fast-effects').duration, easing: S4.motion.spring('fast-effects').easing, pseudoElement: '::backdrop', fill: 'forwards' });
     var t = d._s4transform, visibleSource = t && t.isConnected && t.getClientRects().length;
     var p = visibleSource ? S4.transition.containerTransform(d, t, { open: false })
-          : d.classList.contains('s4-bottom-sheet') ? S4.transition.slide(d, { open: false, edge: 'bottom' })
+          : d.classList.contains('s4-bottom-sheet') && !d._s4phone ? S4.transition.slide(d, { open: false, edge: 'bottom' })
           : d.classList.contains('s4-side-sheet') ? S4.transition.slide(d, { open: false, edge: 'end' })
           : S4.transition.fade(d, false);
     return p.then(function () {

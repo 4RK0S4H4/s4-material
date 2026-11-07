@@ -8,7 +8,8 @@
    </dialog>
    <dialog class="s4-side-sheet" id="filters">… same parts, opens from the end edge …</dialog>
    Opened from a FAB: container transform (the FAB becomes the sheet). Otherwise: slides from its edge.
-   The bottom sheet can be dragged down to dismiss. Solid here; glass.css makes both glass. */
+   From 600 wide the bottom sheet is docked to the bottom and can be dragged down to dismiss; on a phone it is a centered
+   card (like a dialog, no handle) that opens by container transform from any opener. Solid here; glass.css makes both glass. */
 @layer s4.components {
   .s4-bottom-sheet, .s4-side-sheet {
     margin: 0;
@@ -34,6 +35,21 @@
     padding-bottom: max(var(--s4-space-6), env(safe-area-inset-bottom));
     border-radius: var(--s4-shape-sheet) var(--s4-shape-sheet) 0 0;
     touch-action: pan-x;
+  }
+  /* On a phone (under 600) the bottom sheet is a centered card, shaped like a dialog (decision 0011): no handle, no drag */
+  @media (max-width: 599.98px) {
+    .s4-bottom-sheet {
+      inset: 0;
+      width: min(calc(100vw - 2 * var(--s4-space-4)), 560px);
+      max-width: none;
+      height: fit-content;
+      max-height: calc(100dvh - 2 * var(--s4-space-4));
+      margin: auto;
+      padding-top: var(--s4-space-6);
+      border-radius: var(--md-sys-shape-corner-extra-large);
+      touch-action: auto;
+    }
+    .s4-bottom-sheet > .s4-sheet-handle { display: none; }
   }
   .s4-sheet-handle {
     flex: none;
