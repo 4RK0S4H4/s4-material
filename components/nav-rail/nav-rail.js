@@ -8,6 +8,7 @@ S4.register('nav-rail', function (scope) {
   S4.util.all(scope, '.s4-nav-rail').forEach(function (rail) {
     if (!S4.util.once(rail, 'navrail')) return;
     var toggle = rail.querySelector('[data-rail-toggle]');
+    S4.navPill(rail.querySelector('.s4-nav-rail-items'));
 
     function sync() {
       if (!toggle) return;

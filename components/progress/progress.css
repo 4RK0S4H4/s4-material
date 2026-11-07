@@ -2,8 +2,8 @@
    <div class="s4-progress" data-value="0.6" aria-label="Uploading Receipts"></div>                       linear
    <div class="s4-progress" data-type="circular" data-value="0.6" aria-label="Syncing"></div>          circular
    Leave out data-value for indeterminate. progress.js sets role="progressbar", aria-valuenow and --_value (0–1), and
-   draws the circular SVG. Linear: 4dp track, primary indicator, secondary-container track, a 4dp gap between them and
-   a stop dot at the end. Circular: 40dp, 4dp stroke, same gap, no track while indeterminate.
+   draws the circular SVG. Linear: 4dp track, primary indicator, secondary-container track, a 4dp gap between them, no stop
+   dot at the end (decision 0010). Circular: 40dp, 4dp stroke, same gap, no track while indeterminate.
 
    Public knobs (the indeterminate cycles are long, linear loops that no spring token describes):
      --s4-progress-cycle           linear indeterminate cycle            1800ms (M3)
@@ -36,7 +36,7 @@
     color: var(--_indicator);
   }
 
-  /* ---------- linear, determinate: ::before = indicator, ::after = track with the stop dot ---------- */
+  /* ---------- linear, determinate: ::before = indicator, ::after = track ---------- */
   .s4-progress:not([data-type="circular"])::before,
   .s4-progress:not([data-type="circular"])::after {
     content: "";
@@ -54,12 +54,9 @@
     inset-inline-end: 0;
     /* the gap only opens once there is an indicator to separate from */
     width: max(0px, calc((1 - var(--_value)) * 100% - var(--_gap) * min(1, var(--_value) * 1000)));
-    background:
-      radial-gradient(circle closest-side, var(--_indicator) 100%, transparent) right center / var(--_thickness) var(--_thickness) no-repeat,
-      var(--_track);
+    background: var(--_track);
     transition: width var(--s4-motion-spring-spatial-calm-duration) var(--s4-motion-spring-spatial-calm);
   }
-  .s4-progress:not([data-type="circular"])[data-value]:dir(rtl)::after { background-position: left center, 0 0; }
 
   /* ---------- linear, indeterminate: two indicators sweep across; the track is drawn around them with gaps ---------- */
   .s4-progress:not([data-type="circular"]):not([data-value]) {

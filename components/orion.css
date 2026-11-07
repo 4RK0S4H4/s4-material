@@ -231,8 +231,8 @@
     --s4-shape-list-segment: var(--md-sys-shape-corner-extra-small);
     --s4-shape-list-group: var(--md-sys-shape-corner-large);
     --s4-shape-text-field: var(--md-sys-shape-corner-medium);
-    --s4-shape-menu: var(--md-sys-shape-corner-large);
-    --s4-shape-menu-item: var(--md-sys-shape-corner-medium);
+    --s4-shape-menu: var(--md-sys-shape-corner-extra-large);
+    --s4-shape-menu-item: var(--md-sys-shape-corner-large);
     --s4-shape-dialog: var(--md-sys-shape-corner-extra-large);
     --s4-shape-sheet: var(--md-sys-shape-corner-extra-large);
     --s4-shape-snackbar: var(--md-sys-shape-corner-extra-small);
@@ -1703,12 +1703,14 @@
      </a>
      … 3 to 5 items (a or button)
    </nav>
-   80dp bar on surface-container. Each item: a 56x32 pill indicator (secondary-container) around the icon, label-medium
-   label under it. The current item has aria-current="page": the pill expands in from half width and fades in.
+   80dp bar on surface-container. Each item: icon with a label-medium label under it. The current item has
+   aria-current="page": a rounded secondary-container highlight covers its icon and label and slides and resizes from the
+   previous item to it (nav-bar.js; without JS each current item shows a 56x32 pill around the icon).
    From 600 wide the items sit horizontally (icon beside label inside a 40dp pill), as M3 Expressive does on medium windows.
    Inside .s4-app the bar sticks to the bottom and pads for the home indicator. The badge slot is .s4-badge in the indicator. */
 @layer s4.components {
   .s4-nav-bar {
+    position: relative;   /* anchors the sliding pill; the app shell and fixed bars override it */
     container: s4-nav-bar / inline-size;
     display: flex;
     justify-content: center;
@@ -1790,8 +1792,38 @@
   }
   .s4-nav-item[aria-current]:not([aria-current="false"]) .s4-nav-indicator::after { opacity: 1; transform: none; }
   .s4-nav-item[aria-current]:not([aria-current="false"]) .s4-icon { --s4-icon-duo-opacity: 1; }   /* M3: filled icon when selected */
+
+  /* ---------- the sliding highlight (nav-bar.js): one pill behind the items that covers icon and label of the current
+     item and morphs from item to item. The per-item indicator pill is replaced by it. ---------- */
+  .s4-nav-rail-items { position: relative; }
+  .s4-nav-pill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 0;
+    inline-size: var(--_w, 0);
+    block-size: var(--_h, 0);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    background: var(--md-sys-color-secondary-container);
+    transform: translate(var(--_x, 0), var(--_y, 0));
+    pointer-events: none;
+  }
+  .s4-nav-pill[data-animate] {
+    transition:
+      transform var(--md-sys-motion-spring-spatial-duration) var(--md-sys-motion-spring-spatial),
+      inline-size var(--md-sys-motion-spring-spatial-duration) var(--md-sys-motion-spring-spatial),
+      block-size var(--md-sys-motion-spring-spatial-duration) var(--md-sys-motion-spring-spatial);
+  }
+  :is(.s4-nav-bar, .s4-nav-rail-items):has(> .s4-nav-pill) { isolation: isolate; }
+  :is(.s4-nav-bar, .s4-nav-rail-items):has(> .s4-nav-pill) > .s4-nav-item { position: relative; z-index: 1; }
+  :is(.s4-nav-bar, .s4-nav-rail-items):has(> .s4-nav-pill) .s4-nav-indicator::after { display: none; }
+  :is(.s4-nav-bar, .s4-nav-rail-items):has(> .s4-nav-pill) > .s4-nav-item[aria-current]:not([aria-current="false"]) {
+    --_fg: var(--md-sys-color-on-secondary-container);
+    --_icon-fg: var(--md-sys-color-on-secondary-container);
+  }
   @media (hover: hover) {
     .s4-nav-item:hover .s4-nav-indicator::before { opacity: var(--md-sys-state-hover-state-layer-opacity); }
+    :is(.s4-nav-bar, .s4-nav-rail-items):has(> .s4-nav-pill) .s4-nav-item[aria-current]:not([aria-current="false"]):hover .s4-nav-indicator::before { opacity: 0; }
   }
   .s4-nav-item:focus-visible .s4-nav-indicator::before { opacity: var(--md-sys-state-focus-state-layer-opacity); }
   .s4-nav-item:active .s4-nav-indicator::before { opacity: var(--md-sys-state-pressed-state-layer-opacity); }
@@ -1853,7 +1885,7 @@
   @media (forced-colors: active) {
     .s4-nav-bar { border-block-start: 1px solid CanvasText; }
     .s4-nav-indicator::before { display: none; }
-    .s4-nav-item[aria-current]:not([aria-current="false"]) .s4-nav-indicator::after { background: Highlight; forced-color-adjust: none; }
+    .s4-nav-item[aria-current]:not([aria-current="false"]) .s4-nav-indicator::after, .s4-nav-pill { background: Highlight; forced-color-adjust: none; }
     .s4-nav-item[aria-current]:not([aria-current="false"]) .s4-nav-indicator { color: HighlightText; forced-color-adjust: none; }
   }
 }
@@ -1962,7 +1994,7 @@
 }
 
 /* ---- tabs/tabs.css ---- */
-/* Tabs (S4 Orion, Segmented Tray, decision 0009)
+/* Tabs (S4 Orion, Segmented Tray, decision 0009, fully rounded like the button groups)
    <div class="s4-tabs" role="tablist" aria-label="Bills" data-variant="secondary" data-scrollable>
      <button class="s4-tab" role="tab" id="tab-due" aria-selected="true" aria-controls="panel-due">
        <span class="s4-icon" data-icon="schedule"></span>Due</button>
@@ -1981,14 +2013,14 @@
     --_pill: var(--md-sys-color-on-surface);
     --_pill-fg: var(--md-sys-color-surface);
     --_pad: var(--s4-space-1);
-    --_r: calc(var(--md-sys-shape-corner-large) - var(--_pad) / 2);
+    --_r: var(--md-sys-shape-corner-full);
     position: relative;
     display: flex;
     align-items: stretch;
     gap: calc(var(--s4-space-1) / 2);
     padding: var(--_pad);
     background: var(--_tray);
-    border-radius: calc(var(--_r) + var(--_pad));
+    border-radius: var(--md-sys-shape-corner-full);
     isolation: isolate;
   }
 
@@ -4224,8 +4256,8 @@
    <div class="s4-progress" data-value="0.6" aria-label="Uploading Receipts"></div>                       linear
    <div class="s4-progress" data-type="circular" data-value="0.6" aria-label="Syncing"></div>          circular
    Leave out data-value for indeterminate. progress.js sets role="progressbar", aria-valuenow and --_value (0–1), and
-   draws the circular SVG. Linear: 4dp track, primary indicator, secondary-container track, a 4dp gap between them and
-   a stop dot at the end. Circular: 40dp, 4dp stroke, same gap, no track while indeterminate.
+   draws the circular SVG. Linear: 4dp track, primary indicator, secondary-container track, a 4dp gap between them, no stop
+   dot at the end (decision 0010). Circular: 40dp, 4dp stroke, same gap, no track while indeterminate.
 
    Public knobs (the indeterminate cycles are long, linear loops that no spring token describes):
      --s4-progress-cycle           linear indeterminate cycle            1800ms (M3)
@@ -4258,7 +4290,7 @@
     color: var(--_indicator);
   }
 
-  /* ---------- linear, determinate: ::before = indicator, ::after = track with the stop dot ---------- */
+  /* ---------- linear, determinate: ::before = indicator, ::after = track ---------- */
   .s4-progress:not([data-type="circular"])::before,
   .s4-progress:not([data-type="circular"])::after {
     content: "";
@@ -4276,12 +4308,9 @@
     inset-inline-end: 0;
     /* the gap only opens once there is an indicator to separate from */
     width: max(0px, calc((1 - var(--_value)) * 100% - var(--_gap) * min(1, var(--_value) * 1000)));
-    background:
-      radial-gradient(circle closest-side, var(--_indicator) 100%, transparent) right center / var(--_thickness) var(--_thickness) no-repeat,
-      var(--_track);
+    background: var(--_track);
     transition: width var(--s4-motion-spring-spatial-calm-duration) var(--s4-motion-spring-spatial-calm);
   }
-  .s4-progress:not([data-type="circular"])[data-value]:dir(rtl)::after { background-position: left center, 0 0; }
 
   /* ---------- linear, indeterminate: two indicators sweep across; the track is drawn around them with gaps ---------- */
   .s4-progress:not([data-type="circular"]):not([data-value]) {
@@ -4421,7 +4450,7 @@
     max-width: min(280px, calc(100vw - 2 * var(--s4-space-4)));
     max-height: min(480px, calc(100vh - 2 * var(--s4-space-4)));
     overflow: auto;
-    padding: var(--s4-space-1);
+    padding: var(--s4-space-2);
     border: 0;
     border-radius: var(--s4-shape-menu);
     background: var(--md-sys-color-surface-container);
@@ -4625,7 +4654,7 @@
 /* ---- snackbar/snackbar.css ---- */
 /* Snackbar (M3): a short message after an action, often with Undo. Created from code:
      S4.snackbar({ text: 'Bill archived', action: 'Undo', onAction: fn, closable: false, duration: 4000 })
-   Slides up from the bottom edge (decision 0001), above the nav bar, a docked toolbar or a FAB. Solid inverse surface
+   Rises a few pixels and fades in (decision 0010), above the nav bar, a docked toolbar or a FAB. Solid inverse surface
    (not glass: its inverse-primary action only reaches 4.5:1 on the full surface). */
 @layer s4.components {
   .s4-snackbar-host {
@@ -4647,8 +4676,8 @@
     min-width: min(344px, 100%);
     max-width: min(600px, 100%);
     min-height: var(--s4-size-touch-target);
-    padding: var(--s4-space-1) var(--s4-space-2) var(--s4-space-1) var(--s4-space-4);
-    border-radius: var(--s4-shape-snackbar);
+    padding: var(--s4-space-1) var(--s4-space-2) var(--s4-space-1) var(--s4-space-5);
+    border-radius: var(--md-sys-shape-corner-full);
     background: var(--md-sys-color-inverse-surface);
     color: var(--md-sys-color-inverse-on-surface);
     box-shadow: var(--md-sys-elevation-level3);
@@ -4659,7 +4688,7 @@
     letter-spacing: var(--md-sys-typescale-body-medium-tracking);
   }
   .s4-snackbar-text { flex: 1; padding: var(--s4-space-3) 0; }
-  .s4-snackbar[data-multiline] { flex-wrap: wrap; }
+  .s4-snackbar[data-multiline] { flex-wrap: wrap; border-radius: var(--md-sys-shape-corner-extra-large); }
   .s4-snackbar[data-multiline] .s4-snackbar-text { flex-basis: 100%; }
   .s4-snackbar[data-multiline] .s4-snackbar-action { margin-inline-start: auto; }
   .s4-snackbar .s4-button[data-variant="text"] { --_fg: var(--md-sys-color-inverse-primary); }

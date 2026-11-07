@@ -112,10 +112,10 @@
         "$description": "All corners of a text field (the Quiet Box)."
       },
       "menu": {
-        "$value": "{md.sys.shape.corner.large}"
+        "$value": "{md.sys.shape.corner.extra-large}"
       },
       "menu-item": {
-        "$value": "{md.sys.shape.corner.medium}"
+        "$value": "{md.sys.shape.corner.large}"
       },
       "dialog": {
         "$value": "{md.sys.shape.corner.extra-large}"

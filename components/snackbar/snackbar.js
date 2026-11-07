@@ -1,5 +1,5 @@
 /* S4.snackbar({ text, action, onAction, closable, multiline, duration }) -> { dismiss }
-   One at a time: a new snackbar replaces the one showing. Slides up from the bottom edge; sits above a nav bar, a docked
+   One at a time: a new snackbar replaces the one showing. Rises a little and fades in; sits above a nav bar, a docked
    toolbar or a FAB in the corner. Announced politely to screen readers. Stays while hovered or focused.
    Default duration: 4s, or 6s when it has an action; 0 keeps it until dismissed. */
 (function () {
@@ -36,7 +36,7 @@
       el.appendChild(c); S4.init(c);
     }
     ensureHost().appendChild(el);
-    S4.transition.slide(el, { open: true, edge: 'bottom', gap: 'var(--s4-space-6)', spring: 'spatial' });
+    S4.transition.rise(el, { open: true });
     var ms = o.duration != null ? o.duration : (o.action ? 6000 : 4000), timer = null, held = false;
     function arm() { clearTimeout(timer); if (ms && !held) timer = setTimeout(function () { api.dismiss(); }, ms); }
     el.addEventListener('pointerenter', function () { held = true; clearTimeout(timer); });
@@ -49,8 +49,7 @@
       dismiss: function (instant) {
         if (gone) return; gone = true; clearTimeout(timer); if (current === api) current = null;
         if (instant) { el.remove(); return; }
-        S4.motion.animate(el, [{ opacity: 1 }, { opacity: 0 }], 'fast-effects');
-        S4.transition.slide(el, { open: false, edge: 'bottom', gap: 'var(--s4-space-6)' }).then(function () { el.remove(); });
+        S4.transition.rise(el, { open: false }).then(function () { el.remove(); });
       }
     };
     current = api; arm();

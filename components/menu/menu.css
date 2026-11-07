@@ -17,7 +17,7 @@
     max-width: min(280px, calc(100vw - 2 * var(--s4-space-4)));
     max-height: min(480px, calc(100vh - 2 * var(--s4-space-4)));
     overflow: auto;
-    padding: var(--s4-space-1);
+    padding: var(--s4-space-2);
     border: 0;
     border-radius: var(--s4-shape-menu);
     background: var(--md-sys-color-surface-container);

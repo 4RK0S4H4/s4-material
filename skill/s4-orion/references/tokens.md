@@ -193,8 +193,8 @@ Light values are shown; a second value is dark mode. Color roles also change wit
 | `--s4-shape-list-segment` | var(--md-sys-shape-corner-extra-small) |  | Inner corners of rows in a segmented list. |
 | `--s4-shape-list-group` | var(--md-sys-shape-corner-large) |  | Outer corners of a segmented list group. |
 | `--s4-shape-text-field` | var(--md-sys-shape-corner-medium) |  | All corners of a text field (the Quiet Box). |
-| `--s4-shape-menu` | var(--md-sys-shape-corner-large) |  |  |
-| `--s4-shape-menu-item` | var(--md-sys-shape-corner-medium) |  |  |
+| `--s4-shape-menu` | var(--md-sys-shape-corner-extra-large) |  |  |
+| `--s4-shape-menu-item` | var(--md-sys-shape-corner-large) |  |  |
 | `--s4-shape-dialog` | var(--md-sys-shape-corner-extra-large) |  |  |
 | `--s4-shape-sheet` | var(--md-sys-shape-corner-extra-large) |  | Top corners of a bottom sheet; the edge that meets the screen stays square. |
 | `--s4-shape-snackbar` | var(--md-sys-shape-corner-extra-small) |  |  |

@@ -140,31 +140,24 @@
   /* call after the surface is hidden/closed so the next open starts clean */
   function restore(surface, source) { surface.style.visibility = ''; if (source) source.style.visibility = ''; }
 
-  /* ---------- unfold: a menu grows out of its anchor, the same way a container transform does ----------
-     The menu's own shape starts as a small rounded piece at the corner that faces the anchor (the anchor's size and
-     corners, inside the menu's box) and opens to full size on the spatial spring; the items fade in from 35% and the
-     color is the menu's own, so nothing flashes. Closing runs it back on the calm spring. Items never move.
-     opts: open, from ('top'|'bottom'), anchor, align ('start'|'end') */
+  /* ---------- unfold: a menu settles in from its anchor, quietly ----------
+     The menu is revealed from the edge that faces its anchor (about half of its height shows at the start), rises 6px and
+     fades in; the items fade in a little after. On the spatial spring, so it feels like the container transforms, but
+     with far less travel, so nothing seems to come from nowhere. Closing is the same on the calm spring, shorter.
+     opts: open, from ('top'|'bottom'), anchor, align */
   function unfold(el, opts) {
     opts = opts || {};
-    var open = opts.open !== false, up = opts.from === 'bottom', anchor = opts.anchor;
-    if (!anchor || M.reduced()) {
-      if (!open) return done(M.animate(el, [{ opacity: 1 }, { opacity: 0 }], 'fast-effects'));
-      return done(M.animate(el, [{ opacity: 0 }, { opacity: 1 }], 'effects'));
-    }
-    var e = rect(el), a = rect(anchor), ca = getComputedStyle(anchor), ce = getComputedStyle(el);
-    var w = Math.min(a.width, e.width), h = Math.min(a.height, e.height);
-    var end = opts.align === 'end' || (e.right - a.right < a.left - e.left && Math.abs((e.right - a.right)) < 2);
-    var r = Math.min(parseFloat(ca.borderTopLeftRadius) || 0, h / 2, w / 2) + 'px', rEnd = ce.borderTopLeftRadius;
-    var top = up ? e.height - h : 0, left = end ? e.width - w : 0;
-    var from = 'inset(' + top + 'px ' + (e.width - w - left) + 'px ' + (e.height - h - top) + 'px ' + left + 'px round ' + r + ')';
-    var to = 'inset(0px round ' + rEnd + ')';
+    var open = opts.open !== false, up = opts.from === 'bottom';
+    if (M.reduced()) return done(M.animate(el, open ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0 }], open ? 'effects' : 'fast-effects'));
+    var r = getComputedStyle(el).borderTopLeftRadius, dy = up ? 6 : -6;
+    var part = up ? 'inset(50% -48px -48px -48px round ' + r + ')' : 'inset(-48px -48px 50% -48px round ' + r + ')';
+    var full = 'inset(-48px round ' + r + ')';
     var sp = M.spring(open ? 'spatial' : 'spatial-calm'), lin = { duration: sp.duration, easing: 'linear', fill: 'both' };
-    var shape = el.animate(open ? [{ clipPath: from }, { clipPath: to }] : [{ clipPath: to }, { clipPath: from }], { duration: sp.duration, easing: landing(sp.easing), fill: 'both' });
-    /* backdrop blur and shadow are painted at the final box, so they ride with the clip; fade the whole menu in quickly */
-    el.animate(open ? [{ opacity: 0 }, { opacity: 1, offset: 0.25 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], lin);
+    var ease = { duration: sp.duration, easing: landing(sp.easing), fill: 'both' };
+    var shape = el.animate(open ? [{ clipPath: part, transform: 'translateY(' + dy + 'px)' }, { clipPath: full, transform: 'none' }] : [{ clipPath: full, transform: 'none' }, { clipPath: part, transform: 'translateY(' + dy + 'px)' }], ease);
+    el.animate(open ? [{ opacity: 0 }, { opacity: 1, offset: 0.4 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 1, offset: 0.4 }, { opacity: 0 }], lin);
     Array.prototype.forEach.call(el.children, function (c) {
-      c.animate(open ? [{ opacity: 0 }, { opacity: 0, offset: 0.3 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0, offset: 0.25 }, { opacity: 0 }], lin);
+      c.animate(open ? [{ opacity: 0 }, { opacity: 0, offset: 0.2 }, { opacity: 1, offset: 0.7 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0, offset: 0.4 }, { opacity: 0 }], lin);
     });
     return done(shape).then(function () {
       el.getAnimations().forEach(function (x) { x.cancel(); });
@@ -213,5 +206,14 @@
     return done(a).then(function () { if (open) el.getAnimations().forEach(function (x) { x.cancel(); }); });
   }
 
-  S4.transition = { containerTransform: containerTransform, unfold: unfold, sharedAxis: sharedAxis, slide: slide, fade: fadeOnly, restore: restore };
+  /* ---------- rise: a small, quiet arrival for snackbars: a few pixels up and a fade ---------- */
+  function rise(el, opts) {
+    var open = !opts || opts.open !== false, dy = M.reduced() ? 0 : 10;
+    var a = [{ opacity: open ? 0 : 1, transform: open ? 'translateY(' + dy + 'px) scale(0.97)' : 'none' }, { opacity: open ? 1 : 0, transform: open ? 'none' : 'translateY(' + dy + 'px) scale(0.97)' }];
+    var fade = M.animate(el, [{ opacity: a[0].opacity }, { opacity: a[1].opacity }], open ? 'effects' : 'fast-effects');
+    var move = M.animate(el, [{ transform: a[0].transform }, { transform: a[1].transform }], open ? 'spatial' : 'fast-effects');
+    return Promise.all([done(fade), done(move)]).then(function () { if (open) { fade.cancel(); move.cancel(); } });
+  }
+
+  S4.transition = { rise: rise, containerTransform: containerTransform, unfold: unfold, sharedAxis: sharedAxis, slide: slide, fade: fadeOnly, restore: restore };
 })();

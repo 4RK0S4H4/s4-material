@@ -6,12 +6,14 @@
      </a>
      … 3 to 5 items (a or button)
    </nav>
-   80dp bar on surface-container. Each item: a 56x32 pill indicator (secondary-container) around the icon, label-medium
-   label under it. The current item has aria-current="page": the pill expands in from half width and fades in.
+   80dp bar on surface-container. Each item: icon with a label-medium label under it. The current item has
+   aria-current="page": a rounded secondary-container highlight covers its icon and label and slides and resizes from the
+   previous item to it (nav-bar.js; without JS each current item shows a 56x32 pill around the icon).
    From 600 wide the items sit horizontally (icon beside label inside a 40dp pill), as M3 Expressive does on medium windows.
    Inside .s4-app the bar sticks to the bottom and pads for the home indicator. The badge slot is .s4-badge in the indicator. */
 @layer s4.components {
   .s4-nav-bar {
+    position: relative;   /* anchors the sliding pill; the app shell and fixed bars override it */
     container: s4-nav-bar / inline-size;
     display: flex;
     justify-content: center;
@@ -93,8 +95,38 @@
   }
   .s4-nav-item[aria-current]:not([aria-current="false"]) .s4-nav-indicator::after { opacity: 1; transform: none; }
   .s4-nav-item[aria-current]:not([aria-current="false"]) .s4-icon { --s4-icon-duo-opacity: 1; }   /* M3: filled icon when selected */
+
+  /* ---------- the sliding highlight (nav-bar.js): one pill behind the items that covers icon and label of the current
+     item and morphs from item to item. The per-item indicator pill is replaced by it. ---------- */
+  .s4-nav-rail-items { position: relative; }
+  .s4-nav-pill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 0;
+    inline-size: var(--_w, 0);
+    block-size: var(--_h, 0);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    background: var(--md-sys-color-secondary-container);
+    transform: translate(var(--_x, 0), var(--_y, 0));
+    pointer-events: none;
+  }
+  .s4-nav-pill[data-animate] {
+    transition:
+      transform var(--md-sys-motion-spring-spatial-duration) var(--md-sys-motion-spring-spatial),
+      inline-size var(--md-sys-motion-spring-spatial-duration) var(--md-sys-motion-spring-spatial),
+      block-size var(--md-sys-motion-spring-spatial-duration) var(--md-sys-motion-spring-spatial);
+  }
+  :is(.s4-nav-bar, .s4-nav-rail-items):has(> .s4-nav-pill) { isolation: isolate; }
+  :is(.s4-nav-bar, .s4-nav-rail-items):has(> .s4-nav-pill) > .s4-nav-item { position: relative; z-index: 1; }
+  :is(.s4-nav-bar, .s4-nav-rail-items):has(> .s4-nav-pill) .s4-nav-indicator::after { display: none; }
+  :is(.s4-nav-bar, .s4-nav-rail-items):has(> .s4-nav-pill) > .s4-nav-item[aria-current]:not([aria-current="false"]) {
+    --_fg: var(--md-sys-color-on-secondary-container);
+    --_icon-fg: var(--md-sys-color-on-secondary-container);
+  }
   @media (hover: hover) {
     .s4-nav-item:hover .s4-nav-indicator::before { opacity: var(--md-sys-state-hover-state-layer-opacity); }
+    :is(.s4-nav-bar, .s4-nav-rail-items):has(> .s4-nav-pill) .s4-nav-item[aria-current]:not([aria-current="false"]):hover .s4-nav-indicator::before { opacity: 0; }
   }
   .s4-nav-item:focus-visible .s4-nav-indicator::before { opacity: var(--md-sys-state-focus-state-layer-opacity); }
   .s4-nav-item:active .s4-nav-indicator::before { opacity: var(--md-sys-state-pressed-state-layer-opacity); }
@@ -156,7 +188,7 @@
   @media (forced-colors: active) {
     .s4-nav-bar { border-block-start: 1px solid CanvasText; }
     .s4-nav-indicator::before { display: none; }
-    .s4-nav-item[aria-current]:not([aria-current="false"]) .s4-nav-indicator::after { background: Highlight; forced-color-adjust: none; }
+    .s4-nav-item[aria-current]:not([aria-current="false"]) .s4-nav-indicator::after, .s4-nav-pill { background: Highlight; forced-color-adjust: none; }
     .s4-nav-item[aria-current]:not([aria-current="false"]) .s4-nav-indicator { color: HighlightText; forced-color-adjust: none; }
   }
 }

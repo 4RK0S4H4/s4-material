@@ -1,4 +1,4 @@
-/* Tabs (S4 Orion, Segmented Tray, decision 0009)
+/* Tabs (S4 Orion, Segmented Tray, decision 0009, fully rounded like the button groups)
    <div class="s4-tabs" role="tablist" aria-label="Bills" data-variant="secondary" data-scrollable>
      <button class="s4-tab" role="tab" id="tab-due" aria-selected="true" aria-controls="panel-due">
        <span class="s4-icon" data-icon="schedule"></span>Due</button>
@@ -17,14 +17,14 @@
     --_pill: var(--md-sys-color-on-surface);
     --_pill-fg: var(--md-sys-color-surface);
     --_pad: var(--s4-space-1);
-    --_r: calc(var(--md-sys-shape-corner-large) - var(--_pad) / 2);
+    --_r: var(--md-sys-shape-corner-full);
     position: relative;
     display: flex;
     align-items: stretch;
     gap: calc(var(--s4-space-1) / 2);
     padding: var(--_pad);
     background: var(--_tray);
-    border-radius: calc(var(--_r) + var(--_pad));
+    border-radius: var(--md-sys-shape-corner-full);
     isolation: isolate;
   }
 
