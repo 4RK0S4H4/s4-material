@@ -146,13 +146,14 @@
      with far less travel, so nothing seems to come from nowhere. Closing is the same on the calm spring, shorter.
      opts: open, from ('top'|'bottom'), anchor, align */
   /* ---------- emerge: a menu's shape comes out from under its button ----------
-     Nothing is copied and nothing moves except the shape. The menu sits at its final place; its surface is revealed by a
-     clip that starts as a thin lip under the button (the button's width, aligned to it, the button's color) and opens
-     to the whole menu while the options fade in. The button and its label are never touched, so nothing can shift or
-     flash (an earlier version carried a copy of the button, and iPhone showed it moving).
-     Safari can't animate blur smoothly under a moving clip, so the blur is never animated: the surface is solid (no blur)
-     while the shape moves; once it has landed the blur comes on under the still-solid surface and only the color fades to
-     glass. Closing is the same backwards: color to solid first, then the shape folds back under the button. */
+     Nothing is copied and only the surface's own box changes: it starts as a thin lip the button's width, right under
+     (or over) the button, in the button's color, and its size and corners open to the menu while the options fade in.
+     The button and its label are never touched.
+     WebKit paints backdrop-filter in a layer that clip-path does not clip, so a clip-path reveal showed the whole glass
+     pane at full size from the first frame (iPhone, 2026-11-07). So no clip-path here: the box itself (left, top, width,
+     height, radius) animates, and the options keep their final width inside it (hidden by overflow) so nothing reflows.
+     Blur is never animated either: the surface is solid with no blur while it moves; once landed the blur comes on under
+     the still-solid surface and only the color fades to glass. Closing: color to solid, then the box folds back. */
   function emerge(surface, source, opts) {
     var open = opts.open !== false;
     if (!source || !source.isConnected || M.reduced()) return fadeOnly(surface, open);
@@ -163,31 +164,38 @@
       if (S4.position) S4.position(surface, source, { align: opts.align });
     }
     var s = rect(source), e = rect(surface), cs = getComputedStyle(source), ce = getComputedStyle(surface);
-    var up = e.bottom <= s.top + 1, lip = Math.min(8, e.height), rb = Math.min(parseFloat(cs.borderTopLeftRadius) || 0, lip) + 'px';
-    var l = Math.max(0, s.left - e.left), r = Math.max(0, e.right - s.right);
-    var from = 'inset(' + (up ? e.height - lip : 0) + 'px ' + r + 'px ' + (up ? 0 : e.height - lip) + 'px ' + l + 'px round ' + (up ? rb + ' ' + rb + ' 0px 0px' : '0px 0px ' + rb + ' ' + rb) + ')';
-    var to = 'inset(0px 0px 0px 0px round ' + corners(ce, e) + ')';
+    var up = e.bottom <= s.top + 1, padV = (parseFloat(ce.paddingTop) || 0) + (parseFloat(ce.paddingBottom) || 0), lip = Math.min(Math.max(padV, 12), e.height);
+    var padH = (parseFloat(ce.paddingLeft) || 0) + (parseFloat(ce.paddingRight) || 0), rbtn = Math.min(parseFloat(cs.borderTopLeftRadius) || 0, lip / 2);
     var glass = rgba(ce.backgroundColor) || [0, 0, 0, 1], bgTo = ce.backgroundColor, solid = rgb(glass), glassy = glass[3] < 0.999, bgFrom = visibleBg(source);
     var content = Array.prototype.slice.call(surface.children);
+    var box = function (small) {
+      return small ? { left: s.left + 'px', width: s.width + 'px', height: lip + 'px', top: (up ? e.bottom - lip : e.top) + 'px', borderRadius: rbtn + 'px' }
+                   : { left: e.left + 'px', width: e.width + 'px', height: e.height + 'px', top: e.top + 'px', borderRadius: ce.borderTopLeftRadius };
+    };
+    var prevOverflow = surface.style.overflow;
+    surface.style.overflow = 'hidden';
+    content.forEach(function (c) { c.style.width = (e.width - padH) + 'px'; c.style.flex = 'none'; });   /* the options lay out at their final width */
     var cancel = function () { surface.getAnimations().forEach(function (a) { a.cancel(); }); content.forEach(function (c) { c.getAnimations().forEach(function (a) { a.cancel(); }); }); };
+    var finish = function () { cancel(); surface.style.overflow = prevOverflow; content.forEach(function (c) { c.style.width = ''; c.style.flex = ''; }); };
     var flat = function (bg) { return { backgroundColor: bg, backdropFilter: 'none', webkitBackdropFilter: 'none' }; };
     if (open) {
-      var shape = surface.animate([{ clipPath: from }, { clipPath: to }], geo);
+      var shape = surface.animate([box(true), box(false)], geo);
       surface.animate([flat(bgFrom), flat(solid)], lin);
       content.forEach(function (c) { c.animate([{ opacity: 0 }, { opacity: 0, offset: 0.35 }, { opacity: 1 }], lin); });
       return done(shape).then(function () {
         cancel();   /* the blur comes on here, under a surface that is still solid */
+        surface.style.overflow = prevOverflow; content.forEach(function (c) { c.style.width = ''; c.style.flex = ''; });
         if (!glassy) return;
         return done(surface.animate([{ backgroundColor: solid }, { backgroundColor: bgTo }], fx)).then(function () { surface.getAnimations().forEach(function (a) { a.cancel(); }); });
       });
     }
     var toSolid = glassy ? surface.animate([{ backgroundColor: bgTo }, { backgroundColor: solid }], fx) : null;
     return (toSolid ? done(toSolid) : Promise.resolve()).then(function () {
-      var shape = surface.animate([{ clipPath: to }, { clipPath: from }], geo);
+      var shape = surface.animate([box(false), box(true)], geo);
       surface.animate([flat(solid), flat(bgFrom)], lin);   /* started before the color animation is cancelled, so the blur goes off under a solid surface */
       if (toSolid) toSolid.cancel();
       content.forEach(function (c) { c.animate([{ opacity: 1 }, { opacity: 0, offset: 0.2 }, { opacity: 0 }], lin); });
-      return done(shape).then(function () { cancel(); surface.style.minWidth = ''; });
+      return done(shape).then(function () { finish(); surface.style.minWidth = ''; });
     });
   }
 
