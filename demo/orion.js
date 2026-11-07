@@ -214,11 +214,15 @@
      source reaches past the surface's box (a wide row opening a narrow dialog), a spread shadow in the container color
      paints the rest. Opening, the label fades out by 30% and the content fades in from 35%; closing, the content is gone
      by 20% and the label is back by 60%. Glass surfaces stay solid (no blur, nothing showing through) while the shape
-     moves and turn to glass once it has landed, so nothing behind them is ever seen double; the shadow fades in after
-     landing instead of being cut by the clip. Closing runs it backwards on the calm (critically damped) spring, so it
+     moves and turn to glass once it has landed (blur on under the solid color, a short hold, then the color fades), so nothing
+     behind them is ever seen double and WebKit never draws an unclipped blur; the shadow fades in after landing instead of
+     being cut by the clip. Closing runs it backwards on the calm (critically damped) spring, so it
      lands exactly on the source, then the real source is shown again. */
   function containerTransform(surface, source, opts) {
     opts = opts || {};
+    /* closed while still opening (or the reverse): end the running one first, keeping the color it shows now so nothing flashes */
+    var shownBg = null;
+    if (surface._s4ctStop) { shownBg = getComputedStyle(surface).backgroundColor; surface._s4ctStop(); }
     if (!source || !source.isConnected || M.reduced()) return fadeOnly(surface, opts.open);
     var s = rect(source), e = rect(surface);
     if (!s.width || !e.width) return fadeOnly(surface, opts.open);
@@ -265,28 +269,49 @@
     });
     var content = Array.prototype.filter.call(surface.children, function (c) { return c !== ghost; });
     if (!opts.keepSource) source.style.visibility = 'hidden';   /* keepSource: the real button stays put under the copy that detaches from it */
-    var shape = surface.animate(open ? [{ clipPath: from, transform: moved }, { clipPath: to, transform: 'none' }] : [{ clipPath: to, transform: 'none' }, { clipPath: from, transform: moved }], geo);
-    /* color on the same timeline, linear so it can't overshoot either color; solid (no blur, no elevation) while the shape moves */
+    /* WebKit does not clip backdrop-filter with clip-path, so the blur must be off for as long as the clip moves; and an animated blur is
+       choppy there. So a glass surface is fully solid with no blur while the shape moves; opening, once it has landed the blur comes back
+       under the still-solid color, holds a moment (so the browser has built it) and only then the color fades to glass. Closing does the
+       same backwards: the glass settles to solid first, in place, and only then the blur goes and the shape moves. One timeline per
+       direction (later phases are delays), so the scrubber can step through all of it. */
+    var all = [], add = function (el, kf, o) { var an = el.animate(kf, o); all.push(an); return an; };
+    var at0 = function (o, delay, fill) { return Object.assign({}, o, { delay: delay || 0, fill: fill || o.fill }); };
     var k = function (bg, edge, offset) { var f = { backgroundColor: bg, boxShadow: paint(edge), backdropFilter: 'none', webkitBackdropFilter: 'none' }; if (offset != null) f.offset = offset; return f; };
-    surface.animate(open ? [k(bgFrom, bgFrom), k(solid, solid, 0.5), glassy ? { backgroundColor: bgTo, boxShadow: shadow, backdropFilter: blur, webkitBackdropFilter: blur } : k(solid, solid)]
-      : [{ backgroundColor: bgTo, boxShadow: shadow, backdropFilter: blur, webkitBackdropFilter: blur },
-         { backgroundColor: solid, boxShadow: shadow, backdropFilter: blur, webkitBackdropFilter: blur, offset: 0.15 }, k(solid, solid, 0.1501), k(solid, solid, 0.5), k(bgFrom, bgFrom)], lin);
-    ghost.animate(open ? [{ opacity: 1 }, { opacity: 0, offset: 0.3 }, { opacity: 0 }] : [{ opacity: 0 }, { opacity: 0, offset: 0.2 }, { opacity: 1, offset: 0.6 }, { opacity: 1 }], lin);
-    content.forEach(function (c) {
-      c.animate(open ? [{ opacity: 0 }, { opacity: 0, offset: 0.35 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0, offset: 0.2 }, { opacity: 0 }], lin);
-    });
-    return done(shape).then(function () {
-      ghost.remove();
+    var HOLD = 120, FADE = M.spring('effects').duration || 0, SETTLE = glassy ? (M.spring('fast-effects').duration || 0) : 0;
+    var shape, last;
+    if (open) {
+      shape = add(surface, [{ clipPath: from, transform: moved }, { clipPath: to, transform: 'none' }], geo);
+      /* color on the same timeline, linear so it can't overshoot either color; this one stops applying when the shape lands */
+      add(surface, [k(bgFrom, bgFrom), k(solid, solid, 0.5), k(solid, solid)], at0(lin, 0, 'backwards'));
+      if (glassy) last = add(surface, [{ backgroundColor: solid }, { backgroundColor: solid, offset: HOLD / (HOLD + FADE) }, { backgroundColor: bgTo }], { duration: HOLD + FADE, delay: dur, easing: 'linear', fill: 'forwards' });
+      add(ghost, [{ opacity: 1 }, { opacity: 0, offset: 0.3 }, { opacity: 0 }], lin);
+      content.forEach(function (c) { add(c, [{ opacity: 0 }, { opacity: 0, offset: 0.35 }, { opacity: 1 }], lin); });
+    } else {
+      if (glassy) add(surface, [{ backgroundColor: shownBg || bgTo }, { backgroundColor: solid }], { duration: SETTLE, easing: 'linear', fill: 'forwards' });
+      shape = add(surface, [{ clipPath: to, transform: 'none' }, { clipPath: from, transform: moved }], at0(geo, SETTLE, 'forwards'));
+      add(surface, [k(solid, solid), k(solid, solid, 0.5), k(bgFrom, bgFrom)], at0(lin, SETTLE, 'forwards'));
+      add(ghost, [{ opacity: 0 }, { opacity: 0, offset: 0.2 }, { opacity: 1, offset: 0.6 }, { opacity: 1 }], at0(lin, SETTLE));
+      content.forEach(function (c) { add(c, [{ opacity: 1 }, { opacity: 0 }], { duration: SETTLE + dur * 0.2, easing: 'linear', fill: 'both' }); });
+    }
+    var finish = function () {
+      if (surface._s4ctStop === finish) surface._s4ctStop = null;
+      if (ghost.isConnected) ghost.remove();
       surface.style.overflow = overflow; surface.style.overflowX = overflowX;
-      surface.getAnimations().forEach(function (a) { a.cancel(); });
-      content.forEach(function (c) { c.getAnimations().forEach(function (a) { a.cancel(); }); });
+      all.forEach(function (a) { a.cancel(); }); all = [];
+    };
+    surface._s4ctStop = finish;
+    return done(shape).then(function () {
+      if (surface._s4ctStop !== finish) return;   /* interrupted: the next transition owns the surface now */
       if (open) {
-        /* the source stays hidden while the surface "is" the source. Landed: the shadow rises and glass turns clear (the
-           blur comes on under a still-solid surface, so it never pops) */
-        var o = { duration: M.spring('fast-effects').duration, easing: 'linear' };
-        if (shadow && shadow !== 'none' && !glassy) surface.animate([{ boxShadow: 'none' }, { boxShadow: shadow }], o);
+        /* landed: the copy and the clip go (the glass fade, if any, runs on); the source stays hidden while the surface "is" the source */
+        if (ghost.isConnected) ghost.remove();
+        surface.style.overflow = overflow; surface.style.overflowX = overflowX;
+        all.forEach(function (a) { if (a !== last) a.cancel(); });
+        if (shadow && shadow !== 'none' && !glassy) surface.animate([{ boxShadow: 'none' }, { boxShadow: shadow }], { duration: M.spring('fast-effects').duration, easing: 'linear' });
+        return done(last).then(function () { if (surface._s4ctStop === finish) finish(); });
       }
-      else { surface.style.visibility = 'hidden'; if (!opts.keepSource) source.style.visibility = ''; }
+      finish();
+      surface.style.visibility = 'hidden'; if (!opts.keepSource) source.style.visibility = '';
     });
   }
   function fadeOnly(el, open) {
@@ -314,6 +339,9 @@
      The button is never copied, moved or covered (its label stays put). A button with no fill (the three dots) grows from its hover circle. */
   function emerge(surface, source, opts) {
     var open = opts.open !== false;
+    /* a menu reopened while it closes (or closed while it opens): end the running one first, so its layer goes and the button's own
+       position and z-index are put back before this run reads them (otherwise they stay changed for good) */
+    if (surface._s4emergeStop) surface._s4emergeStop();
     if (!source || !source.isConnected || M.reduced()) return fadeOnly(surface, open);
     var sp = M.spring(open ? 'spatial' : 'spatial-calm'), geo = { duration: sp.duration, easing: landing(sp.easing), fill: 'both' };
     var D = geo.duration, FADE = 260, HOLD = 120;
@@ -340,11 +368,16 @@
     if (cs.position === 'static') source.style.position = 'relative';
     source.style.zIndex = String(z0 + 1); layer.style.zIndex = String(z0);
     source.parentNode.insertBefore(layer, source);
-    var restore = function () { layer.remove(); source.style.position = posBefore; source.style.zIndex = zBefore; };
+    /* an ancestor with a transform, filter or backdrop-filter (a glass toolbar or app bar) becomes the containing block of a fixed
+       element: measure where the layer landed and move it back onto the viewport coordinates */
+    var lr = rect(layer);
+    if (Math.abs(lr.left - U.left) > 0.5 || Math.abs(lr.top - U.top) > 0.5) { layer.style.left = (2 * U.left - lr.left) + 'px'; layer.style.top = (2 * U.top - lr.top) + 'px'; }
+    var restored = false, restore = function () { if (restored) return; restored = true; layer.remove(); source.style.position = posBefore; source.style.zIndex = zBefore; };
     var lin = function (ms, delay) { return { duration: ms, delay: delay || 0, easing: 'linear', fill: 'both' }; };
     var all = [], add = function (el, kf, o) { var an = el.animate(kf, o); all.push(an); return an; };
     var T1 = FADE * 0.8, EPS = 0.001;
     var wipe = function () { all.forEach(function (an) { an.cancel(); }); all = []; };
+    var stop = surface._s4emergeStop = function () { if (surface._s4emergeStop === stop) surface._s4emergeStop = null; wipe(); restore(); surface.style.opacity = ''; surface.style.pointerEvents = ''; };
     /* ONE timeline per direction (every animation is created up front; later phases are delays), so the scrubber can step through all of it */
     if (open) {
       /* [0, D] the layer grows. [D, ...] the real menu takes over, solid, holds, then fades to glass. The menu is made 1% visible shortly before
@@ -358,12 +391,13 @@
       content.forEach(function (c) { add(c, [{ opacity: 0 }, { opacity: 1 }], lin(HOLD + 120, D)); });
       var last = all.reduce(function (m, an) { return an.effect.getComputedTiming().endTime > m.effect.getComputedTiming().endTime ? an : m; }, all[0]);
       done(grow).then(function () {
+        if (surface._s4emergeStop !== stop) return;   /* interrupted */
         surface.style.pointerEvents = '';
         var first = surface.querySelector('.s4-menu-item[aria-checked="true"]') || surface.querySelector('.s4-menu-item:not(:disabled)');   /* it was not visible when it opened, so focus could not move in then */
         if (first && first !== document.activeElement) first.focus({ preventScroll: true });
         restore();
       });
-      return done(last).then(function () { wipe(); restore(); surface.style.opacity = ''; surface.style.pointerEvents = ''; });
+      return done(last).then(function () { if (surface._s4emergeStop === stop) stop(); });
     }
     /* close: [0, T1] the glass settles to solid; then the menu is gone and the layer, at the menu's place, folds back into the button */
     surface.style.pointerEvents = 'none';
@@ -375,7 +409,7 @@
     add(layer, [{ backgroundColor: solid }, { backgroundColor: bgFrom }], lin(D, T1));
     /* a button with a fill of its own is hidden behind by the layer's identical color; a button with none dissolves slowly into its hover circle */
     add(layer, hasFill ? [{ opacity: 0, offset: 0 }, { opacity: 1, offset: EPS }, { opacity: 1, offset: 0.9 }, { opacity: 0, offset: 1 }] : [{ opacity: 0, offset: 0 }, { opacity: 1, offset: EPS }, { opacity: 1, offset: 0.35 }, { opacity: 0, offset: 1 }], lin(D, T1));
-    return done(shrink).then(function () { wipe(); restore(); surface.style.opacity = ''; surface.style.pointerEvents = ''; surface.style.minWidth = ''; });
+    return done(shrink).then(function () { if (surface._s4emergeStop !== stop) return; stop(); surface.style.minWidth = ''; });
   }
 
   /* ---------- expand in place: the button's shape grows into the menu, one solid piece ----------
@@ -1897,6 +1931,8 @@ S4.register('sheet', function (scope) {
     ids.length ? el.setAttribute('aria-describedby', ids.join(' ')) : el.removeAttribute('aria-describedby');
   }
   function show(el) {
+    /* never over the button's own open menu or popup (an app-bar button's tip goes below it, right where the menu is) */
+    if (el.getAttribute('aria-expanded') === 'true' || !el.isConnected) return;
     var t = ensureTip(); clearTimeout(hideTimer);
     if (owner && owner !== el) describe(owner, false);
     owner = el; t.textContent = el.getAttribute('data-tooltip'); t.hidden = false; describe(el, true);

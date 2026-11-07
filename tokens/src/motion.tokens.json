@@ -34,7 +34,7 @@
             }
           },
           "spatial": {
-            "$description": "Default for movement: nav indicators, menus unfolding, dialogs and sheets opening, shared axis.",
+            "$description": "Default for movement: nav indicators, menus emerging, dialogs and sheets opening, shared axis.",
             "$extensions": {
               "com.s4.spring": true
             },
@@ -277,7 +277,7 @@
           "start-scale": {
             "$type": "number",
             "$value": 0,
-            "$description": "Menus reveal from their top edge (clip from 0 to full height); items don't move."
+            "$description": "Legacy: the quiet unfold menu style (data-motion=\"quiet\"). Menus emerge from their button by default (decision 0018)."
           }
         }
       }

@@ -20,6 +20,8 @@
     ids.length ? el.setAttribute('aria-describedby', ids.join(' ')) : el.removeAttribute('aria-describedby');
   }
   function show(el) {
+    /* never over the button's own open menu or popup (an app-bar button's tip goes below it, right where the menu is) */
+    if (el.getAttribute('aria-expanded') === 'true' || !el.isConnected) return;
     var t = ensureTip(); clearTimeout(hideTimer);
     if (owner && owner !== el) describe(owner, false);
     owner = el; t.textContent = el.getAttribute('data-tooltip'); t.hidden = false; describe(el, true);

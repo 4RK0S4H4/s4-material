@@ -1,7 +1,7 @@
 # Menu
 
-A short list of choices opened from a button. **Unfolds** from the edge next to its button (the menu's shape opens; items
-stay still), on glass, positioned by `orion.js` (flips above when there's no room below).
+A short list of choices opened from a button. **Emerges** from behind its button (decision 0018: a solid shape grows out
+from under the button into the menu, the options fade in, then it turns to glass; the button never moves), positioned by `orion.js` (flips above when there's no room below).
 
 ```html
 <button class="s4-button" data-variant="tonal" data-menu="sort-menu">Sort By</button>

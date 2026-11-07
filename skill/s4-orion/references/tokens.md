@@ -353,7 +353,7 @@ Light values are shown; a second value is dark mode. Color roles also change wit
 | `--s4-motion-pattern-container-transform-content-fade-start` | 0.35 |  | Container content fades in from this fraction of the move. |
 | `--s4-motion-pattern-container-transform-source-fade-end` | 0.3 |  | The source's label fades out by this fraction. |
 | `--s4-motion-pattern-shared-axis-distance` | 30px |  | How far views slide when switching between siblings. |
-| `--s4-motion-pattern-unfold-start-scale` | 0 |  | Menus reveal from their top edge (clip from 0 to full height); items don't move. |
+| `--s4-motion-pattern-unfold-start-scale` | 0 |  | Legacy: the quiet unfold menu style (data-motion="quiet"). Menus emerge from their button by default (decision 0018). |
 
 ## Glass
 

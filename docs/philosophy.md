@@ -17,7 +17,7 @@ The personal layer is short and deliberate:
 - **Title Case** for labels; sentences stay sentence case.
 - **Monochrome by default.** Color comes from one seed when an app wants it.
 - **Glass on floating chrome** and nowhere else.
-- **Motion that comes from somewhere, quietly**: container transform, unfold, shared axis, slide from edge.
+- **Motion that comes from somewhere, quietly**: container transform, menus emerging from their button, shared axis, slide from edge.
 
 ## 2. One source of color
 
@@ -36,7 +36,7 @@ reduced transparency, or a browser without backdrop blur all turn it solid.
 ## 4. Things come from somewhere, quietly
 
 Motion explains where things come from and where they go. When a surface opens from something you touched, that thing
-becomes the surface (container transform) at its real size, so content never stretches. Menus unfold from their anchor,
+becomes the surface (container transform) at its real size, so content never stretches. Menus emerge from behind their button,
 sibling views slide along a shared axis, and sheets and snackbars come from the edge where they live. Movement uses M3
 Expressive springs; fades and color use effects springs that never overshoot; anything that must land exactly on a
 target uses a calm, critically damped spring. Reduced motion makes movement instant.
