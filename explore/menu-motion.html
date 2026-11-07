@@ -30,7 +30,7 @@ h1,h2,p{margin:0}
 <main class="page">
   <div class="intro">
     <p>You remembered wanting the drop-down to feel more like a container transform. The history: in round one (0008) menus grew out of their button's corner; in round two (0010) I made that quieter (revealed from half height, 6px rise), and the quieter one is what ships now. These three are the real menus on the real motion code; tap the button or the dots in each preview to open and close it.</p>
-    <p><b>A. Quiet Unfold</b> is today. <b>B. Grow From the Button</b> is the 0008 one: the menu starts as the button's shape and grows. <b>C. Container Transform</b> is the dialogs' motion: the button becomes the menu and is gone while it is open. New after your note: <b>D</b> is the same but the original button always stays (a copy detaches from it and expands), and <b>E</b> grows a strip out of the button's bottom edge. Try each at least twice, and on your iPhone.</p>
+    <p><b>A. Quiet Unfold</b> is today. <b>B. Grow From the Button</b> is the 0008 one: the menu starts as the button's shape and grows. <b>C. Container Transform</b> is the dialogs' motion: the button becomes the menu and is gone while it is open. New after your latest note: <b>F</b> is the button's own shape growing into the menu as one solid piece, with the button's label staying as its first row. Earlier: <b>D</b> is the same but the original button always stays (a copy detaches from it and expands), and <b>E</b> grows a strip out of the button's bottom edge. Try each at least twice, and on your iPhone.</p>
   </div>
   <div id="sections"></div>
 </main>
@@ -38,9 +38,9 @@ h1,h2,p{margin:0}
 
 <script src="../components/assets/m3color.js"></script>
 <script src="../components/assets/icons.js"></script>
-<script src="../components/orion.js?v=4"></script>
+<script src="../components/orion.js?v=5"></script>
 <script src="lib/icon-options.js?v=1"></script>
-<script src="lib/questions.js?v=29"></script>
+<script src="lib/questions.js?v=30"></script>
 <script src="lib/review.js?v=9"></script>
 <script>
 const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
@@ -48,7 +48,8 @@ const OPTS = {
   A: { name: 'Quiet Unfold (today)', tag: 'Today', desc: 'Revealed from the button-facing edge at half height, rising 6px, fading in.', m: '' },
   B: { name: 'Grow From the Button', desc: 'The menu starts as the button\'s shape and size and grows to full size (the 0008 version).', m: 'grow' },
   C: { name: 'Container Transform (button hides)', desc: 'The button becomes the menu: its label rides in and fades, color fades, the surface travels from the button, and the button is gone while the menu is open. Closing runs it backwards into the button.', m: 'transform' },
-  D: { name: 'Container Transform, Button Stays', tag: 'Suggested', desc: 'The same, but the real button never disappears: a copy of it detaches, travels and expands into the menu, and the button is still there underneath.', m: 'transform-keep' },
+  D: { name: 'Container Transform, Button Stays', desc: 'The same, but the real button never disappears: a copy of it detaches, travels and expands into the menu, and the button is still there underneath.', m: 'transform-keep' },
+  F: { name: 'Button Expands Into the Menu', tag: 'Suggested', desc: 'The menu opens ON the button: the button\'s own shape grows downward into one solid piece, the button\'s label stays as the first row, and the options appear below it. Closing folds it back into the button.', m: 'inplace' },
   E: { name: 'Expand From the Button Edge', desc: 'A thin strip the width of the button grows out of its bottom edge into the full menu, like the button opening downward. The button stays.', m: 'edge' }
 };
 let n = 0;

@@ -145,6 +145,55 @@
      fades in; the items fade in a little after. On the spatial spring, so it feels like the container transforms, but
      with far less travel, so nothing seems to come from nowhere. Closing is the same on the calm spring, shorter.
      opts: open, from ('top'|'bottom'), anchor, align */
+  /* ---------- expand in place: the button's shape grows into the menu, one solid piece ----------
+     The menu is placed ON its button (same top-start corner, or the bottom edge when there is no room below), so the
+     surface starts exactly as the button (rect, corners, color) and grows into the menu. The button's label stays where
+     it is as the first row (a copy rides in the menu, the real button is hidden under it); the options fade in below.
+     Color goes from the button's to the menu's, solid while the shape moves, glass after landing. Closing folds back. */
+  function expandMenu(el, anchor, opts) {
+    var open = opts.open !== false;
+    if (!anchor || M.reduced()) return done(M.animate(el, open ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0 }], open ? 'effects' : 'fast-effects'));
+    var sp = M.spring(open ? 'spatial' : 'spatial-calm'), geo = { duration: sp.duration, easing: landing(sp.easing), fill: 'both' }, lin = { duration: sp.duration, easing: 'linear', fill: 'both' };
+    var a = rect(anchor), cs = getComputedStyle(anchor), ce, e, up = false, ghost = el._s4ghost, reset = function () { el.style.minWidth = el.style.paddingTop = el.style.paddingBottom = ''; };
+    if (open) {
+      reset(); el.style.minWidth = Math.max(a.width, parseFloat(getComputedStyle(el).minWidth) || 0) + 'px';
+      var pad = parseFloat(getComputedStyle(el).paddingTop) || 0;
+      el.style.paddingTop = (a.height + pad) + 'px';
+      e = rect(el);
+      up = a.top + e.height > innerHeight - 8 && a.bottom - e.height > 8;
+      if (up) { el.style.paddingTop = ''; el.style.paddingBottom = (a.height + pad) + 'px'; e = rect(el); }
+      var end = opts.align === 'end' || (a.left + e.width > innerWidth - 8);
+      var left = Math.max(8, Math.min(end ? a.right - e.width : a.left, innerWidth - e.width - 8)), top = up ? a.bottom - e.height : Math.max(8, Math.min(a.top, innerHeight - e.height - 8));
+      el.style.left = left + 'px'; el.style.top = top + 'px'; e = rect(el);
+      el._s4up = up;
+      ghost = el._s4ghost = anchor.cloneNode(true);
+      ghost.removeAttribute('id'); ghost.removeAttribute('data-menu'); ghost.className = anchor.className + ' s4-ct-ghost'; ghost.setAttribute('aria-hidden', 'true'); ghost.tabIndex = -1;
+      Object.assign(ghost.style, { left: (a.left - e.left) + 'px', top: (a.top - e.top) + 'px', width: a.width + 'px', height: a.height + 'px', visibility: 'visible', background: 'transparent', boxShadow: 'none', transition: 'none', animation: 'none',
+        transform: 'none', translate: 'none', scale: 'none', minWidth: '0', maxWidth: 'none', margin: '0', padding: cs.padding, fontFamily: cs.fontFamily, fontSize: cs.fontSize, fontWeight: cs.fontWeight, lineHeight: cs.lineHeight,
+        letterSpacing: cs.letterSpacing, color: cs.color, justifyContent: cs.justifyContent, gap: cs.gap, border: '0', pointerEvents: 'auto', cursor: 'pointer' });
+      ghost.addEventListener('click', function (ev) { ev.stopPropagation(); anchor.click(); });
+      el.appendChild(ghost);
+      el._s4bgFrom = visibleBg(anchor);
+    } else { e = rect(el); up = !!el._s4up; }
+    ce = getComputedStyle(el);
+    var glass = rgba(ce.backgroundColor) || [0, 0, 0, 1], bgTo = ce.backgroundColor, solid = rgb(glass), blur = ce.backdropFilter || ce.webkitBackdropFilter, glassy = glass[3] < 0.999, bgFrom = el._s4bgFrom || solid;
+    var from = 'inset(' + (a.top - e.top) + 'px ' + (e.right - a.right) + 'px ' + (e.bottom - a.bottom) + 'px ' + (a.left - e.left) + 'px round ' + corners(cs, a) + ')', to = 'inset(0px round ' + corners(ce, e) + ')';
+    var content = Array.prototype.filter.call(el.children, function (c) { return c !== ghost; });
+    if (open) anchor.style.visibility = 'hidden';
+    var shape = el.animate(open ? [{ clipPath: from }, { clipPath: to }] : [{ clipPath: to }, { clipPath: from }], geo);
+    var k = function (bg, offset) { var f = { backgroundColor: bg, backdropFilter: 'none', webkitBackdropFilter: 'none' }; if (offset != null) f.offset = offset; return f; };
+    el.animate(open ? [k(bgFrom), k(solid, 0.5), glassy ? { backgroundColor: bgTo, backdropFilter: blur, webkitBackdropFilter: blur } : k(solid)]
+      : [{ backgroundColor: bgTo, backdropFilter: blur, webkitBackdropFilter: blur }, { backgroundColor: solid, backdropFilter: blur, webkitBackdropFilter: blur, offset: 0.15 }, k(solid, 0.1501), k(solid, 0.5), k(bgFrom)], lin);
+    content.forEach(function (c) {
+      c.animate(open ? [{ opacity: 0 }, { opacity: 0, offset: 0.3 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0, offset: 0.25 }, { opacity: 0 }], lin);
+    });
+    return done(shape).then(function () {
+      el.getAnimations().forEach(function (x) { x.cancel(); });
+      content.forEach(function (c) { c.getAnimations().forEach(function (x) { x.cancel(); }); });
+      if (!open) { if (ghost) ghost.remove(); el._s4ghost = null; anchor.style.visibility = ''; reset(); }
+    });
+  }
+
   /* the 0008 way, kept as an option (opts.style = 'grow'): the menu's shape starts at the anchor's size and position and grows to the menu */
   function grow(el, opts) {
     var open = opts.open !== false, up = opts.from === 'bottom', anchor = opts.anchor;
@@ -171,6 +220,7 @@
   function unfold(el, opts) {
     opts = opts || {};
     if (opts.style === 'grow') return grow(el, opts);
+    if (opts.style === 'inplace' && opts.anchor) return expandMenu(el, opts.anchor, opts);
     if (opts.style === 'edge') return grow(el, Object.assign({}, opts, { strip: true }));
     if (opts.style === 'transform' && opts.anchor) return containerTransform(el, opts.anchor, { open: opts.open !== false });
     if (opts.style === 'transform-keep' && opts.anchor) return containerTransform(el, opts.anchor, { open: opts.open !== false, keepSource: true });
