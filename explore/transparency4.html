@@ -24,17 +24,14 @@ h1,h2,p{margin:0}
 .fr .row{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:14px}
 .fr .chips{display:flex;gap:8px;flex-wrap:wrap}
 .fr .acts{display:flex;justify-content:flex-end;gap:8px}
-/* items on glass, as the owner described: every item keeps its OWN color as the main thing, made translucent so the blurred backdrop shows through
-   (--ia = how much of the color stays, --rec = how far it is deepened toward the text color for a recessed look).
-   Only items that were OUTLINED before (text fields, unselected chips, outlined buttons) swap that outline for the 1px frost line. */
-.fr[data-items]:not([data-items=A]){--ia:70%;--rec:0%}
-.fr[data-items=C]{--ia:55%}
-.fr[data-items=D]{--ia:55%;--rec:12%}
-.fr[data-items=E]{--ia:40%;--rec:12%}
-.fr[data-items]:not([data-items=A]) :where(.s4-chip,.s4-button:not([data-variant=text])){background:color-mix(in srgb,color-mix(in srgb,var(--_bg),var(--md-sys-color-on-surface) var(--rec)) var(--ia),transparent)}
-.fr[data-items]:not([data-items=A]) .s4-text-field::before{background:color-mix(in srgb,color-mix(in srgb,var(--_bg),var(--md-sys-color-on-surface) var(--rec)) var(--ia),transparent)}
-.fr[data-items]:not([data-items=A]) :where(.s4-text-field,.s4-chip:not([aria-pressed=true]),.s4-button[data-variant=outlined]){--_outline:rgb(255 255 255/.2)}
-.fr[data-items]:not([data-items=A]) .s4-button[data-variant=outlined]{--_bg:color-mix(in srgb,var(--md-sys-color-on-surface) 6%,transparent)}
+/* items on glass: the app's own UI stays the main thing. Each item keeps its own design and its own outline; only its fill is made a little translucent
+   (--ia = how much of its color stays). A frost line replaces an item's outline only on the few items named by the option (data-frost). */
+.fr[data-items]:not([data-items=A]){--ia:70%}
+.fr[data-items=C],.fr[data-items=D],.fr[data-items=E]{--ia:55%}
+.fr[data-items]:not([data-items=A]) :where(.s4-chip,.s4-button:not([data-variant=text])){background:color-mix(in srgb,var(--_bg) var(--ia),transparent)}
+.fr[data-items]:not([data-items=A]) .s4-text-field::before{background:color-mix(in srgb,var(--_bg) var(--ia),transparent)}
+.fr[data-frost~=field] .s4-text-field{--_outline:rgb(255 255 255/.2)}
+.fr[data-frost~=button] .s4-button[data-variant=outlined]{--_outline:rgb(255 255 255/.25)}
 </style>
 </head>
 <body>
@@ -46,7 +43,7 @@ h1,h2,p{margin:0}
 </div>
 <main class="page">
   <div class="intro">
-    <p>Your note: apply transparency to the things <b>sitting on</b> glass too, such as text fields. Rebuilt from your note: each item keeps <b>its own color</b> as the main thing, made translucent so the blurred backdrop shows through it. Only items that were <b>outlined</b> before (text fields, unselected chips, the outlined button) swap the outline for the 1px frost line; filled and tonal items get no line. The recessed options deepen each color a little toward the text color.</p>
+    <p>Your note: the glass is there to show depth, but <b>your own UI stays the main thing</b> on top of it, so items on glass should not all get frost lines. Here every item keeps its own design and outline, and its fill is just made a bit translucent so the blurred backdrop shows through. Frost lines appear only on a very few items (D and E), where an edge helps.</p>
     <p>Items stay inside the glass's guarantee: their text is still on-surface and their fills are light, so the text contrast on glass has to be re-checked for whichever you pick. Tap a card (above its preview) to pick it, tap again to unpick. Try typing in the fields.</p>
   </div>
   <div id="sections"></div>
@@ -57,21 +54,21 @@ h1,h2,p{margin:0}
 <script src="../components/assets/icons.js"></script>
 <script src="../components/orion.js?v=1"></script>
 <script src="lib/icon-options.js?v=1"></script>
-<script src="lib/questions.js?v=25"></script>
+<script src="lib/questions.js?v=26"></script>
 <script src="lib/review.js?v=9"></script>
 <script>
 const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
 const OPTS = {
-  A: { name: 'Solid Items (today)', tag: 'Today', desc: 'Fields, chips and buttons are solid surfaces on the glass.' },
-  B: { name: 'Own Color, 70%', desc: 'Every item keeps its own color (surface, secondary container, primary) at 70%, so the blurred backdrop tints it. Outlined items (fields, unselected chips, the outlined button) use the frost line instead of their outline.' },
-  C: { name: 'Own Color, 55%', desc: 'The same at 55%: more of the backdrop comes through each item.', tag: 'Suggested' },
-  D: { name: 'Recessed, 55%', desc: 'At 55%, and each color deepened 12% toward the text color, so items read as pressed into the glass rather than lying on it.' },
-  E: { name: 'Recessed, 40%', desc: 'Deepened and at 40%: the most see-through. Text contrast on filled buttons is the thing to watch here.' }
+  A: { name: 'Solid Items (today)', tag: 'Today', desc: 'Fields, chips and buttons are solid surfaces on the glass.', frost: '' },
+  B: { name: 'Own Design, 70%', desc: 'Every item keeps its own design and its own outline; only the fill is 70% of its color, so a little blurred backdrop shows through. No frost lines.', frost: '' },
+  C: { name: 'Own Design, 55%', desc: 'The same at 55%: more backdrop through each item. Still no frost lines.', tag: 'Suggested', frost: '' },
+  D: { name: '55% + Frost Line on Fields', desc: 'As C, and only the text fields swap their grey outline for the frost line, since a field is the one place a defined edge helps.', frost: 'field' },
+  E: { name: '55% + Frost Line on Fields and Outlined Button', desc: 'As D, plus the outlined button. Chips and everything else stay as designed.', frost: 'field button' }
 };
 let n = 0;
 function dlg(k) {
   const id = 'x' + (++n);
-  return h(`<div class="fr" data-items="${k}"><div class="blob" style="width:200px;height:200px;right:-50px;top:200px;background:#ffd166"></div><div class="blob" style="width:240px;height:240px;left:-70px;bottom:-60px;background:#06d6a0"></div>
+  return h(`<div class="fr" data-items="${k}" data-frost="${OPTS[k].frost}"><div class="blob" style="width:200px;height:200px;right:-50px;top:200px;background:#ffd166"></div><div class="blob" style="width:240px;height:240px;left:-70px;bottom:-60px;background:#06d6a0"></div>
   <dialog class="s4-dialog" open aria-label="Add Expense"><h2>Add Expense</h2>
    <div class="s4-text-field"><span class="s4-text-field-affix" data-prefix>$</span><input id="${id}a" inputmode="decimal" value="18.50"><label for="${id}a">Amount</label></div>
    <div class="s4-text-field"><input id="${id}b" value="Blue Bottle Coffee"><label for="${id}b">Vendor</label></div>
@@ -79,7 +76,7 @@ function dlg(k) {
    <div class="row"><span>Repeat Monthly</span><label class="s4-switch"><input type="checkbox" role="switch" aria-label="Repeat Monthly"><span class="s4-switch-track"></span></label></div>
    <div class="acts"><button class="s4-button" data-variant="outlined" type="button">Add Receipt</button><button class="s4-button" data-variant="tonal" type="button">Draft</button><button class="s4-button" type="button">Save</button></div></dialog></div>`);
 }
-const sec = h('<section class="sec"><h2>Items on Glass</h2><p>Same dialog, five levels.</p><div class="cards rv-group" role="radiogroup" aria-label="Items"></div></section>');
+const sec = h('<section class="sec"><h2>Items on Glass</h2><p>Same dialog, five treatments.</p><div class="cards rv-group" role="radiogroup" aria-label="Items"></div></section>');
 document.getElementById('sections').appendChild(sec);
 Object.keys(OPTS).forEach(k => { const o = OPTS[k], w = h('<div class="pv"></div>'); w.appendChild(dlg(k)); sec.querySelector('.cards').appendChild(S4Review.card({ pick: `items:${k}`, letter: k, title: o.name, desc: o.desc, tag: o.tag || '', preview: w })); });
 S4.init(document.body);

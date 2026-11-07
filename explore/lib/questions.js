@@ -122,7 +122,7 @@ window.S4_REVIEW_DEMOS = [
   {
     id: 'transparency4', title: 'Transparency Lab 4', href: 'explore/transparency4.html',
     questions: [
-      { id: 'items', label: 'Items on glass: own color, translucent (frost line only where outlined)', options: [{ v: 'A', label: 'Solid Items (today)' }, { v: 'B', label: 'Own Color, 70%' }, { v: 'C', label: 'Own Color, 55%' }, { v: 'D', label: 'Recessed, 55%' }, { v: 'E', label: 'Recessed, 40%' }, { v: 'Other', label: 'Describe in notes' }] }
+      { id: 'items', label: 'Items on glass: own design, a little translucent', options: [{ v: 'A', label: 'Solid Items (today)' }, { v: 'B', label: 'Own Design, 70%' }, { v: 'C', label: 'Own Design, 55%' }, { v: 'D', label: '55% + Frost Line on Fields' }, { v: 'E', label: '55% + Frost Line on Fields and Outlined Button' }, { v: 'Other', label: 'Describe in notes' }] }
     ]
   },
   {
