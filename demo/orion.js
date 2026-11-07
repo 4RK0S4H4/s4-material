@@ -264,7 +264,7 @@
       if (Math.abs(ox) > 0.5 || Math.abs(oy) > 0.5) g.style.translate = ox + 'px ' + oy + 'px';
     });
     var content = Array.prototype.filter.call(surface.children, function (c) { return c !== ghost; });
-    source.style.visibility = 'hidden';
+    if (!opts.keepSource) source.style.visibility = 'hidden';   /* keepSource: the real button stays put under the copy that detaches from it */
     var shape = surface.animate(open ? [{ clipPath: from, transform: moved }, { clipPath: to, transform: 'none' }] : [{ clipPath: to, transform: 'none' }, { clipPath: from, transform: moved }], geo);
     /* color on the same timeline, linear so it can't overshoot either color; solid (no blur, no elevation) while the shape moves */
     var k = function (bg, edge, offset) { var f = { backgroundColor: bg, boxShadow: paint(edge), backdropFilter: 'none', webkitBackdropFilter: 'none' }; if (offset != null) f.offset = offset; return f; };
@@ -286,7 +286,7 @@
         var o = { duration: M.spring('fast-effects').duration, easing: 'linear' };
         if (shadow && shadow !== 'none' && !glassy) surface.animate([{ boxShadow: 'none' }, { boxShadow: shadow }], o);
       }
-      else { surface.style.visibility = 'hidden'; source.style.visibility = ''; }
+      else { surface.style.visibility = 'hidden'; if (!opts.keepSource) source.style.visibility = ''; }
     });
   }
   function fadeOnly(el, open) {
@@ -306,7 +306,7 @@
     var open = opts.open !== false, up = opts.from === 'bottom', anchor = opts.anchor;
     if (!anchor || M.reduced()) return done(M.animate(el, open ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0 }], open ? 'effects' : 'fast-effects'));
     var e = rect(el), a = rect(anchor), ca = getComputedStyle(anchor), ce = getComputedStyle(el);
-    var w = Math.min(a.width, e.width), h = Math.min(a.height, e.height);
+    var w = Math.min(a.width, e.width), h = opts.strip ? Math.min(10, e.height) : Math.min(a.height, e.height);
     var end = opts.align === 'end' || (e.right - a.right < a.left - e.left && Math.abs((e.right - a.right)) < 2);
     var r = Math.min(parseFloat(ca.borderTopLeftRadius) || 0, h / 2, w / 2) + 'px', rEnd = ce.borderTopLeftRadius;
     var top = up ? e.height - h : 0, left = end ? e.width - w : 0;
@@ -327,7 +327,9 @@
   function unfold(el, opts) {
     opts = opts || {};
     if (opts.style === 'grow') return grow(el, opts);
+    if (opts.style === 'edge') return grow(el, Object.assign({}, opts, { strip: true }));
     if (opts.style === 'transform' && opts.anchor) return containerTransform(el, opts.anchor, { open: opts.open !== false });
+    if (opts.style === 'transform-keep' && opts.anchor) return containerTransform(el, opts.anchor, { open: opts.open !== false, keepSource: true });
     var open = opts.open !== false, up = opts.from === 'bottom';
     if (M.reduced()) return done(M.animate(el, open ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0 }], open ? 'effects' : 'fast-effects'));
     var r = getComputedStyle(el).borderTopLeftRadius, dy = up ? 6 : -6;
