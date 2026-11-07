@@ -81,6 +81,14 @@ Fixed and published: faster springs, glass timing in container transforms, no wh
 table sort, checkbox uncheck, slider end dot. **Open:** "still looks very Material" (text fields, checkboxes, tables, tab
 headers): **Style Lab answered and applied (0009):** Quiet Box text fields, Soft Square checkboxes, Segmented Tray tabs. **Tables undecided:** the owner wants more exploration and context (where tables appear); build a Tables Lab with tables in their real places (Activity view, phone list reflow, selection, sort) and 2-3 directions. Still open: the iPhone check (Safari: glass during container transforms, menus, new tabs). 1.0.0 waits for these.
 
+## Owner critique round 2 (2026-11-07, later), see [0010](decisions/0010-owner-critique-round-2.md)
+
+Done: no progress stop dot, pill snackbar with a quiet arrival, rounder and quieter menus, fully round tabs, sliding nav
+highlight (bar and rail). **Awaiting the owner's picks in [Style Lab 2](../explore/style2.html):** button groups (unique
+look), sliders (own look with glass/transparency), sheets on a phone (floating card, full page, centered card vs bottom
+sheet), glass edge (CSS thick-pane rim; note real refraction over DOM is Chromium-only, so it is CSS-only here). Then
+implement, record in 0011. Tables still need their own lab (owner asked for context on where tables appear).
+
 ## Owner review (2026-11-04) and plan review
 
 Owner: likes the demo; connected button groups felt too rounded (should be angular, round when selected). Done: inner
@@ -121,6 +129,7 @@ labs could load `components/assets/` instead of their own copies.
 
 ## Session log
 
+- 2026-11-07 (round 2): 0010 fixes shipped; Style Lab 2 published (groups, sliders, sheets, glass edge). Next: owner picks, then implement; Tables Lab; iPhone check; 1.0.0.
 - 2026-11-07 (Style Lab): applied Quiet Box fields, Soft Square checkboxes, tray tabs (0009). Next: Tables Lab, iPhone check, 1.0.0.
 - 2026-11-07 (later): owner critique fixes (0008). Next: Style Lab for a less-Material look, then iPhone check, then 1.0.0.
 - 2026-11-07: repo renamed to s4-orion (links updated, skill re-packaged); Icon Lab answered, `menu` now menu-dots (0007). Next: owner's iPhone check, then 1.0.0; optional items meanwhile.

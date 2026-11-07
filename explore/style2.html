@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>S4 Orion: Style Lab 2</title>
+<link rel="stylesheet" href="../components/orion.css?v=1">
+<style>
+body{margin:0;background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface)}
+h1,h2,p{margin:0}
+.bar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;padding:12px 24px;background:var(--md-sys-color-surface-container);border-bottom:1px solid var(--md-sys-color-outline-variant)}
+.bar h1{font-size:22px;line-height:28px;font-weight:500;margin-right:auto}
+.ctl{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;letter-spacing:.5px}
+.page{max-width:1200px;margin:0 auto;padding:24px 24px 64px;display:flex;flex-direction:column;gap:48px}
+.intro{max-width:80ch;color:var(--md-sys-color-on-surface-variant);display:flex;flex-direction:column;gap:12px}
+.sec > h2{font-size:28px;line-height:36px;font-weight:500;margin-bottom:6px}
+.sec > p{color:var(--md-sys-color-on-surface-variant);max-width:85ch;margin-bottom:16px}
+.cards{--rv-min:320px}
+.pv{padding:20px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;background:var(--md-sys-color-surface-container-low);border-radius:16px;min-height:120px}
+.pv.col{flex-direction:column;align-items:stretch}
+footer{padding:24px;text-align:center;font-size:12px;color:var(--md-sys-color-on-surface-variant)}
+/* ---- button groups ---- */
+.bg{display:inline-flex;font:inherit;font-size:14px;font-weight:500}
+.bg button{font:inherit;border:0;cursor:pointer;color:var(--md-sys-color-on-surface);background:transparent;-webkit-tap-highlight-color:transparent;height:44px;padding:0 20px;transition:background-color 110ms linear,color 110ms linear,border-radius 220ms var(--md-sys-motion-spring-fast-spatial),flex-grow 220ms var(--md-sys-motion-spring-fast-spatial)}
+.bg button[aria-pressed=true]{background:var(--md-sys-color-on-surface);color:var(--md-sys-color-surface)}
+.bg.capsule{border:1.5px solid var(--md-sys-color-outline);border-radius:999px;overflow:hidden}
+.bg.capsule button+button{border-inline-start:1px solid var(--md-sys-color-outline-variant)}
+.bg.capsule button[aria-pressed=true]{background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container)}
+.bg.capsule button[aria-pressed=true]::before{content:"\2713\00a0"}
+.bg.gap{gap:4px}
+.bg.gap button{border-radius:999px;background:var(--md-sys-color-surface-container-highest)}
+.bg.gap button:active{padding-inline:26px}
+.bg.gap button[aria-pressed=true]{background:var(--md-sys-color-on-surface);color:var(--md-sys-color-surface)}
+.bg.notch{gap:2px}
+.bg.notch button{background:var(--md-sys-color-surface-container-highest);border-radius:6px}
+.bg.notch button:first-child{border-radius:22px 6px 6px 22px}.bg.notch button:last-child{border-radius:6px 22px 22px 6px}
+.bg.notch button[aria-pressed=true]{border-radius:22px;background:var(--md-sys-color-on-surface);color:var(--md-sys-color-surface)}
+/* ---- sliders ---- */
+.sl{display:flex;flex-direction:column;gap:6px;width:100%}
+.sl-h{display:flex;justify-content:space-between;font-size:13px;color:var(--md-sys-color-on-surface-variant)}
+.sl input{-webkit-appearance:none;appearance:none;width:100%;margin:0;background:transparent;cursor:pointer;--v:50%;outline:0}
+.sl input::-webkit-slider-runnable-track{height:100%}
+.sl.glass input{height:40px}
+.sl.glass input::-webkit-slider-runnable-track{height:10px;border-radius:99px;margin-block:15px;background:linear-gradient(to right,var(--md-sys-color-on-surface) var(--v),color-mix(in srgb,var(--md-sys-color-on-surface) 14%,transparent) var(--v));box-shadow:inset 0 1px 2px color-mix(in srgb,var(--md-sys-color-shadow) 30%,transparent),0 0 0 1px color-mix(in srgb,var(--md-sys-color-on-surface) 10%,transparent)}
+.sl.glass input::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;margin-top:-10px;border-radius:50%;background:color-mix(in srgb,var(--md-sys-color-surface) 55%,transparent);-webkit-backdrop-filter:blur(6px) saturate(1.4);backdrop-filter:blur(6px) saturate(1.4);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,#fff 70%,transparent),inset 0 2px 6px color-mix(in srgb,#fff 60%,transparent),inset 0 -3px 6px color-mix(in srgb,var(--md-sys-color-shadow) 20%,transparent),0 3px 10px color-mix(in srgb,var(--md-sys-color-shadow) 35%,transparent)}
+.sl.glass input::-moz-range-track{height:10px;border-radius:99px;background:color-mix(in srgb,var(--md-sys-color-on-surface) 14%,transparent)}
+.sl.glass input::-moz-range-progress{height:10px;border-radius:99px;background:var(--md-sys-color-on-surface)}
+.sl.glass input::-moz-range-thumb{width:30px;height:30px;border-radius:50%;border:1.5px solid color-mix(in srgb,#fff 70%,transparent);background:color-mix(in srgb,var(--md-sys-color-surface) 55%,transparent)}
+.sl.line input{height:32px}
+.sl.line input::-webkit-slider-runnable-track{height:4px;margin-block:14px;border-radius:99px;background:linear-gradient(to right,var(--md-sys-color-on-surface) var(--v),var(--md-sys-color-outline-variant) var(--v))}
+.sl.line input::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;margin-top:-10px;border-radius:50%;background:var(--md-sys-color-surface);border:2px solid var(--md-sys-color-on-surface);box-sizing:border-box;transition:transform 140ms var(--md-sys-motion-spring-fast-spatial)}
+.sl.line input:active::-webkit-slider-thumb{transform:scale(1.15)}
+.sl.line input::-moz-range-track{height:4px;border-radius:99px;background:var(--md-sys-color-outline-variant)}
+.sl.line input::-moz-range-progress{height:4px;border-radius:99px;background:var(--md-sys-color-on-surface)}
+.sl.line input::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--md-sys-color-surface);border:2px solid var(--md-sys-color-on-surface);box-sizing:border-box}
+.sl.fill input{height:44px;border-radius:99px;overflow:hidden;background:linear-gradient(to right,var(--md-sys-color-on-surface) var(--v),var(--md-sys-color-surface-container-highest) var(--v))}
+.sl.fill input::-webkit-slider-thumb{-webkit-appearance:none;width:0;height:44px}
+.sl.fill input::-moz-range-thumb{width:0;height:44px;border:0}
+/* ---- sheets (static phone mockups) ---- */
+.ph{position:relative;width:min(100%,260px);height:420px;margin-inline:auto;border-radius:28px;overflow:hidden;background:var(--md-sys-color-surface);box-shadow:0 0 0 6px var(--md-sys-color-surface-container-highest);font-size:13px}
+.ph .bgl{padding:14px;display:flex;flex-direction:column;gap:8px}
+.ph .bgl i{display:block;height:36px;border-radius:10px;background:var(--md-sys-color-surface-container)}
+.ph .scrim{position:absolute;inset:0;background:color-mix(in srgb,var(--md-sys-color-shadow) 40%,transparent)}
+.ph .sh{position:absolute;background:var(--md-sys-color-surface-container-high);color:var(--md-sys-color-on-surface);padding:12px 16px;display:flex;flex-direction:column;gap:10px}
+.ph .sh b{font-size:15px;font-weight:500}
+.ph .fld{height:36px;border:1px solid var(--md-sys-color-outline-variant);border-radius:10px;background:var(--md-sys-color-surface);display:flex;align-items:center;padding:0 10px;color:var(--md-sys-color-on-surface-variant);font-size:12px}
+.ph .btn{margin-top:auto;height:40px;border-radius:99px;background:var(--md-sys-color-on-surface);color:var(--md-sys-color-surface);display:grid;place-items:center;font-weight:500}
+.ph .grab{width:32px;height:4px;border-radius:4px;background:var(--md-sys-color-outline);margin:0 auto 4px}
+.ph.a .sh{left:0;right:0;bottom:0;height:62%;border-radius:28px 28px 0 0}
+.ph.b .sh{left:8px;right:8px;bottom:8px;height:56%;border-radius:28px}
+.ph.c .sh{inset:0;border-radius:0;background:var(--md-sys-color-surface);padding-top:16px}
+.ph.c .top{display:flex;align-items:center;gap:8px}
+.ph.c .x{width:32px;height:32px;border-radius:50%;background:var(--md-sys-color-surface-container-high);display:grid;place-items:center}
+.ph.d .sh{left:12px;right:12px;top:50%;transform:translateY(-50%);height:auto;border-radius:24px;padding-bottom:14px}
+.ph.d .btn{margin-top:6px}
+/* ---- glass edge ---- */
+.gv{position:relative;width:100%;border-radius:16px;overflow:hidden;padding:20px;display:flex;flex-direction:column;gap:16px;align-items:center;background:linear-gradient(135deg,#ff7a59,#c13584 45%,#3b4cca),radial-gradient(circle at 20% 80%,#ffd166,transparent 50%);min-height:170px;justify-content:center}
+.gv::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 22px,rgba(255,255,255,.55) 22px 26px),repeating-linear-gradient(0deg,transparent 0 22px,rgba(0,0,0,.25) 22px 26px);opacity:.55}
+.gp{position:relative;display:flex;gap:6px;align-items:center;padding:10px 18px;border-radius:999px;font-weight:500;font-size:14px;color:var(--md-sys-color-on-surface);background:color-mix(in srgb,var(--md-sys-color-surface) 55%,transparent);-webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.gp.menu{border-radius:24px;flex-direction:column;align-items:flex-start;padding:10px 22px;gap:2px}
+.gp.edge{box-shadow:inset 0 0 0 1px rgba(255,255,255,.35),inset 0 1px 1px rgba(255,255,255,.5),0 6px 18px rgba(0,0,0,.25)}
+.gp.thick{box-shadow:inset 0 0 0 1px rgba(255,255,255,.4),inset 0 2px 5px rgba(255,255,255,.55),inset 0 -3px 6px rgba(0,0,0,.14),0 8px 22px rgba(0,0,0,.28)}
+.gp.thick::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:9px;pointer-events:none;-webkit-backdrop-filter:blur(2px) saturate(1.6) brightness(1.18) contrast(1.15);backdrop-filter:blur(2px) saturate(1.6) brightness(1.18) contrast(1.15);-webkit-mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);mask-composite:exclude}
+.gp > *{position:relative;z-index:1}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>S4 Orion: Style Lab 2</h1>
+  <div class="ctl">Theme <div class="s4-button-group" data-connected data-select="single" data-fit="content" id="theme" aria-label="Theme">
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="light" aria-pressed="true">Light</button>
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="dark">Dark</button></div></div>
+</div>
+<main class="page">
+  <div class="intro">
+    <p>Round two, from your last notes: a button group that is its own thing, sliders that are ours (with some transparency and glass), a better answer than the bottom sheet on a phone, and glass with a thick, refracting edge.</p>
+    <p><b>About the glass:</b> real refraction (content bending at the rim) can only be drawn from a canvas backdrop in Safari and iPhone; over normal page content it needs an SVG filter that only Chrome renders. So the glass options here are CSS looks that work everywhere: a very light edge and a rim that is clearer and brighter than the middle, like the edge of a thick pane. The old <a href="liquid-glass.html">Liquid Glass Lab</a> shows true refraction for comparison.</p>
+    <p>Tap the card (above its preview) to pick one; Other plus a note if none is right. Answers are saved with your other labs.</p>
+  </div>
+  <div id="sections"></div>
+</main>
+<footer><a href="../">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0)</footer>
+
+<script src="../components/assets/m3color.js"></script>
+<script src="../components/assets/icons.js"></script>
+<script src="../components/orion.js?v=1"></script>
+<script src="lib/icon-options.js?v=1"></script>
+<script src="lib/questions.js?v=12"></script>
+<script src="lib/review.js?v=8"></script>
+<script>
+const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+const bgs = (cls, names) => `<div class="pv"><div class="bg ${cls}" role="group">${names.map((n, i) => `<button type="button" aria-pressed="${i === 1}">${n}</button>`).join('')}</div></div>`;
+const N = ['Week', 'Month', 'Year'];
+const sl = (cls, v) => `<div class="pv col"><div class="sl ${cls}"><div class="sl-h"><span>Monthly Budget</span><span>$<b class="o">${Math.round(v * 20)}</b></span></div><input type="range" min="0" max="100" value="${v}" style="--v:${v}%" aria-label="Monthly Budget"></div><div class="sl ${cls}"><div class="sl-h"><span>Alert Volume</span><span><b class="o">100</b>%</span></div><input type="range" min="0" max="100" value="100" style="--v:100%" aria-label="Alert Volume"></div></div>`;
+const phone = (cls, body) => `<div class="pv"><div class="ph ${cls}"><div class="bgl"><i></i><i></i><i></i><i></i><i></i></div>${cls === 'c' ? '' : '<div class="scrim"></div>'}<div class="sh">${body}</div></div></div>`;
+const form = `<b>Add Bill</b><div class="fld">Vendor</div><div class="fld">Amount</div><div class="btn">Save</div>`;
+const SECTIONS = [
+  { id: 'group', title: 'Button Groups', desc: 'Today: separate buttons that join up, angular until selected. Press the buttons: the selected one changes.', opts: [
+    { k: 'A', name: 'Connected (today)', tag: 'Today', desc: 'Angular inner corners, round when selected.', html: () => `<div class="pv"><div class="s4-button-group" data-connected data-select="single" data-fit="content">${N.map((n, i) => `<button class="s4-button" data-variant="tonal" type="button" aria-pressed="${i === 1}">${n}</button>`).join('')}</div></div>` },
+    { k: 'B', name: 'Capsule', desc: 'One outlined capsule with hairline dividers; the selected part gets a tint and a check. Reads as a single control.', html: () => bgs('capsule', N) },
+    { k: 'C', name: 'Squishy Pills', desc: 'Separate round pills with small gaps; pressing one squeezes its neighbours; the selected is solid ink.', html: () => bgs('gap', N) },
+    { k: 'D', name: 'Notched', desc: 'Small gaps, soft squares at the joins, outer ends fully round; the selected one turns into a full pill of ink.', html: () => bgs('notch', N) }]},
+  { id: 'slider', title: 'Sliders', desc: 'Today: M3 Expressive, thick track with a gap, a slim handle and a stop at the end. Drag the sliders; the glass bead and the volume row at 100% show how each ends.', opts: [
+    { k: 'A', name: 'Material (today)', tag: 'Today', desc: 'Thick track, gap, slim handle.', html: () => `<div class="pv col"><div class="s4-slider"><input type="range" min="0" max="100" value="62" aria-label="Monthly Budget"></div><div class="s4-slider"><input type="range" min="0" max="100" value="100" aria-label="Alert Volume"></div></div>` },
+    { k: 'B', name: 'Glass Bead', desc: 'A slim inset track (clear ink well, solid ink fill) with a round glass bead: translucent, blurred, light rim, soft shadow. The glass element.', html: () => sl('glass', 62) },
+    { k: 'C', name: 'Fine Line', desc: 'A hairline-thin track and a ring handle. Nothing at the ends. The quietest.', html: () => sl('line', 62) },
+    { k: 'D', name: 'Fill Bar', desc: 'The whole control is the track, like a volume bar: the ink fills to the value, no handle at all.', html: () => sl('fill', 62) }]},
+  { id: 'sheet', title: 'Sheets on a Phone', desc: 'Today: a bottom sheet that grows out of the + button. Four ways to add a bill on a phone.', opts: [
+    { k: 'A', name: 'Bottom Sheet (today)', tag: 'Today', desc: 'Docked to the bottom edge, round top corners.', html: () => phone('a', `<div class="grab"></div>` + form) },
+    { k: 'B', name: 'Floating Card', desc: 'A rounded card floating 8px above the bottom and the sides, over a scrim. Looks lighter, never meets the screen corners awkwardly.', html: () => phone('b', `<div class="grab"></div>` + form) },
+    { k: 'C', name: 'Full Page', desc: 'The + button grows into a full screen with a close button; best for forms with a keyboard. Back returns to the list.', html: () => phone('c', `<div class="top"><div class="x">✕</div><b>Add Bill</b></div><div class="fld">Vendor</div><div class="fld">Amount</div><div class="fld">Due Date</div><div class="btn">Save</div>`) },
+    { k: 'D', name: 'Centered Card', desc: 'A dialog-style card in the middle of the screen, shaped like the dialogs. Fine for short forms, awkward with the keyboard.', html: () => phone('d', form) }]},
+  { id: 'glass', title: 'Glass Edge', desc: 'Same blur as today on every option (the blur level stays). B adds a very light rim; C also makes the rim band clearer and brighter than the middle, like the edge of a thick pane.', opts: [
+    { k: 'A', name: 'Blur Only (today)', tag: 'Today', desc: 'Frosted, no edge treatment.', html: () => `<div class="pv"><div class="gv"><div class="gp">Due This Week</div><div class="gp menu"><span>Edit</span><span>Snooze</span><span>Delete</span></div></div></div>` },
+    { k: 'B', name: 'Light Rim', desc: 'A very light 1px rim and a faint top shine.', html: () => `<div class="pv"><div class="gv"><div class="gp edge">Due This Week</div><div class="gp menu edge"><span>Edit</span><span>Snooze</span><span>Delete</span></div></div></div>` },
+    { k: 'C', name: 'Thick Pane', desc: 'Light rim, an inner glow and shadow for depth, and a rim band that is clearer and brighter than the middle (a refracting edge look).', html: () => `<div class="pv"><div class="gv"><div class="gp thick">Due This Week</div><div class="gp menu thick"><span>Edit</span><span>Snooze</span><span>Delete</span></div></div></div>` }]}
+];
+const host = document.getElementById('sections');
+SECTIONS.forEach(sec => {
+  const el = h(`<section class="sec"><h2>${sec.title}</h2><p>${sec.desc}</p><div class="cards rv-group" role="radiogroup" aria-label="${sec.title}"></div></section>`);
+  host.appendChild(el);
+  sec.opts.forEach(o => el.querySelector('.cards').appendChild(S4Review.card({ pick: `${sec.id}:${o.k}`, letter: o.k, title: o.name, desc: o.desc, tag: o.tag || '', preview: h(o.html()) })));
+});
+document.addEventListener('click', e => {
+  const b = e.target.closest('.bg button'); if (!b) return;
+  b.parentNode.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+});
+document.addEventListener('input', e => {
+  const i = e.target; if (!i.matches('.sl input')) return;
+  i.style.setProperty('--v', i.value + '%');
+  const o = i.closest('.sl').querySelector('.o'); if (o) o.textContent = o.parentNode.textContent.includes('$') ? Math.round(i.value * 20) : i.value;
+});
+document.getElementById('theme').addEventListener('s4-change', e => S4.theme({ mode: e.detail.value }));
+S4.theme({ mode: 'light' });
+S4Review.page('style2');
+</script>
+</body>
+</html>

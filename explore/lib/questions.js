@@ -72,4 +72,14 @@ window.S4_REVIEW_DEMOS = [
       { id: 'tabs', label: 'Tab headers', options: [{ v: 'A', label: 'Material (today)' }, { v: 'B', label: 'Ink Pills' }, { v: 'C', label: 'Quiet Underline' }, { v: 'D', label: 'Segmented Tray' }, { v: 'Other', label: 'Describe in notes' }] }
     ]
   }
+  ,
+  {
+    id: 'style2', title: 'Style Lab 2', href: 'explore/style2.html',
+    questions: [
+      { id: 'group', label: 'Button groups', options: [{ v: 'A', label: 'Connected (today)' }, { v: 'B', label: 'Capsule' }, { v: 'C', label: 'Squishy Pills' }, { v: 'D', label: 'Notched' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'slider', label: 'Sliders', options: [{ v: 'A', label: 'Material (today)' }, { v: 'B', label: 'Glass Bead' }, { v: 'C', label: 'Fine Line' }, { v: 'D', label: 'Fill Bar' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'sheet', label: 'Sheets on a phone', options: [{ v: 'A', label: 'Bottom Sheet (today)' }, { v: 'B', label: 'Floating Card' }, { v: 'C', label: 'Full Page' }, { v: 'D', label: 'Centered Card' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'glass', label: 'Glass edge', options: [{ v: 'A', label: 'Blur Only (today)' }, { v: 'B', label: 'Light Rim' }, { v: 'C', label: 'Thick Pane' }, { v: 'Other', label: 'Describe in notes' }] }
+    ]
+  }
 ];
