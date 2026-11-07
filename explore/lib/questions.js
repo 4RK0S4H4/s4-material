@@ -124,5 +124,11 @@ window.S4_REVIEW_DEMOS = [
     questions: [
       { id: 'items', label: 'Items on glass: own color, translucent (frost line only where outlined)', options: [{ v: 'A', label: 'Solid Items (today)' }, { v: 'B', label: 'Own Color, 70%' }, { v: 'C', label: 'Own Color, 55%' }, { v: 'D', label: 'Recessed, 55%' }, { v: 'E', label: 'Recessed, 40%' }, { v: 'Other', label: 'Describe in notes' }] }
     ]
+  },
+  {
+    id: 'transparency5', title: 'Transparency Lab 5', href: 'explore/transparency5.html',
+    questions: [
+      { id: 'frost', label: 'How frosted should glass be', options: [{ v: 'A', label: 'Today' }, { v: 'B', label: 'Calmer Color' }, { v: 'C', label: 'Frosted' }, { v: 'D', label: 'Heavy Frost' }, { v: 'E', label: 'Heavy Frost, Clearer' }, { v: 'Other', label: 'Describe in notes' }] }
+    ]
   }
 ];

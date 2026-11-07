@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>S4 Orion: Transparency Lab 3</title>
+<link rel="stylesheet" href="../components/orion.css?v=1">
+<style>
+body{margin:0;background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface)}
+h1,h2,p{margin:0}
+.bar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;padding:12px 24px;background:var(--md-sys-color-surface-container);border-bottom:1px solid var(--md-sys-color-outline-variant)}
+.bar h1{font-size:22px;line-height:28px;font-weight:500;margin-right:auto}
+.ctl{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;letter-spacing:.5px}
+.ctl input[type=range]{width:110px}
+.page{max-width:1200px;margin:0 auto;padding:24px 16px 64px;display:flex;flex-direction:column;gap:32px}
+.intro{max-width:80ch;color:var(--md-sys-color-on-surface-variant);display:flex;flex-direction:column;gap:12px}
+.sec > h2{font-size:24px;line-height:32px;font-weight:500;margin-bottom:6px}
+.sec > p{color:var(--md-sys-color-on-surface-variant);max-width:85ch;margin-bottom:16px}
+.cards{--rv-min:340px}
+.pv{padding:16px;display:flex;justify-content:center;background:var(--md-sys-color-surface-container-low);border-radius:16px}
+.fr{position:relative;width:312px;height:520px;border-radius:30px;overflow:hidden;box-shadow:0 0 0 6px var(--md-sys-color-surface-container-highest);isolation:isolate;background:var(--md-sys-color-surface)}
+.fr .sc{position:absolute;inset:0;padding:14px;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+.ph{height:120px;border-radius:22px;background:linear-gradient(150deg,#ff7a59,#c13584 55%,#3b4cca);color:#fff;font-weight:700;padding:12px;display:flex;align-items:flex-end}
+.ph.b{background:linear-gradient(150deg,#43aa8b,#277da1 60%,#1b263b);height:90px}
+.ph.c{background:repeating-linear-gradient(45deg,#f9c74f 0 14px,#7b2cbf 14px 28px);height:90px}
+.fr .s4-list{background:transparent}
+.fr .s4-toolbar.fl{position:absolute;left:50%;top:66px;transform:translateX(-50%)}
+.fr .s4-nav-bar{position:absolute;left:0;right:0;bottom:0;border-radius:0}
+.fr .s4-dialog{position:absolute;inset:auto;left:16px;right:16px;top:150px;margin:0;width:auto;max-width:none;display:flex;flex-direction:column;gap:10px;padding:18px}
+.fr .s4-dialog h2{margin:0;font-size:18px;font-weight:500}
+.fr .acts{display:flex;justify-content:flex-end;gap:8px}
+/* the levers: blur, color saturation and tint are plain glass tokens, so they are set per frame (blur and saturation do not affect the text-contrast guarantee; tint does) */
+.fr{--s4-glass-blur-float:var(--b,16px);--s4-glass-saturation-float:var(--s,1.8);--s4-glass-tint-opacity-float:var(--t,.6)}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>S4 Orion: Transparency Lab 5</h1>
+  <label class="ctl">Blur <input type="range" id="blur" min="-12" max="30" value="0" aria-label="Extra blur"></label>
+  <label class="ctl">Color <input type="range" id="sat" min="-60" max="40" value="0" aria-label="Color strength"></label>
+  <div class="ctl">Theme <div class="s4-button-group" data-connected data-select="single" data-fit="content" id="theme" aria-label="Theme">
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="light" aria-pressed="true">Light</button>
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="dark">Dark</button></div></div>
+</div>
+<main class="page">
+  <div class="intro">
+    <p>Your note: the colors coming through the glass hit too hard, so make glass <b>more frosted</b>: more blur and calmer color. Today's glass is a 16px blur with color <i>boosted</i> to 180%; that boost is what makes the backdrop's colors so strong. These five cards change only blur and color strength (plus the tint on E); the frost line from decision 0013 and no shadow stay.</p>
+    <p>Good news for the guarantee: blur and color strength don't affect the text-contrast check (that depends on tint and the contrast squeeze), so frostier is free. Each card shows its text contrast for the monochrome theme (the full check runs 97 color schemes and is stricter). The sliders in the bar add or remove blur and color on every card at once, so you can overshoot and tell me where it stops looking right. Tap a card to pick it, tap again to unpick.</p>
+  </div>
+  <div id="sections"></div>
+</main>
+<footer style="padding:24px;text-align:center;font-size:12px;color:var(--md-sys-color-on-surface-variant)"><a href="../">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0)</footer>
+
+<script src="../components/assets/m3color.js"></script>
+<script src="../components/assets/icons.js"></script>
+<script src="../components/orion.js?v=1"></script>
+<script src="lib/icon-options.js?v=1"></script>
+<script src="lib/questions.js?v=25"></script>
+<script src="lib/review.js?v=9"></script>
+<script>
+const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+const OPTS = {
+  A: { name: 'Today', tag: 'Today', desc: '16px blur, color boosted to 180%, 60% tint.', b: 16, s: 1.8, t: .6 },
+  B: { name: 'Calmer Color', desc: 'Same blur, color boost cut to 120%. The backdrop is less shouty.', b: 16, s: 1.2, t: .6 },
+  C: { name: 'Frosted', desc: '28px blur and 120% color: shapes behind turn to soft color fields.', b: 28, s: 1.2, t: .6, tag: 'Suggested' },
+  D: { name: 'Heavy Frost', desc: '40px blur and plain 100% color: a milky, quiet pane.', b: 40, s: 1, t: .6 },
+  E: { name: 'Heavy Frost, Clearer', desc: '40px blur, 100% color and a lighter 45% tint: more of the (blurred) backdrop shows. This one changes the contrast guarantee, a tint under 60% has to be re-checked against all 97 color schemes.', b: 40, s: 1, t: .45 }
+};
+/* worst-case text contrast, same math as scripts/check-glass.mjs: on-surface text on surface-container tint over pure black and white backdrops
+   after the glass's contrast(.74)/brightness(1.1) squeeze (light) or contrast(1)/brightness(.8) (dark). Blur and saturation do not enter into it. */
+function worst(t, dark) {
+  const c = dark ? 1 : .74, br = dark ? .8 : 1.1, f = v => Math.min(255, Math.max(0, ((v - 127.5) * c + 127.5) * br));
+  const lin = v => { v /= 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }, L = x => lin(x);
+  const tint = dark ? [38, 38, 38] : [243, 243, 243], text = dark ? [240, 240, 240] : [24, 24, 24];   /* monochrome surface-container / on-surface (approx) */
+  const lumv = a => .2126 * L(a[0]) + .7152 * L(a[1]) + .0722 * L(a[2]), rat = (a, b) => { const x = lumv(a) + .05, y = lumv(b) + .05; return Math.max(x, y) / Math.min(x, y); };
+  const mix = g => tint.map(v => v * t + g * (1 - t));
+  return Math.min(rat(text, mix(f(0)).map(v => v)), rat(text, mix(f(255))));
+}
+const ROWS = [['Iron Mountain', 'Due Oct 24', '$1,240.00'], ['Staples', 'Due Oct 29', '$72.40'], ['Electric Co.', 'Due Oct 30', '$318.55']];
+const row = r => `<div class="s4-list-item"><span class="s4-list-leading">${r[0].slice(0, 2).toUpperCase()}</span><span class="s4-list-content"><span class="s4-list-headline">${r[0]}</span><span class="s4-list-supporting">${r[1]}</span></span><span class="s4-list-trailing">${r[2]}</span></div>`;
+function frame(o) {
+  const f = h(`<div class="fr"><div class="sc"><div class="ph">Lisbon</div><div class="ph c"></div><div class="s4-list">${ROWS.map(row).join('')}</div><div class="ph b">Night Shots</div></div>
+  <div class="s4-toolbar fl" role="toolbar" aria-label="Actions"><button class="s4-icon-button" type="button" aria-label="Filter"><span class="s4-icon" data-icon="filter"></span></button><button class="s4-icon-button" type="button" aria-label="Sort"><span class="s4-icon" data-icon="sort"></span></button><button class="s4-icon-button" type="button" aria-label="Share"><span class="s4-icon" data-icon="share"></span></button></div>
+  <dialog class="s4-dialog" open aria-label="Delete bill"><h2>Delete this bill?</h2><div class="s4-dialog-content">Staples, $72.40, due Nov 2. This can’t be undone.</div><div class="acts"><button class="s4-button" data-variant="text" type="button">Cancel</button><button class="s4-button" data-variant="text" data-color="error" type="button">Delete</button></div></dialog>
+  <nav class="s4-nav-bar" aria-label="Main"><button class="s4-nav-item" type="button" aria-current="page"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="home"></span></span><span class="s4-nav-label">Home</span></button><button class="s4-nav-item" type="button"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="bills"></span></span><span class="s4-nav-label">Bills</span></button><button class="s4-nav-item" type="button"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="settings"></span></span><span class="s4-nav-label">Settings</span></button></nav></div>`);
+  f._o = o; return f;
+}
+const frames = [], sec = h('<section class="sec"><h2>Frost Levels</h2><p>Same screen, same glass, only blur and color strength differ.</p><div class="cards rv-group" role="radiogroup" aria-label="Frost"></div></section>');
+document.getElementById('sections').appendChild(sec);
+Object.keys(OPTS).forEach(k => {
+  const o = OPTS[k], f = frame(o), w = h('<div class="pv"></div>'); w.appendChild(f); frames.push(f);
+  const card = S4Review.card({ pick: `frost:${k}`, letter: k, title: o.name, desc: o.desc, tag: o.tag || '', preview: w });
+  f._worst = h('<span class="rv-help" style="display:block;margin-top:6px"></span>'); card.querySelector('.rv-preview') ? card.querySelector('.rv-preview').after(f._worst) : card.appendChild(f._worst);
+  sec.querySelector('.cards').appendChild(card);
+});
+function apply() {
+  const eb = +document.getElementById('blur').value, es = +document.getElementById('sat').value / 100, dark = document.documentElement.dataset.theme === 'dark';
+  frames.forEach(f => { const o = f._o; f.style.setProperty('--b', Math.max(0, o.b + eb) + 'px'); f.style.setProperty('--s', Math.max(0, o.s + es)); f.style.setProperty('--t', o.t);
+    f._worst.textContent = `Blur ${Math.max(0, o.b + eb)}px · color ${Math.round(Math.max(0, o.s + es) * 100)}% · tint ${Math.round(o.t * 100)}% · text contrast (monochrome theme) ${worst(o.t, dark).toFixed(2)}:1; the full 97-scheme check is stricter, so a tint under 60% would need re-checking}`; });
+}
+S4.init(document.body);
+['blur', 'sat'].forEach(i => document.getElementById(i).addEventListener('input', apply));
+document.getElementById('theme').addEventListener('s4-change', e => { S4.theme({ mode: e.detail.value }); apply(); });
+S4.theme({ mode: 'light' }); apply();
+S4Review.page('transparency5');
+</script>
+</body>
+</html>
