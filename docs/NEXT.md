@@ -137,6 +137,8 @@ labs could load `components/assets/` instead of their own copies.
 
 ## Session log
 
+- 2026-11-07 (QA): motion bug pass (container transform blur timing for WebKit, menu/dialog interruption, FAB fold, snackbar scale, tooltips), skill/docs wording. Next: owner's iPhone check, then 1.0.0.
+
 - 2026-11-07 (late): Liquid Glass Lab 4 (WebGL glass over real DOM via snapshot) published for the owner's iPhone check.
 - 2026-11-07 (Lab 2 answers): Notched groups + centered-card phone sheets (0011); Liquid Glass Lab 3 published. Next: owner's pick and iPhone check; sliders/glass edge undecided; Tables Lab; 1.0.0.
 - 2026-11-07 (round 2): 0010 fixes shipped; Style Lab 2 published (groups, sliders, sheets, glass edge). Next: owner picks, then implement; Tables Lab; iPhone check; 1.0.0.
@@ -194,6 +196,9 @@ NOTE: demo/ keeps its own copy of orion.css/orion.js; `npm run build` now regene
 **Safari finding (2026-11-07):** clip-path does not clip backdrop-filter in WebKit. `emerge` (menus) now animates the box instead. The **container transform for dialogs and sheets still uses clip-path over glass** and very likely has the same problem on iPhone (the owner reported it earlier as choppy). Next: the same fix there (animate the box, or keep the surface solid and unblurred while it moves and only turn on glass after landing, which it already tries), then ask the owner to check.
 
 **Scrubber (2026-11-07):** `explore/lib/scrub.js` is one slim bar: Freeze and a slider. Tap Freeze, open a menu (it stops at 0%), drag or tap the bar to any moment and screenshot. It sits above a bottom nav if the page has one and does its own hit-testing, so open menus and modal dialogs neither close nor ignore it. The owner found earlier versions glitchy, then too complicated: keep it this simple. Add the script to any new motion lab.
+
+## QA pass on motion (2026-11-07, later): done, needs the owner's iPhone look
+Dialogs and sheets: the container transform no longer has the blur on while `clip-path` moves (blur on only after landing, under a solid color, then fades to glass; closing settles to solid first). Menu re-tap left the button's z-index creeping (fixed); menu layer inside glass bars corrected; FAB label fold, snackbar scale, tooltip over open menu fixed; docs/skill wording (emerge, rise). See CHANGELOG "Fixed (QA pass on motion)". Chromium only. **Next:** owner checks on the iPhone: FAB to sheet, Delete All Data dialog, row to detail, the three demo menus. Still open from below: interrupting a dialog in its first ~400ms jumps to full size before collapsing (edge case); pruning the extra menu styles.
 
 ## Parked for a bigger QA review (owner, 2026-11-07)
 Menu motion (0018, `emerge`) is "ok for now" on the iPhone but not perfect: possible remaining stutter and blur pop on Safari. To tackle in a bigger QA pass, together with: dialogs and sheets still use the clip-path container transform over glass (likely choppy on Safari for the same reason, see "Safari finding"); the demo and gallery on the iPhone end to end; the menu styles other than `emerge` (`quiet`, `grow`, `edge`, `inplace`, `transform`, `transform-keep`) can be pruned then. Fallback if the blur is still the problem: keep menus solid for the whole opening and fade in glass only at the end. Use `?scrub` (demo) and the Menu Motion Lab's Freeze bar to pin down frames.

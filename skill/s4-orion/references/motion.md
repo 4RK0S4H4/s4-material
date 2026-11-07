@@ -30,6 +30,7 @@ spatial durations become 0 and fades remain.
 | A surface opened from something you touched: dialog from a button, sheet from a FAB, detail from a row | **Container transform**: the source becomes the container at real size. It starts and ends with the source's rect, corners, color and label; the container travels from the source and its edges open, and the label and content ride on it (nothing slides across the container). Opening, the label fades out by 30% and content fades in from 35%; closing, content is gone by 20% and the label is back by 60%. Glass stays solid with no blur while the shape moves (WebKit does not clip a blur with clip-path); once it has landed the blur comes on under the solid color, holds briefly, then the color fades to glass. Closing settles glass to solid in place first, then moves. Collapse uses the calm spring; then the real source reappears. |
 | Menus | **Emerge** (decision 0018): the menu's shape grows out from behind its button (a solid layer under the button opens into the menu's box); the button never moves; the options fade in and the color turns to glass after it lands. Called through `S4.transition.unfold` |
 | Switching between sibling views: tabs, nav destinations, steps | **Shared axis**: old view slides 30px out and fades, new one slides in from the side you're heading |
-| Sheets not opened from a FAB, snackbars | **Slide from edge**: they come from the edge where they live |
+| Sheets not opened from a FAB | **Slide from edge**: they come from the edge where they live |
+| Snackbars | **Rise** (decision 0010): a 10px rise and a fade, no scaling |
 
 Never scale a surface's content to make it appear (S4 Material's Origin did; it stretches text and reads as goofy).

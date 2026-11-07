@@ -1368,7 +1368,7 @@
   .s4-fab-label {
     display: inline-block;
     overflow: hidden;
-    max-width: 20em;
+    max-width: var(--_label-w, 20em);   /* fab.js measures the label so the fold starts at once */
     margin-inline-start: var(--_gap);
     transition:
       max-width var(--md-sys-motion-spring-spatial-duration) var(--md-sys-motion-spring-spatial),

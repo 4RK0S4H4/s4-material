@@ -37,7 +37,7 @@ reduced transparency, or a browser without backdrop blur all turn it solid.
 
 Motion explains where things come from and where they go. When a surface opens from something you touched, that thing
 becomes the surface (container transform) at its real size, so content never stretches. Menus emerge from behind their button,
-sibling views slide along a shared axis, and sheets and snackbars come from the edge where they live. Movement uses M3
+sibling views slide along a shared axis, sheets come from the edge where they live, and snackbars rise into place. Movement uses M3
 Expressive springs; fades and color use effects springs that never overshoot; anything that must land exactly on a
 target uses a calm, critically damped spring. Reduced motion makes movement instant.
 

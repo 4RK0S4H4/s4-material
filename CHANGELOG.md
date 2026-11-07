@@ -10,6 +10,16 @@ All notable changes to S4 Orion are recorded here. The format follows [Keep a Ch
 
 The first version of S4 Orion, a leaner rebuild of S4 Material 1.3 on Material 3 Expressive.
 
+### Fixed (QA pass on motion, 2026-11-07)
+
+- Container transform (dialogs, sheets, row to detail): the blur is now off for the whole time the shape moves (WebKit draws a backdrop blur unclipped by `clip-path`, the likely cause of the choppy iPhone morph). After landing the blur comes on under the still-solid color, holds 120ms, then the color fades to glass; closing settles the glass to solid in place first, then collapses.
+- Container transform: closing while it is still opening no longer flashes back to glass; the running transition is ended cleanly first.
+- Menus (`emerge`): re-tapping the button while its menu opened or closed left the button with a raised `z-index` and `position` that grew with every tap; now the running animation is ended first and the button is always restored. The layer is also corrected when the button sits inside a glass bar (a backdrop-filter ancestor moves `position: fixed`).
+- Tooltips never show over their button's own open menu.
+- Extended FAB: the label fold animated from a 20em cap, so it stalled and then snapped; `fab.js` measures the label so the fold starts at once.
+- Snackbar arrival: no more 0.97 scale (content is never scaled to appear); a 10px rise and fade as decided in 0010.
+- Docs and skill: menus emerge from their button (was "unfold"); snackbars rise (was "slide from the edge").
+
 ### Changed (glass edge, 2026-11-07, decision 0013)
 
 - Glass: a 1px frost line (white at 20%, `--s4-glass-highlight-*`) replaces the elevation shadow on glass surfaces; the shadow returns wherever glass is solid. Fill and contrast guarantee unchanged.

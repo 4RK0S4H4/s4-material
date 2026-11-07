@@ -399,7 +399,7 @@
   /* ---------- rise: a small, quiet arrival for snackbars: a few pixels up and a fade ---------- */
   function rise(el, opts) {
     var open = !opts || opts.open !== false, dy = M.reduced() ? 0 : 10;
-    var a = [{ opacity: open ? 0 : 1, transform: open ? 'translateY(' + dy + 'px) scale(0.97)' : 'none' }, { opacity: open ? 1 : 0, transform: open ? 'none' : 'translateY(' + dy + 'px) scale(0.97)' }];
+    var a = [{ opacity: open ? 0 : 1, transform: open ? 'translateY(' + dy + 'px)' : 'none' }, { opacity: open ? 1 : 0, transform: open ? 'none' : 'translateY(' + dy + 'px)' }];   /* no scale: content is never scaled to appear */
     var fade = M.animate(el, [{ opacity: a[0].opacity }, { opacity: a[1].opacity }], open ? 'effects' : 'fast-effects');
     var move = M.animate(el, [{ transform: a[0].transform }, { transform: a[1].transform }], open ? 'spatial' : 'fast-effects');
     return Promise.all([done(fade), done(move)]).then(function () { if (open) { fade.cancel(); move.cancel(); } });

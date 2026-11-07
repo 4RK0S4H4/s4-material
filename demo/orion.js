@@ -555,7 +555,7 @@
   /* ---------- rise: a small, quiet arrival for snackbars: a few pixels up and a fade ---------- */
   function rise(el, opts) {
     var open = !opts || opts.open !== false, dy = M.reduced() ? 0 : 10;
-    var a = [{ opacity: open ? 0 : 1, transform: open ? 'translateY(' + dy + 'px) scale(0.97)' : 'none' }, { opacity: open ? 1 : 0, transform: open ? 'none' : 'translateY(' + dy + 'px) scale(0.97)' }];
+    var a = [{ opacity: open ? 0 : 1, transform: open ? 'translateY(' + dy + 'px)' : 'none' }, { opacity: open ? 1 : 0, transform: open ? 'none' : 'translateY(' + dy + 'px)' }];   /* no scale: content is never scaled to appear */
     var fade = M.animate(el, [{ opacity: a[0].opacity }, { opacity: a[1].opacity }], open ? 'effects' : 'fast-effects');
     var move = M.animate(el, [{ transform: a[0].transform }, { transform: a[1].transform }], open ? 'spatial' : 'fast-effects');
     return Promise.all([done(fade), done(move)]).then(function () { if (open) { fade.cancel(); move.cancel(); } });
@@ -687,6 +687,25 @@ S4.register('button-group', function (scope) {
       stop(to);
       to.focus();
     });
+  });
+});
+
+/* ---- fab/fab.js ---- */
+/* Extended FAB: the label folds with data-collapsed by animating max-width. A fixed cap (20em) made the fold wait while
+   the cap shrank down to the label's real width and then snap shut (and open the same way backwards), so the real width
+   is measured and handed to the CSS as --_label-w. Re-measured when fonts load, when the label's text changes, and when a label first measured hidden is shown. */
+S4.register('fab', function (scope) {
+  S4.util.all(scope, '.s4-fab-label').forEach(function (label) {
+    if (!S4.util.once(label, 'fabLabel')) return;
+    function measure() {
+      label.style.setProperty('--_label-w', 'none');
+      var w = label.scrollWidth;
+      if (w) label.style.setProperty('--_label-w', Math.ceil(w) + 'px'); else label.style.removeProperty('--_label-w');
+    }
+    measure();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+    new MutationObserver(measure).observe(label, { childList: true, characterData: true, subtree: true });
+    if (window.ResizeObserver) new ResizeObserver(function () { if (!label.style.getPropertyValue('--_label-w')) measure(); }).observe(label);   /* first shown (it was in a hidden view) */
   });
 });
 

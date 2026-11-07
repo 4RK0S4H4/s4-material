@@ -112,7 +112,7 @@ Everything ships in this skill's `assets/` folder: `orion.css` (tokens, every co
 **Motion** (built in; use the APIs, never hand-write durations or easings)
 - Something opened from what you touched (dialog from a button, sheet from a FAB, detail from a row): **container transform**
   (`[data-dialog]`, `[data-sheet]`, or `S4.transition.containerTransform(surface, source)`).
-- Menus **emerge** from behind their button (built into `[data-menu]`); sibling views and tabs use **shared axis**; sheets not from a FAB and snackbars **slide from the edge**.
+- Menus **emerge** from behind their button (built into `[data-menu]`); sibling views and tabs use **shared axis**; sheets not from a FAB **slide from the edge**; snackbars **rise** 10px and fade in (built in).
 - Never scale a surface's content to make it appear (it stretches text). Bounce is fine on movement; fades never bounce.
 - Custom animation: `S4.motion.animate(el, keyframes, 'spatial')` (reads the spring tokens and reduced motion).
 
