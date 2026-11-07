@@ -122,7 +122,7 @@ window.S4_REVIEW_DEMOS = [
   {
     id: 'transparency4', title: 'Transparency Lab 4', href: 'explore/transparency4.html',
     questions: [
-      { id: 'items', label: 'Items sitting on glass (text fields, chips)', options: [{ v: 'A', label: 'Solid Items (today)' }, { v: 'B', label: 'Outline Only' }, { v: 'C', label: 'Frosted Fill' }, { v: 'D', label: 'Recessed Well' }, { v: 'E', label: 'Milky Fill' }, { v: 'F', label: 'Soft Well + Frost Line' }, { v: 'G', label: 'Combo: Well + Frost Line, Outlined Items Only' }, { v: 'Other', label: 'Describe in notes' }] }
+      { id: 'items', label: 'Items on glass: own color, translucent (frost line only where outlined)', options: [{ v: 'A', label: 'Solid Items (today)' }, { v: 'B', label: 'Own Color, 70%' }, { v: 'C', label: 'Own Color, 55%' }, { v: 'D', label: 'Recessed, 55%' }, { v: 'E', label: 'Recessed, 40%' }, { v: 'Other', label: 'Describe in notes' }] }
     ]
   }
 ];

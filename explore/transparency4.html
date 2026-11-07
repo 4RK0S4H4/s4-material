@@ -24,13 +24,17 @@ h1,h2,p{margin:0}
 .fr .row{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:14px}
 .fr .chips{display:flex;gap:8px;flex-wrap:wrap}
 .fr .acts{display:flex;justify-content:flex-end;gap:8px}
-/* items on glass. Everything is a variable the components already read (--_bg, --_outline), so no component CSS changes. */
-.fr[data-items=B] :where(.s4-text-field,.s4-chip){--_bg:transparent;--_outline:color-mix(in srgb,var(--md-sys-color-on-surface) 30%,transparent)}
-.fr[data-items=C] :where(.s4-text-field,.s4-chip){--_bg:color-mix(in srgb,var(--md-sys-color-surface) 40%,transparent);--_outline:rgb(255 255 255/.3)}
-.fr[data-items=D] :where(.s4-text-field,.s4-chip){--_bg:color-mix(in srgb,var(--md-sys-color-on-surface) 8%,transparent);--_outline:transparent}
-.fr[data-items=E] :where(.s4-text-field,.s4-chip){--_bg:rgb(255 255 255/.18);--_outline:rgb(255 255 255/.2)}
-.fr[data-items=G] :where(.s4-text-field,.s4-chip:not([aria-pressed=true])){--_bg:color-mix(in srgb,var(--md-sys-color-on-surface) 7%,transparent);--_outline:rgb(255 255 255/.2)}
-.fr[data-items=F] :where(.s4-text-field,.s4-chip){--_bg:color-mix(in srgb,var(--md-sys-color-on-surface) 6%,transparent);--_outline:rgb(255 255 255/.2)}
+/* items on glass, as the owner described: every item keeps its OWN color as the main thing, made translucent so the blurred backdrop shows through
+   (--ia = how much of the color stays, --rec = how far it is deepened toward the text color for a recessed look).
+   Only items that were OUTLINED before (text fields, unselected chips, outlined buttons) swap that outline for the 1px frost line. */
+.fr[data-items]:not([data-items=A]){--ia:70%;--rec:0%}
+.fr[data-items=C]{--ia:55%}
+.fr[data-items=D]{--ia:55%;--rec:12%}
+.fr[data-items=E]{--ia:40%;--rec:12%}
+.fr[data-items]:not([data-items=A]) :where(.s4-chip,.s4-button:not([data-variant=text])){background:color-mix(in srgb,color-mix(in srgb,var(--_bg),var(--md-sys-color-on-surface) var(--rec)) var(--ia),transparent)}
+.fr[data-items]:not([data-items=A]) .s4-text-field::before{background:color-mix(in srgb,color-mix(in srgb,var(--_bg),var(--md-sys-color-on-surface) var(--rec)) var(--ia),transparent)}
+.fr[data-items]:not([data-items=A]) :where(.s4-text-field,.s4-chip:not([aria-pressed=true]),.s4-button[data-variant=outlined]){--_outline:rgb(255 255 255/.2)}
+.fr[data-items]:not([data-items=A]) .s4-button[data-variant=outlined]{--_bg:color-mix(in srgb,var(--md-sys-color-on-surface) 6%,transparent)}
 </style>
 </head>
 <body>
@@ -42,7 +46,7 @@ h1,h2,p{margin:0}
 </div>
 <main class="page">
   <div class="intro">
-    <p>Your note: apply transparency to the things <b>sitting on</b> glass too, such as text fields. Each card is the same dialog (real Orion text fields, chips, a switch, buttons) over a colorful backdrop, on today's glass with the new frost line and no shadow. Only how the items are drawn changes: solid (today), outline only, a frosted fill, a recessed well, a milky fill, a soft well with a frost line.</p>
+    <p>Your note: apply transparency to the things <b>sitting on</b> glass too, such as text fields. Rebuilt from your note: each item keeps <b>its own color</b> as the main thing, made translucent so the blurred backdrop shows through it. Only items that were <b>outlined</b> before (text fields, unselected chips, the outlined button) swap the outline for the 1px frost line; filled and tonal items get no line. The recessed options deepen each color a little toward the text color.</p>
     <p>Items stay inside the glass's guarantee: their text is still on-surface and their fills are light, so the text contrast on glass has to be re-checked for whichever you pick. Tap a card (above its preview) to pick it, tap again to unpick. Try typing in the fields.</p>
   </div>
   <div id="sections"></div>
@@ -53,18 +57,16 @@ h1,h2,p{margin:0}
 <script src="../components/assets/icons.js"></script>
 <script src="../components/orion.js?v=1"></script>
 <script src="lib/icon-options.js?v=1"></script>
-<script src="lib/questions.js?v=23"></script>
+<script src="lib/questions.js?v=24"></script>
 <script src="lib/review.js?v=9"></script>
 <script>
 const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
 const OPTS = {
-  A: { name: 'Solid Items (today)', tag: 'Today', desc: 'Fields and chips are solid surfaces on the glass.' },
-  B: { name: 'Outline Only', desc: 'No fill: a 30% line in the text color. The glass shows straight through the field.' },
-  C: { name: 'Frosted Fill', desc: 'A 40% surface fill with the same 30% frost line as the glass edge: a smaller pane on the pane.' },
-  D: { name: 'Recessed Well', desc: 'A faint dark fill (8% of the text color) and no line: the field looks pressed into the glass.' },
-  E: { name: 'Milky Fill', desc: 'White at 18% with a 20% frost line, exactly the edge of the glass. Light and airy.' },
-  G: { name: 'Your Combo: Well + Frost Line, Outlined Items Only', tag: 'Suggested', desc: 'D and E together, as you described: things that already had an outline (text fields, unselected chips) become a faint recessed well whose outline is the frost line. Selected chips, buttons and the switch stay solid, because a selected thing is a state, not a surface.' },
-  F: { name: 'Soft Well + Frost Line', desc: 'A 6% fill and a 20% frost line: recessed but with a defined edge.' }
+  A: { name: 'Solid Items (today)', tag: 'Today', desc: 'Fields, chips and buttons are solid surfaces on the glass.' },
+  B: { name: 'Own Color, 70%', desc: 'Every item keeps its own color (surface, secondary container, primary) at 70%, so the blurred backdrop tints it. Outlined items (fields, unselected chips, the outlined button) use the frost line instead of their outline.' },
+  C: { name: 'Own Color, 55%', desc: 'The same at 55%: more of the backdrop comes through each item.', tag: 'Suggested' },
+  D: { name: 'Recessed, 55%', desc: 'At 55%, and each color deepened 12% toward the text color, so items read as pressed into the glass rather than lying on it.' },
+  E: { name: 'Recessed, 40%', desc: 'Deepened and at 40%: the most see-through. Text contrast on filled buttons is the thing to watch here.' }
 };
 let n = 0;
 function dlg(k) {
@@ -75,9 +77,9 @@ function dlg(k) {
    <div class="s4-text-field"><input id="${id}b" value="Blue Bottle Coffee"><label for="${id}b">Vendor</label></div>
    <div class="chips"><button class="s4-chip" data-type="filter" type="button">Food</button><button class="s4-chip" data-type="filter" type="button" aria-pressed="true">Office</button><button class="s4-chip" data-type="filter" type="button">Travel</button></div>
    <div class="row"><span>Repeat Monthly</span><label class="s4-switch"><input type="checkbox" role="switch" aria-label="Repeat Monthly"><span class="s4-switch-track"></span></label></div>
-   <div class="acts"><button class="s4-button" data-variant="text" type="button">Cancel</button><button class="s4-button" type="button">Save</button></div></dialog></div>`);
+   <div class="acts"><button class="s4-button" data-variant="outlined" type="button">Add Receipt</button><button class="s4-button" data-variant="tonal" type="button">Draft</button><button class="s4-button" type="button">Save</button></div></dialog></div>`);
 }
-const sec = h('<section class="sec"><h2>Items on Glass</h2><p>Same dialog, seven treatments for what sits on it.</p><div class="cards rv-group" role="radiogroup" aria-label="Items"></div></section>');
+const sec = h('<section class="sec"><h2>Items on Glass</h2><p>Same dialog, five levels.</p><div class="cards rv-group" role="radiogroup" aria-label="Items"></div></section>');
 document.getElementById('sections').appendChild(sec);
 Object.keys(OPTS).forEach(k => { const o = OPTS[k], w = h('<div class="pv"></div>'); w.appendChild(dlg(k)); sec.querySelector('.cards').appendChild(S4Review.card({ pick: `items:${k}`, letter: k, title: o.name, desc: o.desc, tag: o.tag || '', preview: w })); });
 S4.init(document.body);
