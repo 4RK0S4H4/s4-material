@@ -176,3 +176,4 @@ Lab 5 (transparency5.html): owner wants glass more frosted / calmer color (color
 
 **Applied ([0014](decisions/0014-calmer-glass-color.md)):** glass saturation 180% to 120% (owner picked Lab 5 B). **Next:** the owner judges Lab 4 (items on glass) on the calmer glass and picks; then apply item rules to glass.css and extend check-glass for translucent filled buttons.
 Lab 4 reworked again (owner: frost lines only on a very few items, own UI stays main): items keep own design and outline, fill 70/55% translucent; D/E add a frost line on fields (and outlined button). Waiting on pick; then item rules in glass.css + check-glass for translucent filled buttons.
+Lab 4 final form (owner: no outlines/frost lines on items unless outline-only with no fill): rule + What I Will Build summary on the page; waiting on owner confirmation (B vs C for outline-only items; fill 70/55/40) before building as 0015. Watch: the off switch loses its ring and nearly vanishes on glass.

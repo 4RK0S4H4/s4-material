@@ -24,29 +24,42 @@ h1,h2,p{margin:0}
 .fr .row{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:14px}
 .fr .chips{display:flex;gap:8px;flex-wrap:wrap}
 .fr .acts{display:flex;justify-content:flex-end;gap:8px}
-/* items on glass: the app's own UI stays the main thing. Each item keeps its own design and its own outline; only its fill is made a little translucent
-   (--ia = how much of its color stays). A frost line replaces an item's outline only on the few items named by the option (data-frost). */
-.fr[data-items]:not([data-items=A]){--ia:70%}
-.fr[data-items=C],.fr[data-items=D],.fr[data-items=E]{--ia:55%}
-.fr[data-items]:not([data-items=A]) :where(.s4-chip,.s4-button:not([data-variant=text])){background:color-mix(in srgb,var(--_bg) var(--ia),transparent)}
-.fr[data-items]:not([data-items=A]) .s4-text-field::before{background:color-mix(in srgb,var(--_bg) var(--ia),transparent)}
-.fr[data-frost~=field] .s4-text-field{--_outline:rgb(255 255 255/.2)}
-.fr[data-frost~=button] .s4-button[data-variant=outlined]{--_outline:rgb(255 255 255/.25)}
+/* items on glass. THE RULE: an item keeps its own design and color, with its fill made translucent (--ia = how much of its color stays),
+   and has NO outline and no frost line, except an item that is only an outline with no fill (outlined button, unselected chip).
+   Those keep an outline: their own (data-o=own) or the glass's frost line (data-o=frost). */
+.fr[data-items=on]{--ia:55%}
+.fr[data-items=on] :where(.s4-chip,.s4-button:not([data-variant=text])){background:color-mix(in srgb,var(--_bg) var(--ia),transparent)}
+.fr[data-items=on] .s4-text-field::before{background:color-mix(in srgb,var(--_bg) var(--ia),transparent)}
+.fr[data-items=on] .s4-text-field{--_outline:transparent}
+.fr[data-items=on] .s4-switch-track{box-shadow:none}
+.fr[data-items=on][data-o=frost] :where(.s4-chip:not([aria-pressed=true]),.s4-button[data-variant=outlined]){--_outline:rgb(255 255 255/.28)}
 </style>
 </head>
 <body>
 <div class="bar">
   <h1>S4 Orion: Transparency Lab 4</h1>
+  <div class="ctl">Fill <div class="s4-button-group" data-connected data-select="single" data-fit="content" id="fill" aria-label="Fill strength">
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="70%">70%</button>
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="55%" aria-pressed="true">55%</button>
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="40%">40%</button></div></div>
   <div class="ctl">Theme <div class="s4-button-group" data-connected data-select="single" data-fit="content" id="theme" aria-label="Theme">
     <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="light" aria-pressed="true">Light</button>
     <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="dark">Dark</button></div></div>
 </div>
 <main class="page">
   <div class="intro">
-    <p>Your note: the glass is there to show depth, but <b>your own UI stays the main thing</b> on top of it, so items on glass should not all get frost lines. Here every item keeps its own design and outline, and its fill is just made a bit translucent so the blurred backdrop shows through. Frost lines appear only on a very few items (D and E), where an edge helps.</p>
-    <p>Items stay inside the glass's guarantee: their text is still on-surface and their fills are light, so the text contrast on glass has to be re-checked for whichever you pick. Tap a card (above its preview) to pick it, tap again to unpick. Try typing in the fields.</p>
+    <p>The rule as I understand it: <b>items on glass keep their own design and color, with the fill made a bit translucent. No outlines and no frost lines, except on items that are only an outline with no fill</b> (the outlined button, an unselected chip). Text fields therefore lose their outline and are just a translucent fill; the switch loses its ring; filled and tonal buttons were never outlined.</p>
+    <p>The one thing left to choose is how those outline-only items draw their outline: their own grey one (B) or the glass's frost line (C). The Fill buttons in the bar (70, 55, 40%) change how much of each item's color stays; answer the fill question at the end. <b>If this matches what you want, the summary at the bottom is exactly what I will build</b>; say so (or what to change) in the notes.</p>
   </div>
   <div id="sections"></div>
+  <section class="sec"><h2>What I Will Build</h2><p>Nothing is built until you confirm. On confirmation, in <code>glass.css</code> (so it applies to everything inside any glass surface, nowhere else):</p>
+    <ol style="margin:0 0 0 20px;max-width:85ch;display:flex;flex-direction:column;gap:6px">
+      <li>Buttons (filled, tonal, elevated, outlined fill), chips and text fields on glass draw their own color at the chosen strength (default 55%) over the blurred backdrop instead of a solid fill.</li>
+      <li>Text fields and the switch lose their outline; nothing else gets one.</li>
+      <li>Outlined buttons and unselected chips keep an outline (own or frost line, as you pick).</li>
+      <li>Text stays on-surface; the button label colors are unchanged. I will extend the glass check to the translucent filled buttons and raise their strength if any scheme falls under 4.5:1.</li>
+      <li>Solid wherever glass is solid (high contrast, reduced transparency, no backdrop-filter, <code>data-glass="off"</code>). Record as decision 0015, update docs and the skill.</li>
+    </ol></section>
 </main>
 <footer style="padding:24px;text-align:center;font-size:12px;color:var(--md-sys-color-on-surface-variant)"><a href="../">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0)</footer>
 
@@ -54,21 +67,19 @@ h1,h2,p{margin:0}
 <script src="../components/assets/icons.js"></script>
 <script src="../components/orion.js?v=1"></script>
 <script src="lib/icon-options.js?v=1"></script>
-<script src="lib/questions.js?v=26"></script>
+<script src="lib/questions.js?v=27"></script>
 <script src="lib/review.js?v=9"></script>
 <script>
 const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
 const OPTS = {
-  A: { name: 'Solid Items (today)', tag: 'Today', desc: 'Fields, chips and buttons are solid surfaces on the glass.', frost: '' },
-  B: { name: 'Own Design, 70%', desc: 'Every item keeps its own design and its own outline; only the fill is 70% of its color, so a little blurred backdrop shows through. No frost lines.', frost: '' },
-  C: { name: 'Own Design, 55%', desc: 'The same at 55%: more backdrop through each item. Still no frost lines.', tag: 'Suggested', frost: '' },
-  D: { name: '55% + Frost Line on Fields', desc: 'As C, and only the text fields swap their grey outline for the frost line, since a field is the one place a defined edge helps.', frost: 'field' },
-  E: { name: '55% + Frost Line on Fields and Outlined Button', desc: 'As D, plus the outlined button. Chips and everything else stay as designed.', frost: 'field button' }
+  A: { name: 'Today', tag: 'Today', desc: 'Solid items with their normal outlines on the glass.', items: 'off', o: 'own' },
+  B: { name: 'Outline-Only Items Keep Their Own Outline', desc: 'Fills are translucent and nothing has an outline, except the outlined button and the unselected chips (outline, no fill), which keep their normal grey outline.', items: 'on', o: 'own' },
+  C: { name: 'Outline-Only Items Get the Frost Line', desc: 'The same, but those two items draw their outline as the glass\'s milky frost line instead of grey. Text fields, filled and tonal buttons and the switch have no line at all.', tag: 'Suggested', items: 'on', o: 'frost' }
 };
 let n = 0;
 function dlg(k) {
   const id = 'x' + (++n);
-  return h(`<div class="fr" data-items="${k}" data-frost="${OPTS[k].frost}"><div class="blob" style="width:200px;height:200px;right:-50px;top:200px;background:#ffd166"></div><div class="blob" style="width:240px;height:240px;left:-70px;bottom:-60px;background:#06d6a0"></div>
+  return h(`<div class="fr" data-items="${OPTS[k].items}" data-o="${OPTS[k].o}"><div class="blob" style="width:200px;height:200px;right:-50px;top:200px;background:#ffd166"></div><div class="blob" style="width:240px;height:240px;left:-70px;bottom:-60px;background:#06d6a0"></div>
   <dialog class="s4-dialog" open aria-label="Add Expense"><h2>Add Expense</h2>
    <div class="s4-text-field"><span class="s4-text-field-affix" data-prefix>$</span><input id="${id}a" inputmode="decimal" value="18.50"><label for="${id}a">Amount</label></div>
    <div class="s4-text-field"><input id="${id}b" value="Blue Bottle Coffee"><label for="${id}b">Vendor</label></div>
@@ -76,10 +87,11 @@ function dlg(k) {
    <div class="row"><span>Repeat Monthly</span><label class="s4-switch"><input type="checkbox" role="switch" aria-label="Repeat Monthly"><span class="s4-switch-track"></span></label></div>
    <div class="acts"><button class="s4-button" data-variant="outlined" type="button">Add Receipt</button><button class="s4-button" data-variant="tonal" type="button">Draft</button><button class="s4-button" type="button">Save</button></div></dialog></div>`);
 }
-const sec = h('<section class="sec"><h2>Items on Glass</h2><p>Same dialog, five treatments.</p><div class="cards rv-group" role="radiogroup" aria-label="Items"></div></section>');
+const sec = h('<section class="sec"><h2>Items on Glass</h2><p>Same dialog; only how outline-only items are drawn differs.</p><div class="cards rv-group" role="radiogroup" aria-label="Items"></div></section>');
 document.getElementById('sections').appendChild(sec);
 Object.keys(OPTS).forEach(k => { const o = OPTS[k], w = h('<div class="pv"></div>'); w.appendChild(dlg(k)); sec.querySelector('.cards').appendChild(S4Review.card({ pick: `items:${k}`, letter: k, title: o.name, desc: o.desc, tag: o.tag || '', preview: w })); });
 S4.init(document.body);
+document.getElementById('fill').addEventListener('s4-change', e => document.querySelectorAll('.fr').forEach(f => f.style.setProperty('--ia', e.detail.value)));
 document.getElementById('theme').addEventListener('s4-change', e => S4.theme({ mode: e.detail.value }));
 S4.theme({ mode: 'light' });
 S4Review.page('transparency4');
