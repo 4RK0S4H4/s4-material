@@ -104,5 +104,12 @@ window.S4_REVIEW_DEMOS = [
       { id: 'glass', label: 'Glass transparency and edge (CSS only)', options: [{ v: 'A', label: 'Today' }, { v: 'B', label: 'Clearer' }, { v: 'C', label: 'Clearer + Lit Edge' }, { v: 'D', label: 'Light-Gathering Rim' }, { v: 'E', label: 'Specular Arcs' }, { v: 'F', label: 'Bevel Hairlines' }, { v: 'G', label: 'Prism Edge' }, { v: 'H', label: 'Bright Band' }, { v: 'I', label: 'Frost Bevel' }, { v: 'J', label: 'Everything Together' }, { v: 'Other', label: 'Describe in notes' }] },
       { id: 'clarity', label: 'How clear should glass be', options: [{ v: 'A', label: 'More tint than shown' }, { v: 'B', label: 'About as shown' }, { v: 'C', label: 'Clearer than shown' }, { v: 'Other', label: 'Describe in notes' }] }
     ]
+  },
+  {
+    id: 'transparency2', title: 'Transparency Lab 2', href: 'explore/transparency2.html',
+    questions: [
+      { id: 'edge', label: 'The thin, slightly frostier edge line', options: [{ v: 'A', label: 'No Edge' }, { v: 'B', label: 'Frost Hairline' }, { v: 'C', label: 'Fainter Hairline' }, { v: 'D', label: 'Hairline + Soft Inner Fade' }, { v: 'E', label: 'Hairline + Hint of Top Light' }, { v: 'F', label: 'Hairline + Outer Hairline' }, { v: 'G', label: 'Thicker Frost Line' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'clarity', label: 'How clear should glass be', options: [{ v: 'A', label: 'More tint than shown' }, { v: 'B', label: 'About as shown' }, { v: 'C', label: 'Clearer than shown' }, { v: 'Other', label: 'Describe in notes' }] }
+    ]
   }
 ];

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>S4 Orion: Transparency Lab 2</title>
+<link rel="stylesheet" href="../components/orion.css?v=1">
+<style>
+body{margin:0;background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface)}
+h1,h2,p{margin:0}
+.bar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;padding:12px 24px;background:var(--md-sys-color-surface-container);border-bottom:1px solid var(--md-sys-color-outline-variant)}
+.bar h1{font-size:22px;line-height:28px;font-weight:500;margin-right:auto}
+.ctl{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;letter-spacing:.5px}
+.page{max-width:1200px;margin:0 auto;padding:24px 24px 64px;display:flex;flex-direction:column;gap:48px}
+.intro{max-width:80ch;color:var(--md-sys-color-on-surface-variant);display:flex;flex-direction:column;gap:12px}
+.sec > h2{font-size:28px;line-height:36px;font-weight:500;margin-bottom:6px}
+.sec > p{color:var(--md-sys-color-on-surface-variant);max-width:85ch;margin-bottom:16px}
+.cards{--rv-min:300px}
+.pv{padding:16px;display:flex;justify-content:center;background:var(--md-sys-color-surface-container-low);border-radius:16px}
+footer{padding:24px;text-align:center;font-size:12px;color:var(--md-sys-color-on-surface-variant)}
+/* phone: real scrolling content under CSS-only glass */
+.lp{position:relative;width:280px;height:460px;border-radius:30px;overflow:hidden;background:#111;box-shadow:0 0 0 6px var(--md-sys-color-surface-container-highest)}
+.lf{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+.lf::-webkit-scrollbar{display:none}
+.fi{width:280px;padding:72px 12px 100px;display:flex;flex-direction:column;gap:10px;box-sizing:border-box}
+.fc{border-radius:18px;padding:14px;color:#fff;font-size:15px;font-weight:600;line-height:1.25;min-height:72px;display:flex;flex-direction:column;justify-content:flex-end;gap:2px}
+.fc small{font-weight:400;opacity:.85;font-size:12px}
+.fc.w{background:#f4f1ea;color:#111}
+.fc.k{background:#101014;color:#eee}
+.gl{position:absolute;border-radius:999px;color:var(--md-sys-color-on-surface);display:flex;align-items:center;justify-content:space-around;font-size:12px;font-weight:600;isolation:isolate;
+ background:color-mix(in srgb,var(--md-sys-color-surface-container) calc(var(--tint) * 100%),transparent);
+ -webkit-backdrop-filter:blur(var(--blur)) saturate(var(--sat)) contrast(var(--con)) brightness(var(--bri));
+ backdrop-filter:blur(var(--blur)) saturate(var(--sat)) contrast(var(--con)) brightness(var(--bri));
+ box-shadow:var(--shadow,0 6px 18px rgb(0 0 0/.16))}
+.gl.nav{left:14px;right:14px;bottom:14px;height:60px}
+.gl.top{left:14px;right:14px;top:12px;height:46px;padding:0 18px;justify-content:space-between;font-size:14px}
+.gl>*{position:relative;z-index:2}
+/* lit ring: bright top left and bottom right, dim between */
+.gl::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:var(--rw,1px);pointer-events:none;z-index:1;background:var(--ring,transparent);
+ -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+ mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);mask-composite:exclude}
+.gl::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;box-shadow:var(--inner,none)}
+.gl.nav{font-size:11px}
+#clarity{width:140px}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>S4 Orion: Transparency Lab 2</h1>
+  <label class="ctl">Clarity <input type="range" id="clarity" min="-25" max="25" value="0" aria-label="Clarity"> <span>(left: more tint, right: clearer)</span></label>
+  <div class="ctl">Theme <div class="s4-button-group" data-connected data-select="single" data-fit="content" id="theme" aria-label="Theme">
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="light" aria-pressed="true">Light</button>
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="dark">Dark</button></div></div>
+</div>
+<main class="page">
+  <div class="intro">
+    <p>Direction from the last round: no shiny or glowing edges. Instead, a <b>very thin line that is just slightly more frosted than the glass itself</b>, the way most apps draw a translucent panel edge. Every phone here is plain CSS (Safari-safe) with the same glass fill (about 38% tint, 10px blur); only the edge changes.</p>
+    <p>Scroll inside each phone and look at both light and dark mode (the line is milky white in dark mode and also needs to show over the white card). Tap a card (above its preview) to pick one; Other plus a note if none is right.</p>
+  </div>
+  <div id="sections"></div>
+</main>
+<footer><a href="../">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0)</footer>
+
+<script src="../components/assets/m3color.js"></script>
+<script src="../components/assets/icons.js"></script>
+<script src="../components/orion.js?v=1"></script>
+<script src="lib/icon-options.js?v=1"></script>
+<script src="lib/questions.js?v=17"></script>
+<script src="lib/review.js?v=8"></script>
+<script>
+const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+const COL = [['#ff7a59','#c13584'],['#3b4cca','#00b4d8'],['#f9c74f','#f3722c'],['#43aa8b','#277da1'],['#b5179e','#560bad'],['#ef476f','#ffd166']];
+const TXT = ['Electric Co.', 'Iron Mountain', 'Comcast Business', 'Staples', 'Xcel Energy', 'Acme Insurance', 'Slack', 'Adobe Creative Cloud', 'WeWork', 'AWS'];
+function feed() {
+  const f = h('<div class="fi"></div>');
+  TXT.forEach((t, i) => {
+    const c = COL[i % COL.length], k = i % 5 === 3 ? ' w' : i % 5 === 4 ? ' k' : '';
+    f.appendChild(h(`<div class="fc${k}" style="${k ? '' : `background:linear-gradient(${120 + i * 25}deg,${c[0]},${c[1]})`}">${t}<small>Due Oct ${10 + i} · $${(i * 137 % 900) + 40}.00</small></div>`));
+  });
+  return f;
+}
+const BASE = { tint: .38, blur: '10px', sat: 1.7, con: .8, bri: 1.07 };
+const OPTS = {
+  A: { name: 'No Edge', tag: 'Today-like', desc: 'The clearer glass with no edge line, for reference.', v: { ...BASE, rw: '0px' } },
+  B: { name: 'Frost Hairline', tag: 'Suggested', desc: 'A 1px line in milky white at about 45%: clearly frostier than the glass, quiet, even all the way round.', v: { ...BASE, rw: '1px', ring: 'color-mix(in srgb,#fff 45%,transparent)' } },
+  C: { name: 'Fainter Hairline', desc: 'The same 1px line at about 28%: barely there, only just separates the glass from what is behind.', v: { ...BASE, rw: '1px', ring: 'color-mix(in srgb,#fff 28%,transparent)' } },
+  D: { name: 'Hairline + Soft Inner Fade', desc: 'The 1px frost line plus a few pixels just inside it that fade from frosty to the normal glass, so the edge feels slightly thicker without a second line.', v: { ...BASE, rw: '1px', ring: 'color-mix(in srgb,#fff 45%,transparent)', inner: 'inset 0 0 6px 1px color-mix(in srgb,#fff 26%,transparent)' } },
+  E: { name: 'Hairline + Hint of Top Light', desc: 'The frost line is a touch stronger along the top half (about 60%) than the bottom (about 30%), a soft overhead light and still no shine.', v: { ...BASE, rw: '1px', ring: 'linear-gradient(180deg,color-mix(in srgb,#fff 60%,transparent),color-mix(in srgb,#fff 30%,transparent))' } },
+  F: { name: 'Hairline + Outer Hairline', desc: 'The frost line with a very faint dark hairline just outside it, so the edge also holds up over white content in light mode.', v: { ...BASE, rw: '1px', ring: 'color-mix(in srgb,#fff 45%,transparent)', outer: '0 0 0 1px rgb(0 0 0/.07),' } },
+  G: { name: 'Thicker Frost Line', desc: 'A 2px line at about 35%: more visible as a frame, still flat.', v: { ...BASE, rw: '2px', ring: 'color-mix(in srgb,#fff 35%,transparent)' } }
+};
+function phone(o) {
+  const p = h('<div class="lp"></div>'), f = h('<div class="lf"></div>'); f.appendChild(feed()); p.appendChild(f);
+  for (const k in o.v) p.style.setProperty('--' + k, o.v[k]);
+  p.style.setProperty('--shadow', (o.v.outer || '') + '0 6px 18px rgb(0 0 0/.16)');
+  p.append(h('<div class="gl top"><span>October</span><span>$3,639.95</span></div>'), h('<div class="gl nav"><span>Overview</span><span>Bills</span><span>Activity</span><span>Settings</span></div>'));
+  return p;
+}
+const sec = h('<section class="sec"><h2>A Thin, Slightly Frostier Line</h2><p>The Clarity slider in the bar shifts the tint on every phone at once.</p><div class="cards rv-group" role="radiogroup" aria-label="Glass"></div></section>');
+document.getElementById('sections').appendChild(sec);
+const phones = [];
+Object.keys(OPTS).forEach(k => {
+  const o = OPTS[k], w = h('<div class="pv"></div>'), p = phone(o); w.appendChild(p); phones.push({ p, base: o.v.tint });
+  sec.querySelector('.cards').appendChild(S4Review.card({ pick: `edge:${k}`, letter: k, title: o.name, desc: o.desc, tag: o.tag || '', preview: w }));
+});
+document.getElementById('clarity').addEventListener('input', e => { const d = -e.target.value / 100; phones.forEach(x => x.p.style.setProperty('--tint', Math.max(.05, Math.min(.9, x.base + d)))); });
+document.getElementById('theme').addEventListener('s4-change', e => S4.theme({ mode: e.detail.value }));
+S4.theme({ mode: 'light' });
+S4Review.page('transparency2');
+</script>
+</body>
+</html>
