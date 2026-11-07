@@ -5,8 +5,11 @@ Status: **decided by the owner (Menu Motion Lab: D plus a note); default for eve
 Path: 0001 unfold, 0008 grow from the button, 0010 quieter unfold (what shipped), then the owner asked for something closer to a container transform with the original button kept. The lab tried: container transform (button hides), button stays, expand from the button edge, button expanding in place. The owner picked **D (container transform, button stays)** with the note: "make it come from underneath the button and only the shape, and don't have the text move".
 
 ## Decision
-- `S4.transition.unfold` now defaults to `emerge`: the menu's surface starts hidden under the button (its rect, corners and color) and travels to its place while its edges open. The button and its label never move; no label is carried into the menu. Options fade in; color goes from the button's to the menu's, solid while it moves, glass after landing. Closing runs back under the button.
-- A still copy of the button is shown above the surface (in the top layer) only while the animation runs, so the moving surface can never paint over the real button. The copy is removed at the end.
-- The menu is never narrower than its button while open, so the button never reaches past the surface.
-- Other styles stay reachable with `data-motion` on the menu (or `S4.menuMotion`): `quiet` (the old unfold), `grow`, `edge`, `inplace`, `transform`, `transform-keep`. They are not documented as supported patterns; prune them once the owner has lived with `emerge`.
+- `S4.transition.unfold` defaults to `emerge`: the menu sits at its final place and its surface is revealed by a clip that starts as a thin lip under the button (the button's width, aligned to it, the button's color) and opens to the whole menu while the options fade in. **Nothing is copied and nothing but the shape moves; the button is never touched.**
+- First build (same day) carried a still copy of the button above the surface in the top layer. The owner's iPhone check: "very buggy, symbol moves, button changes shape for a split second, blur is choppy". The copy was the cause of the first two (it never lays out exactly like the real button); it is gone.
+- Blur is never animated (Safari can't animate it smoothly under a moving clip, the same trouble the container transform had): the surface is solid with no blur while the shape moves; after it lands the blur comes on under the still-solid surface and only the color fades to glass (150ms). Closing: color to solid, then the shape folds back under the button with the blur off.
+- The menu is never narrower than its button while open.
+- Other styles stay reachable with `data-motion` on the menu (or `S4.menuMotion`): `quiet` (the old unfold), `grow`, `edge`, `inplace`, `transform`, `transform-keep`. Not documented as supported patterns; prune them once the owner has lived with `emerge`.
 - Reduced motion: a plain fade, as before.
+
+Not verified: Safari (only Chromium frames were checked). If the blur still stutters on the iPhone, the next step is to keep menus solid for the whole open animation and fade the glass in only on landing, or to drop the blur on menus.
