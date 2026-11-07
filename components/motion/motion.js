@@ -146,8 +146,8 @@
      with far less travel, so nothing seems to come from nowhere. Closing is the same on the calm spring, shorter.
      opts: open, from ('top'|'bottom'), anchor, align */
   /* ---------- emerge: a menu's shape comes out from under its button ----------
-     Nothing is copied and only the surface's own box changes: it starts as a thin lip the button's width, right under
-     (or over) the button, in the button's color, and its size and corners open to the menu while the options fade in.
+     Nothing is copied and only the surface's own box changes: it starts as a zero-height sliver on the button's edge, the button's width,
+     in the button's color, and grows away from the button into the menu while the options fade in.
      The button and its label are never touched.
      WebKit paints backdrop-filter in a layer that clip-path does not clip, so a clip-path reveal showed the whole glass
      pane at full size from the first frame (iPhone, 2026-11-07). So no clip-path here: the box itself (left, top, width,
@@ -164,14 +164,19 @@
       if (S4.position) S4.position(surface, source, { align: opts.align });
     }
     var s = rect(source), e = rect(surface), cs = getComputedStyle(source), ce = getComputedStyle(surface);
-    var up = e.bottom <= s.top + 1, padV = (parseFloat(ce.paddingTop) || 0) + (parseFloat(ce.paddingBottom) || 0), lip = Math.min(Math.max(padV, 12), e.height);
-    var padH = (parseFloat(ce.paddingLeft) || 0) + (parseFloat(ce.paddingRight) || 0), rbtn = Math.min(parseFloat(cs.borderTopLeftRadius) || 0, lip / 2);
+    var up = e.bottom <= s.top + 1;
+    var padH = (parseFloat(ce.paddingLeft) || 0) + (parseFloat(ce.paddingRight) || 0), rbtn = Math.min(parseFloat(cs.borderTopLeftRadius) || 0, 10);
     var glass = rgba(ce.backgroundColor) || [0, 0, 0, 1], bgTo = ce.backgroundColor, solid = rgb(glass), glassy = glass[3] < 0.999, bgFrom = visibleBg(source);
     var content = Array.prototype.slice.call(surface.children);
+    /* the start is NOT a visible lip: it is a zero-height sliver on the button's own edge (the button's width, x aligned to it, no padding), so nothing
+       pops in; the box then grows away from the button (down, or up) to the menu. A menu aligned to the button's end (right) keeps its right edge on
+       the button's right edge, so it grows leftwards from the button, never from the wrong side. */
     var box = function (small) {
-      return small ? { left: s.left + 'px', width: s.width + 'px', height: lip + 'px', top: (up ? e.bottom - lip : e.top) + 'px', borderRadius: rbtn + 'px' }
-                   : { left: e.left + 'px', width: e.width + 'px', height: e.height + 'px', top: e.top + 'px', borderRadius: ce.borderTopLeftRadius };
+      return small ? { left: s.left + 'px', width: s.width + 'px', height: '0px', top: (up ? s.top : s.bottom) + 'px', paddingTop: '0px', paddingBottom: '0px', borderRadius: rbtn + 'px', boxShadow: 'none' }
+                   : { left: e.left + 'px', width: e.width + 'px', height: e.height + 'px', top: e.top + 'px', paddingTop: ce.paddingTop, paddingBottom: ce.paddingBottom, borderRadius: ce.borderTopLeftRadius, boxShadow: ce.boxShadow };
     };
+    var minW = surface.style.minWidth;
+    surface.style.minWidth = '0px';   /* the CSS min-width would keep the sliver wider than the button */
     var prevOverflow = surface.style.overflow;
     surface.style.overflow = 'hidden';
     content.forEach(function (c) { c.style.width = (e.width - padH) + 'px'; c.style.flex = 'none'; });   /* the options lay out at their final width */
@@ -185,18 +190,20 @@
       add(surface, [box(true), box(false)], geo);
       add(surface, [{ backgroundColor: solid }, { backgroundColor: bgTo }], { duration: F, delay: D, easing: 'linear', fill: 'both' });
       add(surface, [flat(bgFrom), flat(solid)], { duration: D, easing: 'linear', fill: 'none' });
+      add(surface, [{ opacity: 0 }, { opacity: 1, offset: 0.12 }, { opacity: 1 }], { duration: D, easing: 'linear', fill: 'backwards' });   /* a zero-height box can still paint a hairline: it is invisible at 0 */
       content.forEach(function (c) { add(c, [{ opacity: 0 }, { opacity: 0, offset: 0.35 }, { opacity: 1 }], { duration: D, easing: 'linear', fill: 'both' }); });
     } else {
       if (glassy) add(surface, [{ backgroundColor: bgTo }, { backgroundColor: solid }], { duration: F, easing: 'linear', fill: 'both' });
       add(surface, [box(false), box(true)], { duration: D, delay: F, easing: geo.easing, fill: 'both' });
       add(surface, [flat(solid), flat(bgFrom)], { duration: D, delay: F, easing: 'linear', fill: 'forwards' });
+      add(surface, [{ opacity: 1 }, { opacity: 1, offset: 0.88 }, { opacity: 0 }], { duration: D, delay: F, easing: 'linear', fill: 'forwards' });
       content.forEach(function (c) { add(c, [{ opacity: 1 }, { opacity: 0, offset: 0.2 }, { opacity: 0 }], { duration: D, delay: F, easing: 'linear', fill: 'both' }); });
     }
     var last = all.reduce(function (m, an) { return an.effect.getComputedTiming().endTime > m.effect.getComputedTiming().endTime ? an : m; }, all[0]);
     return done(last).then(function () {
       all.forEach(function (an) { an.cancel(); });
       surface.style.overflow = prevOverflow; content.forEach(function (c) { c.style.width = ''; c.style.flex = ''; });
-      if (!open) surface.style.minWidth = '';
+      surface.style.minWidth = open ? minW : '';
     });
   }
 
