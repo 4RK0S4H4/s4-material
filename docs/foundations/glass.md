@@ -37,9 +37,9 @@ else glass (a custom floating panel), add `class="s4-glass"`. To keep one elemen
 
 | Situation | Glass becomes |
 |---|---|
-| `prefers-contrast: more` or contrast level high | Solid (`surface-container`), no blur, no frost line; the component's elevation shadow returns |
-| `prefers-reduced-transparency: reduce` or `data-glass="off"` on `<html>` | Solid (shadow returns) |
-| Browser without `backdrop-filter` | Solid (shadow returns) |
+| `prefers-contrast: more` or contrast level high | Solid (`surface-container`), no blur, no frost line |
+| `prefers-reduced-transparency: reduce` or `data-glass="off"` on `<html>` | Solid |
+| Browser without `backdrop-filter` | Solid |
 | Contrast level medium | 80% tint |
 | Forced colors | Solid with a real border |
 | `prefers-reduced-motion` | Unchanged (glass doesn't move); transitions into it follow the motion rules |

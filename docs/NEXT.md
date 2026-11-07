@@ -182,3 +182,5 @@ Lab 4 final form (owner: no outlines/frost lines on items unless outline-only wi
 NOTE: demo/ keeps its own copy of orion.css/orion.js; `npm run build` now regenerates them (and the ?v= stamps in demo/index.html) and `npm run check` fails if stale. It was stale until 2026-11-07.
 
 **0016 (2026-11-07):** after the owner's iPhone check: frost line 0.5px at 28% and only on the content-facing edge of full-width bars. **Open:** the owner says the menu drop-down animation looks bad again on the iPhone; I could not reproduce it in Chromium (frames at 30% and 100% match the earlier look apart from the missing shadow). Ask what exactly looks wrong (flicker, double image, pop at the end, wrong direction) and on which menu. Prime suspect: Safari with clip-path over backdrop-filter, now without the elevation shadow that used to soften the reveal.
+
+**0017 (2026-11-07):** all shadows removed system-wide (elevation tokens flat). Watch solid dialogs/menus (glass off, high contrast, reduced transparency) for lost edge cues.

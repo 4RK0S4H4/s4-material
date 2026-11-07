@@ -297,11 +297,11 @@ Light values are shown; a second value is dark mode. Color roles also change wit
 | Token | Value | Dark | Notes |
 |---|---|---|---|
 | `--md-sys-elevation-level0` | 0 0 0 0 transparent |  | Flat. Most surfaces: M3 shows depth with tonal surface containers first. |
-| `--md-sys-elevation-level1` | 0px 1px 2px 0px rgb(0 0 0 / 0.3), 0px 1px 3px 1px rgb(0 0 0 / 0.15) |  | Elevated card, elevated button at rest. |
-| `--md-sys-elevation-level2` | 0px 1px 2px 0px rgb(0 0 0 / 0.3), 0px 2px 6px 2px rgb(0 0 0 / 0.15) |  | Menus, elevated buttons on hover. |
-| `--md-sys-elevation-level3` | 0px 1px 3px 0px rgb(0 0 0 / 0.3), 0px 4px 8px 3px rgb(0 0 0 / 0.15) |  | FAB at rest, dialogs and sheets when not glass. |
-| `--md-sys-elevation-level4` | 0px 2px 3px 0px rgb(0 0 0 / 0.3), 0px 6px 10px 4px rgb(0 0 0 / 0.15) |  | FAB on hover. |
-| `--md-sys-elevation-level5` | 0px 4px 4px 0px rgb(0 0 0 / 0.3), 0px 8px 12px 6px rgb(0 0 0 / 0.15) |  | Rare. |
+| `--md-sys-elevation-level1` | 0 0 0 0 transparent |  | Flat (decision 0017: no shadows). |
+| `--md-sys-elevation-level2` | 0 0 0 0 transparent |  | Flat (decision 0017: no shadows). |
+| `--md-sys-elevation-level3` | 0 0 0 0 transparent |  | Flat (decision 0017: no shadows). |
+| `--md-sys-elevation-level4` | 0 0 0 0 transparent |  | Flat (decision 0017: no shadows). |
+| `--md-sys-elevation-level5` | 0 0 0 0 transparent |  | Flat (decision 0017: no shadows). |
 
 ## State
 

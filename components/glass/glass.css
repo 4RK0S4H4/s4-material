@@ -55,10 +55,10 @@
     backdrop-filter: none;
   }
 
-  /* opt out per element: solid again, so the component's own elevation shadow comes back */
+  /* opt out per element: solid again */
   :where([data-glass="off"]) { --_glass-tint: 1; box-shadow: revert-layer; -webkit-backdrop-filter: none; backdrop-filter: none; }
 
-  /* solid fallbacks (high contrast, reduced transparency, no backdrop-filter): nothing shows through, so the shadow is the depth cue again */
+  /* solid fallbacks (high contrast, reduced transparency, no backdrop-filter): back to the component's own box-shadow (flat since 0017) */
   :where(:root[data-contrast="high"]) :where(.s4-glass, .s4-top-app-bar[data-scrolled], .s4-nav-bar, .s4-nav-rail:is([data-modal], [data-overlay]), .s4-toolbar, .s4-menu, .s4-dialog, .s4-bottom-sheet, .s4-side-sheet, .s4-rich-tooltip) { box-shadow: revert-layer; }
   @media (prefers-reduced-transparency: reduce) {
     :where(.s4-glass, .s4-top-app-bar[data-scrolled], .s4-nav-bar, .s4-nav-rail:is([data-modal], [data-overlay]), .s4-toolbar, .s4-menu, .s4-dialog, .s4-bottom-sheet, .s4-side-sheet, .s4-rich-tooltip) { box-shadow: revert-layer; }

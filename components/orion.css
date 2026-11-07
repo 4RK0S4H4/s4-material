@@ -59,11 +59,11 @@
     --md-sys-color-on-tertiary-fixed: #ffffff;
     --md-sys-color-on-tertiary-fixed-variant: #e2e2e2;
     --md-sys-elevation-level0: 0 0 0 0 transparent;
-    --md-sys-elevation-level1: 0px 1px 2px 0px rgb(0 0 0 / 0.3), 0px 1px 3px 1px rgb(0 0 0 / 0.15);
-    --md-sys-elevation-level2: 0px 1px 2px 0px rgb(0 0 0 / 0.3), 0px 2px 6px 2px rgb(0 0 0 / 0.15);
-    --md-sys-elevation-level3: 0px 1px 3px 0px rgb(0 0 0 / 0.3), 0px 4px 8px 3px rgb(0 0 0 / 0.15);
-    --md-sys-elevation-level4: 0px 2px 3px 0px rgb(0 0 0 / 0.3), 0px 6px 10px 4px rgb(0 0 0 / 0.15);
-    --md-sys-elevation-level5: 0px 4px 4px 0px rgb(0 0 0 / 0.3), 0px 8px 12px 6px rgb(0 0 0 / 0.15);
+    --md-sys-elevation-level1: 0 0 0 0 transparent;
+    --md-sys-elevation-level2: 0 0 0 0 transparent;
+    --md-sys-elevation-level3: 0 0 0 0 transparent;
+    --md-sys-elevation-level4: 0 0 0 0 transparent;
+    --md-sys-elevation-level5: 0 0 0 0 transparent;
     --md-sys-motion-spring-fast-spatial-stiffness: 1400;
     --md-sys-motion-spring-fast-spatial-damping: 0.75;
     --md-sys-motion-spring-fast-spatial-duration: 220ms;
@@ -4836,10 +4836,10 @@
     backdrop-filter: none;
   }
 
-  /* opt out per element: solid again, so the component's own elevation shadow comes back */
+  /* opt out per element: solid again */
   :where([data-glass="off"]) { --_glass-tint: 1; box-shadow: revert-layer; -webkit-backdrop-filter: none; backdrop-filter: none; }
 
-  /* solid fallbacks (high contrast, reduced transparency, no backdrop-filter): nothing shows through, so the shadow is the depth cue again */
+  /* solid fallbacks (high contrast, reduced transparency, no backdrop-filter): back to the component's own box-shadow (flat since 0017) */
   :where(:root[data-contrast="high"]) :where(.s4-glass, .s4-top-app-bar[data-scrolled], .s4-nav-bar, .s4-nav-rail:is([data-modal], [data-overlay]), .s4-toolbar, .s4-menu, .s4-dialog, .s4-bottom-sheet, .s4-side-sheet, .s4-rich-tooltip) { box-shadow: revert-layer; }
   @media (prefers-reduced-transparency: reduce) {
     :where(.s4-glass, .s4-top-app-bar[data-scrolled], .s4-nav-bar, .s4-nav-rail:is([data-modal], [data-overlay]), .s4-toolbar, .s4-menu, .s4-dialog, .s4-bottom-sheet, .s4-side-sheet, .s4-rich-tooltip) { box-shadow: revert-layer; }
