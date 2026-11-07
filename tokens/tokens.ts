@@ -1114,6 +1114,22 @@ export const tokens = {
     "value": "2",
     "description": "At most two glass layers overlap at any point (e.g. a menu over an app bar). A third becomes solid."
   },
+  "--s4-glass-item-fill": {
+    "type": "number",
+    "value": "1",
+    "description": "How much of its own color an item (button, chip, text field) keeps on glass, 1 = fully (decision 0015: owner picked full fill; lower it to let the blurred backdrop tint items)."
+  },
+  "--s4-glass-item-outline": {
+    "type": "color",
+    "value": "rgb(255 255 255 / 0.28)",
+    "description": "The outline of an outline-only item on glass (outlined button, unselected chip): the glass's milky frost line, a little stronger than the edge (decision 0015). Zero in high contrast, where glass is solid and the item keeps its own outline.",
+    "modes": {
+      "dark": "rgb(255 255 255 / 0.28)",
+      "high-contrast": "rgb(255 255 255 / 0)",
+      "dark-high-contrast": "rgb(255 255 255 / 0)",
+      "reduced-transparency": "rgb(255 255 255 / 0)"
+    }
+  },
   "--s4-icon-duo-opacity": {
     "type": "number",
     "value": "0.8",

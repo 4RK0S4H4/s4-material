@@ -48,6 +48,12 @@ else glass (a custom floating panel), add `class="s4-glass"`. To keep one elemen
 ## Edge and depth
 Glass has **no shadow**: the transparency itself says what is in front. The only edge is a 1px frost line (`--s4-glass-highlight-width` / `-color`, white at 20%), same all the way round, no fade, no glow (decision 0013). Over plain white content in light mode the glass can look flat; that is accepted.
 
+## Items on glass
+Controls inside a glass surface (a dialog's fields, a menu's chips) stay your UI: they keep their own color at full fill (`--s4-glass-item-fill: 1`; lower it to let the blurred backdrop tint them) and drop their outlines, so the glass supplies the depth and the items stay clean (decision 0015).
+- No outline at rest on text fields and the switch. Hover, focus, error and disabled keep theirs, because they carry meaning.
+- An item that is only an outline with no fill (outlined button, unselected chip) keeps one, drawn as the frost line (`--s4-glass-item-outline`, white at 28%). Error-colored outlines stay.
+- Solid wherever the glass is solid: all of this switches off with high contrast, reduced transparency, no `backdrop-filter` and `data-glass="off"`.
+
 ## Do / don't
 - **Do** let content scroll under the top app bar and nav bar; that's what the glass is for.
 - **Do** keep chrome light: a title, a few icon buttons, navigation.
