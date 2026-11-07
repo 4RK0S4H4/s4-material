@@ -37,12 +37,17 @@ footer{padding:24px;text-align:center;font-size:12px;color:var(--md-sys-color-on
 .gl>*{position:relative;z-index:2}
 /* lit ring: bright top left and bottom right, dim between */
 .gl::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:var(--rw);pointer-events:none;z-index:1;opacity:var(--rim);
- background:linear-gradient(135deg,rgb(255 255 255/.95),rgb(255 255 255/.1) 35%,rgb(255 255 255/.1) 65%,rgb(255 255 255/.7));
+ background:var(--rg,linear-gradient(135deg,rgb(255 255 255/.95),rgb(255 255 255/.1) 35%,rgb(255 255 255/.1) 65%,rgb(255 255 255/.7)));
  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);mask-composite:exclude}
 /* light-gathering band: inner glow and a lit, slightly thicker-looking inside edge */
 .gl::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;opacity:var(--band);
- box-shadow:inset 0 0 0 1px rgb(255 255 255/.25),inset 0 2px 8px rgb(255 255 255/.45),inset 0 0 16px rgb(255 255 255/.18),inset 0 -5px 10px rgb(0 0 0/.1)}
+ box-shadow:var(--bs,inset 0 0 0 1px rgb(255 255 255/.25),inset 0 2px 8px rgb(255 255 255/.45),inset 0 0 16px rgb(255 255 255/.18),inset 0 -5px 10px rgb(0 0 0/.1))}
+/* bright band: only a ring at the edge gets its backdrop brightened and saturated */
+.gl .bnd{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;opacity:var(--bnd,0);padding:var(--bw,6px);
+ -webkit-backdrop-filter:brightness(1.4) saturate(1.5);backdrop-filter:brightness(1.4) saturate(1.5);
+ -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+ mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);mask-composite:exclude}
 [data-theme=dark] .gl::after{box-shadow:inset 0 0 0 1px rgb(255 255 255/.14),inset 0 2px 8px rgb(255 255 255/.2),inset 0 0 16px rgb(255 255 255/.08),inset 0 -5px 10px rgb(0 0 0/.25)}
 #clarity{width:140px}
 </style>
@@ -69,7 +74,7 @@ footer{padding:24px;text-align:center;font-size:12px;color:var(--md-sys-color-on
 <script src="../components/assets/icons.js"></script>
 <script src="../components/orion.js?v=1"></script>
 <script src="lib/icon-options.js?v=1"></script>
-<script src="lib/questions.js?v=15"></script>
+<script src="lib/questions.js?v=16"></script>
 <script src="lib/review.js?v=8"></script>
 <script>
 const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
@@ -87,12 +92,18 @@ const OPTS = {
   A: { name: 'Today', tag: 'Today', desc: 'Orion glass as shipped: 60% tint, 16px blur, strong contrast compression. Reads as a frosted pane.', v: { tint: .6, blur: '16px', sat: 1.8, con: .74, bri: 1.1, rw: '0px', rim: 0, band: 0 } },
   B: { name: 'Clearer', desc: 'Same recipe with less tint and a smaller blur: more of the content shows through. Text stays on-surface.', v: { tint: .38, blur: '10px', sat: 1.7, con: .8, bri: 1.08, rw: '0px', rim: 0, band: 0 } },
   C: { name: 'Clearer + Lit Edge', desc: 'Clearer, plus a thin lit ring: bright at the top left and bottom right, dim between. A defined edge, nothing bends.', v: { tint: .38, blur: '10px', sat: 1.7, con: .8, bri: 1.08, rw: '1.2px', rim: 1, band: 0 } },
-  D: { name: 'Light-Gathering Rim', desc: 'Lit ring plus an inner glow and a bright inside edge, so the rim looks thick like liquid glass. CSS only; nothing actually bends.', v: { tint: .34, blur: '9px', sat: 1.7, con: .82, bri: 1.06, rw: '1.5px', rim: 1, band: 1 } }
+  D: { name: 'Light-Gathering Rim', desc: 'Lit ring plus an inner glow and a bright inside edge, so the rim looks thick like liquid glass. CSS only; nothing actually bends.', v: { tint: .34, blur: '9px', sat: 1.7, con: .82, bri: 1.06, rw: '1.5px', rim: 1, band: 1 } },
+  E: { name: 'Specular Arcs', desc: 'A thin edge that catches light in two hot arcs (top left, bottom right) and nearly vanishes elsewhere, like a highlight on curved glass.', v: { tint: .36, blur: '10px', sat: 1.7, con: .8, bri: 1.07, rw: '1.5px', rim: 1, band: 0, rg: 'conic-gradient(from 200deg at 50% 50%,rgb(255 255 255/.05),rgb(255 255 255/.95) 12%,rgb(255 255 255/.05) 30%,rgb(255 255 255/.05) 52%,rgb(255 255 255/.85) 64%,rgb(255 255 255/.05) 80%)' } },
+  F: { name: 'Bevel Hairlines', desc: 'Two hairlines like a chamfer: a bright outer line and a faint dark line just inside, plus a small top highlight. Crisp and graphic.', v: { tint: .36, blur: '10px', sat: 1.7, con: .8, bri: 1.07, rw: '1px', rim: 1, band: 1, bs: 'inset 0 0 0 1px rgb(0 0 0/.12),inset 0 1.5px 0 1px rgb(255 255 255/.55)' } },
+  G: { name: 'Prism Edge', desc: 'A thin edge with a faint cyan and magenta shift around the rim, like light splitting in glass. Subtle, but it gives the edge life.', v: { tint: .36, blur: '10px', sat: 1.7, con: .8, bri: 1.07, rw: '1.5px', rim: 1, band: 0, rg: 'conic-gradient(from 90deg,rgb(255 255 255/.9),rgb(120 220 255/.7),rgb(255 255 255/.15) 30%,rgb(255 255 255/.15) 55%,rgb(255 150 230/.7) 75%,rgb(255 255 255/.9))' } },
+  H: { name: 'Bright Band', desc: 'The backdrop in a narrow band at the edge is brightened and saturated, with a thin lit line on its outside. The rim glows without a visible gradient ring.', v: { tint: .36, blur: '10px', sat: 1.7, con: .8, bri: 1.07, rw: '1px', rim: 1, band: 0, bnd: 1, bw: '7px' } },
+  I: { name: 'Frost Bevel', desc: 'A wider soft bevel (about 3px) in a lit gradient with a thin crisp line on top, like an etched, polished edge on frosted glass.', v: { tint: .4, blur: '12px', sat: 1.6, con: .8, bri: 1.06, rw: '3px', rim: .55, band: 1, bs: 'inset 0 0 0 1px rgb(255 255 255/.5),inset 0 3px 6px rgb(255 255 255/.3),inset 0 -3px 6px rgb(0 0 0/.08)' } },
+  J: { name: 'Everything Together', desc: 'Specular arcs, the bright band and a soft inner glow. The most glassy; check it still reads as calm over busy content.', v: { tint: .34, blur: '9px', sat: 1.7, con: .82, bri: 1.06, rw: '1.5px', rim: 1, band: 1, bnd: .8, bw: '6px', rg: 'conic-gradient(from 200deg at 50% 50%,rgb(255 255 255/.1),rgb(255 255 255/1) 12%,rgb(255 255 255/.1) 30%,rgb(255 255 255/.1) 52%,rgb(255 255 255/.9) 64%,rgb(255 255 255/.1) 80%)' } }
 };
 function phone(o) {
   const p = h('<div class="lp"></div>'), f = h('<div class="lf"></div>'); f.appendChild(feed()); p.appendChild(f);
   for (const k in o.v) p.style.setProperty('--' + k, o.v[k]);
-  p.append(h('<div class="gl top"><span>October</span><span>$3,639.95</span></div>'), h('<div class="gl nav"><span>Overview</span><span>Bills</span><span>Activity</span><span>Settings</span></div>'));
+  p.append(h('<div class="gl top"><i class="bnd"></i><span>October</span><span>$3,639.95</span></div>'), h('<div class="gl nav"><i class="bnd"></i><span>Overview</span><span>Bills</span><span>Activity</span><span>Settings</span></div>'));
   return p;
 }
 const sec = h('<section class="sec"><h2>Transparency Without WebGL</h2><p>The Clarity slider in the bar shifts the tint on every phone at once.</p><div class="cards rv-group" role="radiogroup" aria-label="Glass"></div></section>');

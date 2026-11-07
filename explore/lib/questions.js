@@ -101,7 +101,7 @@ window.S4_REVIEW_DEMOS = [
   {
     id: 'transparency', title: 'Transparency Lab', href: 'explore/transparency.html',
     questions: [
-      { id: 'glass', label: 'Glass transparency and edge (CSS only)', options: [{ v: 'A', label: 'Today' }, { v: 'B', label: 'Clearer' }, { v: 'C', label: 'Clearer + Lit Edge' }, { v: 'D', label: 'Light-Gathering Rim' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'glass', label: 'Glass transparency and edge (CSS only)', options: [{ v: 'A', label: 'Today' }, { v: 'B', label: 'Clearer' }, { v: 'C', label: 'Clearer + Lit Edge' }, { v: 'D', label: 'Light-Gathering Rim' }, { v: 'E', label: 'Specular Arcs' }, { v: 'F', label: 'Bevel Hairlines' }, { v: 'G', label: 'Prism Edge' }, { v: 'H', label: 'Bright Band' }, { v: 'I', label: 'Frost Bevel' }, { v: 'J', label: 'Everything Together' }, { v: 'Other', label: 'Describe in notes' }] },
       { id: 'clarity', label: 'How clear should glass be', options: [{ v: 'A', label: 'More tint than shown' }, { v: 'B', label: 'About as shown' }, { v: 'C', label: 'Clearer than shown' }, { v: 'Other', label: 'Describe in notes' }] }
     ]
   }
