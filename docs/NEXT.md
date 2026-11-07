@@ -170,3 +170,4 @@ Lab 3 now has a Shadow toggle (default none): the owner does not want shadows un
 
 **Applied 2026-11-07 ([0013](decisions/0013-glass-edge-and-no-shadow.md)):** glass has a 1px 20% frost line and no shadow (shadow returns where glass is solid). Review labs: cards can be deselected. **Next:** Transparency Lab 4 (translucent items on glass: text fields, chips, rows). Open: drop shadows on cards/FAB system-wide? Ask the owner when relevant.
 Lab 4 (transparency4.html) live: six treatments for items on glass (text fields, chips). Waiting on the pick; whichever wins must re-pass the glass text-contrast check (items add light fills on the glass).
+Owner on Lab 4: combine D and E for items that already had an outline (outline becomes the frost line). Added as option G in Lab 4; waiting on confirmation, then apply to glass.css + extend check-glass for item fills.
