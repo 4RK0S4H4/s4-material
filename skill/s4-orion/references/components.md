@@ -432,7 +432,7 @@ height from 840 and mirrors the nav bar.
 
 ## Tabs
 
-Switch between related views of the same content at one level. The Segmented Tray (decision 0009): tabs in a soft tray with a flat ink pill that slides to the selected tab (primary), or a quieter pill without the tray (secondary).
+Switch between related views of the same content at one level. The Segmented Tray (decision 0009): tabs in a soft tray with a flat ink pill that slides to the selected tab (primary), (secondary: the same, with icons inline).
 
 ```html
 <div class="s4-tabs" role="tablist" aria-label="Bill Status">

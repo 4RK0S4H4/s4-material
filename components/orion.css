@@ -1971,7 +1971,7 @@
    <div class="s4-tab-panel" role="tabpanel" id="panel-due" aria-labelledby="tab-due">…</div>
    Primary (default): the tabs sit in a soft tray (surface-container-high); the selected tab is a flat ink pill
    (on-surface, with an inverse label) that slides between tabs, no raised shadow. With icons the icon sits above the
-   label. Secondary: no tray; the selected tab is a surface-container-highest pill with an on-surface label.
+   label. Secondary (inside a card or pane): the same tray and pill, with icons inline.
    tabs.js slides one pill between tabs (spatial spring), switches panels with the shared axis pattern, and adds
    arrow / Home / End keys with automatic activation. Without JS the selected tab paints its own pill.
    data-scrollable: tabs keep their natural width and the row scrolls sideways. */
@@ -1990,12 +1990,6 @@
     background: var(--_tray);
     border-radius: calc(var(--_r) + var(--_pad));
     isolation: isolate;
-  }
-  .s4-tabs[data-variant="secondary"] {
-    --_tray: transparent;
-    --_pill: var(--md-sys-color-surface-container-highest);
-    --_pill-fg: var(--md-sys-color-on-surface);
-    padding: 0;
   }
 
   .s4-tab {
@@ -2059,7 +2053,6 @@
     transform: translateX(var(--_x, 0));
     pointer-events: none;
   }
-  .s4-tabs[data-variant="secondary"] > .s4-tabs-indicator { top: 0; bottom: 0; }
   .s4-tabs-indicator[data-animate] {
     transition:
       transform var(--md-sys-motion-spring-spatial-duration) var(--md-sys-motion-spring-spatial),
