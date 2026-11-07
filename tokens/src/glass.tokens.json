@@ -68,8 +68,8 @@
       "saturation": {
         "$type": "number",
         "float": {
-          "$value": 1.8,
-          "$description": "saturate() on the backdrop, so color showing through stays lively."
+          "$value": 1.2,
+          "$description": "saturate() on the backdrop, calmer color showing through (decision 0014: 120%, was 180%)."
         }
       },
       "backdrop-contrast": {

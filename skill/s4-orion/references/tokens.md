@@ -365,7 +365,7 @@ Light values are shown; a second value is dark mode. Color roles also change wit
 | `--s4-glass-tint-opacity-fill` | 0.56 | 0.64 |  |
 | `--s4-glass-tint-opacity-medium-contrast` | 0.8 |  | Float tint when the app runs at medium contrast (contrast level 0.5). |
 | `--s4-glass-blur-float` | 16px |  | Backdrop blur radius. |
-| `--s4-glass-saturation-float` | 1.8 |  | saturate() on the backdrop, so color showing through stays lively. |
+| `--s4-glass-saturation-float` | 1.2 |  | saturate() on the backdrop, calmer color showing through (decision 0014: 120%, was 180%). |
 | `--s4-glass-backdrop-contrast-float` | 0.74 | 1 | contrast() on the backdrop: lifts blacks behind light glass so dark text keeps 4.5:1. |
 | `--s4-glass-backdrop-brightness-float` | 1.1 | 0.8 | brightness() on the backdrop: dims whites behind dark glass so light text keeps 4.5:1. |
 | `--s4-glass-highlight-width` | 1px |  |  |

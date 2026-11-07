@@ -13,6 +13,7 @@ The first version of S4 Orion, a leaner rebuild of S4 Material 1.3 on Material 3
 ### Changed (glass edge, 2026-11-07, decision 0013)
 
 - Glass: a 1px frost line (white at 20%, `--s4-glass-highlight-*`) replaces the elevation shadow on glass surfaces; the shadow returns wherever glass is solid. Fill and contrast guarantee unchanged.
+- Glass: color boost through the backdrop reduced from 180% to 120% (decision 0014); blur and tint unchanged.
 - Review labs: a picked card or chip can be tapped again to deselect.
 
 ### Explored (not part of 1.0.0 yet)

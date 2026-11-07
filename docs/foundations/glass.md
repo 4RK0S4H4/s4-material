@@ -26,7 +26,7 @@ above content. Content itself is always solid.
 
 ```css
 background-color: color-mix(in srgb, var(--s4-glass-tint-float) 60%, transparent);   /* surface-container */
-backdrop-filter: blur(16px) saturate(1.8) contrast(.74) brightness(1.1);              /* dark: contrast(1) brightness(.8) */
+backdrop-filter: blur(16px) saturate(1.2) contrast(.74) brightness(1.1);              /* dark: contrast(1) brightness(.8) */
 box-shadow: inset 0 0 0 1px rgb(255 255 255 / .2);                                    /* the thin frost line; no elevation shadow */
 ```
 
