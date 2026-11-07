@@ -85,7 +85,7 @@ Everything ships in this skill's `assets/` folder: `orion.css` (tokens, every co
 - A named color ("make it green"): `S4.theme({ seed: '#2e7d32', variant: 'vibrant' })`. An exact brand hex that must show as
   is: `variant: 'fidelity'`. Subtle or photo-derived: `'tonal'`.
 - Use roles, never hex: page `surface`; cards and panes `surface-container-low`; menus and nav `surface-container`;
-  dialogs `surface-container-high`; filled fields `surface-container-highest`; text `on-surface`, secondary text
+  dialogs `surface-container-high`; fields `surface` (Quiet Box); text `on-surface`, secondary text
   `on-surface-variant`; selection `secondary-container`; the one main action `primary`; standout container (FAB)
   `primary-container`; errors `error`. If you're reaching for a hex value, there is a role for it.
 - Raise contrast with `S4.theme({ contrast: 0.5 | 1 })`, never by darkening one color.

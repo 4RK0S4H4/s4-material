@@ -73,7 +73,7 @@ grid of panes: KPI panes (label, emphasized number, delta status) · a chart pan
 ## Forms
 
 - One column, fields at full width up to about 560px (`max-width: 35rem` on the form). Group long forms into sections.
-- Filled text fields by default; outlined when the form sits on a busy surface or in a table row.
+- Text fields are one look, the Quiet Box (label above a thin-outlined box); there is no filled or outlined variant.
 - Labels in Title Case, helper text and errors as sentences. Validate on blur and on submit, not on every keystroke;
   set `data-error="Enter an amount above $0.00."` and move focus to the first invalid field on submit.
 - Actions at the end, end-aligned: Cancel (text) then the main action (filled), named by what it does ("Save Bill").

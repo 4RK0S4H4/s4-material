@@ -432,7 +432,7 @@ height from 840 and mirrors the nav bar.
 
 ## Tabs
 
-Switch between related views of the same content at one level. M3 primary and secondary tabs.
+Switch between related views of the same content at one level. The Segmented Tray (decision 0009): tabs in a soft tray with a flat ink pill that slides to the selected tab (primary), or a quieter pill without the tray (secondary).
 
 ```html
 <div class="s4-tabs" role="tablist" aria-label="Bill Status">
@@ -454,11 +454,10 @@ Switch between related views of the same content at one level. M3 primary and se
 **When to use what:** **primary** tabs right under the top app bar to organize the whole screen; **secondary** tabs inside
 a content area (a card, a pane) to divide it further. Use **scrollable** for more than about 4 tabs on a phone.
 
-**Behaviour (`tabs.js`):** one indicator slides between tabs on the spatial spring (content width, 3dp, rounded top for
-primary; full width, 2dp for secondary). Panels switch with the shared axis pattern: the old panel slides 30px away and
+**Behaviour (`tabs.js`):** one pill slides between tabs on the spatial spring (the tab's full width). Panels switch with the shared axis pattern: the old panel slides 30px away and
 fades out, the new one slides in from the side of the newly selected tab. Keys: Left / Right (wrapping), Home / End,
 with automatic activation and a roving tabindex. Fires `s4-change { tab, index, panel }` on the tab list. Missing ids,
-roles and `aria-labelledby` are filled in. Without JS each selected tab draws its own indicator.
+roles and `aria-labelledby` are filled in. Without JS each selected tab paints its own pill.
 
 **Do**
 - Use short Title Case labels (one or two words) and keep the tab order stable.
@@ -469,8 +468,8 @@ roles and `aria-labelledby` are filled in. Without JS each selected tab draws it
 - Don't nest primary tabs inside primary tabs; use secondary tabs.
 
 **Accessibility:** WAI-ARIA tabs pattern; the tab list is one tab stop and panels are focusable. Selected uses color
-and the indicator (and a solid icon), not color alone. Inner focus ring so a scrolling row never clips it. Forced colors:
-the indicator uses Highlight and the row gets a border.
+and the pill (and a solid icon), not color alone. Inner focus ring so a scrolling row never clips it. Forced colors:
+the pill uses Highlight and the row gets a border.
 
 **Tokens:** `--s4-size-touch-target`, `--md-sys-typescale-title-small-*`, `--md-sys-color-primary`,
 `--md-sys-color-on-surface-variant`, `--md-sys-color-surface-variant` (divider), `--s4-motion-pattern-shared-axis-distance`,
@@ -876,8 +875,9 @@ use the list's `data-dividers` instead.
 
 ## Text Field
 
-Lets people enter and edit text. M3 filled and outlined text fields with a floating label, icons, prefix / suffix,
-supporting text, counter, error state, select and auto-growing textarea. 56dp tall, tabular figures.
+Lets people enter and edit text. The Quiet Box (decision 0009): a thin outline, medium corners, surface fill and the label
+above the box, always visible. Icons, prefix / suffix, supporting text, counter, error state, select and auto-growing
+textarea. 48dp tall, tabular figures. There is one look: `data-variant` is ignored.
 
 ```html
 <div class="s4-text-field">
@@ -888,7 +888,7 @@ supporting text, counter, error state, select and auto-growing textarea. 56dp ta
   <div class="s4-text-field-supporting">Includes tax.</div>
 </div>
 
-<div class="s4-text-field" data-variant="outlined">
+<div class="s4-text-field">
   <span class="s4-icon" data-icon="search"></span>
   <input id="q" type="search">
   <label for="q">Search Bills</label>
@@ -902,26 +902,18 @@ supporting text, counter, error state, select and auto-growing textarea. 56dp ta
 
 | Part / attribute | Meaning |
 |---|---|
-| `<input id>` / `<select>` / `<textarea>` + `<label for>` | the control and its floating label (body large → body small) |
-| `data-variant="outlined"` | outlined; default is filled (surface-container-highest, top corners `--s4-shape-text-field`, 1dp indicator → 2dp primary on focus) |
-| `.s4-icon` / `.s4-icon-button` before the control | leading icon (12dp from the edge, 16dp to the text) |
+| `<input id>` / `<select>` / `<textarea>` + `<label for>` | the control and its label (label medium, above the box) |
+| `.s4-icon` / `.s4-icon-button` before the control | leading icon (12dp from the edge) |
 | `.s4-icon` / `.s4-icon-button` after the control | trailing icon or action |
-| `.s4-text-field-affix[data-prefix]` / `[data-suffix]` | "$", "kg": shown once the label floats |
+| `.s4-text-field-affix[data-prefix]` / `[data-suffix]` | "$", "kg": always shown |
 | `.s4-text-field-supporting` | helper text, sentence case |
 | `data-counter` | "length / maxlength" at the end of the supporting line |
 | `data-error="Message"` (or `aria-invalid="true"` on the control) | error color; the message replaces the helper text |
 | `disabled` on the control | M3 disabled: 4% container, 38% content |
 
-**Behaviour** (`text-field.js`): adds `placeholder=" "` so the label can float with `:placeholder-shown` (a real
-placeholder is shown only while focused); injects the outlined notch; adds a chevron to selects and opens the picker
+**Behaviour** (`text-field.js`): adds `placeholder=" "` to text controls; adds a chevron to selects and opens the picker
 when the field is clicked; grows textareas; links supporting text with `aria-describedby`; keeps `aria-invalid` and the
-error message in sync with `data-error`. Selects float their label when a non-empty option is chosen (`value=""` keeps
-it resting); date/time inputs always float.
-
-**The outlined notch** is a real `<fieldset><legend>` drawn behind the control (`.s4-text-field-outline`, `aria-hidden`).
-The browser cuts the border around the legend, which holds an invisible copy of the label at body-small, so the gap is
-exactly the label's width on any background — glass, images, gradients — with no background patch to match. The legend
-width animates open on the same calm spring as the label.
+error message in sync with `data-error`.
 
 **Do**
 - Title Case labels ("Due Date"), sentence-case helper and error text that says how to fix it.
@@ -932,7 +924,7 @@ width animates open on the same calm spring as the label.
 - Don't put helper text and an error in two places; `data-error` replaces the helper text.
 
 **Accessibility:** native controls with real `<label for>`; supporting text is `aria-describedby`; errors set
-`aria-invalid`; the active indicator / outline is the focus indication (M3); the whole container is a click target;
+`aria-invalid`; the 2dp ink ring is the focus indication; the whole container is a click target;
 forced-colors mode draws real borders.
 
 **Tokens:** `--s4-size-text-field`, `--s4-shape-text-field`, `--md-sys-color-surface-container-highest`,

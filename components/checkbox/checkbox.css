@@ -1,17 +1,18 @@
-/* Checkbox (M3)
+/* Checkbox (S4 Orion, Soft Square)
    <label class="s4-checkbox"><input type="checkbox"><span class="s4-checkbox-box"></span>Remind Me</label>
    Bare in a table cell: <label class="s4-checkbox"><input type="checkbox" aria-label="Select Electric Co."><span class="s4-checkbox-box"></span></label>
    States: checked, indeterminate (input.indeterminate, or data-indeterminate on the label, set by checkbox.js),
    data-error on the label, disabled. The native input sits invisibly on top, so keyboard, forms and screen readers work.
-   18dp box, 2dp corners, 2dp on-surface-variant border; checked = primary fill with an on-primary mark.
+   Soft Square (decision 0009): 20dp box, 6dp corners, 1.5dp outline border; checked = primary fill with an on-primary mark
+   (ink in a monochrome app); the mark wipes in and fades out.
    40dp circular state layer around the box; 48dp touch target. */
 @layer s4.components {
   .s4-checkbox {
-    --_border: var(--md-sys-color-on-surface-variant);
+    --_border: var(--md-sys-color-outline);
     --_fill: transparent;
     --_mark: var(--md-sys-color-on-primary);
     --_state: var(--md-sys-color-on-surface);
-    --_box: calc(var(--s4-space-4) + 2px);
+    --_box: calc(var(--s4-space-4) + var(--s4-space-1));   /* 20dp */
     --_layer: var(--s4-size-icon-button);
     --_effects: var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
 
@@ -50,8 +51,8 @@
     width: var(--_box);
     height: var(--_box);
     margin: calc((var(--_layer) - var(--_box)) / 2);
-    border: 2px solid var(--_border);
-    border-radius: calc(var(--md-sys-shape-corner-extra-small) / 2);
+    border: 1.5px solid var(--_border);
+    border-radius: calc(var(--md-sys-shape-corner-extra-small) * 1.5);   /* soft square: 6dp */
     background: var(--_fill);
     transition: background-color var(--_effects), border-color var(--_effects);
   }

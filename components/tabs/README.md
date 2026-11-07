@@ -1,6 +1,6 @@
 # Tabs
 
-Switch between related views of the same content at one level. M3 primary and secondary tabs.
+Switch between related views of the same content at one level. The Segmented Tray (decision 0009): tabs in a soft tray with a flat ink pill that slides to the selected tab (primary), or a quieter pill without the tray (secondary).
 
 ```html
 <div class="s4-tabs" role="tablist" aria-label="Bill Status">
@@ -22,11 +22,10 @@ Switch between related views of the same content at one level. M3 primary and se
 **When to use what:** **primary** tabs right under the top app bar to organize the whole screen; **secondary** tabs inside
 a content area (a card, a pane) to divide it further. Use **scrollable** for more than about 4 tabs on a phone.
 
-**Behaviour (`tabs.js`):** one indicator slides between tabs on the spatial spring (content width, 3dp, rounded top for
-primary; full width, 2dp for secondary). Panels switch with the shared axis pattern: the old panel slides 30px away and
+**Behaviour (`tabs.js`):** one pill slides between tabs on the spatial spring (the tab's full width). Panels switch with the shared axis pattern: the old panel slides 30px away and
 fades out, the new one slides in from the side of the newly selected tab. Keys: Left / Right (wrapping), Home / End,
 with automatic activation and a roving tabindex. Fires `s4-change { tab, index, panel }` on the tab list. Missing ids,
-roles and `aria-labelledby` are filled in. Without JS each selected tab draws its own indicator.
+roles and `aria-labelledby` are filled in. Without JS each selected tab paints its own pill.
 
 **Do**
 - Use short Title Case labels (one or two words) and keep the tab order stable.
@@ -37,8 +36,8 @@ roles and `aria-labelledby` are filled in. Without JS each selected tab draws it
 - Don't nest primary tabs inside primary tabs; use secondary tabs.
 
 **Accessibility:** WAI-ARIA tabs pattern; the tab list is one tab stop and panels are focusable. Selected uses color
-and the indicator (and a solid icon), not color alone. Inner focus ring so a scrolling row never clips it. Forced colors:
-the indicator uses Highlight and the row gets a border.
+and the pill (and a solid icon), not color alone. Inner focus ring so a scrolling row never clips it. Forced colors:
+the pill uses Highlight and the row gets a border.
 
 **Tokens:** `--s4-size-touch-target`, `--md-sys-typescale-title-small-*`, `--md-sys-color-primary`,
 `--md-sys-color-on-surface-variant`, `--md-sys-color-surface-variant` (divider), `--s4-motion-pattern-shared-axis-distance`,

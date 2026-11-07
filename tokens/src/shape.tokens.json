@@ -108,8 +108,8 @@
         "$description": "Outer corners of a segmented list group."
       },
       "text-field": {
-        "$value": "{md.sys.shape.corner.extra-small}",
-        "$description": "Top corners of a filled field (bottom corners are square), all corners of an outlined field."
+        "$value": "{md.sys.shape.corner.medium}",
+        "$description": "All corners of a text field (the Quiet Box)."
       },
       "menu": {
         "$value": "{md.sys.shape.corner.large}"

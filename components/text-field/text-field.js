@@ -1,6 +1,5 @@
 /* Text field behaviour.
-   - adds placeholder=" " so the floating label can use :placeholder-shown
-   - outlined fields get a <fieldset><legend> for the notch (the browser cuts the border around the legend)
+   - adds placeholder=" " (an empty placeholder) to text controls
    - selects get a chevron; clicking anywhere in the field focuses the control (and opens a select's picker)
    - textareas grow with their content
    - data-counter shows "length / maxlength" under the field
@@ -15,13 +14,6 @@ S4.register('text-field', function (scope) {
     var label = f.querySelector(':scope > label');
     var isSelect = c.tagName === 'SELECT', isArea = c.tagName === 'TEXTAREA';
     if (!isSelect && !c.hasAttribute('placeholder')) c.setAttribute('placeholder', ' ');
-
-    /* outlined notch */
-    if (f.dataset.variant === 'outlined' && label && !f.querySelector(':scope > .s4-text-field-outline')) {
-      var fs = document.createElement('fieldset'); fs.className = 's4-text-field-outline'; fs.setAttribute('aria-hidden', 'true');
-      var lg = document.createElement('legend'), sp = document.createElement('span');
-      sp.textContent = label.textContent.trim(); lg.appendChild(sp); fs.appendChild(lg); f.appendChild(fs);
-    }
 
     /* select chevron */
     if (isSelect && !f.querySelector(':scope > select ~ .s4-icon, :scope > select ~ .s4-icon-button')) {

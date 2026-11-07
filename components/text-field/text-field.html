@@ -14,11 +14,11 @@
 <body>
 <header class="ex-bar"><h1><a href="../">Components</a> / Text Field</h1></header>
 <main class="ex-main">
-  <p>Text fields let people enter and edit text. <b>Filled</b> fields stand out in forms and dialogs; <b>outlined</b> fields are lighter and suit dense forms. Both use a floating label, which shrinks above the text once the field has focus or a value. Labels are Title Case, helper text is a short sentence. Numbers use tabular figures.</p>
+  <p>Text fields let people enter and edit text. One look, the Quiet Box: a thin outline, medium corners and the label above the box, always visible. Focus turns the outline into a 2dp ink ring; hover darkens it. Labels are Title Case, helper text is a short sentence. Numbers use tabular figures.</p>
 
   <section class="ex-sec">
-    <h2>Filled</h2>
-    <p>Default. Prefix and suffix appear once the label floats. Leading and trailing icons, a select and a growing textarea with a counter.</p>
+    <h2>Fields</h2>
+    <p>Prefix and suffix are always shown. Leading and trailing icons, a select and a growing textarea with a counter.</p>
     <div class="ex-board col">
       <div class="tf-grid">
         <div class="s4-text-field">
@@ -62,47 +62,6 @@
     </div>
   </section>
 
-  <section class="ex-sec">
-    <h2>Outlined</h2>
-    <p><code>data-variant="outlined"</code>. The label floats into a notch in the outline, which works on any background.</p>
-    <div class="ex-board col">
-      <div class="tf-grid">
-        <div class="s4-text-field" data-variant="outlined">
-          <input id="o-vendor" value="Northwind Office Supply">
-          <label for="o-vendor">Vendor</label>
-          <div class="s4-text-field-supporting">As it appears on the bill.</div>
-        </div>
-        <div class="s4-text-field" data-variant="outlined">
-          <span class="s4-text-field-affix" data-prefix>$</span>
-          <input id="o-amount" inputmode="decimal">
-          <label for="o-amount">Amount</label>
-          <span class="s4-text-field-affix" data-suffix>USD</span>
-        </div>
-        <div class="s4-text-field" data-variant="outlined">
-          <span class="s4-icon" data-icon="calendar"></span>
-          <input id="o-due" type="date" value="2026-11-15">
-          <label for="o-due">Due Date</label>
-        </div>
-        <div class="s4-text-field" data-variant="outlined">
-          <select id="o-cat">
-            <option>Utilities</option>
-            <option selected>Travel</option>
-            <option>Office</option>
-          </select>
-          <label for="o-cat">Category</label>
-        </div>
-        <div class="s4-text-field" data-variant="outlined">
-          <span class="s4-icon" data-icon="mail"></span>
-          <input id="o-email" type="email" autocomplete="email">
-          <label for="o-email">Billing Email</label>
-        </div>
-        <div class="s4-text-field" data-variant="outlined" data-counter>
-          <textarea id="o-notes" rows="1" maxlength="120">Quarterly office lease, paid by card. Split with the design team.</textarea>
-          <label for="o-notes">Notes</label>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <section class="ex-sec">
     <h2>Error and Disabled</h2>
@@ -115,7 +74,7 @@
           <label for="e-amount">Amount</label>
           <div class="s4-text-field-supporting">Includes tax.</div>
         </div>
-        <div class="s4-text-field" data-variant="outlined" data-error="Weight is required." id="weight-field">
+        <div class="s4-text-field" data-error="Weight is required." id="weight-field">
           <input id="e-weight" inputmode="decimal">
           <label for="e-weight">Package Weight</label>
           <span class="s4-text-field-affix" data-suffix>kg</span>
@@ -127,7 +86,7 @@
           <label for="d-account">Pay From</label>
           <div class="s4-text-field-supporting">Change accounts in Settings.</div>
         </div>
-        <div class="s4-text-field" data-variant="outlined">
+        <div class="s4-text-field">
           <input id="d-ref" disabled>
           <label for="d-ref">Reference</label>
         </div>

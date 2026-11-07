@@ -14,6 +14,12 @@ The first version of S4 Orion, a leaner rebuild of S4 Material 1.3 on Material 3
 
 - Liquid Glass Lab (`explore/liquid-glass.html`, engine in `explore/lib/liquid-glass.js`): glass that refracts like a thick slab with curved edges (squircle bevel, Snell's law), light blur, specular rim, soft shadow, shapes that melt together and a magnifying lens on the nav bar. WebGL2 engine (all browsers, over app-drawn backdrops) and SVG `backdrop-filter` engine (Chromium, over any DOM). Proposes an adaptive tint that keeps text at AA per pixel. Awaiting the owner's picks. After the first look: no color split (no rainbow fringes on white), a slight blur that's always on, and extra softening along the rim where the bend stretches content, so it never pixelates. Owner picks recorded in decision 0006 (extra liquid, adaptive tint, melt, every glass surface); added the frosted extra liquid material (more blur, firmer base tint, calmer colors, 7:1 text target, clearer outer rim) and a Frost Level question. Second round (owner: Material first, refraction and transparency only): new Material Liquid material (Liquid bend with a soft, seamless edge; frosted; no melting, lens, edge highlight or glow), M3 layout in the lab (full-width bars bend only along the content-facing edge), and a question on which raised surfaces get it. 0006 rewritten. Then shelved by the owner: today's glass (0004) already gives raised surfaces the transparency and depth wanted; liquid glass is not adopted.
 
+### Changed (Style Lab, 2026-11-07, decision 0009)
+
+- Text fields are the Quiet Box: label above a thin-outlined box, ink focus ring; the filled and outlined variants, the floating label and the notch are gone (`data-variant` is ignored).
+- Checkboxes are Soft Squares (20dp, 6dp corners, thin outline).
+- Tabs are a Segmented Tray: a flat ink pill slides between tabs in a soft tray (secondary: a quiet pill, no tray).
+
 ### Changed (owner critique, 2026-11-07, decision 0008)
 
 - Motion is much quicker and tighter: spatial 260 ms (was 415), fast-spatial 220, slow-spatial 340, effects 120, fast-effects 90; far less bounce.

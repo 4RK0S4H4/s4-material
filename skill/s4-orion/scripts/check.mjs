@@ -114,6 +114,8 @@ function audit() {
       if (bf && bf !== 'none' && bg && bg[3] < 1) { glass = { tint: bg, f: filterOf(bf) }; break; }   /* its gradient is the edge highlight */
       if (s.backgroundImage !== 'none') unknown = true;
       if (bg && bg[3] > 0) { layers.push(bg); if (bg[3] >= 1) break; }
+      /* a selected tab sits on the pill that slides behind it (a sibling element, not an ancestor) */
+      if (n.matches('.s4-tab[aria-selected="true"]')) { const pill = n.parentElement && n.parentElement.querySelector(':scope > .s4-tabs-indicator'); const pb = pill && parse(getComputedStyle(pill).backgroundColor); if (pb && pb[3] > 0) layers.push(pb); }
     }
     if (unknown || opacity < 0.99) continue;                                  /* images and fading content: skip */
     const size = parseFloat(cs.fontSize), bold = +cs.fontWeight >= 700, large = size >= 24 || (bold && size >= 18.66);

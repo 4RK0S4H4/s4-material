@@ -1,30 +1,43 @@
-/* Tabs (M3)
+/* Tabs (S4 Orion, Segmented Tray, decision 0009)
    <div class="s4-tabs" role="tablist" aria-label="Bills" data-variant="secondary" data-scrollable>
      <button class="s4-tab" role="tab" id="tab-due" aria-selected="true" aria-controls="panel-due">
        <span class="s4-icon" data-icon="schedule"></span>Due</button>
      …
    </div>
    <div class="s4-tab-panel" role="tabpanel" id="panel-due" aria-labelledby="tab-due">…</div>
-   Primary (default): label in primary when selected, a 3dp indicator as wide as the content with rounded top corners;
-   with icons the icon sits above the label (64dp). Secondary: on-surface label, a 2dp indicator the full tab width,
-   icons inline. tabs.js slides one indicator between tabs (spatial spring), switches panels with the shared axis
-   pattern, and adds arrow / Home / End keys with automatic activation. Without JS each selected tab draws its own
-   indicator. data-scrollable: tabs keep their natural width and the row scrolls sideways. */
+   Primary (default): the tabs sit in a soft tray (surface-container-high); the selected tab is a flat ink pill
+   (on-surface, with an inverse label) that slides between tabs, no raised shadow. With icons the icon sits above the
+   label. Secondary: no tray; the selected tab is a surface-container-highest pill with an on-surface label.
+   tabs.js slides one pill between tabs (spatial spring), switches panels with the shared axis pattern, and adds
+   arrow / Home / End keys with automatic activation. Without JS the selected tab paints its own pill.
+   data-scrollable: tabs keep their natural width and the row scrolls sideways. */
 @layer s4.components {
   .s4-tabs {
-    --_indicator: var(--md-sys-color-primary);
-    --_stroke: 3px;
+    --_tray: var(--md-sys-color-surface-container-high);
+    --_pill: var(--md-sys-color-on-surface);
+    --_pill-fg: var(--md-sys-color-surface);
+    --_pad: var(--s4-space-1);
+    --_r: calc(var(--md-sys-shape-corner-large) - var(--_pad) / 2);
     position: relative;
     display: flex;
     align-items: stretch;
-    background: transparent;   /* the tabs sit on whatever surface holds them: a slab of another color reads as a square cut-out */
-    border-radius: var(--md-sys-shape-corner-medium) var(--md-sys-shape-corner-medium) 0 0;
-    box-shadow: inset 0 calc(-1 * var(--s4-size-divider)) 0 var(--md-sys-color-surface-variant);   /* divider */
+    gap: calc(var(--s4-space-1) / 2);
+    padding: var(--_pad);
+    background: var(--_tray);
+    border-radius: calc(var(--_r) + var(--_pad));
+    isolation: isolate;
   }
-  .s4-tabs[data-variant="secondary"] { --_stroke: 2px; }
+  .s4-tabs[data-variant="secondary"] {
+    --_tray: transparent;
+    --_pill: var(--md-sys-color-surface-container-highest);
+    --_pill-fg: var(--md-sys-color-on-surface);
+    padding: 0;
+  }
 
   .s4-tab {
     --_fg: var(--md-sys-color-on-surface-variant);
+    position: relative;
+    z-index: 1;
     flex: 1 1 0;
     display: inline-flex;
     flex-direction: column;
@@ -32,11 +45,11 @@
     justify-content: center;
     gap: calc(var(--s4-space-1) / 2);
     min-inline-size: 0;
-    min-block-size: var(--s4-size-touch-target);
+    min-block-size: calc(var(--s4-size-touch-target) - 2 * var(--_pad));
     margin: 0;
     padding: 0 var(--s4-space-4);
     border: 0;
-    border-radius: var(--md-sys-shape-corner-medium) var(--md-sys-shape-corner-medium) 0 0;
+    border-radius: var(--_r);
     background: none;
     color: var(--_fg);
     font-family: var(--md-sys-typescale-title-small-font);
@@ -48,51 +61,41 @@
     text-decoration: none;
     cursor: pointer;
     user-select: none;
-    outline-offset: calc(-1 * var(--s4-focus-ring-width));   /* inner ring: the row may clip outside it */
+    -webkit-tap-highlight-color: transparent;
+    outline-offset: calc(-1 * var(--s4-focus-ring-width));
     --s4-icon-size: var(--s4-size-icon);
     transition: color var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
   }
-  .s4-tab[aria-selected="true"] { --_fg: var(--md-sys-color-primary); }
+  @media (hover: hover) {
+    .s4-tab[aria-selected="false"]:not(:disabled, [aria-disabled="true"]):hover { --_fg: var(--md-sys-color-on-surface); }
+  }
+  .s4-tab[aria-selected="true"] { --_fg: var(--_pill-fg); }
   .s4-tab[aria-selected="true"] .s4-icon { --s4-icon-duo-opacity: 1; }
   .s4-tabs:not([data-variant="secondary"]) > .s4-tab:has(> .s4-icon) { min-block-size: calc(var(--s4-size-touch-target) + var(--s4-space-4)); }
-
   .s4-tabs[data-variant="secondary"] > .s4-tab { flex-direction: row; gap: var(--s4-space-2); }
-  .s4-tabs[data-variant="secondary"] > .s4-tab[aria-selected="true"] { --_fg: var(--md-sys-color-on-surface); }
 
   .s4-tab:is(:disabled, [aria-disabled="true"]) {
     --_fg: color-mix(in srgb, var(--md-sys-color-on-surface) calc(var(--md-sys-state-disabled-content-opacity) * 100%), transparent);
   }
 
-  /* ---------- indicator ---------- */
-  /* without JS: each selected tab draws its own */
-  .s4-tab::after {
-    content: "";
-    position: absolute;
-    inset-inline: var(--s4-space-4);
-    inset-block-end: 0;
-    block-size: var(--_stroke);
-    border-radius: var(--_stroke) var(--_stroke) 0 0;
-    background: var(--_indicator);
-    opacity: 0;
-    pointer-events: none;
-  }
-  .s4-tabs[data-variant="secondary"] > .s4-tab::after { inset-inline: 0; border-radius: 0; }
-  .s4-tab[aria-selected="true"]::after { opacity: 1; }
-  /* with JS (tabs.js marks the list): one indicator that slides */
-  .s4-tabs[data-s4tabs] > .s4-tab::after { display: none; }
+  /* ---------- the pill ---------- */
+  /* without JS: the selected tab paints its own */
+  .s4-tabs:not([data-s4tabs]) > .s4-tab[aria-selected="true"] { background: var(--_pill); }
+  .s4-tab::after { display: none; }
+  /* with JS (tabs.js marks the list): one pill that slides, behind the labels */
   .s4-tabs-indicator {
     position: absolute;
     left: 0;                                    /* physical: JS measures physical offsets */
-    bottom: 0;
-    z-index: 1;
+    top: var(--_pad);
+    bottom: var(--_pad);
+    z-index: 0;
     inline-size: var(--_w, 0);
-    block-size: var(--_stroke);
-    border-radius: var(--_stroke) var(--_stroke) 0 0;
-    background: var(--_indicator);
+    border-radius: var(--_r);
+    background: var(--_pill);
     transform: translateX(var(--_x, 0));
     pointer-events: none;
   }
-  .s4-tabs[data-variant="secondary"] > .s4-tabs-indicator { border-radius: 0; }
+  .s4-tabs[data-variant="secondary"] > .s4-tabs-indicator { top: 0; bottom: 0; }
   .s4-tabs-indicator[data-animate] {
     transition:
       transform var(--md-sys-motion-spring-spatial-duration) var(--md-sys-motion-spring-spatial),
@@ -105,7 +108,6 @@
     overflow-y: hidden;
     overscroll-behavior-x: contain;
     scrollbar-width: none;
-    padding-inline: var(--s4-space-4);
     scroll-padding-inline: var(--s4-space-12);
   }
   .s4-tabs[data-scrollable]::-webkit-scrollbar { display: none; }
@@ -116,7 +118,9 @@
   .s4-tab-panel:focus-visible { border-radius: var(--md-sys-shape-corner-small); }
 
   @media (forced-colors: active) {
-    .s4-tabs-indicator, .s4-tab::after { background: Highlight; forced-color-adjust: none; }
-    .s4-tabs { border-block-end: 1px solid CanvasText; }
+    .s4-tabs-indicator { background: Highlight; forced-color-adjust: none; }
+    .s4-tabs:not([data-s4tabs]) > .s4-tab[aria-selected="true"] { background: Highlight; color: HighlightText; forced-color-adjust: none; }
+    .s4-tab[aria-selected="true"] { color: HighlightText; }
+    .s4-tabs { border: 1px solid CanvasText; }
   }
 }

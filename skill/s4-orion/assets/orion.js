@@ -709,8 +709,7 @@ S4.register('nav-rail', function (scope) {
 
 /* ---- tabs/tabs.js ---- */
 /* Tabs behaviour (WAI-ARIA tabs, automatic activation).
-   - One indicator per tab list slides to the selected tab on the spatial spring: content width for primary tabs,
-     full tab width for secondary.
+   - One pill per tab list slides to the selected tab on the spatial spring (the tab's full width).
    - Panels (aria-controls) switch with the shared axis pattern: the old panel slides 30px away and fades out, the new
      one slides in from the side of the newly selected tab. Movement on the spatial spring, fades on effects.
    - Keys: Left / Right move and select (wrapping), Home / End go to the first / last tab. Roving tabindex.
@@ -732,14 +731,8 @@ S4.register('tabs', function (scope) {
     function place(animate) {
       var tab = list.querySelector('.s4-tab[aria-selected="true"]');
       if (!tab) { indicator.style.setProperty('--_w', '0px'); return; }
-      var lr = list.getBoundingClientRect(), x, w;
-      var base = lr.left + list.clientLeft - list.scrollLeft;
-      if (list.dataset.variant === 'secondary') {
-        var tr = tab.getBoundingClientRect(); x = tr.left - base; w = tr.width;
-      } else {
-        var range = document.createRange(); range.selectNodeContents(tab);
-        var cr = range.getBoundingClientRect(); x = cr.left - base; w = cr.width;
-      }
+      var lr = list.getBoundingClientRect(), tr = tab.getBoundingClientRect();
+      var base = lr.left + list.clientLeft - list.scrollLeft, x = tr.left - base, w = tr.width;
       indicator.toggleAttribute('data-animate', !!animate);
       indicator.style.setProperty('--_x', x + 'px');
       indicator.style.setProperty('--_w', w + 'px');
@@ -1122,8 +1115,7 @@ S4.register('table', function (scope) {
 
 /* ---- text-field/text-field.js ---- */
 /* Text field behaviour.
-   - adds placeholder=" " so the floating label can use :placeholder-shown
-   - outlined fields get a <fieldset><legend> for the notch (the browser cuts the border around the legend)
+   - adds placeholder=" " (an empty placeholder) to text controls
    - selects get a chevron; clicking anywhere in the field focuses the control (and opens a select's picker)
    - textareas grow with their content
    - data-counter shows "length / maxlength" under the field
@@ -1138,13 +1130,6 @@ S4.register('text-field', function (scope) {
     var label = f.querySelector(':scope > label');
     var isSelect = c.tagName === 'SELECT', isArea = c.tagName === 'TEXTAREA';
     if (!isSelect && !c.hasAttribute('placeholder')) c.setAttribute('placeholder', ' ');
-
-    /* outlined notch */
-    if (f.dataset.variant === 'outlined' && label && !f.querySelector(':scope > .s4-text-field-outline')) {
-      var fs = document.createElement('fieldset'); fs.className = 's4-text-field-outline'; fs.setAttribute('aria-hidden', 'true');
-      var lg = document.createElement('legend'), sp = document.createElement('span');
-      sp.textContent = label.textContent.trim(); lg.appendChild(sp); fs.appendChild(lg); f.appendChild(fs);
-    }
 
     /* select chevron */
     if (isSelect && !f.querySelector(':scope > select ~ .s4-icon, :scope > select ~ .s4-icon-button')) {

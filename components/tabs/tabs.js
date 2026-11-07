@@ -1,6 +1,5 @@
 /* Tabs behaviour (WAI-ARIA tabs, automatic activation).
-   - One indicator per tab list slides to the selected tab on the spatial spring: content width for primary tabs,
-     full tab width for secondary.
+   - One pill per tab list slides to the selected tab on the spatial spring (the tab's full width).
    - Panels (aria-controls) switch with the shared axis pattern: the old panel slides 30px away and fades out, the new
      one slides in from the side of the newly selected tab. Movement on the spatial spring, fades on effects.
    - Keys: Left / Right move and select (wrapping), Home / End go to the first / last tab. Roving tabindex.
@@ -22,14 +21,8 @@ S4.register('tabs', function (scope) {
     function place(animate) {
       var tab = list.querySelector('.s4-tab[aria-selected="true"]');
       if (!tab) { indicator.style.setProperty('--_w', '0px'); return; }
-      var lr = list.getBoundingClientRect(), x, w;
-      var base = lr.left + list.clientLeft - list.scrollLeft;
-      if (list.dataset.variant === 'secondary') {
-        var tr = tab.getBoundingClientRect(); x = tr.left - base; w = tr.width;
-      } else {
-        var range = document.createRange(); range.selectNodeContents(tab);
-        var cr = range.getBoundingClientRect(); x = cr.left - base; w = cr.width;
-      }
+      var lr = list.getBoundingClientRect(), tr = tab.getBoundingClientRect();
+      var base = lr.left + list.clientLeft - list.scrollLeft, x = tr.left - base, w = tr.width;
       indicator.toggleAttribute('data-animate', !!animate);
       indicator.style.setProperty('--_x', x + 'px');
       indicator.style.setProperty('--_w', w + 'px');

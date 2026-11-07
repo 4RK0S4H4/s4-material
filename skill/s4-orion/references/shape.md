@@ -10,7 +10,7 @@ large 16, large-increased 20, extra-large 28, extra-large-increased 32, extra-ex
 - Components use `--s4-shape-<component>`, which points at a step of the scale, so a component's corner is set in one place.
 - **Buttons are pills that square off while pressed** (full → small): M3 Expressive's shape morph, animated with the
   fast-spatial spring.
-- **Filled text fields** round only their top corners; the bottom edge stays square with its indicator line.
+- **Text fields** (the Quiet Box) round all corners at `--s4-shape-text-field` (medium, 12dp).
 - **Segmented lists** use extra-small inner corners inside a large outer group.
 - Edges that meet the screen stay square: a bottom sheet's bottom edge, full-screen dialogs, a docked toolbar.
 - Don't invent radii in app CSS; pick a step from the scale.
