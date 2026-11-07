@@ -111,5 +111,11 @@ window.S4_REVIEW_DEMOS = [
       { id: 'edge', label: 'The thin, slightly frostier edge line', options: [{ v: 'A', label: 'No Edge' }, { v: 'B', label: 'Frost Hairline' }, { v: 'C', label: 'Fainter Hairline' }, { v: 'D', label: 'Hairline + Soft Inner Fade' }, { v: 'E', label: 'Hairline + Hint of Top Light' }, { v: 'F', label: 'Hairline + Outer Hairline' }, { v: 'G', label: 'Thicker Frost Line' }, { v: 'H', label: 'C + D: Tight' }, { v: 'I', label: 'C + D: Fainter' }, { v: 'J', label: 'C + D: Softer Fade' }, { v: 'Other', label: 'Describe in notes' }] },
       { id: 'clarity', label: 'How clear should glass be', options: [{ v: 'A', label: 'More tint than shown' }, { v: 'B', label: 'About as shown' }, { v: 'C', label: 'Clearer than shown' }, { v: 'Other', label: 'Describe in notes' }] }
     ]
+  },
+  {
+    id: 'transparency3', title: 'Transparency Lab 3', href: 'explore/transparency3.html',
+    questions: [
+      { id: 'edge', label: 'Edge on the real UI', options: [{ v: 'H', label: 'C + D: Tight' }, { v: 'I', label: 'C + D: Fainter' }, { v: 'J', label: 'C + D: Softer Fade' }, { v: 'Other', label: 'Describe in notes' }] }
+    ]
   }
 ];
