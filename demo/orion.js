@@ -304,78 +304,78 @@
   /* ---------- emerge: the menu's shape grows out from a layer BELOW its button ----------
      The owner's "D, but from underneath": the container transform with the button staying, except the moving shape sits in a lower
      layer than the button instead of a higher one. A menu is in the browser's top layer, which always paints above the page, so the real
-     menu cannot be below the button. Instead a plain layer (a div, not in the top layer) is put in the button's own stacking context
-     just behind it (the button is lifted one step above it for the duration); that layer starts as exactly the button's rectangle,
-     color and corners and grows into the menu's final box. The real menu stays hidden until the layer has landed, then takes over
-     at the same place, still solid, the options fade in and the color fades to glass. Closing is the same backwards.
-     The button is never copied, moved or covered (its label stays put), and the layer has no backdrop-filter, so WebKit's
-     "clip-path does not clip backdrop-filter" problem cannot happen. Blur is never animated: it comes on under the solid menu. */
+     menu cannot be below the button. Instead a plain layer (a div, not in the top layer, no backdrop-filter) is put in the button's own
+     stacking context just behind it (the button is lifted one step above it for the duration). The layer covers the button AND the menu's
+     final box and never moves or resizes; only its clip-path animates, from a pill just inside the button to the menu's rounded box (a plain
+     solid div, so WebKit's clip-path-vs-backdrop-filter problem cannot happen, and nothing is laid out per frame). The real menu stays hidden
+     until the layer has landed, then takes over at the same place, still solid; the options fade in and the color fades to glass.
+     The blur is never animated, and its layer is built early: shortly before the handoff the menu is made visible at 1% opacity (so the browser
+     has built the blur) and the glass fade starts only after a short solid hold, so the blur never appears to pop in. Closing is the same backwards.
+     The button is never copied, moved or covered (its label stays put). A button with no fill (the three dots) grows from its hover circle. */
   function emerge(surface, source, opts) {
     var open = opts.open !== false;
     if (!source || !source.isConnected || M.reduced()) return fadeOnly(surface, open);
     var sp = M.spring(open ? 'spatial' : 'spatial-calm'), geo = { duration: sp.duration, easing: landing(sp.easing), fill: 'both' };
-    var fx = { duration: M.spring('fast-effects').duration, easing: 'linear', fill: 'both' };
+    var D = geo.duration, FADE = 260, HOLD = 120;
     if (open) {   /* never narrower than the button */
       surface.style.minWidth = Math.max(rect(source).width, parseFloat(getComputedStyle(surface).minWidth) || 0) + 'px';
       if (S4.position) S4.position(surface, source, { align: opts.align });
     }
     var s = rect(source), e = rect(surface), cs = getComputedStyle(source), ce = getComputedStyle(surface);
     var glass = rgba(ce.backgroundColor) || [0, 0, 0, 1], bgTo = ce.backgroundColor, solid = rgb(glass), glassy = glass[3] < 0.999;
-    /* what the layer starts as: the button's own fill; a button with none (a plain icon button) starts as its hover circle, the faint
-       tint of its own color over what is behind it, so it is the hover shape that grows into the menu */
-    var own = rgba(cs.backgroundColor), page = rgba(visibleBg(source)) || [255, 255, 255, 1], fg = rgba(cs.color) || [0, 0, 0, 1];
-    var bgFrom = own && own[3] > 0.5 ? cs.backgroundColor : rgb([0, 1, 2].map(function (i) { return page[i] * 0.88 + fg[i] * 0.12; }));
+    var own = rgba(cs.backgroundColor), hasFill = own && own[3] > 0.5;
+    var page = rgba(visibleBg(source)) || [255, 255, 255, 1], fg = rgba(cs.color) || [0, 0, 0, 1];
+    var bgFrom = hasFill ? cs.backgroundColor : rgb([0, 1, 2].map(function (i) { return page[i] * 0.88 + fg[i] * 0.12; }));
     var content = Array.prototype.slice.call(surface.children);
-    /* the layer, right behind the button */
+    /* the start is a pill a hair INSIDE the button: a button squares off while pressed and springs back, and any of the layer outside that
+       moving edge would show as a glitch */
+    var IN = 2, sIn = { left: s.left + IN, top: s.top + IN, right: s.right - IN, bottom: s.bottom - IN };
+    var U = { left: Math.min(sIn.left, e.left), top: Math.min(sIn.top, e.top), right: Math.max(sIn.right, e.right), bottom: Math.max(sIn.bottom, e.bottom) };
+    var inset = function (r, radius) { return 'inset(' + (r.top - U.top) + 'px ' + (U.right - r.right) + 'px ' + (U.bottom - r.bottom) + 'px ' + (r.left - U.left) + 'px round ' + radius + ')'; };
+    var rBtn = Math.min(sIn.right - sIn.left, sIn.bottom - sIn.top) / 2 + 'px', rMenu = ce.borderTopLeftRadius;
+    var from = inset(sIn, rBtn), to = inset({ left: e.left, top: e.top, right: e.right, bottom: e.bottom }, rMenu);
     var layer = document.createElement('div'); layer.setAttribute('aria-hidden', 'true'); layer.className = 's4-emerge-layer';
-    var box = function (r, radius) { return { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', borderRadius: radius }; };
-    /* the layer starts a hair INSIDE the button, as a pill: a button squares off while pressed and springs back, and anything of the layer outside that
-       moving edge would show as a glitch; a pill 2px smaller always stays hidden behind it */
-    var IN = 2, sIn = { left: s.left + IN, top: s.top + IN, width: Math.max(2, s.width - 2 * IN), height: Math.max(2, s.height - 2 * IN) };
-    var rBtn = Math.min(sIn.width, sIn.height) / 2 + 'px', rMenu = ce.borderTopLeftRadius;
-    Object.assign(layer.style, { position: 'fixed', margin: '0', padding: '0', border: '0', pointerEvents: 'none', zIndex: '0', boxShadow: 'none' }, box(open ? sIn : e, open ? rBtn : rMenu));
-    var posBefore = source.style.position, zBefore = source.style.zIndex, cpos = cs.position;
-    if (cpos === 'static') source.style.position = 'relative';
-    source.style.zIndex = String((parseInt(cs.zIndex, 10) || 0) + 1);
-    layer.style.zIndex = String(parseInt(cs.zIndex, 10) || 0);
+    Object.assign(layer.style, { position: 'fixed', left: U.left + 'px', top: U.top + 'px', width: (U.right - U.left) + 'px', height: (U.bottom - U.top) + 'px', margin: '0', padding: '0', border: '0', pointerEvents: 'none', boxShadow: 'none', backgroundColor: solid });
+    var posBefore = source.style.position, zBefore = source.style.zIndex, z0 = parseInt(cs.zIndex, 10) || 0;
+    if (cs.position === 'static') source.style.position = 'relative';
+    source.style.zIndex = String(z0 + 1); layer.style.zIndex = String(z0);
     source.parentNode.insertBefore(layer, source);
     var restore = function () { layer.remove(); source.style.position = posBefore; source.style.zIndex = zBefore; };
-    var hideMenu = function () { surface.style.visibility = 'hidden'; }, showMenu = function () { surface.style.visibility = ''; };
-    var flat = { backdropFilter: 'none', webkitBackdropFilter: 'none' };
-    var D = geo.duration, F = fx.duration, glassIn = function () {
-      /* a short hold before the fade: the first frames with the blur on are the expensive ones (the browser builds the blur layer), and the surface is solid and unchanging while it does */
-      return glassy ? done(surface.animate([{ backgroundColor: solid }, { backgroundColor: bgTo }], { duration: fx.duration, delay: 80, easing: 'linear', fill: 'both' })).then(function () { surface.getAnimations().forEach(function (a) { a.cancel(); }); }) : Promise.resolve();
-    };
+    var lin = function (ms, delay) { return { duration: ms, delay: delay || 0, easing: 'linear', fill: 'both' }; };
+    var all = [], add = function (el, kf, o) { var an = el.animate(kf, o); all.push(an); return an; };
+    var T1 = FADE * 0.8, EPS = 0.001;
+    var wipe = function () { all.forEach(function (an) { an.cancel(); }); all = []; };
+    /* ONE timeline per direction (every animation is created up front; later phases are delays), so the scrubber can step through all of it */
     if (open) {
-      hideMenu();
-      var grow = layer.animate([box(sIn, rBtn), box(e, rMenu)], geo);
-      layer.animate([{ backgroundColor: bgFrom }, { backgroundColor: solid }], { duration: D, easing: 'linear', fill: 'both' });
-      layer.animate([{ opacity: 0 }, { opacity: 1, offset: 0.1 }, { opacity: 1 }], { duration: D, easing: 'linear', fill: 'both' });
-      return done(grow).then(function () {
-        /* hand over: the menu appears exactly where the layer is, solid; same task, so there is no frame without a shape */
-        var hold = surface.animate([{ backgroundColor: solid, backdropFilter: 'none', webkitBackdropFilter: 'none' }, { backgroundColor: solid, backdropFilter: 'none', webkitBackdropFilter: 'none' }], { duration: 1, fill: 'forwards' });
-        showMenu();
-        var first = surface.querySelector('.s4-menu-item[aria-checked="true"]') || surface.querySelector('.s4-menu-item:not(:disabled)');   /* the menu was hidden when it opened, so focus could not move into it then */
+      /* [0, D] the layer grows. [D, ...] the real menu takes over, solid, holds, then fades to glass. The menu is made 1% visible shortly before
+         the handoff so the browser has built the blur by then. */
+      surface.style.pointerEvents = 'none';
+      var grow = add(layer, [{ clipPath: from }, { clipPath: to }], geo);
+      add(layer, [{ backgroundColor: bgFrom }, { backgroundColor: solid }], lin(D));
+      add(layer, [{ opacity: 0 }, { opacity: 1, offset: 0.1 }, { opacity: 1 }], lin(D));
+      add(surface, [{ opacity: 0, offset: 0 }, { opacity: 0, offset: 0.549 }, { opacity: 0.01, offset: 0.55 }, { opacity: 0.01, offset: 1 - EPS }, { opacity: 1, offset: 1 }], lin(D));
+      add(surface, glassy ? [{ backgroundColor: solid }, { backgroundColor: solid, offset: HOLD / (HOLD + FADE) }, { backgroundColor: bgTo }] : [{ backgroundColor: solid }, { backgroundColor: solid }], lin(HOLD + FADE, D));
+      content.forEach(function (c) { add(c, [{ opacity: 0 }, { opacity: 1 }], lin(HOLD + 120, D)); });
+      var last = all.reduce(function (m, an) { return an.effect.getComputedTiming().endTime > m.effect.getComputedTiming().endTime ? an : m; }, all[0]);
+      done(grow).then(function () {
+        surface.style.pointerEvents = '';
+        var first = surface.querySelector('.s4-menu-item[aria-checked="true"]') || surface.querySelector('.s4-menu-item:not(:disabled)');   /* it was not visible when it opened, so focus could not move in then */
         if (first && first !== document.activeElement) first.focus({ preventScroll: true });
-        content.forEach(function (c) { c.animate([{ opacity: 0 }, { opacity: 1 }], { duration: F, easing: 'linear', fill: 'backwards' }); });
         restore();
-        hold.cancel();   /* the blur comes on here, under a surface that is still solid */
-        return glassIn();
       });
+      return done(last).then(function () { wipe(); restore(); surface.style.opacity = ''; surface.style.pointerEvents = ''; });
     }
-    /* close: color to solid, then the layer takes over from the menu and folds back into the button */
-    var toSolid = glassy ? surface.animate([{ backgroundColor: bgTo }, { backgroundColor: solid }], fx) : null;
-    layer.style.visibility = 'hidden';
-    return (toSolid ? done(toSolid) : Promise.resolve()).then(function () {
-      content.forEach(function (c) { c.animate([{ opacity: 1 }, { opacity: 0 }], { duration: F, easing: 'linear', fill: 'both' }); });
-      layer.style.backgroundColor = solid; layer.style.visibility = '';
-      var shrink = layer.animate([box(e, rMenu), box(sIn, rBtn)], geo);
-      layer.animate([{ backgroundColor: solid }, { backgroundColor: bgFrom }], { duration: D, easing: 'linear', fill: 'both' });
-      layer.animate([{ opacity: 1 }, { opacity: 1, offset: 0.9 }, { opacity: 0 }], { duration: D, easing: 'linear', fill: 'both' });
-      hideMenu();
-      if (toSolid) toSolid.cancel();
-      return done(shrink).then(function () { restore(); surface.getAnimations().forEach(function (a) { a.cancel(); }); content.forEach(function (c) { c.getAnimations().forEach(function (a) { a.cancel(); }); }); surface.style.minWidth = ''; });
-    });
+    /* close: [0, T1] the glass settles to solid; then the menu is gone and the layer, at the menu's place, folds back into the button */
+    surface.style.pointerEvents = 'none';
+    layer.style.opacity = '0';
+    if (glassy) add(surface, [{ backgroundColor: bgTo }, { backgroundColor: solid }], lin(T1));
+    add(surface, [{ opacity: 1 }, { opacity: 0 }], lin(1, T1));
+    content.forEach(function (c) { add(c, [{ opacity: 1 }, { opacity: 0 }], lin(120, T1 * 0.5)); });
+    var shrink = add(layer, [{ clipPath: to }, { clipPath: from }], { duration: D, delay: T1, easing: geo.easing, fill: 'both' });
+    add(layer, [{ backgroundColor: solid }, { backgroundColor: bgFrom }], lin(D, T1));
+    /* a button with a fill of its own is hidden behind by the layer's identical color; a button with none dissolves slowly into its hover circle */
+    add(layer, hasFill ? [{ opacity: 0, offset: 0 }, { opacity: 1, offset: EPS }, { opacity: 1, offset: 0.9 }, { opacity: 0, offset: 1 }] : [{ opacity: 0, offset: 0 }, { opacity: 1, offset: EPS }, { opacity: 1, offset: 0.35 }, { opacity: 0, offset: 1 }], lin(D, T1));
+    return done(shrink).then(function () { wipe(); restore(); surface.style.opacity = ''; surface.style.pointerEvents = ''; surface.style.minWidth = ''; });
   }
 
   /* ---------- expand in place: the button's shape grows into the menu, one solid piece ----------
