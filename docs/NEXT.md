@@ -84,7 +84,7 @@ headers): **Style Lab answered and applied (0009):** Quiet Box text fields, Soft
 ## Style Lab 2 answers applied (2026-11-07, [0011](decisions/0011-style-lab-2.md))
 
 Notched button groups and the centered-card phone sheet are in. Sliders and glass edge stay undecided. The owner wants to
-explore liquid glass aspects to replace the blur sections: **[Liquid Glass Lab 3](../explore/liquid3.html)** tries a
+explore liquid glass aspects to replace the blur sections. Correction to what Lab 3 implied: the WebGL engine can run over a real page if a snapshot of the DOM is the texture (the glass canvas is transparent outside the glass shapes). **[Liquid Glass Lab 4](../explore/liquid4.html)** proves that in Chromium (live DOM, SVG-foreignObject snapshot, same engine); the open risk is Safari/WebKit and keeping the snapshot fresh (animations, hover, images, fonts). If it works on the iPhone: build it as `S4.glass` for a few chrome surfaces (nav bar, toolbar, menu, dialog) with blur as fallback. **[Liquid Glass Lab 3](../explore/liquid3.html)** tries a
 DOM-only way (a live copy of the content inside the glass; blurred middle, magnified rim) that should run on iPhone. Needs
 the owner's pick and an iPhone check (performance, Safari). If liked: build `S4.glass` enhancement for a few chrome
 surfaces (nav bar, toolbar, menu), with today's blur as the fallback. Real WebGL refraction only works over canvases.
@@ -137,6 +137,7 @@ labs could load `components/assets/` instead of their own copies.
 
 ## Session log
 
+- 2026-11-07 (late): Liquid Glass Lab 4 (WebGL glass over real DOM via snapshot) published for the owner's iPhone check.
 - 2026-11-07 (Lab 2 answers): Notched groups + centered-card phone sheets (0011); Liquid Glass Lab 3 published. Next: owner's pick and iPhone check; sliders/glass edge undecided; Tables Lab; 1.0.0.
 - 2026-11-07 (round 2): 0010 fixes shipped; Style Lab 2 published (groups, sliders, sheets, glass edge). Next: owner picks, then implement; Tables Lab; iPhone check; 1.0.0.
 - 2026-11-07 (Style Lab): applied Quiet Box fields, Soft Square checkboxes, tray tabs (0009). Next: Tables Lab, iPhone check, 1.0.0.

@@ -9,6 +9,7 @@ reviewed, and they save answers in the browser so several labs can be worked thr
 | `states-shape.html` | States A (stock M3), Shape A (stock M3 Expressive), default color Mono |
 | `motion.html` | Springs D (M3 Expressive) |
 | `liquid-glass.html` | Not adopted: liquid glass (refraction + frost) was explored and shelved; 0004 glass stays ([0006](../docs/decisions/0006-liquid-glass.md)) |
+| `liquid4.html` | Open: the WebGL liquid glass over a real DOM page, using a snapshot of the page as the texture (needs the iPhone check) |
 | `liquid3.html` | Open: glass with a magnified-rim copy of the content behind it (iPhone-safe, no WebGL) |
 | `style2.html` | Open: button groups, sliders, phone sheets and glass edge looks |
 | `style.html` | Open: alternative looks (less Material) for text fields, checkboxes, tables and tab headers |

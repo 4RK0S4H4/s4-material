@@ -90,4 +90,12 @@ window.S4_REVIEW_DEMOS = [
       { id: 'device', label: 'On your iPhone', options: [{ v: 'A', label: 'Smooth and right' }, { v: 'B', label: 'Looks right but slow' }, { v: 'C', label: 'Looks wrong or broken' }, { v: 'Other', label: 'Describe in notes' }] }
     ]
   }
+  ,
+  {
+    id: 'liquid4', title: 'Liquid Glass Lab 4', href: 'explore/liquid4.html',
+    questions: [
+      { id: 'glass', label: 'WebGL glass over a real page', options: [{ v: 'A', label: 'Liquid Frost' }, { v: 'B', label: 'Heavy Frost' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'device', label: 'On your iPhone', options: [{ v: 'A', label: 'Shows and follows scrolling, smooth' }, { v: 'B', label: 'Shows but slow or laggy' }, { v: 'C', label: 'Glass missing, blank or wrong' }, { v: 'Other', label: 'Describe in notes' }] }
+    ]
+  }
 ];
