@@ -154,7 +154,7 @@
      height, radius) animates, and the options keep their final width inside it (hidden by overflow) so nothing reflows.
      Blur is never animated either: the surface is solid with no blur while it moves; once landed the blur comes on under
      the still-solid surface and only the color fades to glass. Closing: color to solid, then the box folds back. */
-  function emerge(surface, source, opts) {
+  function emergeBox(surface, source, opts) {
     var open = opts.open !== false;
     if (!source || !source.isConnected || M.reduced()) return fadeOnly(surface, open);
     var sp = M.spring(open ? 'spatial' : 'spatial-calm'), geo = { duration: sp.duration, easing: landing(sp.easing), fill: 'both' }, lin = { duration: sp.duration, easing: 'linear', fill: 'both' };
@@ -204,6 +204,62 @@
       all.forEach(function (an) { an.cancel(); });
       surface.style.overflow = prevOverflow; content.forEach(function (c) { c.style.width = ''; c.style.flex = ''; });
       surface.style.minWidth = open ? minW : '';
+    });
+  }
+
+  /* ---------- emerge, as a layer: the menu's surface grows out from BEHIND its button ----------
+     This is the real "underneath": the surface's shape starts as exactly the button's rectangle and grows to the menu, and the
+     part of it that overlaps the button is cut out (an even-odd clip with the button's rect as a hole), so the real button always
+     shows on top of it, untouched: its label never moves, nothing is copied. At the start the shape equals the hole, so nothing
+     is visible and nothing pops. The menu itself never moves or resizes, so nothing reflows.
+     WebKit paints backdrop-filter in a layer a clip does not clip, so the blur is switched off outright (an inline !important)
+     while the shape moves and the surface is solid; once landed, the blur comes on under the still-solid surface and only the
+     color fades to glass. Closing is the same backwards. Needs clip-path: path(); without it, emergeBox (the box grows) is used. */
+  function emerge(surface, source, opts) {
+    var open = opts.open !== false;
+    if (!source || !source.isConnected || M.reduced()) return fadeOnly(surface, open);
+    if (!(window.CSS && CSS.supports && CSS.supports('clip-path', 'path(evenodd, "M0 0 L1 0 L1 1 Z")'))) return emergeBox(surface, source, opts);
+    var sp = M.spring(open ? 'spatial' : 'spatial-calm'), geo = { duration: sp.duration, easing: landing(sp.easing), fill: 'both' };
+    var fx = { duration: M.spring('fast-effects').duration, easing: 'linear', fill: 'both' };
+    if (open) {   /* never narrower than the button */
+      surface.style.minWidth = Math.max(rect(source).width, parseFloat(getComputedStyle(surface).minWidth) || 0) + 'px';
+      if (S4.position) S4.position(surface, source, { align: opts.align });
+    }
+    var s = rect(source), e = rect(surface), cs = getComputedStyle(source), ce = getComputedStyle(surface);
+    var glass = rgba(ce.backgroundColor) || [0, 0, 0, 1], bgTo = ce.backgroundColor, solid = rgb(glass), glassy = glass[3] < 0.999, bgFrom = visibleBg(source);
+    var content = Array.prototype.slice.call(surface.children);
+    var bx = s.left - e.left, by = s.top - e.top, rbtn = parseFloat(cs.borderTopLeftRadius) || 0, rmenu = parseFloat(ce.borderTopLeftRadius) || 0;
+    var n = function (v) { return Math.round(v * 100) / 100; };
+    var rr = function (x, y, w, h, r) {   /* a rounded rectangle as path commands; always the same commands, so two of them interpolate */
+      r = Math.max(0, Math.min(r, w / 2, h / 2)); x = n(x); y = n(y); w = n(w); h = n(h); r = n(r);
+      return 'M ' + (x + r) + ' ' + y + ' H ' + (x + w - r) + ' A ' + r + ' ' + r + ' 0 0 1 ' + (x + w) + ' ' + (y + r) + ' V ' + (y + h - r) + ' A ' + r + ' ' + r + ' 0 0 1 ' + (x + w - r) + ' ' + (y + h) + ' H ' + (x + r) + ' A ' + r + ' ' + r + ' 0 0 1 ' + x + ' ' + (y + h - r) + ' V ' + (y + r) + ' A ' + r + ' ' + r + ' 0 0 1 ' + (x + r) + ' ' + y + ' Z';
+    };
+    var hole = rr(bx, by, s.width, s.height, rbtn);
+    var shapeAt = function (small) { return 'path(evenodd, "' + (small ? rr(bx, by, s.width, s.height, rbtn) : rr(0, 0, e.width, e.height, rmenu)) + ' ' + hole + '")'; };
+    var important = function (on) { ['backdrop-filter', '-webkit-backdrop-filter'].forEach(function (k) { if (on) surface.style.setProperty(k, 'none', 'important'); else surface.style.removeProperty(k); }); };
+    var all = [], add = function (el, kf, o) { var an = el.animate(kf, o); all.push(an); return an; };
+    var D = geo.duration, F = fx.duration, shape;
+    if (open) {
+      important(true);
+      shape = add(surface, [{ clipPath: shapeAt(true) }, { clipPath: shapeAt(false) }], geo);
+      add(surface, [{ backgroundColor: bgFrom }, { backgroundColor: solid }], { duration: D, easing: 'linear', fill: 'both' });
+      add(surface, [{ backgroundColor: solid }, { backgroundColor: bgTo }], { duration: F, delay: D, easing: 'linear', fill: 'both' });
+      add(surface, [{ opacity: 0 }, { opacity: 1, offset: 0.12 }, { opacity: 1 }], { duration: D, easing: 'linear', fill: 'backwards' });   /* identical shapes can leave an antialiasing hairline: invisible at 0 */
+      content.forEach(function (c) { add(c, [{ opacity: 0 }, { opacity: 0, offset: 0.35 }, { opacity: 1 }], { duration: D, easing: 'linear', fill: 'both' }); });
+      shape.finished.then(function () { important(false); }, function () {});   /* landed: the blur comes on under the solid surface */
+    } else {
+      var toSolid = glassy ? add(surface, [{ backgroundColor: bgTo }, { backgroundColor: solid }], { duration: F, easing: 'linear', fill: 'both' }) : null;
+      shape = add(surface, [{ clipPath: shapeAt(false) }, { clipPath: shapeAt(true) }], { duration: D, delay: F, easing: geo.easing, fill: 'both' });
+      add(surface, [{ backgroundColor: solid }, { backgroundColor: bgFrom }], { duration: D, delay: F, easing: 'linear', fill: 'both' });
+      add(surface, [{ opacity: 1 }, { opacity: 1, offset: 0.88 }, { opacity: 0 }], { duration: D, delay: F, easing: 'linear', fill: 'forwards' });
+      content.forEach(function (c) { add(c, [{ opacity: 1 }, { opacity: 0, offset: 0.2 }, { opacity: 0 }], { duration: D, delay: F, easing: 'linear', fill: 'both' }); });
+      (toSolid ? toSolid.finished : Promise.resolve()).then(function () { important(true); }, function () {});   /* solid reached: now the blur can go off */
+    }
+    var last = all.reduce(function (m, an) { return an.effect.getComputedTiming().endTime > m.effect.getComputedTiming().endTime ? an : m; }, all[0]);
+    return done(last).then(function () {
+      all.forEach(function (an) { an.cancel(); });
+      important(false);
+      if (!open) surface.style.minWidth = '';
     });
   }
 
