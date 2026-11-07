@@ -175,27 +175,28 @@
     var prevOverflow = surface.style.overflow;
     surface.style.overflow = 'hidden';
     content.forEach(function (c) { c.style.width = (e.width - padH) + 'px'; c.style.flex = 'none'; });   /* the options lay out at their final width */
-    var cancel = function () { surface.getAnimations().forEach(function (a) { a.cancel(); }); content.forEach(function (c) { c.getAnimations().forEach(function (a) { a.cancel(); }); }); };
-    var finish = function () { cancel(); surface.style.overflow = prevOverflow; content.forEach(function (c) { c.style.width = ''; c.style.flex = ''; }); };
     var flat = function (bg) { return { backgroundColor: bg, backdropFilter: 'none', webkitBackdropFilter: 'none' }; };
+    var D = geo.duration, F = fx.duration, all = [];
+    var add = function (el, kf, o) { var an = el.animate(kf, o); all.push(an); return an; };
+    /* ONE timeline, every animation created up front (the later phases are delays, not promises), so a test page can scrub it by setting
+       every animation's currentTime (explore/lib/scrub.js). Open: [0, D] the box and the solid color, then [D, D+F] the color fades to glass.
+       The solid phase's animation has no end fill, so at D the blur comes on under a surface that is still solid. Close mirrors it. */
     if (open) {
-      var shape = surface.animate([box(true), box(false)], geo);
-      surface.animate([flat(bgFrom), flat(solid)], lin);
-      content.forEach(function (c) { c.animate([{ opacity: 0 }, { opacity: 0, offset: 0.35 }, { opacity: 1 }], lin); });
-      return done(shape).then(function () {
-        cancel();   /* the blur comes on here, under a surface that is still solid */
-        surface.style.overflow = prevOverflow; content.forEach(function (c) { c.style.width = ''; c.style.flex = ''; });
-        if (!glassy) return;
-        return done(surface.animate([{ backgroundColor: solid }, { backgroundColor: bgTo }], fx)).then(function () { surface.getAnimations().forEach(function (a) { a.cancel(); }); });
-      });
+      add(surface, [box(true), box(false)], geo);
+      add(surface, [{ backgroundColor: solid }, { backgroundColor: bgTo }], { duration: F, delay: D, easing: 'linear', fill: 'both' });
+      add(surface, [flat(bgFrom), flat(solid)], { duration: D, easing: 'linear', fill: 'none' });
+      content.forEach(function (c) { add(c, [{ opacity: 0 }, { opacity: 0, offset: 0.35 }, { opacity: 1 }], { duration: D, easing: 'linear', fill: 'both' }); });
+    } else {
+      if (glassy) add(surface, [{ backgroundColor: bgTo }, { backgroundColor: solid }], { duration: F, easing: 'linear', fill: 'both' });
+      add(surface, [box(false), box(true)], { duration: D, delay: F, easing: geo.easing, fill: 'both' });
+      add(surface, [flat(solid), flat(bgFrom)], { duration: D, delay: F, easing: 'linear', fill: 'forwards' });
+      content.forEach(function (c) { add(c, [{ opacity: 1 }, { opacity: 0, offset: 0.2 }, { opacity: 0 }], { duration: D, delay: F, easing: 'linear', fill: 'both' }); });
     }
-    var toSolid = glassy ? surface.animate([{ backgroundColor: bgTo }, { backgroundColor: solid }], fx) : null;
-    return (toSolid ? done(toSolid) : Promise.resolve()).then(function () {
-      var shape = surface.animate([box(false), box(true)], geo);
-      surface.animate([flat(solid), flat(bgFrom)], lin);   /* started before the color animation is cancelled, so the blur goes off under a solid surface */
-      if (toSolid) toSolid.cancel();
-      content.forEach(function (c) { c.animate([{ opacity: 1 }, { opacity: 0, offset: 0.2 }, { opacity: 0 }], lin); });
-      return done(shape).then(function () { finish(); surface.style.minWidth = ''; });
+    var last = all.reduce(function (m, an) { return an.effect.getComputedTiming().endTime > m.effect.getComputedTiming().endTime ? an : m; }, all[0]);
+    return done(last).then(function () {
+      all.forEach(function (an) { an.cancel(); });
+      surface.style.overflow = prevOverflow; content.forEach(function (c) { c.style.width = ''; c.style.flex = ''; });
+      if (!open) surface.style.minWidth = '';
     });
   }
 

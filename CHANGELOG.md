@@ -18,6 +18,7 @@ The first version of S4 Orion, a leaner rebuild of S4 Material 1.3 on Material 3
 - Glass: frost line thinner (0.5px, 28%) and drawn only on the content-facing edge of full-width bars (decision 0016). The demo's stylesheet copy is now built and checked by `npm run build`.
 - No shadows anywhere (decision 0017): all elevation tokens are flat.
 - Menu motion (decision 0018): menus now emerge from underneath their button (default `emerge`): only the shape moves, the button and its label stay still. Other styles via `data-motion` (`quiet` is the old unfold).
+- Review labs: an animation scrubber (`explore/lib/scrub.js`, also `demo/index.html?scrub`) to freeze and drag through any animation.
 - Review labs: a picked card or chip can be tapped again to deselect.
 
 ### Explored (not part of 1.0.0 yet)
