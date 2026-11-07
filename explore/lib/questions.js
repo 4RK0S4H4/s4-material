@@ -82,4 +82,12 @@ window.S4_REVIEW_DEMOS = [
       { id: 'glass', label: 'Glass edge', options: [{ v: 'A', label: 'Blur Only (today)' }, { v: 'B', label: 'Light Rim' }, { v: 'C', label: 'Thick Pane' }, { v: 'Other', label: 'Describe in notes' }] }
     ]
   }
+  ,
+  {
+    id: 'liquid3', title: 'Liquid Glass Lab 3', href: 'explore/liquid3.html',
+    questions: [
+      { id: 'glass', label: 'Glass over moving content', options: [{ v: 'A', label: 'Blur Only (today)' }, { v: 'B', label: 'Magnified Rim' }, { v: 'C', label: 'Thick Pane' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'device', label: 'On your iPhone', options: [{ v: 'A', label: 'Smooth and right' }, { v: 'B', label: 'Looks right but slow' }, { v: 'C', label: 'Looks wrong or broken' }, { v: 'Other', label: 'Describe in notes' }] }
+    ]
+  }
 ];

@@ -81,7 +81,15 @@ Fixed and published: faster springs, glass timing in container transforms, no wh
 table sort, checkbox uncheck, slider end dot. **Open:** "still looks very Material" (text fields, checkboxes, tables, tab
 headers): **Style Lab answered and applied (0009):** Quiet Box text fields, Soft Square checkboxes, Segmented Tray tabs. **Tables undecided:** the owner wants more exploration and context (where tables appear); build a Tables Lab with tables in their real places (Activity view, phone list reflow, selection, sort) and 2-3 directions. Still open: the iPhone check (Safari: glass during container transforms, menus, new tabs). 1.0.0 waits for these.
 
-## Owner critique round 2 (2026-11-07, later), see [0010](decisions/0010-owner-critique-round-2.md)
+## Style Lab 2 answers applied (2026-11-07, [0011](decisions/0011-style-lab-2.md))
+
+Notched button groups and the centered-card phone sheet are in. Sliders and glass edge stay undecided. The owner wants to
+explore liquid glass aspects to replace the blur sections: **[Liquid Glass Lab 3](../explore/liquid3.html)** tries a
+DOM-only way (a live copy of the content inside the glass; blurred middle, magnified rim) that should run on iPhone. Needs
+the owner's pick and an iPhone check (performance, Safari). If liked: build `S4.glass` enhancement for a few chrome
+surfaces (nav bar, toolbar, menu), with today's blur as the fallback. Real WebGL refraction only works over canvases.
+
+## Owner critique round 2 (2026-11-07, earlier), see [0010](decisions/0010-owner-critique-round-2.md)
 
 Done: no progress stop dot, pill snackbar with a quiet arrival, rounder and quieter menus, fully round tabs, sliding nav
 highlight (bar and rail). **Awaiting the owner's picks in [Style Lab 2](../explore/style2.html):** button groups (unique
@@ -129,6 +137,7 @@ labs could load `components/assets/` instead of their own copies.
 
 ## Session log
 
+- 2026-11-07 (Lab 2 answers): Notched groups + centered-card phone sheets (0011); Liquid Glass Lab 3 published. Next: owner's pick and iPhone check; sliders/glass edge undecided; Tables Lab; 1.0.0.
 - 2026-11-07 (round 2): 0010 fixes shipped; Style Lab 2 published (groups, sliders, sheets, glass edge). Next: owner picks, then implement; Tables Lab; iPhone check; 1.0.0.
 - 2026-11-07 (Style Lab): applied Quiet Box fields, Soft Square checkboxes, tray tabs (0009). Next: Tables Lab, iPhone check, 1.0.0.
 - 2026-11-07 (later): owner critique fixes (0008). Next: Style Lab for a less-Material look, then iPhone check, then 1.0.0.

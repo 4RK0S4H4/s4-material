@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>S4 Orion: Liquid Glass Lab 3</title>
+<link rel="stylesheet" href="../components/orion.css?v=1">
+<style>
+body{margin:0;background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface)}
+h1,h2,p{margin:0}
+.bar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;padding:12px 24px;background:var(--md-sys-color-surface-container);border-bottom:1px solid var(--md-sys-color-outline-variant)}
+.bar h1{font-size:22px;line-height:28px;font-weight:500;margin-right:auto}
+.ctl{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;letter-spacing:.5px}
+.page{max-width:1200px;margin:0 auto;padding:24px 24px 64px;display:flex;flex-direction:column;gap:48px}
+.intro{max-width:80ch;color:var(--md-sys-color-on-surface-variant);display:flex;flex-direction:column;gap:12px}
+.sec > h2{font-size:28px;line-height:36px;font-weight:500;margin-bottom:6px}
+.sec > p{color:var(--md-sys-color-on-surface-variant);max-width:85ch;margin-bottom:16px}
+.cards{--rv-min:300px}
+.pv{padding:16px;display:flex;justify-content:center;background:var(--md-sys-color-surface-container-low);border-radius:16px}
+footer{padding:24px;text-align:center;font-size:12px;color:var(--md-sys-color-on-surface-variant)}
+.lp{position:relative;width:260px;height:440px;border-radius:28px;overflow:hidden;background:#111;box-shadow:0 0 0 6px var(--md-sys-color-surface-container-highest)}
+.lf{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+.lf::-webkit-scrollbar{display:none}
+.fi{width:260px;padding:64px 12px 90px;display:flex;flex-direction:column;gap:10px;box-sizing:border-box}
+.fc{border-radius:18px;padding:14px;color:#fff;font-size:15px;font-weight:600;line-height:1.25;min-height:64px;display:flex;flex-direction:column;justify-content:flex-end;gap:2px}
+.fc small{font-weight:400;opacity:.85;font-size:12px}
+.gl{position:absolute;overflow:hidden;border-radius:999px;color:#fff;isolation:isolate;box-shadow:0 8px 20px rgba(0,0,0,.35)}
+.gl.nav{left:14px;right:14px;bottom:14px;height:58px}
+.gl.top{left:14px;right:14px;top:12px;height:44px}
+.gl .cl{position:absolute;left:0;top:0;pointer-events:none;will-change:transform}
+.gl .base{position:absolute;inset:0;overflow:hidden}
+.gl .base .cl{filter:blur(9px) saturate(1.35) brightness(.92)}
+.gl .rim{position:absolute;inset:0;overflow:hidden;box-sizing:border-box;padding:var(--rw,12px);border-radius:inherit;-webkit-mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);mask-composite:exclude}
+.gl .rim .cl{filter:blur(.6px) saturate(1.5) brightness(1.12)}
+.gl .tint{position:absolute;inset:0;background:rgba(20,20,28,.34);z-index:1}
+.gl .items{position:absolute;inset:0;z-index:3;display:flex;align-items:center;justify-content:space-around;font-size:12px;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.gl .sheen{position:absolute;inset:0;border-radius:inherit;z-index:2;pointer-events:none}
+.gl.A{-webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3);background:rgba(20,20,28,.36)}
+.gl.B .sheen{box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)}
+.gl.C .sheen{box-shadow:inset 0 0 0 1px rgba(255,255,255,.4),inset 0 2px 5px rgba(255,255,255,.45),inset 0 -3px 7px rgba(0,0,0,.2)}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>S4 Orion: Liquid Glass Lab 3</h1>
+  <div class="ctl">Theme <div class="s4-button-group" data-connected data-select="single" data-fit="content" id="theme" aria-label="Theme">
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="light" aria-pressed="true">Light</button>
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="dark">Dark</button></div></div>
+</div>
+<main class="page">
+  <div class="intro">
+    <p>You liked how the WebGL liquid glass looks and want some of it in place of today's blur. WebGL can only bend a canvas, and an app's page isn't one, so this lab tries another way that also runs on iPhone: a glass surface holds a live copy of the content behind it. The middle of the copy is blurred (like today); the rim band holds a <b>magnified</b> copy, which makes content bend at the edge like a thick piece of glass. No backdrop-filter and no WebGL.</p>
+    <p>Scroll the feed inside each phone: the glass follows it. Try it on your iPhone; this is the part I can't test in Safari. Cost: the page behind is duplicated inside each glass surface, so it suits a few chrome surfaces (nav bar, toolbar, menu), not everything.</p>
+    <p>Tap a card (above its preview) to pick one; Other plus a note if none is right.</p>
+  </div>
+  <div id="sections"></div>
+</main>
+<footer><a href="../">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0)</footer>
+
+<script src="../components/assets/m3color.js"></script>
+<script src="../components/assets/icons.js"></script>
+<script src="../components/orion.js?v=1"></script>
+<script src="lib/icon-options.js?v=1"></script>
+<script src="lib/questions.js?v=13"></script>
+<script src="lib/review.js?v=8"></script>
+<script>
+const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+const COL = [['#ff7a59','#c13584'],['#3b4cca','#00b4d8'],['#f9c74f','#f3722c'],['#43aa8b','#277da1'],['#b5179e','#560bad'],['#ef476f','#ffd166']];
+const TXT = ['Electric Co.', 'Iron Mountain', 'Comcast Business', 'Staples', 'Xcel Energy', 'Acme Insurance', 'Slack', 'Adobe Creative Cloud', 'WeWork', 'AWS'];
+function feed() {
+  const f = h('<div class="fi"></div>');
+  TXT.forEach((t, i) => { const c = COL[i % COL.length]; f.appendChild(h(`<div class="fc" style="background:linear-gradient(${120 + i * 25}deg,${c[0]},${c[1]})">${t}<small>Due Oct ${10 + i} · $${(i * 137 % 900) + 40}.00</small></div>`)); });
+  return f;
+}
+const OPTS = {
+  A: { name: 'Blur Only (today)', tag: 'Today', desc: 'Frosted with backdrop blur; nothing bends.', cls: 'A', mag: 1, rim: 0 },
+  B: { name: 'Magnified Rim', desc: 'Blurred middle, and a clear rim band where the content behind is magnified, so it bends at the edge. A light rim line.', cls: 'B', mag: 1.16, rim: 11 },
+  C: { name: 'Thick Pane', desc: 'A wider, stronger rim bend (like the liquid glass), a light rim and a soft inner shade for thickness.', cls: 'C', mag: 1.32, rim: 16 }
+};
+function glass(kind, o, phone, scroller) {
+  const g = h(`<div class="gl ${kind} ${o.cls}"></div>`);
+  if (o.mag === 1) { g.appendChild(h('<div class="items"></div>')); return { g, sync() {} }; }
+  const mk = () => { const c = h('<div class="cl"></div>'); c.appendChild(feed()); return c; };
+  const base = h('<div class="base"></div>'), rim = h('<div class="rim"></div>'), bc = mk(), rc = mk();
+  base.appendChild(bc); rim.appendChild(rc); rim.style.setProperty('--rw', o.rim + 'px');
+  g.append(base, rim, h('<div class="tint"></div>'), h('<div class="sheen"></div>'), h('<div class="items"></div>'));
+  function sync() {
+    const pr = phone.getBoundingClientRect(), gr = g.getBoundingClientRect(), s = scroller.scrollTop;
+    const x = gr.left - pr.left, y = gr.top - pr.top;
+    bc.style.transform = `translate(${-x}px, ${-y - s}px)`;
+    rc.style.transformOrigin = `${x + gr.width / 2}px ${y + s + gr.height / 2}px`;
+    rc.style.transform = `translate(${-x}px, ${-y - s}px) scale(${o.mag})`;
+  }
+  return { g, sync };
+}
+function phone(o) {
+  const p = h('<div class="lp"></div>'), f = h('<div class="lf"></div>'); f.appendChild(feed()); p.appendChild(f);
+  const nav = glass('nav', o, p, f), top = glass('top', o, p, f);
+  nav.g.querySelector('.items').innerHTML = '<span>Overview</span><span>Bills</span><span>Activity</span><span>Settings</span>';
+  top.g.querySelector('.items').innerHTML = '<span>October</span><span>$3,639.95</span>';
+  p.append(top.g, nav.g);
+  const run = () => { nav.sync(); top.sync(); };
+  f.addEventListener('scroll', run, { passive: true }); requestAnimationFrame(run);
+  return p;
+}
+const host = document.getElementById('sections');
+const sec = h('<section class="sec"><h2>Glass Over Moving Content</h2><p>Scroll inside each phone. The nav bar and the top bar are glass over the feed.</p><div class="cards rv-group" role="radiogroup" aria-label="Glass"></div></section>');
+host.appendChild(sec);
+Object.keys(OPTS).forEach(k => {
+  const o = OPTS[k], w = h('<div class="pv"></div>'); w.appendChild(phone(o));
+  sec.querySelector('.cards').appendChild(S4Review.card({ pick: `glass:${k}`, letter: k, title: o.name, desc: o.desc, tag: o.tag || '', preview: w }));
+});
+document.getElementById('theme').addEventListener('s4-change', e => S4.theme({ mode: e.detail.value }));
+S4.theme({ mode: 'light' });
+S4Review.page('liquid3');
+</script>
+</body>
+</html>
