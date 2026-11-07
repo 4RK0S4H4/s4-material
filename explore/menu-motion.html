@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>S4 Orion: Transparency Lab 3</title>
-<link rel="stylesheet" href="../components/orion.css?v=1">
+<link rel="stylesheet" href="../components/orion.css?v=a1d7c43">
 <style>
 body{margin:0;background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface)}
 h1,h2,p{margin:0}
@@ -29,8 +29,7 @@ h1,h2,p{margin:0}
 </div>
 <main class="page">
   <div class="intro">
-    <p>You remembered wanting the drop-down to feel more like a container transform. The history: in round one (0008) menus grew out of their button's corner; in round two (0010) I made that quieter (revealed from half height, 6px rise), and the quieter one is what ships now. These three are the real menus on the real motion code; tap the button or the dots in each preview to open and close it.</p>
-    <p><b>A. Quiet Unfold</b> is today. <b>B. Grow From the Button</b> is the 0008 one: the menu starts as the button's shape and grows. <b>C. Container Transform</b> is the dialogs' motion: the button becomes the menu and is gone while it is open. New after your latest note: <b>F</b> is the button's own shape growing into the menu as one solid piece, with the button's label staying as its first row. Earlier: <b>D</b> is the same but the original button always stays (a copy detaches from it and expands), and <b>E</b> grows a strip out of the button's bottom edge. Try each at least twice, and on your iPhone.</p>
+    <p>You picked D, with a note: <b>make it come from underneath the button, only the shape, and don't move the text</b>. G is that, and it is now the default for every Orion menu. D and the old quiet unfold are here to compare; tap the button or the dots in each preview to open and close it, a couple of times each, and on your iPhone.</p>
   </div>
   <div id="sections"></div>
 </main>
@@ -38,19 +37,16 @@ h1,h2,p{margin:0}
 
 <script src="../components/assets/m3color.js"></script>
 <script src="../components/assets/icons.js"></script>
-<script src="../components/orion.js?v=5"></script>
-<script src="lib/icon-options.js?v=1"></script>
-<script src="lib/questions.js?v=30"></script>
-<script src="lib/review.js?v=9"></script>
+<script src="../components/orion.js?v=7644090"></script>
+<script src="lib/icon-options.js?v=f39de6b"></script>
+<script src="lib/questions.js?v=96816fc"></script>
+<script src="lib/review.js?v=2d9b250"></script>
 <script>
 const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
 const OPTS = {
-  A: { name: 'Quiet Unfold (today)', tag: 'Today', desc: 'Revealed from the button-facing edge at half height, rising 6px, fading in.', m: '' },
-  B: { name: 'Grow From the Button', desc: 'The menu starts as the button\'s shape and size and grows to full size (the 0008 version).', m: 'grow' },
-  C: { name: 'Container Transform (button hides)', desc: 'The button becomes the menu: its label rides in and fades, color fades, the surface travels from the button, and the button is gone while the menu is open. Closing runs it backwards into the button.', m: 'transform' },
-  D: { name: 'Container Transform, Button Stays', desc: 'The same, but the real button never disappears: a copy of it detaches, travels and expands into the menu, and the button is still there underneath.', m: 'transform-keep' },
-  F: { name: 'Button Expands Into the Menu', tag: 'Suggested', desc: 'The menu opens ON the button: the button\'s own shape grows downward into one solid piece, the button\'s label stays as the first row, and the options appear below it. Closing folds it back into the button.', m: 'inplace' },
-  E: { name: 'Expand From the Button Edge', desc: 'A thin strip the width of the button grows out of its bottom edge into the full menu, like the button opening downward. The button stays.', m: 'edge' }
+  A: { name: 'Quiet Unfold (before)', tag: 'Before', desc: 'The menu that shipped before: revealed from half height, rising 6px, fading in.', m: 'quiet' },
+  D: { name: 'Container Transform, Button Stays (your pick)', desc: 'The version you picked: a copy of the button travels with the menu and its label fades into it.', m: 'transform-keep' },
+  G: { name: 'From Underneath the Button (your note)', tag: 'Now the default', desc: 'Your note applied: the button and its label never move. The menu\'s shape slides out from underneath the button (same size and color), the options fade in, glass turns clear on landing. Closing slides back under it.', m: '' }
 };
 let n = 0;
 const sec = h('<section class="sec"><h2>Opening a Menu</h2><p>Each preview has a Sort By button and a three-dots button, both with the same menu.</p><div class="cards rv-group" role="radiogroup" aria-label="Menu motion"></div></section>');

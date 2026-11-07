@@ -135,7 +135,7 @@ window.S4_REVIEW_DEMOS = [
   {
     id: 'menumotion', title: 'Menu Motion Lab', href: 'explore/menu-motion.html',
     questions: [
-      { id: 'motion', label: 'How a menu opens', options: [{ v: 'A', label: 'Quiet Unfold (today)' }, { v: 'B', label: 'Grow From the Button' }, { v: 'C', label: 'Container Transform (button hides)' }, { v: 'D', label: 'Container Transform, Button Stays' }, { v: 'E', label: 'Expand From the Button Edge' }, { v: 'F', label: 'Button Expands Into the Menu' }, { v: 'Other', label: 'Describe in notes' }] }
+      { id: 'motion', label: 'How a menu opens', options: [{ v: 'A', label: 'Quiet Unfold (before)' }, { v: 'D', label: 'Container Transform, Button Stays' }, { v: 'G', label: 'From Underneath the Button' }, { v: 'Other', label: 'Describe in notes' }] }
     ]
   }
 ];

@@ -56,14 +56,24 @@ const outputs = {
   'skill/s4-orion/assets/orion.css': cssSkill,
   'skill/s4-orion/assets/orion.js': js,
 };
-/* the demo is a self-contained app that carries its own copy (its font sits beside the stylesheet) with cache-busting versions, so it can never go stale */
+/* the demo is a self-contained app that carries its own copy (its font sits beside the stylesheet) so it can never go stale */
 import { createHash } from 'node:crypto';
+import { readdirSync } from 'node:fs';
 const hash = (t) => createHash('sha1').update(t).digest('hex').slice(0, 7);
 const demoCss = cssSkill.replace('url("assets/inter-variable.woff2")', 'url("inter-variable.woff2")');
-if (existsSync(join(root, 'demo/index.html'))) {
-  outputs['demo/orion.css'] = demoCss;
-  outputs['demo/orion.js'] = js;
-  outputs['demo/index.html'] = readFileSync(join(root, 'demo/index.html'), 'utf8').replace(/orion\.css\?v=[\w]+/, 'orion.css?v=' + hash(demoCss)).replace(/orion\.js\?v=[\w]+/, 'orion.js?v=' + hash(js));
+if (existsSync(join(root, 'demo/index.html'))) { outputs['demo/orion.css'] = demoCss; outputs['demo/orion.js'] = js; }
+/* cache-busting: every local asset a page loads with ?v=... gets its version from the file's content, so a changed file is a new URL
+   and phones never need a hard refresh (the HTML pages themselves are opened through links that carry the commit, see CLAUDE.md) */
+const pages = ['index.html', 'demo/index.html', 'tokens/index.html'].concat(existsSync(join(root, 'explore')) ? readdirSync(join(root, 'explore')).filter((f) => f.endsWith('.html')).map((f) => 'explore/' + f) : []).filter((f) => existsSync(join(root, f)));
+const fileText = (rel) => (rel in outputs ? outputs[rel] : existsSync(join(root, rel)) ? readFileSync(join(root, rel)) : null);
+for (const page of pages) {
+  const dir = page.includes('/') ? page.slice(0, page.lastIndexOf('/')) : '';
+  const src = readFileSync(join(root, page), 'utf8');
+  const out = src.replace(/((?:src|href)=")([^"?#:]+)\?v=[\w.-]*(")/g, (m, a, path, c) => {
+    const rel = join(dir, path).split('\\').join('/'), t = fileText(rel);
+    return t == null ? m : a + path + '?v=' + hash(t) + c;
+  });
+  if (out !== src) outputs[page] = out;
 }
 const copies = {
   'skill/s4-orion/assets/icons.js': 'components/assets/icons.js',

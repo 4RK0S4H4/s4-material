@@ -145,6 +145,50 @@
      fades in; the items fade in a little after. On the spatial spring, so it feels like the container transforms, but
      with far less travel, so nothing seems to come from nowhere. Closing is the same on the calm spring, shorter.
      opts: open, from ('top'|'bottom'), anchor, align */
+  /* ---------- emerge: a menu's shape slides out from underneath its button ----------
+     The button never moves and its label never moves. The menu's surface starts hidden under the button (same rect, corners
+     and color) and travels down to its place while its edges open, so only the shape moves. While it moves, a still copy
+     of the button sits above it (in the top layer, so the surface can't cover the real one); then the copy is removed and the
+     real button is there. Color goes from the button's to the menu's, solid while it moves, glass after landing. Closing
+     runs it backwards into the button. */
+  function emerge(surface, source, opts) {
+    var open = opts.open !== false;
+    if (!source || !source.isConnected || M.reduced()) return fadeOnly(surface, open);
+    var sp = M.spring(open ? 'spatial' : 'spatial-calm'), geo = { duration: sp.duration, easing: landing(sp.easing), fill: 'both' }, lin = { duration: sp.duration, easing: 'linear', fill: 'both' };
+    var s = rect(source), cs = getComputedStyle(source);
+    if (open) {   /* never narrower than the button, so the button never reaches past the surface */
+      surface.style.minWidth = Math.max(s.width, parseFloat(getComputedStyle(surface).minWidth) || 0) + 'px';
+      if (S4.position) S4.position(surface, source, { align: opts.align });
+    }
+    var e = rect(surface), ce = getComputedStyle(surface);
+    var dx = (s.left + s.width / 2) - (e.left + e.width / 2), dy = s.top - e.top;
+    var at = { top: e.top + dy, left: e.left + dx, right: e.right + dx, bottom: e.bottom + dy };
+    var ins = [s.top - at.top, at.right - s.right, at.bottom - s.bottom, s.left - at.left];
+    var from = 'inset(' + ins.join('px ') + 'px round ' + corners(cs, s) + ')', to = 'inset(0px 0px 0px 0px round ' + corners(ce, e) + ')', moved = 'translate(' + dx + 'px, ' + dy + 'px)';
+    var bgFrom = visibleBg(source), glass = rgba(ce.backgroundColor) || [0, 0, 0, 1], bgTo = ce.backgroundColor, solid = rgb(glass), blur = ce.backdropFilter || ce.webkitBackdropFilter, glassy = glass[3] < 0.999;
+    /* the still copy of the button, above the surface */
+    var cap = document.createElement('div'); cap.setAttribute('popover', 'manual'); cap.setAttribute('aria-hidden', 'true');
+    var copy = source.cloneNode(true); copy.removeAttribute('id'); copy.removeAttribute('data-menu'); copy.tabIndex = -1; copy.className = source.className + ' s4-ct-ghost';
+    Object.assign(copy.style, { position: 'static', margin: '0', width: s.width + 'px', height: s.height + 'px', transition: 'none', animation: 'none', transform: 'none', translate: 'none', scale: 'none', visibility: 'visible',
+      minWidth: '0', maxWidth: 'none', background: cs.backgroundColor, boxShadow: cs.boxShadow, color: cs.color, border: cs.borderTopWidth + ' ' + cs.borderTopStyle + ' ' + cs.borderTopColor, borderRadius: cs.borderTopLeftRadius,
+      padding: cs.padding, fontFamily: cs.fontFamily, fontSize: cs.fontSize, fontWeight: cs.fontWeight, lineHeight: cs.lineHeight, letterSpacing: cs.letterSpacing, justifyContent: cs.justifyContent, gap: cs.gap });
+    Object.assign(cap.style, { position: 'fixed', inset: 'auto', left: s.left + 'px', top: s.top + 'px', margin: '0', padding: '0', border: '0', background: 'transparent', overflow: 'visible', pointerEvents: 'none', width: s.width + 'px', height: s.height + 'px' });
+    cap.appendChild(copy); document.body.appendChild(cap);
+    try { cap.showPopover(); } catch (x) { cap.style.zIndex = '2147483647'; }
+    var content = Array.prototype.slice.call(surface.children);
+    var shape = surface.animate(open ? [{ clipPath: from, transform: moved }, { clipPath: to, transform: 'none' }] : [{ clipPath: to, transform: 'none' }, { clipPath: from, transform: moved }], geo);
+    var k = function (bg, offset) { var f = { backgroundColor: bg, backdropFilter: 'none', webkitBackdropFilter: 'none' }; if (offset != null) f.offset = offset; return f; };
+    surface.animate(open ? [k(bgFrom), k(solid, 0.5), glassy ? { backgroundColor: bgTo, backdropFilter: blur, webkitBackdropFilter: blur } : k(solid)]
+      : [{ backgroundColor: bgTo, backdropFilter: blur, webkitBackdropFilter: blur }, { backgroundColor: solid, backdropFilter: blur, webkitBackdropFilter: blur, offset: 0.15 }, k(solid, 0.1501), k(solid, 0.5), k(bgFrom)], lin);
+    content.forEach(function (c) { c.animate(open ? [{ opacity: 0 }, { opacity: 0, offset: 0.35 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0, offset: 0.2 }, { opacity: 0 }], lin); });
+    return done(shape).then(function () {
+      try { cap.hidePopover(); } catch (x) {} cap.remove();
+      surface.getAnimations().forEach(function (a) { a.cancel(); });
+      content.forEach(function (c) { c.getAnimations().forEach(function (a) { a.cancel(); }); });
+      if (!open) { surface.style.minWidth = ''; }
+    });
+  }
+
   /* ---------- expand in place: the button's shape grows into the menu, one solid piece ----------
      The menu is placed ON its button (same top-start corner, or the bottom edge when there is no room below), so the
      surface starts exactly as the button (rect, corners, color) and grows into the menu. The button's label stays where
@@ -219,11 +263,13 @@
 
   function unfold(el, opts) {
     opts = opts || {};
-    if (opts.style === 'grow') return grow(el, opts);
-    if (opts.style === 'inplace' && opts.anchor) return expandMenu(el, opts.anchor, opts);
-    if (opts.style === 'edge') return grow(el, Object.assign({}, opts, { strip: true }));
-    if (opts.style === 'transform' && opts.anchor) return containerTransform(el, opts.anchor, { open: opts.open !== false });
-    if (opts.style === 'transform-keep' && opts.anchor) return containerTransform(el, opts.anchor, { open: opts.open !== false, keepSource: true });
+    var style = opts.style || 'emerge';
+    if (style === 'emerge') return emerge(el, opts.anchor, opts);
+    if (style === 'grow') return grow(el, opts);
+    if (style === 'inplace' && opts.anchor) return expandMenu(el, opts.anchor, opts);
+    if (style === 'edge') return grow(el, Object.assign({}, opts, { strip: true }));
+    if (style === 'transform' && opts.anchor) return containerTransform(el, opts.anchor, { open: opts.open !== false });
+    if (style === 'transform-keep' && opts.anchor) return containerTransform(el, opts.anchor, { open: opts.open !== false, keepSource: true });
     var open = opts.open !== false, up = opts.from === 'bottom';
     if (M.reduced()) return done(M.animate(el, open ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0 }], open ? 'effects' : 'fast-effects'));
     var r = getComputedStyle(el).borderTopLeftRadius, dy = up ? 6 : -6;
