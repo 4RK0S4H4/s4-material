@@ -49,7 +49,7 @@ Glass has **no shadow**: the transparency itself says what is in front. The only
 
 ## Items on glass
 Controls inside a glass surface (a dialog's fields, a menu's chips) stay your UI: they keep their own color at full fill (`--s4-glass-item-fill: 1`; lower it to let the blurred backdrop tint them) and drop their outlines, so the glass supplies the depth and the items stay clean (decision 0015).
-- No outline at rest on text fields and the switch. Hover, focus, error and disabled keep theirs, because they carry meaning.
+- No outline at rest on text fields and the switch. Focus, error and disabled keep theirs, because they carry meaning; hover draws none on glass.
 - An item that is only an outline with no fill (outlined button, unselected chip) keeps one, drawn as the frost line (`--s4-glass-item-outline`, white at 28%). Error-colored outlines stay.
 - Solid wherever the glass is solid: all of this switches off with high contrast, reduced transparency, no `backdrop-filter` and `data-glass="off"`.
 
