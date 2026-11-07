@@ -29,25 +29,25 @@ h1,h2,p{margin:0}
 </div>
 <main class="page">
   <div class="intro">
-    <p>You picked D, with a note: <b>make it come from underneath the button, only the shape, and don't move the text</b>. G is that, and it is now the default for every Orion menu. D and the old quiet unfold are here to compare; tap the button or the dots in each preview to open and close it, a couple of times each, and on your iPhone. <b>The blue bar at the bottom is a scrubber.</b> Tap Freeze, then open or close a menu: it stops at 0%. Tap 0, 20, 40, 60, 80 or 100 (or − and + for 5% steps, or drag the bar) and take your screenshot; Play runs it on from there, and Freeze again lets go.</p>
+    <p>You want <b>D, but with the shape coming out from a lower layer than the button instead of above it</b>. H is that. It starts as exactly the button's shape, behind the button, and grows into the menu; the button never moves or gets covered. G (the clipped version) is gone. A and D are here to compare.</p>
   </div>
   <div id="sections"></div>
 </main>
 <footer style="padding:24px;text-align:center;font-size:12px;color:var(--md-sys-color-on-surface-variant)"><a href="../">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0)</footer>
 
-<script src="lib/scrub.js?v=25222f5"></script>
+<script src="lib/scrub.js?v=b7738ee"></script>
 <script src="../components/assets/m3color.js"></script>
 <script src="../components/assets/icons.js"></script>
-<script src="../components/orion.js?v=8365455"></script>
+<script src="../components/orion.js?v=32383e4"></script>
 <script src="lib/icon-options.js?v=f39de6b"></script>
-<script src="lib/questions.js?v=96816fc"></script>
+<script src="lib/questions.js?v=c58f07b"></script>
 <script src="lib/review.js?v=2d9b250"></script>
 <script>
 const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
 const OPTS = {
   A: { name: 'Quiet Unfold (before)', tag: 'Before', desc: 'The menu that shipped before: revealed from half height, rising 6px, fading in.', m: 'quiet' },
   D: { name: 'Container Transform, Button Stays (your pick)', desc: 'The version you picked: a copy of the button travels with the menu and its label fades into it.', m: 'transform-keep' },
-  G: { name: 'From Underneath the Button (your note)', tag: 'Now the default', desc: 'Rebuilt after your iPhone report: nothing is copied and the button is never touched. The menu\'s shape comes out from a thin lip under the button (same width and color) and opens, the options fade in, and the blur only comes on after it lands. Closing folds back under the button.', m: '' }
+  H: { name: 'D, With the Shape Below the Button (your note)', tag: 'Now the default', desc: 'D\'s idea with the moving shape in a lower layer than the button: the button stays crisp on top, untouched, and the shape grows out from behind it into the menu. Then the options fade in and the glass comes on.', m: '' }
 };
 let n = 0;
 const sec = h('<section class="sec"><h2>Opening a Menu</h2><p>Each preview has a Sort By button and a three-dots button, both with the same menu.</p><div class="cards rv-group" role="radiogroup" aria-label="Menu motion"></div></section>');
