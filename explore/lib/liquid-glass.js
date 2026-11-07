@@ -160,7 +160,7 @@ window.LiquidGlass = (function () {
     gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, t.tex);
     if (t.v !== (src._lgv || 0)) {
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src);   /* throws SecurityError for a tainted canvas (WebKit: SVG foreignObject) */
       gl.generateMipmap(gl.TEXTURE_2D);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -171,7 +171,7 @@ window.LiquidGlass = (function () {
   }
   function Stage(opts) {
     this.root = opts.root; this.scene = opts.scene; this.source = opts.source || opts.scene; this.params = Object.assign({}, PRESETS.liquid, opts.params || {});
-    this.mode = opts.mode || 'webgl';
+    this.mode = opts.mode || 'webgl'; this.onError = opts.onError;
     this.out = document.createElement('canvas'); this.out.className = 'lg-out'; this.out.setAttribute('aria-hidden', 'true');
     this.root.insertBefore(this.out, this.scene.closest('.lg-scroll') ? this.scene.closest('.lg-scroll').nextSibling : this.scene.nextSibling);
     this.ctx = this.out.getContext('2d');
@@ -236,13 +236,27 @@ window.LiquidGlass = (function () {
     this.ctx.clearRect(0, 0, W, H);
     this.ctx.drawImage(glCanvas, 0, glCanvas.height - H, W, H, 0, 0, W, H);
   };
+  /* a render error (tainted texture, lost context...) turns this stage off once and tells the page, instead of retrying every frame */
+  Stage.prototype.fail = function (e) {
+    console.error('LiquidGlass:', e); this.error = (e && e.name ? e.name + ': ' : '') + (e && e.message || e);
+    this.setMode('off'); if (this.onError) this.onError(this.error);
+  };
+  /* has the glass actually put pixels on this stage's canvas? (read back a coarse grid; null = could not tell) */
+  Stage.prototype.drawn = function () {
+    try {
+      var w = this.out.width, h = this.out.height; if (!w || !h) return false;
+      var d = this.ctx.getImageData(0, 0, w, h).data;
+      for (var i = 3; i < d.length; i += 4 * 97) if (d[i] > 8) return true;
+      return false;
+    } catch (e) { return null; }
+  };
   Stage.prototype.invalidate = function () { this.key = ''; };
 
   var running = false;
   function loop() {
     if (running) return; running = true;
     (function frame() {
-      for (var i = 0; i < stages.length; i++) { try { stages[i].render(); } catch (e) { console.error(e); } }
+      for (var i = 0; i < stages.length; i++) { try { stages[i].render(); } catch (e) { stages[i].fail(e); } }
       requestAnimationFrame(frame);
     })();
   }
@@ -321,6 +335,12 @@ window.LiquidGlass = (function () {
     webglSupported: function () { return initGL(); },
     svgSupported: /Chrome\/\d/.test(ua) && !/CriOS|FxiOS|EdgiOS/.test(ua) && !!(window.CSS && CSS.supports('backdrop-filter', 'url(#a)')),
     shift: shift,
+    /* one-line facts for on-page diagnostics */
+    diag: function () {
+      var ok = initGL(), r = '';
+      if (ok) { try { var x = gl.getExtension('WEBGL_debug_renderer_info'); r = x ? gl.getParameter(x.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER); } catch (e) {} }
+      return { webgl2: ok, renderer: String(r), maxTex: ok ? gl.getParameter(gl.MAX_TEXTURE_SIZE) : 0, dpr: window.devicePixelRatio || 1 };
+    },
     invalidateAll: function () { stages.forEach(function (s) { s.key = ''; s.colors = null; if (s.mode === 'svg') svgRefresh(s); }); },
     touch: function (src) { src._lgv = (src._lgv || 0) + 1; }
   };

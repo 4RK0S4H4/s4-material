@@ -1,6 +1,6 @@
 # Where S4 Orion stands (resume here)
 
-Last updated: 2026-11-04 (owner liked the demo; button groups angular again, plan reviewed; see below). **Phase 6 demo built and published; awaiting the owner's iPhone check, then release 1.0.0.** Working notes for Claude are in [`/CLAUDE.md`](../CLAUDE.md).
+Last updated: 2026-11-07 (liquid glass: Lab 4 diagnostics, see 0012) (owner liked the demo; button groups angular again, plan reviewed; see below). **Phase 6 demo built and published; awaiting the owner's iPhone check, then release 1.0.0.** Working notes for Claude are in [`/CLAUDE.md`](../CLAUDE.md).
 
 ## The brief (original plan, six phases)
 
@@ -154,3 +154,8 @@ labs could load `components/assets/` instead of their own copies.
 - 2026-11-03: Liquid glass picks recorded (0006); frosted extra liquid material + Frost Level question added. Next: owner picks frost, then build into the system.
 - 2026-10-31: Liquid Glass Lab built (WebGL + SVG refraction engines); awaiting owner picks and an iPhone check. Phase 6 / 1.0.0 status unchanged.
 - 2026-10-28: polish pass on motion and connected button group corners after owner review (see above); demo bundle refreshed. Next: owner re-checks on iPhone, then 0005 open items, evals, release 1.0.0.
+
+
+## Liquid Glass workstream (2026-11-07, [0012](decisions/0012-liquid-glass-webkit.md))
+
+Lab 4 glitched on iPhone, most likely because WebKit taints canvases that drew an SVG foreignObject. Lab 4 now shows a one-line status and falls back to plain blur. **Waiting on the owner:** open `explore/liquid4.html` on the iPhone and report the status line; then pick an option in 0012. Don't build `S4.glass` before that.

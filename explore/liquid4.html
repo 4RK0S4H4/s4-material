@@ -33,6 +33,9 @@ footer{padding:24px;text-align:center;font-size:12px;color:var(--md-sys-color-on
 .g.top{left:14px;right:14px;top:12px;height:46px;border-radius:23px;justify-content:space-between;padding:0 18px;font-size:14px}
 .g span{display:flex;flex-direction:column;align-items:center;gap:2px}
 .g .s4-icon{--s4-icon-size:22px}
+.lg-stage[data-lg-mode=off] .g,.lg-stage[data-fallback] .g{background:color-mix(in oklab,var(--lg-tint) 62%,transparent);-webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3);box-shadow:0 0 0 1px color-mix(in oklab,var(--lg-text) 12%,transparent),0 6px 18px rgb(0 0 0/.18)}
+.status{font:500 12px/18px ui-monospace,Menlo,monospace;padding:10px 14px;border-radius:12px;background:var(--md-sys-color-surface-container-high);color:var(--md-sys-color-on-surface);word-break:break-word;max-width:85ch}
+.status[data-bad]{background:var(--md-sys-color-error-container);color:var(--md-sys-color-on-error-container)}
 .snap{font-size:12px;color:var(--md-sys-color-on-surface-variant);text-align:center}
 </style>
 </head>
@@ -49,6 +52,7 @@ footer{padding:24px;text-align:center;font-size:12px;color:var(--md-sys-color-on
     <p>Open this on your iPhone. The thing I can't test is whether Safari draws the snapshot (it renders the page into an SVG image, and WebKit can be fussy about fonts and images). If the glass shows, bends and follows your scrolling, it works. Under each phone it says how long the snapshot took.</p>
     <p>Tap a card (above its preview) to pick one; Other plus a note if none is right. The device question near the end is the important one.</p>
   </div>
+  <div class="status" id="status" role="status">Starting…</div>
   <div id="sections"></div>
 </main>
 <footer><a href="../">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0)</footer>
@@ -59,7 +63,7 @@ footer{padding:24px;text-align:center;font-size:12px;color:var(--md-sys-color-on
 <script src="lib/icon-options.js?v=1"></script>
 <script src="lib/questions.js?v=14"></script>
 <script src="lib/review.js?v=8"></script>
-<script src="lib/liquid-glass.js?v=1"></script>
+<script src="lib/liquid-glass.js?v=6"></script>
 <script>
 const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
 const ROWS = [['Iron Mountain', 'Due Oct 24', '$1,240.00'], ['Staples', 'Due Oct 29', '$72.40'], ['Electric Co.', 'Due Oct 30', '$318.55'], ['Comcast Business', 'Due Nov 2', '$189.00'], ['Acme Insurance', 'Due Nov 5', '$1,820.00'], ['Slack', 'Due Nov 9', '$96.00'], ['Adobe', 'Due Nov 12', '$89.99']];
@@ -67,7 +71,15 @@ const PRESETS = {
   A: { name: 'Liquid Frost (WebGL)', tag: 'Suggested', desc: 'The lab\'s Frosted preset: blur, firm tint, thick bezel, adaptive tint for text. The page below is real, live DOM; only the glass is drawn by WebGL.', params: { preset: 'frostLight' } },
   B: { name: 'Heavy Frost (WebGL)', desc: 'More blur and tint; the bend shows mostly at the rim.', params: { preset: 'frostHeavy' } }
 };
-/* --- DOM -> canvas snapshot (SVG foreignObject), used as the glass's texture --- */
+/* --- DOM -> canvas snapshot (SVG foreignObject), used as the glass's texture ---
+   WebKit (Safari, every iPhone browser) is known to TAINT a canvas that has drawn an SVG containing a foreignObject, and
+   WebGL refuses a tainted canvas (SecurityError). Every step is therefore checked and named, so a failure says where. */
+const DIAG = { gl: LiquidGlass.diag(), snap: '', taint: '', blank: '', glass: '', mode: 'starting', ua: /iPhone|iPad/.test(navigator.userAgent) ? 'iOS' : /Safari/.test(navigator.userAgent) && !/Chrome|Chromium/.test(navigator.userAgent) ? 'Safari' : /Firefox/.test(navigator.userAgent) ? 'Firefox' : 'Chromium' };
+function status() {
+  const g = DIAG.gl, bad = DIAG.mode.startsWith('fallback');
+  const el = document.getElementById('status'); el.toggleAttribute('data-bad', bad);
+  el.textContent = [DIAG.ua, g.webgl2 ? 'WebGL2 ok (max ' + g.maxTex + ', dpr ' + g.dpr + ')' : 'WebGL2 missing', DIAG.snap && 'snapshot ' + DIAG.snap, DIAG.taint && 'canvas ' + DIAG.taint, DIAG.blank && 'texture ' + DIAG.blank, DIAG.glass && 'glass ' + DIAG.glass, DIAG.mode].filter(Boolean).join(' · ');
+}
 let fontCss = '';
 async function loadFont() {
   try {
@@ -82,14 +94,30 @@ function inline(src, dst) {
   dst.setAttribute('style', t);
   for (let i = 0; i < src.children.length; i++) inline(src.children[i], dst.children[i]);
 }
+const step = (name, p, ms = 6000) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('timed out after ' + ms + ' ms')), ms))]).catch(e => { e.step = name; throw e; });
+function loadImg(url) {
+  return new Promise((res, rej) => { const img = new Image(); img.onload = () => res(img); img.onerror = () => rej(new Error('image failed to load (SVG not accepted)')); img.src = url; });
+}
 async function snapshot(el, canvas, scale) {
-  const w = el.offsetWidth, hgt = el.scrollHeight, clone = el.cloneNode(true);
+  const w = el.offsetWidth, hgt = el.scrollHeight;
+  scale = Math.min(scale, Math.sqrt(8e6 / (w * hgt)));            /* stay far below iOS canvas limits (~16 M px) */
+  const clone = el.cloneNode(true);
   inline(el, clone); clone.style.margin = '0'; clone.style.position = 'static'; clone.style.height = hgt + 'px';
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${hgt}"><style>${fontCss}</style><foreignObject width="100%" height="100%">${new XMLSerializer().serializeToString(clone).replace(/^<(\w+)/, '<$1 xmlns="http://www.w3.org/1999/xhtml"')}</foreignObject></svg>`;
-  const img = new Image(); img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-  await img.decode();
+  const img = await step('load', loadImg('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg)));
   canvas.width = Math.round(w * scale); canvas.height = Math.round(hgt * scale);
-  const c = canvas.getContext('2d'); c.drawImage(img, 0, 0, canvas.width, canvas.height);
+  const c = canvas.getContext('2d');
+  for (let attempt = 0; attempt < 2; attempt++) {                 /* Safari sometimes draws a blank first time */
+    c.clearRect(0, 0, canvas.width, canvas.height); c.drawImage(img, 0, 0, canvas.width, canvas.height);
+    const t = document.createElement('canvas'); t.width = t.height = 24; const tc = t.getContext('2d'); tc.drawImage(canvas, 0, 0, 24, 24);
+    let d; try { d = tc.getImageData(0, 0, 24, 24).data; } catch (e) { DIAG.taint = 'TAINTED (' + e.name + ')'; const er = new Error('canvas is tainted: the browser will not let WebGL read a drawn SVG foreignObject'); er.step = 'taint'; throw er; }
+    DIAG.taint = 'clean';
+    let a = 0; for (let i = 3; i < d.length; i += 4) a += d[i];
+    DIAG.blank = a > 0 ? 'has content' : 'BLANK';
+    if (a > 0) return { w: canvas.width, h: canvas.height };
+    await new Promise(r => setTimeout(r, 250));
+  }
+  const er = new Error('snapshot drew nothing'); er.step = 'blank'; throw er;
 }
 function phone(o) {
   const root = h(`<div class="lg-stage"><div class="lg-scroll"><div class="lg-scene"></div></div></div>`);
@@ -115,22 +143,34 @@ Object.keys(PRESETS).forEach(k => {
 });
 S4.init(document.body);
 const canvases = new Map();
+function fallback(p, why) {
+  p.root.dataset.fallback = '1'; if (p.stage) p.stage.setMode('off');
+  DIAG.mode = 'fallback: plain blur (' + why + ')'; p.note.textContent = 'Fallback: plain backdrop blur, because ' + why + '.'; status();
+}
 async function rebuild() {
   for (const p of phones) {
+    if (p.dead) continue;
     const src = canvases.get(p) || document.createElement('canvas'); canvases.set(p, src);
     const t0 = performance.now();
-    try { await snapshot(p.scene, src, 2); } catch (e) { p.note.textContent = 'Snapshot failed here: ' + e.message; continue; }
+    if (!LiquidGlass.webglSupported()) { p.dead = true; fallback(p, 'WebGL2 is not available'); continue; }
+    try { const r = await snapshot(p.scene, src, 2); DIAG.snap = `${r.w}×${r.h} in ${Math.round(performance.now() - t0)} ms`; }
+    catch (e) { p.dead = true; DIAG.snap = DIAG.snap || 'failed'; fallback(p, `the page snapshot failed at "${e.step || 'draw'}": ${e.message}`); continue; }
     if (!p.stage) {
       const base = LiquidGlass.PRESETS[p.o.params.preset];
-      p.stage = LiquidGlass.stage({ root: p.root, scene: p.scene, source: src, mode: 'webgl', params: { ...base, adaptive: 1 } });
+      p.stage = LiquidGlass.stage({ root: p.root, scene: p.scene, source: src, mode: 'webgl', params: { ...base, adaptive: 1 }, onError: m => { p.dead = true; DIAG.glass = 'ERROR'; fallback(p, 'WebGL failed: ' + m); } });
     }
-    p.stage.sceneChanged(); p.stage.colors = null;
+    p.stage.sceneChanged(); p.stage.colors = null; delete p.root.dataset.fallback;
+    DIAG.mode = 'WebGL glass';
     p.note.textContent = `Snapshot ${Math.round(performance.now() - t0)} ms (taken once, and again when the theme changes)`;
+    setTimeout(() => { if (p.dead) return; const d = p.stage.drawn(); DIAG.glass = d === null ? 'unknown' : d ? 'drawn' : 'NOT drawn'; if (d === false) fallback(p, 'WebGL rendered nothing'); else status(); }, 600);
   }
+  status();
 }
 function themeChanged() { requestAnimationFrame(() => setTimeout(rebuild, 120)); }
 document.getElementById('theme').addEventListener('s4-change', e => { S4.theme({ mode: e.detail.value }); themeChanged(); });
 S4.theme({ mode: 'light' });
+status();
+window.addEventListener('error', e => { DIAG.mode = 'fallback: script error ' + e.message; status(); });
 loadFont().then(() => setTimeout(rebuild, 300));
 S4Review.page('liquid4');
 </script>
