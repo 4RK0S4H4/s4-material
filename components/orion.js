@@ -301,8 +301,33 @@
      fades in; the items fade in a little after. On the spatial spring, so it feels like the container transforms, but
      with far less travel, so nothing seems to come from nowhere. Closing is the same on the calm spring, shorter.
      opts: open, from ('top'|'bottom'), anchor, align */
+  /* the 0008 way, kept as an option (opts.style = 'grow'): the menu's shape starts at the anchor's size and position and grows to the menu */
+  function grow(el, opts) {
+    var open = opts.open !== false, up = opts.from === 'bottom', anchor = opts.anchor;
+    if (!anchor || M.reduced()) return done(M.animate(el, open ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0 }], open ? 'effects' : 'fast-effects'));
+    var e = rect(el), a = rect(anchor), ca = getComputedStyle(anchor), ce = getComputedStyle(el);
+    var w = Math.min(a.width, e.width), h = Math.min(a.height, e.height);
+    var end = opts.align === 'end' || (e.right - a.right < a.left - e.left && Math.abs((e.right - a.right)) < 2);
+    var r = Math.min(parseFloat(ca.borderTopLeftRadius) || 0, h / 2, w / 2) + 'px', rEnd = ce.borderTopLeftRadius;
+    var top = up ? e.height - h : 0, left = end ? e.width - w : 0;
+    var from = 'inset(' + top + 'px ' + (e.width - w - left) + 'px ' + (e.height - h - top) + 'px ' + left + 'px round ' + r + ')';
+    var to = 'inset(0px round ' + rEnd + ')';
+    var sp = M.spring(open ? 'spatial' : 'spatial-calm'), lin = { duration: sp.duration, easing: 'linear', fill: 'both' };
+    var shape = el.animate(open ? [{ clipPath: from }, { clipPath: to }] : [{ clipPath: to }, { clipPath: from }], { duration: sp.duration, easing: landing(sp.easing), fill: 'both' });
+    el.animate(open ? [{ opacity: 0 }, { opacity: 1, offset: 0.25 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], lin);
+    Array.prototype.forEach.call(el.children, function (c) {
+      c.animate(open ? [{ opacity: 0 }, { opacity: 0, offset: 0.3 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0, offset: 0.25 }, { opacity: 0 }], lin);
+    });
+    return done(shape).then(function () {
+      el.getAnimations().forEach(function (x) { x.cancel(); });
+      Array.prototype.forEach.call(el.children, function (c) { c.getAnimations().forEach(function (x) { x.cancel(); }); });
+    });
+  }
+
   function unfold(el, opts) {
     opts = opts || {};
+    if (opts.style === 'grow') return grow(el, opts);
+    if (opts.style === 'transform' && opts.anchor) return containerTransform(el, opts.anchor, { open: opts.open !== false });
     var open = opts.open !== false, up = opts.from === 'bottom';
     if (M.reduced()) return done(M.animate(el, open ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0 }], open ? 'effects' : 'fast-effects'));
     var r = getComputedStyle(el).borderTopLeftRadius, dy = up ? 6 : -6;
@@ -1446,12 +1471,13 @@ S4.register('progress', function (scope) {
   function open(menu, anchor) {
     if (isOpen(menu) && !menu._s4closing) return;
     menu._s4closing = false;
+    if (S4.transition && S4.transition.restore) S4.transition.restore(menu, anchor);   /* a container-transform close leaves the menu hidden and its anchor hidden */
     menu._s4anchor = anchor;
     try { menu.showPopover(); } catch (e) { menu.setAttribute('data-open', ''); }
     var from = menu._s4from = S4.position(menu, anchor, { align: menu.dataset.align });
     Array.prototype.forEach.call(document.querySelectorAll('.s4-menu'), function (o) { if (o !== menu && isOpen(o)) close(o, false); });
     if (anchor) anchor.setAttribute('aria-expanded', 'true');
-    S4.transition.unfold(menu, { from: from, anchor: anchor, align: menu.dataset.align });
+    S4.transition.unfold(menu, { from: from, anchor: anchor, align: menu.dataset.align, style: menu.dataset.motion || S4.menuMotion });
     var first = menu.querySelector('.s4-menu-item[aria-checked="true"]') || items(menu)[0];
     if (first) first.focus({ preventScroll: true });
     S4.util.emit(menu, 's4-open', {});
@@ -1461,7 +1487,7 @@ S4.register('progress', function (scope) {
     if (anchor) anchor.setAttribute('aria-expanded', 'false');
     if (!isOpen(menu) || menu._s4closing) return;
     menu._s4closing = true;
-    S4.transition.unfold(menu, { open: false, from: menu._s4from, anchor: anchor, align: menu.dataset.align }).then(function () {
+    S4.transition.unfold(menu, { open: false, from: menu._s4from, anchor: anchor, align: menu.dataset.align, style: menu.dataset.motion || S4.menuMotion }).then(function () {
       if (!menu._s4closing) return;   /* reopened meanwhile */
       menu._s4closing = false;
       try { menu.hidePopover(); } catch (e) {} menu.removeAttribute('data-open');

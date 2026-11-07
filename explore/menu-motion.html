@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>S4 Orion: Transparency Lab 3</title>
+<link rel="stylesheet" href="../components/orion.css?v=1">
+<style>
+body{margin:0;background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface)}
+h1,h2,p{margin:0}
+.bar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;padding:12px 24px;background:var(--md-sys-color-surface-container);border-bottom:1px solid var(--md-sys-color-outline-variant)}
+.bar h1{font-size:22px;line-height:28px;font-weight:500;margin-right:auto}
+.ctl{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;letter-spacing:.5px}
+.page{max-width:1100px;margin:0 auto;padding:24px 16px 64px;display:flex;flex-direction:column;gap:32px}
+.intro{max-width:80ch;color:var(--md-sys-color-on-surface-variant);display:flex;flex-direction:column;gap:12px}
+.sec > h2{font-size:24px;line-height:32px;font-weight:500;margin-bottom:6px}
+.sec > p{color:var(--md-sys-color-on-surface-variant);max-width:85ch;margin-bottom:16px}
+.cards{--rv-min:320px}
+.pv{padding:16px;display:flex;flex-direction:column;gap:16px;align-items:center;background:linear-gradient(160deg,#ff7a59,#c13584 35%,#3b4cca 70%,#00b4d8);border-radius:16px;min-height:260px;justify-content:flex-start}
+.pv .row{display:flex;gap:12px;align-items:center;justify-content:space-between;width:100%;max-width:280px}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>S4 Orion: Menu Motion Lab</h1>
+  <div class="ctl">Theme <div class="s4-button-group" data-connected data-select="single" data-fit="content" id="theme" aria-label="Theme">
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="light" aria-pressed="true">Light</button>
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="dark">Dark</button></div></div>
+</div>
+<main class="page">
+  <div class="intro">
+    <p>You remembered wanting the drop-down to feel more like a container transform. The history: in round one (0008) menus grew out of their button's corner; in round two (0010) I made that quieter (revealed from half height, 6px rise), and the quieter one is what ships now. These three are the real menus on the real motion code; tap the button or the dots in each preview to open and close it.</p>
+    <p><b>A. Quiet Unfold</b> is today. <b>B. Grow From the Button</b> is the 0008 one: the menu starts as the button's shape and grows. <b>C. Container Transform</b> is the dialogs' motion: the button itself becomes the menu (its label and icon ride into it and fade, color fades linearly, glass turns clear after landing). Try each at least twice, and on your iPhone.</p>
+  </div>
+  <div id="sections"></div>
+</main>
+<footer style="padding:24px;text-align:center;font-size:12px;color:var(--md-sys-color-on-surface-variant)"><a href="../">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0)</footer>
+
+<script src="../components/assets/m3color.js"></script>
+<script src="../components/assets/icons.js"></script>
+<script src="../components/orion.js?v=3"></script>
+<script src="lib/icon-options.js?v=1"></script>
+<script src="lib/questions.js?v=28"></script>
+<script src="lib/review.js?v=9"></script>
+<script>
+const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+const OPTS = {
+  A: { name: 'Quiet Unfold (today)', tag: 'Today', desc: 'Revealed from the button-facing edge at half height, rising 6px, fading in.', m: '' },
+  B: { name: 'Grow From the Button', desc: 'The menu starts as the button\'s shape and size and grows to full size (the 0008 version).', m: 'grow' },
+  C: { name: 'Container Transform', tag: 'Suggested', desc: 'The button becomes the menu: its label rides in and fades, color fades, the surface travels from the button. Closing runs it backwards into the button.', m: 'transform' }
+};
+let n = 0;
+const sec = h('<section class="sec"><h2>Opening a Menu</h2><p>Each preview has a Sort By button and a three-dots button, both with the same menu.</p><div class="cards rv-group" role="radiogroup" aria-label="Menu motion"></div></section>');
+document.getElementById('sections').appendChild(sec);
+Object.keys(OPTS).forEach(k => {
+  const o = OPTS[k], id = 'mm' + (++n), w = h(`<div class="pv"><div class="row"><button class="s4-button" data-variant="tonal" type="button" data-menu="${id}" aria-haspopup="menu"><span class="s4-icon" data-icon="sort"></span>Sort By</button><button class="s4-icon-button" type="button" aria-label="More" data-menu="${id}"><span class="s4-icon" data-icon="more-vert"></span></button></div>
+  <div class="s4-menu" id="${id}" popover="manual" role="menu" aria-label="Sort by" data-align="end" ${o.m ? `data-motion="${o.m}"` : ''}><div class="s4-menu-label">Sort By</div>
+   <button class="s4-menu-item" role="menuitemradio" aria-checked="true" type="button"><span class="s4-icon" data-icon="calendar"></span>Due Date</button>
+   <button class="s4-menu-item" role="menuitemradio" aria-checked="false" type="button"><span class="s4-icon" data-icon="wallet"></span>Amount</button>
+   <button class="s4-menu-item" role="menuitemradio" aria-checked="false" type="button"><span class="s4-icon" data-icon="person"></span>Vendor</button></div></div>`);
+  sec.querySelector('.cards').appendChild(S4Review.card({ pick: `motion:${k}`, letter: k, title: o.name, desc: o.desc, tag: o.tag || '', preview: w }));
+});
+S4.init(document.body);
+document.getElementById('theme').addEventListener('s4-change', e => S4.theme({ mode: e.detail.value }));
+S4.theme({ mode: 'light' });
+S4Review.page('menumotion');
+</script>
+</body>
+</html>

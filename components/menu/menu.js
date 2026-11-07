@@ -25,12 +25,13 @@
   function open(menu, anchor) {
     if (isOpen(menu) && !menu._s4closing) return;
     menu._s4closing = false;
+    if (S4.transition && S4.transition.restore) S4.transition.restore(menu, anchor);   /* a container-transform close leaves the menu hidden and its anchor hidden */
     menu._s4anchor = anchor;
     try { menu.showPopover(); } catch (e) { menu.setAttribute('data-open', ''); }
     var from = menu._s4from = S4.position(menu, anchor, { align: menu.dataset.align });
     Array.prototype.forEach.call(document.querySelectorAll('.s4-menu'), function (o) { if (o !== menu && isOpen(o)) close(o, false); });
     if (anchor) anchor.setAttribute('aria-expanded', 'true');
-    S4.transition.unfold(menu, { from: from, anchor: anchor, align: menu.dataset.align });
+    S4.transition.unfold(menu, { from: from, anchor: anchor, align: menu.dataset.align, style: menu.dataset.motion || S4.menuMotion });
     var first = menu.querySelector('.s4-menu-item[aria-checked="true"]') || items(menu)[0];
     if (first) first.focus({ preventScroll: true });
     S4.util.emit(menu, 's4-open', {});
@@ -40,7 +41,7 @@
     if (anchor) anchor.setAttribute('aria-expanded', 'false');
     if (!isOpen(menu) || menu._s4closing) return;
     menu._s4closing = true;
-    S4.transition.unfold(menu, { open: false, from: menu._s4from, anchor: anchor, align: menu.dataset.align }).then(function () {
+    S4.transition.unfold(menu, { open: false, from: menu._s4from, anchor: anchor, align: menu.dataset.align, style: menu.dataset.motion || S4.menuMotion }).then(function () {
       if (!menu._s4closing) return;   /* reopened meanwhile */
       menu._s4closing = false;
       try { menu.hidePopover(); } catch (e) {} menu.removeAttribute('data-open');

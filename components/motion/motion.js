@@ -145,8 +145,33 @@
      fades in; the items fade in a little after. On the spatial spring, so it feels like the container transforms, but
      with far less travel, so nothing seems to come from nowhere. Closing is the same on the calm spring, shorter.
      opts: open, from ('top'|'bottom'), anchor, align */
+  /* the 0008 way, kept as an option (opts.style = 'grow'): the menu's shape starts at the anchor's size and position and grows to the menu */
+  function grow(el, opts) {
+    var open = opts.open !== false, up = opts.from === 'bottom', anchor = opts.anchor;
+    if (!anchor || M.reduced()) return done(M.animate(el, open ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0 }], open ? 'effects' : 'fast-effects'));
+    var e = rect(el), a = rect(anchor), ca = getComputedStyle(anchor), ce = getComputedStyle(el);
+    var w = Math.min(a.width, e.width), h = Math.min(a.height, e.height);
+    var end = opts.align === 'end' || (e.right - a.right < a.left - e.left && Math.abs((e.right - a.right)) < 2);
+    var r = Math.min(parseFloat(ca.borderTopLeftRadius) || 0, h / 2, w / 2) + 'px', rEnd = ce.borderTopLeftRadius;
+    var top = up ? e.height - h : 0, left = end ? e.width - w : 0;
+    var from = 'inset(' + top + 'px ' + (e.width - w - left) + 'px ' + (e.height - h - top) + 'px ' + left + 'px round ' + r + ')';
+    var to = 'inset(0px round ' + rEnd + ')';
+    var sp = M.spring(open ? 'spatial' : 'spatial-calm'), lin = { duration: sp.duration, easing: 'linear', fill: 'both' };
+    var shape = el.animate(open ? [{ clipPath: from }, { clipPath: to }] : [{ clipPath: to }, { clipPath: from }], { duration: sp.duration, easing: landing(sp.easing), fill: 'both' });
+    el.animate(open ? [{ opacity: 0 }, { opacity: 1, offset: 0.25 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], lin);
+    Array.prototype.forEach.call(el.children, function (c) {
+      c.animate(open ? [{ opacity: 0 }, { opacity: 0, offset: 0.3 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0, offset: 0.25 }, { opacity: 0 }], lin);
+    });
+    return done(shape).then(function () {
+      el.getAnimations().forEach(function (x) { x.cancel(); });
+      Array.prototype.forEach.call(el.children, function (c) { c.getAnimations().forEach(function (x) { x.cancel(); }); });
+    });
+  }
+
   function unfold(el, opts) {
     opts = opts || {};
+    if (opts.style === 'grow') return grow(el, opts);
+    if (opts.style === 'transform' && opts.anchor) return containerTransform(el, opts.anchor, { open: opts.open !== false });
     var open = opts.open !== false, up = opts.from === 'bottom';
     if (M.reduced()) return done(M.animate(el, open ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0 }], open ? 'effects' : 'fast-effects'));
     var r = getComputedStyle(el).borderTopLeftRadius, dy = up ? 6 : -6;

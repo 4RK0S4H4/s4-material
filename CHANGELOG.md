@@ -17,6 +17,7 @@ The first version of S4 Orion, a leaner rebuild of S4 Material 1.3 on Material 3
 - Glass: items on glass (decision 0015): buttons, chips and text fields keep their own color at full fill (`--s4-glass-item-fill`), text fields and the unchecked switch lose their outline at rest, outline-only items (outlined button, unselected chip) get the frost line (`--s4-glass-item-outline`).
 - Glass: frost line thinner (0.5px, 28%) and drawn only on the content-facing edge of full-width bars (decision 0016). The demo's stylesheet copy is now built and checked by `npm run build`.
 - No shadows anywhere (decision 0017): all elevation tokens are flat.
+- Menu motion: `data-motion="grow"|"transform"` (or `S4.menuMotion`) opens a menu by growing from its button or by container transform; the default stays the quiet unfold (Menu Motion Lab, awaiting the owner's pick).
 - Review labs: a picked card or chip can be tapped again to deselect.
 
 ### Explored (not part of 1.0.0 yet)

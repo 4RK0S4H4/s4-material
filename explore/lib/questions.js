@@ -131,5 +131,11 @@ window.S4_REVIEW_DEMOS = [
     questions: [
       { id: 'frost', label: 'How frosted should glass be', options: [{ v: 'A', label: 'Today' }, { v: 'B', label: 'Calmer Color' }, { v: 'C', label: 'Frosted' }, { v: 'D', label: 'Heavy Frost' }, { v: 'E', label: 'Heavy Frost, Clearer' }, { v: 'Other', label: 'Describe in notes' }] }
     ]
+  },
+  {
+    id: 'menumotion', title: 'Menu Motion Lab', href: 'explore/menu-motion.html',
+    questions: [
+      { id: 'motion', label: 'How a menu opens', options: [{ v: 'A', label: 'Quiet Unfold (today)' }, { v: 'B', label: 'Grow From the Button' }, { v: 'C', label: 'Container Transform' }, { v: 'Other', label: 'Describe in notes' }] }
+    ]
   }
 ];
