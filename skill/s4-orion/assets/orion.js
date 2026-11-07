@@ -321,13 +321,19 @@
     }
     var s = rect(source), e = rect(surface), cs = getComputedStyle(source), ce = getComputedStyle(surface);
     var glass = rgba(ce.backgroundColor) || [0, 0, 0, 1], bgTo = ce.backgroundColor, solid = rgb(glass), glassy = glass[3] < 0.999;
-    var own = rgba(cs.backgroundColor), bgFrom = own && own[3] > 0.5 ? cs.backgroundColor : solid;   /* a button with no fill of its own grows in the menu's color */
+    /* what the layer starts as: the button's own fill; a button with none (a plain icon button) starts as its hover circle, the faint
+       tint of its own color over what is behind it, so it is the hover shape that grows into the menu */
+    var own = rgba(cs.backgroundColor), page = rgba(visibleBg(source)) || [255, 255, 255, 1], fg = rgba(cs.color) || [0, 0, 0, 1];
+    var bgFrom = own && own[3] > 0.5 ? cs.backgroundColor : rgb([0, 1, 2].map(function (i) { return page[i] * 0.88 + fg[i] * 0.12; }));
     var content = Array.prototype.slice.call(surface.children);
     /* the layer, right behind the button */
     var layer = document.createElement('div'); layer.setAttribute('aria-hidden', 'true'); layer.className = 's4-emerge-layer';
     var box = function (r, radius) { return { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', borderRadius: radius }; };
-    var rBtn = cs.borderTopLeftRadius, rMenu = ce.borderTopLeftRadius;
-    Object.assign(layer.style, { position: 'fixed', margin: '0', padding: '0', border: '0', pointerEvents: 'none', zIndex: '0', boxShadow: 'none' }, box(open ? s : e, open ? rBtn : rMenu));
+    /* the layer starts a hair INSIDE the button, as a pill: a button squares off while pressed and springs back, and anything of the layer outside that
+       moving edge would show as a glitch; a pill 2px smaller always stays hidden behind it */
+    var IN = 2, sIn = { left: s.left + IN, top: s.top + IN, width: Math.max(2, s.width - 2 * IN), height: Math.max(2, s.height - 2 * IN) };
+    var rBtn = Math.min(sIn.width, sIn.height) / 2 + 'px', rMenu = ce.borderTopLeftRadius;
+    Object.assign(layer.style, { position: 'fixed', margin: '0', padding: '0', border: '0', pointerEvents: 'none', zIndex: '0', boxShadow: 'none' }, box(open ? sIn : e, open ? rBtn : rMenu));
     var posBefore = source.style.position, zBefore = source.style.zIndex, cpos = cs.position;
     if (cpos === 'static') source.style.position = 'relative';
     source.style.zIndex = String((parseInt(cs.zIndex, 10) || 0) + 1);
@@ -337,11 +343,12 @@
     var hideMenu = function () { surface.style.visibility = 'hidden'; }, showMenu = function () { surface.style.visibility = ''; };
     var flat = { backdropFilter: 'none', webkitBackdropFilter: 'none' };
     var D = geo.duration, F = fx.duration, glassIn = function () {
-      return glassy ? done(surface.animate([{ backgroundColor: solid }, { backgroundColor: bgTo }], fx)).then(function () { surface.getAnimations().forEach(function (a) { a.cancel(); }); }) : Promise.resolve();
+      /* a short hold before the fade: the first frames with the blur on are the expensive ones (the browser builds the blur layer), and the surface is solid and unchanging while it does */
+      return glassy ? done(surface.animate([{ backgroundColor: solid }, { backgroundColor: bgTo }], { duration: fx.duration, delay: 80, easing: 'linear', fill: 'both' })).then(function () { surface.getAnimations().forEach(function (a) { a.cancel(); }); }) : Promise.resolve();
     };
     if (open) {
       hideMenu();
-      var grow = layer.animate([box(s, rBtn), box(e, rMenu)], geo);
+      var grow = layer.animate([box(sIn, rBtn), box(e, rMenu)], geo);
       layer.animate([{ backgroundColor: bgFrom }, { backgroundColor: solid }], { duration: D, easing: 'linear', fill: 'both' });
       layer.animate([{ opacity: 0 }, { opacity: 1, offset: 0.1 }, { opacity: 1 }], { duration: D, easing: 'linear', fill: 'both' });
       return done(grow).then(function () {
@@ -362,7 +369,7 @@
     return (toSolid ? done(toSolid) : Promise.resolve()).then(function () {
       content.forEach(function (c) { c.animate([{ opacity: 1 }, { opacity: 0 }], { duration: F, easing: 'linear', fill: 'both' }); });
       layer.style.backgroundColor = solid; layer.style.visibility = '';
-      var shrink = layer.animate([box(e, rMenu), box(s, rBtn)], geo);
+      var shrink = layer.animate([box(e, rMenu), box(sIn, rBtn)], geo);
       layer.animate([{ backgroundColor: solid }, { backgroundColor: bgFrom }], { duration: D, easing: 'linear', fill: 'both' });
       layer.animate([{ opacity: 1 }, { opacity: 1, offset: 0.9 }, { opacity: 0 }], { duration: D, easing: 'linear', fill: 'both' });
       hideMenu();
