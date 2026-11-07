@@ -74,7 +74,7 @@
     var qsBox = sec.querySelector('.rv-qs');
     function choose(q, o, keep) {
       var st = load(), pg = st.pages[cfg.id], cur = pg.answers[q.id];
-      if (cur && cur.v === o.v && !o.capture && !keep) delete pg.answers[q.id];   /* chips: click again to unselect; cards stay picked */
+      if (cur && cur.v === o.v && !o.capture && !keep) delete pg.answers[q.id];   /* click a picked chip or card again to unselect */
       else pg.answers[q.id] = { v: o.v, label: o.label || '', extra: o.capture ? o.capture() : '' };
       pg.updated = new Date().toISOString(); save(st); render();
     }
@@ -90,7 +90,7 @@
         if (e.target.closest('[data-no-pick]')) return;
         if (e.target.closest('.rv-preview')) return;   /* the preview is the demo: taps there run the demo, never answer */
       }
-      var f = findOpt(b.dataset.pick); if (f) choose(f[0], f[1], b.classList.contains('rv-card'));
+      var f = findOpt(b.dataset.pick); if (f) choose(f[0], f[1]);
     }
     document.addEventListener('click', pickFrom);
     document.addEventListener('keydown', function (e) {

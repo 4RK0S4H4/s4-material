@@ -167,3 +167,5 @@ Owner picked a mix of C (thinness) and D (inner fade): Lab 2 now has H/I/J combo
 Lab 3 (transparency3.html) shows the C+D edge (H/I/J) on real Orion components with the real glass tokens. Waiting on the pick, then 0013 and glass.css.
 Lab 3 reworked (2026-11-07): thin frost line only (no fade), 20-50% strengths + outer hairline, four real screens (library, menu, dialog, bottom sheet). Waiting on the pick, then 0013 and glass.css.
 Lab 3 now has a Shadow toggle (default none): the owner does not want shadows under raised things; transparency must convey depth. Finding: without shadows the toolbar nearly vanishes over white content in light mode; the outer hairline option or a firmer tint there may be needed.
+
+**Applied 2026-11-07 ([0013](decisions/0013-glass-edge-and-no-shadow.md)):** glass has a 1px 20% frost line and no shadow (shadow returns where glass is solid). Review labs: cards can be deselected. **Next:** Transparency Lab 4 (translucent items on glass: text fields, chips, rows). Open: drop shadows on cards/FAB system-wide? Ask the owner when relevant.

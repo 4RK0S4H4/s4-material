@@ -27,7 +27,7 @@ above content. Content itself is always solid.
 ```css
 background-color: color-mix(in srgb, var(--s4-glass-tint-float) 60%, transparent);   /* surface-container */
 backdrop-filter: blur(16px) saturate(1.8) contrast(.74) brightness(1.1);              /* dark: contrast(1) brightness(.8) */
-background-image: linear-gradient(to bottom, white-at-50% 0 1px, transparent 1px);   /* hairline on the content-facing edge */
+box-shadow: inset 0 0 0 1px rgb(255 255 255 / .2);                                    /* the thin frost line; no elevation shadow */
 ```
 
 Components don't write this: `glass.css` applies it to the listed components in its own cascade layer. To make something
@@ -37,12 +37,15 @@ else glass (a custom floating panel), add `class="s4-glass"`. To keep one elemen
 
 | Situation | Glass becomes |
 |---|---|
-| `prefers-contrast: more` or contrast level high | Solid (`surface-container`), no blur, no hairline |
-| `prefers-reduced-transparency: reduce` or `data-glass="off"` on `<html>` | Solid |
-| Browser without `backdrop-filter` | Solid |
+| `prefers-contrast: more` or contrast level high | Solid (`surface-container`), no blur, no frost line; the component's elevation shadow returns |
+| `prefers-reduced-transparency: reduce` or `data-glass="off"` on `<html>` | Solid (shadow returns) |
+| Browser without `backdrop-filter` | Solid (shadow returns) |
 | Contrast level medium | 80% tint |
 | Forced colors | Solid with a real border |
 | `prefers-reduced-motion` | Unchanged (glass doesn't move); transitions into it follow the motion rules |
+
+## Edge and depth
+Glass has **no shadow**: the transparency itself says what is in front. The only edge is a 1px frost line (`--s4-glass-highlight-width` / `-color`, white at 20%), same all the way round, no fade, no glow (decision 0013). Over plain white content in light mode the glass can look flat; that is accepted.
 
 ## Do / don't
 - **Do** let content scroll under the top app bar and nav bar; that's what the glass is for.

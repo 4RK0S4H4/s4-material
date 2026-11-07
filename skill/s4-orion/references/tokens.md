@@ -369,7 +369,7 @@ Light values are shown; a second value is dark mode. Color roles also change wit
 | `--s4-glass-backdrop-contrast-float` | 0.74 | 1 | contrast() on the backdrop: lifts blacks behind light glass so dark text keeps 4.5:1. |
 | `--s4-glass-backdrop-brightness-float` | 1.1 | 0.8 | brightness() on the backdrop: dims whites behind dark glass so light text keeps 4.5:1. |
 | `--s4-glass-highlight-width` | 1px |  |  |
-| `--s4-glass-highlight-color` | rgb(255 255 255 / 0.5) | rgb(255 255 255 / 0.12) |  |
+| `--s4-glass-highlight-color` | rgb(255 255 255 / 0.2) | rgb(255 255 255 / 0.2) |  |
 | `--s4-glass-max-stack` | 2 |  | At most two glass layers overlap at any point (e.g. a menu over an app bar). A third becomes solid. |
 
 ## Icons

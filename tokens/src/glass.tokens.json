@@ -97,7 +97,7 @@
         }
       },
       "highlight": {
-        "$description": "Unused since 2026-11-07: the light hairline on glass edges was removed (owner critique, decision 0008).",
+        "$description": "The thin frost line on glass edges (decision 0013, owner pick 2026-11-07: 20%, no shadows). A 1px line in milky white; it is the only edge treatment glass gets. Zero in high contrast.",
         "width": {
           "$type": "dimension",
           "$value": {
@@ -114,7 +114,7 @@
               1,
               1
             ],
-            "alpha": 0.5,
+            "alpha": 0.2,
             "hex": "#ffffff"
           },
           "$extensions": {
@@ -126,7 +126,7 @@
                   1,
                   1
                 ],
-                "alpha": 0.12,
+                "alpha": 0.2,
                 "hex": "#ffffff"
               },
               "high-contrast": {
