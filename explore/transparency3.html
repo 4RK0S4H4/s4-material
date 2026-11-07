@@ -40,6 +40,8 @@ h1,h2,p{margin:0}
 .fr .s4-nav-bar{border-radius:0}
 /* fill (token overrides; same variables glass.css reads) */
 .fr[data-fill=clearer]{--s4-glass-tint-opacity-float:.38;--s4-glass-blur-float:10px;--s4-glass-backdrop-contrast-float:.8;--s4-glass-saturation-float:1.7}
+/* no shadows under raised things: depth comes from the glass itself */
+.fr[data-shadow=none] :where(.s4-top-app-bar,.s4-nav-bar,.s4-toolbar,.s4-menu,.s4-dialog,.s4-bottom-sheet,.s4-fab,.s4-card){box-shadow:none!important}
 /* THE EDGE: only a 1px frosted line, no fade */
 .fr[data-edge]{--ea:.3}
 .fr[data-edge="20"]{--ea:.2}.fr[data-edge="40"]{--ea:.4}.fr[data-edge="50"]{--ea:.5}
@@ -60,6 +62,9 @@ h1,h2,p{margin:0}
     <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="40">40%</button>
     <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="50">50%</button>
     <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="30o">30% + Outer</button></div></div>
+  <div class="ctl">Shadow <div class="s4-button-group" data-connected data-select="single" data-fit="content" id="shadow" aria-label="Shadow">
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="today">Today</button>
+    <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="none" aria-pressed="true">None</button></div></div>
   <div class="ctl">Glass <div class="s4-button-group" data-connected data-select="single" data-fit="content" id="fill" aria-label="Glass fill">
     <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="today">Today</button>
     <button class="s4-button" data-variant="tonal" data-size="xs" type="button" value="clearer" aria-pressed="true">Clearer</button></div></div>
@@ -69,12 +74,13 @@ h1,h2,p{margin:0}
 </div>
 <main class="page">
   <div class="intro">
-    <p>Just the thin frosted line, no fade. It is a 1px line in milky white; the buttons in the bar change its strength (20 to 50%), add a faint dark hairline outside it, switch between today's glass fill and the clearer one, and flip light and dark.</p>
+    <p>Just the thin frosted line, no fade, and now <b>no shadows</b> under raised things (menu, dialog, sheet, toolbar, FAB, cards): the glass itself has to say what is in front. The Shadow button flips back to today's shadows to compare. It is a 1px line in milky white; the buttons in the bar change its strength (20 to 50%), add a faint dark hairline outside it, switch between today's glass fill and the clearer one, and flip light and dark.</p>
     <p>Four screens of a small bills app built from the real Orion components and glass tokens: the library (top app bar, floating toolbar, FAB, nav bar over photos and list rows; scroll it), a menu, a dialog and a bottom sheet over the same screen. Check both themes and over both the white-ish and the colorful areas.</p>
   </div>
   <section class="sec"><h2>Real UI</h2><div class="frames" id="frames"></div></section>
   <section class="sec"><h2>Your Pick</h2><p>The settings above are only for looking; this answer is what I will apply.</p>
-    <div class="cards rv-group" role="radiogroup" aria-label="Edge" id="cards" style="--rv-min:240px"></div></section>
+    <div class="cards rv-group" role="radiogroup" aria-label="Edge" id="cards" style="--rv-min:240px"></div>
+    <div class="cards rv-group" role="radiogroup" aria-label="Shadows" id="cards2" style="--rv-min:240px;margin-top:16px"></div></section>
 </main>
 <footer style="padding:24px;text-align:center;font-size:12px;color:var(--md-sys-color-on-surface-variant)"><a href="../">S4 Orion</a> exploration · Inter (SIL OFL 1.1) · Solar icons by 480 Design (CC BY 4.0)</footer>
 
@@ -82,7 +88,7 @@ h1,h2,p{margin:0}
 <script src="../components/assets/icons.js"></script>
 <script src="../components/orion.js?v=1"></script>
 <script src="lib/icon-options.js?v=1"></script>
-<script src="lib/questions.js?v=20"></script>
+<script src="lib/questions.js?v=21"></script>
 <script src="lib/review.js?v=8"></script>
 <script>
 const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
@@ -110,7 +116,7 @@ const dialog = `<div class="scrim"></div><dialog class="s4-dialog" open aria-lab
 const sheet = `<div class="scrim"></div><dialog class="s4-bottom-sheet" open aria-labelledby="sh"><h2 class="s4-sheet-title" id="sh" style="padding-top:20px">Add Expense</h2><div class="s4-sheet-content"><div class="s4-text-field"><span class="s4-text-field-affix" data-prefix>$</span><input id="s-amt" inputmode="decimal" value="18.50"><label for="s-amt">Amount</label></div><div class="s4-text-field"><input id="s-vendor" value="Blue Bottle Coffee"><label for="s-vendor">Vendor</label></div></div><div class="s4-sheet-actions"><button class="s4-button" data-variant="text" type="button">Cancel</button><button class="s4-button" type="button">Save</button></div></dialog>`;
 const frames = document.getElementById('frames'), all = [];
 [['Library (scroll it)', ''], ['Menu', menu], ['Dialog', dialog], ['Bottom sheet', sheet]].forEach(([label, extra], i) => {
-  const fr = h(`<div class="fr" data-fill="clearer" data-edge="30">${content}${chrome}${extra}</div>`), w = h(`<div class="fw"></div>`);
+  const fr = h(`<div class="fr" data-fill="clearer" data-edge="30" data-shadow="none">${content}${chrome}${extra}</div>`), w = h(`<div class="fw"></div>`);
   w.append(fr, document.createTextNode(label)); frames.appendChild(w); all.push(fr);
   fr.querySelector('.sc').scrollTop = i === 0 ? 70 : 150;
   if (extra) fr.querySelectorAll('.sc, .s4-top-app-bar, .s4-fab, .s4-toolbar, .s4-nav-bar').forEach(el => el.inert = true);
@@ -118,11 +124,13 @@ const frames = document.getElementById('frames'), all = [];
 S4.init(document.body);
 const set = (a, v) => all.forEach(f => v ? f.setAttribute(a, v) : f.removeAttribute(a));
 document.getElementById('edge').addEventListener('s4-change', e => { const v = e.detail.value; set('data-edge', v.replace('o', '')); set('data-outer', v.endsWith('o') ? '1' : ''); });
+document.getElementById('shadow').addEventListener('s4-change', e => set('data-shadow', e.detail.value));
 document.getElementById('fill').addEventListener('s4-change', e => set('data-fill', e.detail.value));
 document.getElementById('theme').addEventListener('s4-change', e => S4.theme({ mode: e.detail.value }));
 S4.theme({ mode: 'light' });
 const OPT = { '20': ['Frost Line 20%', 'Barely there.'], '30': ['Frost Line 30%', 'Quiet but visible. Suggested.'], '40': ['Frost Line 40%', 'Clearly a frame.'], '50': ['Frost Line 50%', 'Strong; still flat.'], '30o': ['30% + Outer Hairline', 'Adds a faint dark line outside so it holds over white.'] };
 Object.keys(OPT).forEach(k => document.getElementById('cards').appendChild(S4Review.card({ pick: `edge:${k}`, letter: k.toUpperCase(), title: OPT[k][0], desc: OPT[k][1], tag: k === '30' ? 'Suggested' : '' })));
+[['none', 'No Shadows', 'Raised things have no shadow at all; edge line and tint carry the depth.', 'Suggested'], ['glass', 'No Shadow on Glass Only', 'Glass surfaces lose their shadow; cards and the FAB keep theirs.', ''], ['today', 'Keep Today\'s Shadows', 'Elevation shadows as shipped.', '']].forEach(o => document.getElementById('cards2').appendChild(S4Review.card({ pick: 'shadow:' + o[0], letter: o[0][0].toUpperCase(), title: o[1], desc: o[2], tag: o[3] })));
 S4Review.page('transparency3');
 </script>
 </body>
