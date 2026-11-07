@@ -169,3 +169,4 @@ Lab 3 reworked (2026-11-07): thin frost line only (no fade), 20-50% strengths + 
 Lab 3 now has a Shadow toggle (default none): the owner does not want shadows under raised things; transparency must convey depth. Finding: without shadows the toolbar nearly vanishes over white content in light mode; the outer hairline option or a firmer tint there may be needed.
 
 **Applied 2026-11-07 ([0013](decisions/0013-glass-edge-and-no-shadow.md)):** glass has a 1px 20% frost line and no shadow (shadow returns where glass is solid). Review labs: cards can be deselected. **Next:** Transparency Lab 4 (translucent items on glass: text fields, chips, rows). Open: drop shadows on cards/FAB system-wide? Ask the owner when relevant.
+Lab 4 (transparency4.html) live: six treatments for items on glass (text fields, chips). Waiting on the pick; whichever wins must re-pass the glass text-contrast check (items add light fills on the glass).

@@ -118,5 +118,11 @@ window.S4_REVIEW_DEMOS = [
       { id: 'edge', label: 'Thin frost line (no fade) on the real UI', options: [{ v: '20', label: 'Frost Line 20%' }, { v: '30', label: 'Frost Line 30%' }, { v: '40', label: 'Frost Line 40%' }, { v: '50', label: 'Frost Line 50%' }, { v: '30o', label: '30% + Outer Hairline' }, { v: 'Other', label: 'Describe in notes' }] },
       { id: 'shadow', label: 'Shadows under raised things', options: [{ v: 'none', label: 'No Shadows' }, { v: 'glass', label: 'No Shadow on Glass Only' }, { v: 'today', label: 'Keep Today\'s Shadows' }, { v: 'Other', label: 'Describe in notes' }] }
     ]
+  },
+  {
+    id: 'transparency4', title: 'Transparency Lab 4', href: 'explore/transparency4.html',
+    questions: [
+      { id: 'items', label: 'Items sitting on glass (text fields, chips)', options: [{ v: 'A', label: 'Solid Items (today)' }, { v: 'B', label: 'Outline Only' }, { v: 'C', label: 'Frosted Fill' }, { v: 'D', label: 'Recessed Well' }, { v: 'E', label: 'Milky Fill' }, { v: 'F', label: 'Soft Well + Frost Line' }, { v: 'Other', label: 'Describe in notes' }] }
+    ]
   }
 ];
