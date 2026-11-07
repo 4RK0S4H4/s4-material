@@ -65,7 +65,7 @@ footer{padding:24px;text-align:center;font-size:12px;color:var(--md-sys-color-on
 <script src="../components/assets/icons.js"></script>
 <script src="../components/orion.js?v=1"></script>
 <script src="lib/icon-options.js?v=1"></script>
-<script src="lib/questions.js?v=17"></script>
+<script src="lib/questions.js?v=18"></script>
 <script src="lib/review.js?v=8"></script>
 <script>
 const h = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
@@ -87,7 +87,10 @@ const OPTS = {
   D: { name: 'Hairline + Soft Inner Fade', desc: 'The 1px frost line plus a few pixels just inside it that fade from frosty to the normal glass, so the edge feels slightly thicker without a second line.', v: { ...BASE, rw: '1px', ring: 'color-mix(in srgb,#fff 45%,transparent)', inner: 'inset 0 0 6px 1px color-mix(in srgb,#fff 26%,transparent)' } },
   E: { name: 'Hairline + Hint of Top Light', desc: 'The frost line is a touch stronger along the top half (about 60%) than the bottom (about 30%), a soft overhead light and still no shine.', v: { ...BASE, rw: '1px', ring: 'linear-gradient(180deg,color-mix(in srgb,#fff 60%,transparent),color-mix(in srgb,#fff 30%,transparent))' } },
   F: { name: 'Hairline + Outer Hairline', desc: 'The frost line with a very faint dark hairline just outside it, so the edge also holds up over white content in light mode.', v: { ...BASE, rw: '1px', ring: 'color-mix(in srgb,#fff 45%,transparent)', outer: '0 0 0 1px rgb(0 0 0/.07),' } },
-  G: { name: 'Thicker Frost Line', desc: 'A 2px line at about 35%: more visible as a frame, still flat.', v: { ...BASE, rw: '2px', ring: 'color-mix(in srgb,#fff 35%,transparent)' } }
+  G: { name: 'Thicker Frost Line', desc: 'A 2px line at about 35%: more visible as a frame, still flat.', v: { ...BASE, rw: '2px', ring: 'color-mix(in srgb,#fff 35%,transparent)' } },
+  H: { name: 'C + D: Tight', tag: 'Suggested', desc: 'C\'s faint 1px line (30%) with D\'s idea kept small: a 4px fade just inside it. Thin overall.', v: { ...BASE, rw: '1px', ring: 'color-mix(in srgb,#fff 30%,transparent)', inner: 'inset 0 0 4px 0 color-mix(in srgb,#fff 20%,transparent)' } },
+  I: { name: 'C + D: Fainter', desc: 'The same, one step quieter: line at 26%, fade at 13%.', v: { ...BASE, rw: '1px', ring: 'color-mix(in srgb,#fff 26%,transparent)', inner: 'inset 0 0 5px 0 color-mix(in srgb,#fff 13%,transparent)' } },
+  J: { name: 'C + D: Softer Fade', desc: 'Line at 30% with a longer, gentler fade (about 8px) at 16%: the edge reads as slightly frosted glass rather than a line.', v: { ...BASE, rw: '1px', ring: 'color-mix(in srgb,#fff 30%,transparent)', inner: 'inset 0 0 8px 1px color-mix(in srgb,#fff 16%,transparent)' } }
 };
 function phone(o) {
   const p = h('<div class="lp"></div>'), f = h('<div class="lf"></div>'); f.appendChild(feed()); p.appendChild(f);
