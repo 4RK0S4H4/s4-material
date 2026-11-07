@@ -159,3 +159,5 @@ labs could load `components/assets/` instead of their own copies.
 ## Liquid Glass workstream (2026-11-07, [0012](decisions/0012-liquid-glass-webkit.md))
 
 Lab 4 glitched on iPhone, most likely because WebKit taints canvases that drew an SVG foreignObject. Lab 4 now shows a one-line status and falls back to plain blur. **Waiting on the owner:** open `explore/liquid4.html` on the iPhone and report the status line; then pick an option in 0012. Don't build `S4.glass` before that.
+
+**Owner decision (2026-11-07):** real edge refraction over normal pages is not feasible on iPhone; fine to drop it. Next: **[Transparency Lab](../explore/transparency.html)** (CSS-only: clearer panes, lit edge, light-gathering rim, vs today). Waiting on the owner's picks, then record as 0013 and apply to `glass.css` tokens (must keep the AA guarantee; re-run `check-glass`). The WebGL path stays an optional canvas-backdrop extra, not built.

@@ -97,5 +97,12 @@ window.S4_REVIEW_DEMOS = [
       { id: 'glass', label: 'WebGL glass over a real page', options: [{ v: 'A', label: 'Liquid Frost' }, { v: 'B', label: 'Heavy Frost' }, { v: 'Other', label: 'Describe in notes' }] },
       { id: 'device', label: 'On your iPhone', options: [{ v: 'A', label: 'Shows and follows scrolling, smooth' }, { v: 'B', label: 'Shows but slow or laggy' }, { v: 'C', label: 'Glass missing, blank or wrong' }, { v: 'Other', label: 'Describe in notes' }] }
     ]
+  },
+  {
+    id: 'transparency', title: 'Transparency Lab', href: 'explore/transparency.html',
+    questions: [
+      { id: 'glass', label: 'Glass transparency and edge (CSS only)', options: [{ v: 'A', label: 'Today' }, { v: 'B', label: 'Clearer' }, { v: 'C', label: 'Clearer + Lit Edge' }, { v: 'D', label: 'Light-Gathering Rim' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'clarity', label: 'How clear should glass be', options: [{ v: 'A', label: 'More tint than shown' }, { v: 'B', label: 'About as shown' }, { v: 'C', label: 'Clearer than shown' }, { v: 'Other', label: 'Describe in notes' }] }
+    ]
   }
 ];
