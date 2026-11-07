@@ -75,6 +75,14 @@ the gallery, the demo and all 31 reference pages (the only hits are the delibera
 
 **Couldn't check here:** Safari/WebKit (not available in the sandbox). Everything above is Chromium only.
 
+## Owner critique (2026-11-07), see [0008](decisions/0008-owner-critique-2026-11-07.md)
+
+Fixed and published: faster springs, glass timing in container transforms, no white glass edge, menu toggle + menu motion,
+table sort, checkbox uncheck, slider end dot. **Open:** "still looks very Material" (text fields, checkboxes, tables, tab
+headers): build a Style Lab (`explore/style.html`, questionnaire style) with 2-3 directions per component (text field,
+checkbox, table, tabs, maybe buttons/chips), get the owner's picks, then restyle, record in 0009. Still needs the iPhone
+check for the glass-during-transform change (Safari). 1.0.0 waits for this.
+
 ## Owner review (2026-11-04) and plan review
 
 Owner: likes the demo; connected button groups felt too rounded (should be angular, round when selected). Done: inner
@@ -115,6 +123,7 @@ labs could load `components/assets/` instead of their own copies.
 
 ## Session log
 
+- 2026-11-07 (later): owner critique fixes (0008). Next: Style Lab for a less-Material look, then iPhone check, then 1.0.0.
 - 2026-11-07: repo renamed to s4-orion (links updated, skill re-packaged); Icon Lab answered, `menu` now menu-dots (0007). Next: owner's iPhone check, then 1.0.0; optional items meanwhile.
 - 2026-11-04: button groups angular (M3E inner corners), rail FAB replaces pinned FABs on wide screens, list trailing value + icon in a row, checker audits all views, Icon Lab added. Next: owner's iPhone check and Icon Lab, then 1.0.0.
 - 2026-11-03 (review): end-to-end review in Chromium; container transform rebuilt (content and label ride on the container, starts on the source even outside the surface's box, label fades back on close, glass solid while moving); gallery theme bar follows swatches. Next: owner's iPhone check, then 1.0.0.

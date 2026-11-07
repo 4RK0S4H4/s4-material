@@ -78,7 +78,7 @@ S4.register('table', function (scope) {
       /* FLIP: each row slides from where it was */
       bodyRows().forEach(function (tr) {
         var dy = before.get(tr) - tr.getBoundingClientRect().top;
-        if (dy) S4.motion.animate(tr, [{ transform: 'translateY(' + dy + 'px)' }, { transform: 'none' }], 'spatial', { fill: 'none' });
+        if (dy) S4.motion.animate(tr, [{ transform: 'translateY(' + dy + 'px)' }, { transform: 'none' }], 'spatial-calm', { fill: 'none' });
       });
     }
     table.addEventListener('click', function (e) {

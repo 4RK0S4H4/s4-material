@@ -5,22 +5,22 @@
       "motion": {
         "spring": {
           "fast-spatial": {
-            "$description": "Small things that move or resize: switch handles, chips, button press shape. Overshoots about 9%.",
+            "$description": "Small things that move or resize: switch handles, chips, button press shape. Overshoots about 3%.",
             "$extensions": {
               "com.s4.spring": true
             },
             "stiffness": {
               "$type": "number",
-              "$value": 800
+              "$value": 1400
             },
             "damping": {
               "$type": "number",
-              "$value": 0.6
+              "$value": 0.75
             },
             "duration": {
               "$type": "duration",
               "$value": {
-                "value": 375,
+                "value": 220,
                 "unit": "ms"
               },
               "$extensions": {
@@ -40,16 +40,16 @@
             },
             "stiffness": {
               "$type": "number",
-              "$value": 380
+              "$value": 900
             },
             "damping": {
               "$type": "number",
-              "$value": 0.8
+              "$value": 0.85
             },
             "duration": {
               "$type": "duration",
               "$value": {
-                "value": 415,
+                "value": 260,
                 "unit": "ms"
               },
               "$extensions": {
@@ -69,16 +69,16 @@
             },
             "stiffness": {
               "$type": "number",
-              "$value": 200
+              "$value": 520
             },
             "damping": {
               "$type": "number",
-              "$value": 0.8
+              "$value": 0.9
             },
             "duration": {
               "$type": "duration",
               "$value": {
-                "value": 568,
+                "value": 340,
                 "unit": "ms"
               },
               "$extensions": {
@@ -98,7 +98,7 @@
             },
             "stiffness": {
               "$type": "number",
-              "$value": 3800
+              "$value": 6000
             },
             "damping": {
               "$type": "number",
@@ -107,7 +107,7 @@
             "duration": {
               "$type": "duration",
               "$value": {
-                "value": 153,
+                "value": 90,
                 "unit": "ms"
               }
             }
@@ -119,7 +119,7 @@
             },
             "stiffness": {
               "$type": "number",
-              "$value": 1600
+              "$value": 3500
             },
             "damping": {
               "$type": "number",
@@ -128,7 +128,7 @@
             "duration": {
               "$type": "duration",
               "$value": {
-                "value": 222,
+                "value": 120,
                 "unit": "ms"
               }
             }
@@ -140,7 +140,7 @@
             },
             "stiffness": {
               "$type": "number",
-              "$value": 800
+              "$value": 2000
             },
             "damping": {
               "$type": "number",
@@ -149,7 +149,7 @@
             "duration": {
               "$type": "duration",
               "$value": {
-                "value": 300,
+                "value": 180,
                 "unit": "ms"
               }
             }
@@ -168,7 +168,7 @@
           },
           "stiffness": {
             "$type": "number",
-            "$value": 800
+            "$value": 1400
           },
           "damping": {
             "$type": "number",
@@ -177,7 +177,7 @@
           "duration": {
             "$type": "duration",
             "$value": {
-              "value": 299,
+              "value": 200,
               "unit": "ms"
             },
             "$extensions": {
@@ -197,7 +197,7 @@
           },
           "stiffness": {
             "$type": "number",
-            "$value": 380
+            "$value": 900
           },
           "damping": {
             "$type": "number",
@@ -206,7 +206,7 @@
           "duration": {
             "$type": "duration",
             "$value": {
-              "value": 434,
+              "value": 260,
               "unit": "ms"
             },
             "$extensions": {
@@ -226,7 +226,7 @@
           },
           "stiffness": {
             "$type": "number",
-            "$value": 200
+            "$value": 520
           },
           "damping": {
             "$type": "number",
@@ -235,7 +235,7 @@
           "duration": {
             "$type": "duration",
             "$value": {
-              "value": 598,
+              "value": 340,
               "unit": "ms"
             },
             "$extensions": {

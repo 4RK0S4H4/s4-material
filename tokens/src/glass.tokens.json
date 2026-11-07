@@ -97,7 +97,7 @@
         }
       },
       "highlight": {
-        "$description": "Hairline edge: a 1px light line along the top edge of a glass surface (decision 0004: Edge B).",
+        "$description": "Unused since 2026-11-07: the light hairline on glass edges was removed (owner critique, decision 0008).",
         "width": {
           "$type": "dimension",
           "$value": {

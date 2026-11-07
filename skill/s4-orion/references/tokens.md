@@ -327,24 +327,24 @@ Light values are shown; a second value is dark mode. Color roles also change wit
 
 | Token | Value | Dark | Notes |
 |---|---|---|---|
-| `--md-sys-motion-spring-fast-spatial-duration` | 375ms |  |  |
-| `--md-sys-motion-spring-spatial-duration` | 415ms |  |  |
-| `--md-sys-motion-spring-slow-spatial-duration` | 568ms |  |  |
-| `--md-sys-motion-spring-fast-effects-duration` | 153ms |  |  |
-| `--md-sys-motion-spring-effects-duration` | 222ms |  |  |
-| `--md-sys-motion-spring-slow-effects-duration` | 300ms |  |  |
-| `--s4-motion-spring-fast-spatial-calm-duration` | 299ms |  |  |
-| `--s4-motion-spring-spatial-calm-duration` | 434ms |  |  |
-| `--s4-motion-spring-slow-spatial-calm-duration` | 598ms |  |  |
-| `--md-sys-motion-spring-fast-spatial` | linear(…) spring easing |  | Spring: stiffness 800, damping 0.6, 375ms, overshoot 9.5%. |
-| `--md-sys-motion-spring-spatial` | linear(…) spring easing |  | Spring: stiffness 380, damping 0.8, 415ms, overshoot 1.5%. |
-| `--md-sys-motion-spring-slow-spatial` | linear(…) spring easing |  | Spring: stiffness 200, damping 0.8, 568ms, overshoot 1.5%. |
-| `--md-sys-motion-spring-fast-effects` | linear(…) spring easing |  | Spring: stiffness 3800, damping 1, 153ms, overshoot 0%. |
-| `--md-sys-motion-spring-effects` | linear(…) spring easing |  | Spring: stiffness 1600, damping 1, 222ms, overshoot 0%. |
-| `--md-sys-motion-spring-slow-effects` | linear(…) spring easing |  | Spring: stiffness 800, damping 1, 300ms, overshoot 0%. |
-| `--s4-motion-spring-fast-spatial-calm` | linear(…) spring easing |  | Spring: stiffness 800, damping 1, 299ms, overshoot 0%. |
-| `--s4-motion-spring-spatial-calm` | linear(…) spring easing |  | Spring: stiffness 380, damping 1, 434ms, overshoot 0%. |
-| `--s4-motion-spring-slow-spatial-calm` | linear(…) spring easing |  | Spring: stiffness 200, damping 1, 598ms, overshoot 0%. |
+| `--md-sys-motion-spring-fast-spatial-duration` | 220ms |  |  |
+| `--md-sys-motion-spring-spatial-duration` | 260ms |  |  |
+| `--md-sys-motion-spring-slow-spatial-duration` | 340ms |  |  |
+| `--md-sys-motion-spring-fast-effects-duration` | 90ms |  |  |
+| `--md-sys-motion-spring-effects-duration` | 120ms |  |  |
+| `--md-sys-motion-spring-slow-effects-duration` | 180ms |  |  |
+| `--s4-motion-spring-fast-spatial-calm-duration` | 200ms |  |  |
+| `--s4-motion-spring-spatial-calm-duration` | 260ms |  |  |
+| `--s4-motion-spring-slow-spatial-calm-duration` | 340ms |  |  |
+| `--md-sys-motion-spring-fast-spatial` | linear(…) spring easing |  | Spring: stiffness 1400, damping 0.75, 220ms, overshoot 2.8%. |
+| `--md-sys-motion-spring-spatial` | linear(…) spring easing |  | Spring: stiffness 900, damping 0.85, 260ms, overshoot 0.6%. |
+| `--md-sys-motion-spring-slow-spatial` | linear(…) spring easing |  | Spring: stiffness 520, damping 0.9, 340ms, overshoot 0.2%. |
+| `--md-sys-motion-spring-fast-effects` | linear(…) spring easing |  | Spring: stiffness 6000, damping 1, 90ms, overshoot 0%. |
+| `--md-sys-motion-spring-effects` | linear(…) spring easing |  | Spring: stiffness 3500, damping 1, 120ms, overshoot 0%. |
+| `--md-sys-motion-spring-slow-effects` | linear(…) spring easing |  | Spring: stiffness 2000, damping 1, 180ms, overshoot 0%. |
+| `--s4-motion-spring-fast-spatial-calm` | linear(…) spring easing |  | Spring: stiffness 1400, damping 1, 200ms, overshoot 0%. |
+| `--s4-motion-spring-spatial-calm` | linear(…) spring easing |  | Spring: stiffness 900, damping 1, 260ms, overshoot 0%. |
+| `--s4-motion-spring-slow-spatial-calm` | linear(…) spring easing |  | Spring: stiffness 520, damping 1, 340ms, overshoot 0%. |
 
 ## Motion: patterns
 

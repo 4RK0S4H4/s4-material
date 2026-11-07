@@ -4,8 +4,8 @@
    </div>
    The native range input stays on top (invisible) so dragging, keys, forms and screen readers are native. slider.js adds
    the handle, value label and stops, and keeps --_value (0..1) in sync. 16dp track: active primary, inactive
-   secondary-container, with a 6dp gap each side of a 4dp x 44dp handle; a stop indicator at the end; data-stops adds a
-   dot for each step; data-label shows the value above the handle while dragging or focused (data-prefix / data-suffix
+   secondary-container, with a 6dp gap each side of a 4dp x 44dp handle; data-stops adds a
+   dot for each step (there is no stop at the end of the track); data-label shows the value above the handle while dragging or focused (data-prefix / data-suffix
    format it). The handle narrows to 2dp while pressed. */
 @layer s4.components {
   .s4-slider {
@@ -64,10 +64,11 @@
     pointer-events: none;
     background: linear-gradient(to right, var(--_stop-on-active) var(--_x), var(--_stop-on-inactive) var(--_x));
     --_dot: radial-gradient(circle closest-side, var(--_handle) 100%, transparent 100%);   /* mask: only alpha matters */
-    mask: var(--_dot) calc(100% - var(--_inset) + var(--s4-space-1) / 2) 50% / var(--s4-space-1) var(--s4-space-1) no-repeat;
+    display: none;   /* only with data-stops: a dot at the end of the track looks odd, most of all with the handle on it */
   }
   /* data-stops: the layer spans exactly steps + 1 tiles, one dot centred in each, so dot k sits on value position k */
   .s4-slider[data-stops] .s4-slider-stops {
+    display: block;
     --_p: calc(100% / (var(--_steps, 10) + 1));   /* one tile, in this layer's own width */
     left: calc(var(--_inset) - (100% - 2 * var(--_inset)) / var(--_steps, 10) / 2);
     right: auto;

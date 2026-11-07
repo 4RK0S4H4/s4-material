@@ -112,7 +112,7 @@
     var shape = surface.animate(open ? [{ clipPath: from, transform: moved }, { clipPath: to, transform: 'none' }] : [{ clipPath: to, transform: 'none' }, { clipPath: from, transform: moved }], geo);
     /* color on the same timeline, linear so it can't overshoot either color; solid (no blur, no elevation) while the shape moves */
     var k = function (bg, edge, offset) { var f = { backgroundColor: bg, boxShadow: paint(edge), backdropFilter: 'none', webkitBackdropFilter: 'none' }; if (offset != null) f.offset = offset; return f; };
-    surface.animate(open ? [k(bgFrom, bgFrom), k(solid, solid, 0.5), k(solid, solid)]
+    surface.animate(open ? [k(bgFrom, bgFrom), k(solid, solid, 0.5), glassy ? { backgroundColor: bgTo, boxShadow: shadow, backdropFilter: blur, webkitBackdropFilter: blur } : k(solid, solid)]
       : [{ backgroundColor: bgTo, boxShadow: shadow, backdropFilter: blur, webkitBackdropFilter: blur },
          { backgroundColor: solid, boxShadow: shadow, backdropFilter: blur, webkitBackdropFilter: blur, offset: 0.15 }, k(solid, solid, 0.1501), k(solid, solid, 0.5), k(bgFrom, bgFrom)], lin);
     ghost.animate(open ? [{ opacity: 1 }, { opacity: 0, offset: 0.3 }, { opacity: 0 }] : [{ opacity: 0 }, { opacity: 0, offset: 0.2 }, { opacity: 1, offset: 0.6 }, { opacity: 1 }], lin);
@@ -127,9 +127,8 @@
       if (open) {
         /* the source stays hidden while the surface "is" the source. Landed: the shadow rises and glass turns clear (the
            blur comes on under a still-solid surface, so it never pops) */
-        var o = { duration: M.spring('effects').duration, easing: 'linear' };
-        if (shadow && shadow !== 'none') surface.animate([{ boxShadow: 'none' }, { boxShadow: shadow }], o);
-        if (glassy) surface.animate([{ backgroundColor: solid }, { backgroundColor: bgTo }], o);
+        var o = { duration: M.spring('fast-effects').duration, easing: 'linear' };
+        if (shadow && shadow !== 'none' && !glassy) surface.animate([{ boxShadow: 'none' }, { boxShadow: shadow }], o);
       }
       else { surface.style.visibility = 'hidden'; source.style.visibility = ''; }
     });
@@ -141,16 +140,35 @@
   /* call after the surface is hidden/closed so the next open starts clean */
   function restore(surface, source) { surface.style.visibility = ''; if (source) source.style.visibility = ''; }
 
-  /* ---------- unfold: a menu's own shape opens from its anchored edge; items don't move ---------- */
+  /* ---------- unfold: a menu grows out of its anchor, the same way a container transform does ----------
+     The menu's own shape starts as a small rounded piece at the corner that faces the anchor (the anchor's size and
+     corners, inside the menu's box) and opens to full size on the spatial spring; the items fade in from 35% and the
+     color is the menu's own, so nothing flashes. Closing runs it back on the calm spring. Items never move.
+     opts: open, from ('top'|'bottom'), anchor, align ('start'|'end') */
   function unfold(el, opts) {
     opts = opts || {};
-    var up = opts.from === 'bottom', r = getComputedStyle(el).borderTopLeftRadius;
-    if (opts.open === false) return done(M.animate(el, [{ opacity: 1 }, { opacity: 0 }], 'fast-effects'));
-    var closed = up ? 'inset(100% 0 0 0 round ' + r + ')' : 'inset(0 0 100% 0 round ' + r + ')';
-    var opened = 'inset(-' + SHADOW_ROOM + 'px round calc(' + r + ' + ' + SHADOW_ROOM + 'px))';
-    M.animate(el, [{ opacity: 0 }, { opacity: 1 }], 'fast-effects');
-    return done(M.animate(el, [{ clipPath: closed }, { clipPath: opened }], 'spatial')).then(function () {
-      el.getAnimations().forEach(function (a) { a.cancel(); });
+    var open = opts.open !== false, up = opts.from === 'bottom', anchor = opts.anchor;
+    if (!anchor || M.reduced()) {
+      if (!open) return done(M.animate(el, [{ opacity: 1 }, { opacity: 0 }], 'fast-effects'));
+      return done(M.animate(el, [{ opacity: 0 }, { opacity: 1 }], 'effects'));
+    }
+    var e = rect(el), a = rect(anchor), ca = getComputedStyle(anchor), ce = getComputedStyle(el);
+    var w = Math.min(a.width, e.width), h = Math.min(a.height, e.height);
+    var end = opts.align === 'end' || (e.right - a.right < a.left - e.left && Math.abs((e.right - a.right)) < 2);
+    var r = Math.min(parseFloat(ca.borderTopLeftRadius) || 0, h / 2, w / 2) + 'px', rEnd = ce.borderTopLeftRadius;
+    var top = up ? e.height - h : 0, left = end ? e.width - w : 0;
+    var from = 'inset(' + top + 'px ' + (e.width - w - left) + 'px ' + (e.height - h - top) + 'px ' + left + 'px round ' + r + ')';
+    var to = 'inset(0px round ' + rEnd + ')';
+    var sp = M.spring(open ? 'spatial' : 'spatial-calm'), lin = { duration: sp.duration, easing: 'linear', fill: 'both' };
+    var shape = el.animate(open ? [{ clipPath: from }, { clipPath: to }] : [{ clipPath: to }, { clipPath: from }], { duration: sp.duration, easing: landing(sp.easing), fill: 'both' });
+    /* backdrop blur and shadow are painted at the final box, so they ride with the clip; fade the whole menu in quickly */
+    el.animate(open ? [{ opacity: 0 }, { opacity: 1, offset: 0.25 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], lin);
+    Array.prototype.forEach.call(el.children, function (c) {
+      c.animate(open ? [{ opacity: 0 }, { opacity: 0, offset: 0.3 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0, offset: 0.25 }, { opacity: 0 }], lin);
+    });
+    return done(shape).then(function () {
+      el.getAnimations().forEach(function (x) { x.cancel(); });
+      Array.prototype.forEach.call(el.children, function (c) { c.getAnimations().forEach(function (x) { x.cancel(); }); });
     });
   }
 

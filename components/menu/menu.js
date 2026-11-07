@@ -21,13 +21,16 @@
     return below ? 'top' : 'bottom';
   };
 
+  function isOpen(menu) { return menu.matches(':popover-open') || menu.hasAttribute('data-open'); }
   function open(menu, anchor) {
-    if (menu.matches(':popover-open')) return;
+    if (isOpen(menu) && !menu._s4closing) return;
+    menu._s4closing = false;
     menu._s4anchor = anchor;
     try { menu.showPopover(); } catch (e) { menu.setAttribute('data-open', ''); }
-    var from = S4.position(menu, anchor, { align: menu.dataset.align });
+    var from = menu._s4from = S4.position(menu, anchor, { align: menu.dataset.align });
+    Array.prototype.forEach.call(document.querySelectorAll('.s4-menu'), function (o) { if (o !== menu && isOpen(o)) close(o, false); });
     if (anchor) anchor.setAttribute('aria-expanded', 'true');
-    S4.transition.unfold(menu, { from: from });
+    S4.transition.unfold(menu, { from: from, anchor: anchor, align: menu.dataset.align });
     var first = menu.querySelector('.s4-menu-item[aria-checked="true"]') || items(menu)[0];
     if (first) first.focus({ preventScroll: true });
     S4.util.emit(menu, 's4-open', {});
@@ -35,9 +38,11 @@
   function close(menu, restoreFocus) {
     var anchor = menu._s4anchor;
     if (anchor) anchor.setAttribute('aria-expanded', 'false');
-    var isOpen = menu.matches(':popover-open') || menu.hasAttribute('data-open');
-    if (!isOpen) return;
-    S4.transition.unfold(menu, { open: false }).then(function () {
+    if (!isOpen(menu) || menu._s4closing) return;
+    menu._s4closing = true;
+    S4.transition.unfold(menu, { open: false, from: menu._s4from, anchor: anchor, align: menu.dataset.align }).then(function () {
+      if (!menu._s4closing) return;   /* reopened meanwhile */
+      menu._s4closing = false;
       try { menu.hidePopover(); } catch (e) {} menu.removeAttribute('data-open');
       menu.getAnimations().forEach(function (a) { a.cancel(); });
     });
@@ -53,14 +58,14 @@
       anchor.setAttribute('aria-haspopup', 'menu'); anchor.setAttribute('aria-expanded', 'false'); anchor.setAttribute('aria-controls', menu.id);
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
-        var isOpen = menu.matches(':popover-open') || menu.hasAttribute('data-open');
-        isOpen ? close(menu) : open(menu, anchor);
+        isOpen(menu) && !menu._s4closing ? close(menu) : open(menu, anchor);
       });
       anchor.addEventListener('keydown', function (e) { if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); open(menu, anchor); } });
     });
     S4.util.all(scope, '.s4-menu').forEach(function (menu) {
       if (!S4.util.once(menu, 'menu')) return;
-      if (!menu.hasAttribute('popover')) menu.setAttribute('popover', '');
+      /* manual: we close it ourselves (animated), so a click on the open menu's own button toggles instead of reopening */
+      menu.setAttribute('popover', 'manual');
       if (!menu.getAttribute('role')) menu.setAttribute('role', 'menu');
       items(menu).forEach(function (i) { if (!i.getAttribute('role')) i.setAttribute('role', 'menuitem'); i.tabIndex = -1; });
       /* light dismiss (click outside) closes through the popover API: keep aria-expanded in sync */
@@ -89,6 +94,13 @@
       });
     });
   });
+  document.addEventListener('pointerdown', function (e) {
+    document.querySelectorAll('.s4-menu').forEach(function (m) {
+      if (!isOpen(m) || m._s4closing || m.contains(e.target)) return;
+      if (m._s4anchor && m._s4anchor.contains(e.target)) return;   /* the anchor's own click toggles */
+      close(m, false);
+    });
+  }, true);
   window.addEventListener('resize', function () {
     document.querySelectorAll('.s4-menu:popover-open').forEach(function (m) { if (m._s4anchor) S4.position(m, m._s4anchor, { align: m.dataset.align }); });
   });

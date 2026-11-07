@@ -268,7 +268,7 @@
     var shape = surface.animate(open ? [{ clipPath: from, transform: moved }, { clipPath: to, transform: 'none' }] : [{ clipPath: to, transform: 'none' }, { clipPath: from, transform: moved }], geo);
     /* color on the same timeline, linear so it can't overshoot either color; solid (no blur, no elevation) while the shape moves */
     var k = function (bg, edge, offset) { var f = { backgroundColor: bg, boxShadow: paint(edge), backdropFilter: 'none', webkitBackdropFilter: 'none' }; if (offset != null) f.offset = offset; return f; };
-    surface.animate(open ? [k(bgFrom, bgFrom), k(solid, solid, 0.5), k(solid, solid)]
+    surface.animate(open ? [k(bgFrom, bgFrom), k(solid, solid, 0.5), glassy ? { backgroundColor: bgTo, boxShadow: shadow, backdropFilter: blur, webkitBackdropFilter: blur } : k(solid, solid)]
       : [{ backgroundColor: bgTo, boxShadow: shadow, backdropFilter: blur, webkitBackdropFilter: blur },
          { backgroundColor: solid, boxShadow: shadow, backdropFilter: blur, webkitBackdropFilter: blur, offset: 0.15 }, k(solid, solid, 0.1501), k(solid, solid, 0.5), k(bgFrom, bgFrom)], lin);
     ghost.animate(open ? [{ opacity: 1 }, { opacity: 0, offset: 0.3 }, { opacity: 0 }] : [{ opacity: 0 }, { opacity: 0, offset: 0.2 }, { opacity: 1, offset: 0.6 }, { opacity: 1 }], lin);
@@ -283,9 +283,8 @@
       if (open) {
         /* the source stays hidden while the surface "is" the source. Landed: the shadow rises and glass turns clear (the
            blur comes on under a still-solid surface, so it never pops) */
-        var o = { duration: M.spring('effects').duration, easing: 'linear' };
-        if (shadow && shadow !== 'none') surface.animate([{ boxShadow: 'none' }, { boxShadow: shadow }], o);
-        if (glassy) surface.animate([{ backgroundColor: solid }, { backgroundColor: bgTo }], o);
+        var o = { duration: M.spring('fast-effects').duration, easing: 'linear' };
+        if (shadow && shadow !== 'none' && !glassy) surface.animate([{ boxShadow: 'none' }, { boxShadow: shadow }], o);
       }
       else { surface.style.visibility = 'hidden'; source.style.visibility = ''; }
     });
@@ -297,16 +296,35 @@
   /* call after the surface is hidden/closed so the next open starts clean */
   function restore(surface, source) { surface.style.visibility = ''; if (source) source.style.visibility = ''; }
 
-  /* ---------- unfold: a menu's own shape opens from its anchored edge; items don't move ---------- */
+  /* ---------- unfold: a menu grows out of its anchor, the same way a container transform does ----------
+     The menu's own shape starts as a small rounded piece at the corner that faces the anchor (the anchor's size and
+     corners, inside the menu's box) and opens to full size on the spatial spring; the items fade in from 35% and the
+     color is the menu's own, so nothing flashes. Closing runs it back on the calm spring. Items never move.
+     opts: open, from ('top'|'bottom'), anchor, align ('start'|'end') */
   function unfold(el, opts) {
     opts = opts || {};
-    var up = opts.from === 'bottom', r = getComputedStyle(el).borderTopLeftRadius;
-    if (opts.open === false) return done(M.animate(el, [{ opacity: 1 }, { opacity: 0 }], 'fast-effects'));
-    var closed = up ? 'inset(100% 0 0 0 round ' + r + ')' : 'inset(0 0 100% 0 round ' + r + ')';
-    var opened = 'inset(-' + SHADOW_ROOM + 'px round calc(' + r + ' + ' + SHADOW_ROOM + 'px))';
-    M.animate(el, [{ opacity: 0 }, { opacity: 1 }], 'fast-effects');
-    return done(M.animate(el, [{ clipPath: closed }, { clipPath: opened }], 'spatial')).then(function () {
-      el.getAnimations().forEach(function (a) { a.cancel(); });
+    var open = opts.open !== false, up = opts.from === 'bottom', anchor = opts.anchor;
+    if (!anchor || M.reduced()) {
+      if (!open) return done(M.animate(el, [{ opacity: 1 }, { opacity: 0 }], 'fast-effects'));
+      return done(M.animate(el, [{ opacity: 0 }, { opacity: 1 }], 'effects'));
+    }
+    var e = rect(el), a = rect(anchor), ca = getComputedStyle(anchor), ce = getComputedStyle(el);
+    var w = Math.min(a.width, e.width), h = Math.min(a.height, e.height);
+    var end = opts.align === 'end' || (e.right - a.right < a.left - e.left && Math.abs((e.right - a.right)) < 2);
+    var r = Math.min(parseFloat(ca.borderTopLeftRadius) || 0, h / 2, w / 2) + 'px', rEnd = ce.borderTopLeftRadius;
+    var top = up ? e.height - h : 0, left = end ? e.width - w : 0;
+    var from = 'inset(' + top + 'px ' + (e.width - w - left) + 'px ' + (e.height - h - top) + 'px ' + left + 'px round ' + r + ')';
+    var to = 'inset(0px round ' + rEnd + ')';
+    var sp = M.spring(open ? 'spatial' : 'spatial-calm'), lin = { duration: sp.duration, easing: 'linear', fill: 'both' };
+    var shape = el.animate(open ? [{ clipPath: from }, { clipPath: to }] : [{ clipPath: to }, { clipPath: from }], { duration: sp.duration, easing: landing(sp.easing), fill: 'both' });
+    /* backdrop blur and shadow are painted at the final box, so they ride with the clip; fade the whole menu in quickly */
+    el.animate(open ? [{ opacity: 0 }, { opacity: 1, offset: 0.25 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }], lin);
+    Array.prototype.forEach.call(el.children, function (c) {
+      c.animate(open ? [{ opacity: 0 }, { opacity: 0, offset: 0.3 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0, offset: 0.25 }, { opacity: 0 }], lin);
+    });
+    return done(shape).then(function () {
+      el.getAnimations().forEach(function (x) { x.cancel(); });
+      Array.prototype.forEach.call(el.children, function (c) { c.getAnimations().forEach(function (x) { x.cancel(); }); });
     });
   }
 
@@ -1046,7 +1064,7 @@ S4.register('table', function (scope) {
       /* FLIP: each row slides from where it was */
       bodyRows().forEach(function (tr) {
         var dy = before.get(tr) - tr.getBoundingClientRect().top;
-        if (dy) S4.motion.animate(tr, [{ transform: 'translateY(' + dy + 'px)' }, { transform: 'none' }], 'spatial', { fill: 'none' });
+        if (dy) S4.motion.animate(tr, [{ transform: 'translateY(' + dy + 'px)' }, { transform: 'none' }], 'spatial-calm', { fill: 'none' });
       });
     }
     table.addEventListener('click', function (e) {
@@ -1410,13 +1428,16 @@ S4.register('progress', function (scope) {
     return below ? 'top' : 'bottom';
   };
 
+  function isOpen(menu) { return menu.matches(':popover-open') || menu.hasAttribute('data-open'); }
   function open(menu, anchor) {
-    if (menu.matches(':popover-open')) return;
+    if (isOpen(menu) && !menu._s4closing) return;
+    menu._s4closing = false;
     menu._s4anchor = anchor;
     try { menu.showPopover(); } catch (e) { menu.setAttribute('data-open', ''); }
-    var from = S4.position(menu, anchor, { align: menu.dataset.align });
+    var from = menu._s4from = S4.position(menu, anchor, { align: menu.dataset.align });
+    Array.prototype.forEach.call(document.querySelectorAll('.s4-menu'), function (o) { if (o !== menu && isOpen(o)) close(o, false); });
     if (anchor) anchor.setAttribute('aria-expanded', 'true');
-    S4.transition.unfold(menu, { from: from });
+    S4.transition.unfold(menu, { from: from, anchor: anchor, align: menu.dataset.align });
     var first = menu.querySelector('.s4-menu-item[aria-checked="true"]') || items(menu)[0];
     if (first) first.focus({ preventScroll: true });
     S4.util.emit(menu, 's4-open', {});
@@ -1424,9 +1445,11 @@ S4.register('progress', function (scope) {
   function close(menu, restoreFocus) {
     var anchor = menu._s4anchor;
     if (anchor) anchor.setAttribute('aria-expanded', 'false');
-    var isOpen = menu.matches(':popover-open') || menu.hasAttribute('data-open');
-    if (!isOpen) return;
-    S4.transition.unfold(menu, { open: false }).then(function () {
+    if (!isOpen(menu) || menu._s4closing) return;
+    menu._s4closing = true;
+    S4.transition.unfold(menu, { open: false, from: menu._s4from, anchor: anchor, align: menu.dataset.align }).then(function () {
+      if (!menu._s4closing) return;   /* reopened meanwhile */
+      menu._s4closing = false;
       try { menu.hidePopover(); } catch (e) {} menu.removeAttribute('data-open');
       menu.getAnimations().forEach(function (a) { a.cancel(); });
     });
@@ -1442,14 +1465,14 @@ S4.register('progress', function (scope) {
       anchor.setAttribute('aria-haspopup', 'menu'); anchor.setAttribute('aria-expanded', 'false'); anchor.setAttribute('aria-controls', menu.id);
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
-        var isOpen = menu.matches(':popover-open') || menu.hasAttribute('data-open');
-        isOpen ? close(menu) : open(menu, anchor);
+        isOpen(menu) && !menu._s4closing ? close(menu) : open(menu, anchor);
       });
       anchor.addEventListener('keydown', function (e) { if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); open(menu, anchor); } });
     });
     S4.util.all(scope, '.s4-menu').forEach(function (menu) {
       if (!S4.util.once(menu, 'menu')) return;
-      if (!menu.hasAttribute('popover')) menu.setAttribute('popover', '');
+      /* manual: we close it ourselves (animated), so a click on the open menu's own button toggles instead of reopening */
+      menu.setAttribute('popover', 'manual');
       if (!menu.getAttribute('role')) menu.setAttribute('role', 'menu');
       items(menu).forEach(function (i) { if (!i.getAttribute('role')) i.setAttribute('role', 'menuitem'); i.tabIndex = -1; });
       /* light dismiss (click outside) closes through the popover API: keep aria-expanded in sync */
@@ -1478,6 +1501,13 @@ S4.register('progress', function (scope) {
       });
     });
   });
+  document.addEventListener('pointerdown', function (e) {
+    document.querySelectorAll('.s4-menu').forEach(function (m) {
+      if (!isOpen(m) || m._s4closing || m.contains(e.target)) return;
+      if (m._s4anchor && m._s4anchor.contains(e.target)) return;   /* the anchor's own click toggles */
+      close(m, false);
+    });
+  }, true);
   window.addEventListener('resize', function () {
     document.querySelectorAll('.s4-menu:popover-open').forEach(function (m) { if (m._s4anchor) S4.position(m, m._s4anchor, { align: m.dataset.align }); });
   });

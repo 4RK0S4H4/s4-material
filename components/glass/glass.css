@@ -23,15 +23,10 @@
          .s4-rich-tooltip) {
     --md-sys-color-on-surface-variant: var(--md-sys-color-on-surface);
     --_glass-tint: var(--s4-glass-tint-opacity-float);
-    --_glass-edge: to bottom;   /* where the hairline sits: the edge that faces content */
     background-color: color-mix(in srgb, var(--s4-glass-tint-float) calc(var(--_glass-tint) * 100%), transparent);
-    background-image: linear-gradient(var(--_glass-edge), var(--s4-glass-highlight-color) 0 var(--s4-glass-highlight-width), transparent var(--s4-glass-highlight-width));
     -webkit-backdrop-filter: blur(var(--s4-glass-blur-float)) saturate(var(--s4-glass-saturation-float)) contrast(var(--s4-glass-backdrop-contrast-float)) brightness(var(--s4-glass-backdrop-brightness-float));
     backdrop-filter: blur(var(--s4-glass-blur-float)) saturate(var(--s4-glass-saturation-float)) contrast(var(--s4-glass-backdrop-contrast-float)) brightness(var(--s4-glass-backdrop-brightness-float));
   }
-  /* the app bar's content-facing edge is its bottom */
-  :where(.s4-top-app-bar[data-scrolled]) { --_glass-edge: to top; }
-
   /* a toolbar in vibrant color keeps its role as the tint */
   :where(.s4-toolbar[data-color="vibrant"]) { background-color: color-mix(in srgb, var(--md-sys-color-primary-container) calc(var(--_glass-tint) * 100%), transparent); }
 
