@@ -1097,13 +1097,13 @@ export const tokens = {
   },
   "--s4-glass-highlight-width": {
     "type": "dimension",
-    "value": "1px"
+    "value": "0.5px"
   },
   "--s4-glass-highlight-color": {
     "type": "color",
-    "value": "rgb(255 255 255 / 0.2)",
+    "value": "rgb(255 255 255 / 0.28)",
     "modes": {
-      "dark": "rgb(255 255 255 / 0.2)",
+      "dark": "rgb(255 255 255 / 0.28)",
       "high-contrast": "rgb(255 255 255 / 0)",
       "dark-high-contrast": "rgb(255 255 255 / 0)",
       "reduced-transparency": "rgb(255 255 255 / 0)"

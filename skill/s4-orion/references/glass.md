@@ -28,7 +28,7 @@ above content. Content itself is always solid.
 ```css
 background-color: color-mix(in srgb, var(--s4-glass-tint-float) 60%, transparent);   /* surface-container */
 backdrop-filter: blur(16px) saturate(1.2) contrast(.74) brightness(1.1);              /* dark: contrast(1) brightness(.8) */
-box-shadow: inset 0 0 0 1px rgb(255 255 255 / .2);                                    /* the thin frost line; no elevation shadow */
+box-shadow: inset 0 0 0 .5px rgb(255 255 255 / .28);                                  /* the thin frost line; no elevation shadow */
 ```
 
 Components don't write this: `glass.css` applies it to the listed components in its own cascade layer. To make something
@@ -46,7 +46,7 @@ else glass (a custom floating panel), add `class="s4-glass"`. To keep one elemen
 | `prefers-reduced-motion` | Unchanged (glass doesn't move); transitions into it follow the motion rules |
 
 ## Edge and depth
-Glass has **no shadow**: the transparency itself says what is in front. The only edge is a 1px frost line (`--s4-glass-highlight-width` / `-color`, white at 20%), same all the way round, no fade, no glow (decision 0013). Over plain white content in light mode the glass can look flat; that is accepted.
+Glass has **no shadow**: the transparency itself says what is in front. The only edge is a thin frost line (`--s4-glass-highlight-width` / `-color`: half a pixel, white at 28%), no fade, no glow (decisions 0013, 0016). Floating surfaces (toolbar, menu, dialog, phone bottom sheet) get it all the way round; full-width and docked ones (top app bar, nav bar, docked toolbar, rail, side sheet, wide bottom sheet) get it only on the edge that faces the content. Over plain white content in light mode the glass can look flat; that is accepted.
 
 ## Items on glass
 Controls inside a glass surface (a dialog's fields, a menu's chips) stay your UI: they keep their own color at full fill (`--s4-glass-item-fill: 1`; lower it to let the blurred backdrop tint them) and drop their outlines, so the glass supplies the depth and the items stay clean (decision 0015).

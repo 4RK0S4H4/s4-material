@@ -56,6 +56,15 @@ const outputs = {
   'skill/s4-orion/assets/orion.css': cssSkill,
   'skill/s4-orion/assets/orion.js': js,
 };
+/* the demo is a self-contained app that carries its own copy (its font sits beside the stylesheet) with cache-busting versions, so it can never go stale */
+import { createHash } from 'node:crypto';
+const hash = (t) => createHash('sha1').update(t).digest('hex').slice(0, 7);
+const demoCss = cssSkill.replace('url("assets/inter-variable.woff2")', 'url("inter-variable.woff2")');
+if (existsSync(join(root, 'demo/index.html'))) {
+  outputs['demo/orion.css'] = demoCss;
+  outputs['demo/orion.js'] = js;
+  outputs['demo/index.html'] = readFileSync(join(root, 'demo/index.html'), 'utf8').replace(/orion\.css\?v=[\w]+/, 'orion.css?v=' + hash(demoCss)).replace(/orion\.js\?v=[\w]+/, 'orion.js?v=' + hash(js));
+}
 const copies = {
   'skill/s4-orion/assets/icons.js': 'components/assets/icons.js',
   'skill/s4-orion/assets/m3color.js': 'components/assets/m3color.js',

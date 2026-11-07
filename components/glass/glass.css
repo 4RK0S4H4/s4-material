@@ -29,6 +29,14 @@
     -webkit-backdrop-filter: blur(var(--s4-glass-blur-float)) saturate(var(--s4-glass-saturation-float)) contrast(var(--s4-glass-backdrop-contrast-float)) brightness(var(--s4-glass-backdrop-brightness-float));
     backdrop-filter: blur(var(--s4-glass-blur-float)) saturate(var(--s4-glass-saturation-float)) contrast(var(--s4-glass-backdrop-contrast-float)) brightness(var(--s4-glass-backdrop-brightness-float));
   }
+  /* full-width bars and docked surfaces touch the screen edges, so the frost line is drawn only on the edge that faces the content
+     (a line along the screen edge reads as a box around the bar, especially on a phone) */
+  :where(.s4-top-app-bar[data-scrolled]) { box-shadow: inset 0 calc(-1 * var(--s4-glass-highlight-width)) 0 0 var(--s4-glass-highlight-color); }
+  :where(.s4-nav-bar, .s4-toolbar[data-type="docked"]) { box-shadow: inset 0 var(--s4-glass-highlight-width) 0 0 var(--s4-glass-highlight-color); }
+  :where(.s4-nav-rail:is([data-modal], [data-overlay])) { box-shadow: inset calc(-1 * var(--s4-glass-highlight-width)) 0 0 0 var(--s4-glass-highlight-color); }
+  :where(.s4-side-sheet) { box-shadow: inset var(--s4-glass-highlight-width) 0 0 0 var(--s4-glass-highlight-color); }
+  @media (min-width: 600px) { :where(.s4-bottom-sheet) { box-shadow: inset 0 var(--s4-glass-highlight-width) 0 0 var(--s4-glass-highlight-color); } }
+
   /* a toolbar in vibrant color keeps its role as the tint */
   :where(.s4-toolbar[data-color="vibrant"]) { background-color: color-mix(in srgb, var(--md-sys-color-primary-container) calc(var(--_glass-tint) * 100%), transparent); }
 

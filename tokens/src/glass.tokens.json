@@ -97,11 +97,11 @@
         }
       },
       "highlight": {
-        "$description": "The thin frost line on glass edges (decision 0013, owner pick 2026-11-07: 20%, no shadows). A 1px line in milky white; it is the only edge treatment glass gets. Zero in high contrast.",
+        "$description": "The thin frost line on glass edges (decisions 0013 and 0016: a half-pixel line, white at 28%, no shadow). Full-width bars draw it only on the edge that faces the content. Zero in high contrast.",
         "width": {
           "$type": "dimension",
           "$value": {
-            "value": 1,
+            "value": 0.5,
             "unit": "px"
           }
         },
@@ -114,7 +114,7 @@
               1,
               1
             ],
-            "alpha": 0.2,
+            "alpha": 0.28,
             "hex": "#ffffff"
           },
           "$extensions": {
@@ -126,7 +126,7 @@
                   1,
                   1
                 ],
-                "alpha": 0.2,
+                "alpha": 0.28,
                 "hex": "#ffffff"
               },
               "high-contrast": {

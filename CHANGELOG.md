@@ -15,6 +15,7 @@ The first version of S4 Orion, a leaner rebuild of S4 Material 1.3 on Material 3
 - Glass: a 1px frost line (white at 20%, `--s4-glass-highlight-*`) replaces the elevation shadow on glass surfaces; the shadow returns wherever glass is solid. Fill and contrast guarantee unchanged.
 - Glass: color boost through the backdrop reduced from 180% to 120% (decision 0014); blur and tint unchanged.
 - Glass: items on glass (decision 0015): buttons, chips and text fields keep their own color at full fill (`--s4-glass-item-fill`), text fields and the unchecked switch lose their outline at rest, outline-only items (outlined button, unselected chip) get the frost line (`--s4-glass-item-outline`).
+- Glass: frost line thinner (0.5px, 28%) and drawn only on the content-facing edge of full-width bars (decision 0016). The demo's stylesheet copy is now built and checked by `npm run build`.
 - Review labs: a picked card or chip can be tapped again to deselect.
 
 ### Explored (not part of 1.0.0 yet)

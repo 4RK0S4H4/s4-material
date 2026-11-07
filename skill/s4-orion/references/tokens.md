@@ -368,8 +368,8 @@ Light values are shown; a second value is dark mode. Color roles also change wit
 | `--s4-glass-saturation-float` | 1.2 |  | saturate() on the backdrop, calmer color showing through (decision 0014: 120%, was 180%). |
 | `--s4-glass-backdrop-contrast-float` | 0.74 | 1 | contrast() on the backdrop: lifts blacks behind light glass so dark text keeps 4.5:1. |
 | `--s4-glass-backdrop-brightness-float` | 1.1 | 0.8 | brightness() on the backdrop: dims whites behind dark glass so light text keeps 4.5:1. |
-| `--s4-glass-highlight-width` | 1px |  |  |
-| `--s4-glass-highlight-color` | rgb(255 255 255 / 0.2) | rgb(255 255 255 / 0.2) |  |
+| `--s4-glass-highlight-width` | 0.5px |  |  |
+| `--s4-glass-highlight-color` | rgb(255 255 255 / 0.28) | rgb(255 255 255 / 0.28) |  |
 | `--s4-glass-max-stack` | 2 |  | At most two glass layers overlap at any point (e.g. a menu over an app bar). A third becomes solid. |
 | `--s4-glass-item-fill` | 1 |  | How much of its own color an item (button, chip, text field) keeps on glass, 1 = fully (decision 0015: owner picked full fill; lower it to let the blurred backdrop tint items). |
 | `--s4-glass-item-outline` | rgb(255 255 255 / 0.28) | rgb(255 255 255 / 0.28) | The outline of an outline-only item on glass (outlined button, unselected chip): the glass's milky frost line, a little stronger than the edge (decision 0015). Zero in high contrast, where glass is solid and the item keeps its own outline. |
