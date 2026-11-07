@@ -2,7 +2,7 @@
 # Glass
 
 **Tokens:** `--s4-glass-*` · **CSS:** `components/glass/glass.css` · decided in the
-[Glass Lab](https://4rk0s4h4.github.io/s4-material/explore/glass.html) ([decision 0004](../decisions/0004-glass.md))
+[Glass Lab](https://4rk0s4h4.github.io/s4-orion/explore/glass.html) ([decision 0004](../decisions/0004-glass.md))
 
 S4 Orion is Material 3 Expressive with one personal layer: very clear, Liquid Glass-inspired glass on the things that float
 above content. Content itself is always solid.

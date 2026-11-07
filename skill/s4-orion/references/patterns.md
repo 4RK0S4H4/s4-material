@@ -1,7 +1,7 @@
 # S4 Orion screen patterns
 
 How the components combine into screens. Each pattern names the components and why; markup details for each
-component are in `components.md`. Live demo app: https://4rk0s4h4.github.io/s4-material/demo/
+component are in `components.md`. Live demo app: https://4rk0s4h4.github.io/s4-orion/demo/
 
 ## Contents
 

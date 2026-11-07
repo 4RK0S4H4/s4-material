@@ -2,7 +2,7 @@
 
 S4 Orion is the owner's personal design system for web apps and pages: Material 3 Expressive plus a very clear,
 contrast-guaranteed glass layer on floating chrome. It replaces the older **S4 Material** skill. **S4 Glass is a separate,
-unrelated system**; don't mix the two. The repo is named `s4-material` for history only; the product is **S4 Orion**.
+unrelated system**; don't mix the two. The repo was renamed from `s4-material` to `s4-orion` (2026-11); the product is **S4 Orion**.
 
 **Start every session by reading [`docs/NEXT.md`](docs/NEXT.md)**: current phase, the plan for what's left, the backlog
 and the open questions. Update it (and the README phase table and CHANGELOG) before ending any session that changed
@@ -10,7 +10,7 @@ something, so the next session can pick up cold.
 
 ## How the owner works
 
-- **Publish everything reviewable to GitHub Pages** and link it in the reply: https://4rk0s4h4.github.io/s4-material/
+- **Publish everything reviewable to GitHub Pages** and link it in the reply: https://4rk0s4h4.github.io/s4-orion/
   (deploys from `main`, repo root). The owner reviews on an iPhone, so check pages at 390px as well as desktop.
 - **Design decisions are made through review labs** in `explore/` (questionnaire style: options picked by tapping the
   option card right above its demo, answers saved in localStorage with an in-memory fallback, a Copy Answers button at

@@ -2,9 +2,9 @@
 
 **Tokens:** `--md-sys-motion-spring-<name>` (a CSS `linear()` easing) with `-duration`, `-stiffness`, `-damping`; calm
 variants `--s4-motion-spring-<name>-calm`; patterns `--s4-motion-pattern-*` · live:
-[tokens page](https://4rk0s4h4.github.io/s4-material/tokens/#motion) · decided in the
-[Motion Lab](https://4rk0s4h4.github.io/s4-material/explore/motion.html) and
-[Transitions Lab](https://4rk0s4h4.github.io/s4-material/explore/transitions.html)
+[tokens page](https://4rk0s4h4.github.io/s4-orion/tokens/#motion) · decided in the
+[Motion Lab](https://4rk0s4h4.github.io/s4-orion/explore/motion.html) and
+[Transitions Lab](https://4rk0s4h4.github.io/s4-orion/explore/transitions.html)
 
 ## Springs
 S4 Orion uses **M3 Expressive springs**. Each is stored as physics (stiffness, damping ratio, duration) and the build
