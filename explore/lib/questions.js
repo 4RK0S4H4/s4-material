@@ -99,6 +99,13 @@ window.S4_REVIEW_DEMOS = [
     ]
   },
   {
+    id: 'liquid5', title: 'Liquid Glass Lab 5', href: 'explore/liquid5.html',
+    questions: [
+      { id: 'glass', label: 'Liquid glass on the real bars', options: [{ v: 'A', label: 'Today (blur only)' }, { v: 'B', label: 'Soft Liquid' }, { v: 'C', label: 'Liquid Lens' }, { v: 'D', label: 'Extra Lens' }, { v: 'Other', label: 'Describe in notes' }] },
+      { id: 'device', label: 'On your iPhone', options: [{ v: 'A', label: 'Bends, follows scrolling, smooth' }, { v: 'B', label: 'Bends but scrolling is laggy' }, { v: 'C', label: 'No bend (looks like plain blur)' }, { v: 'D', label: 'Broken (blank, misplaced or doubled)' }, { v: 'Other', label: 'Describe in notes' }] }
+    ]
+  },
+  {
     id: 'transparency', title: 'Transparency Lab', href: 'explore/transparency.html',
     questions: [
       { id: 'glass', label: 'Glass transparency and edge (CSS only)', options: [{ v: 'A', label: 'Today' }, { v: 'B', label: 'Clearer' }, { v: 'C', label: 'Clearer + Lit Edge' }, { v: 'D', label: 'Light-Gathering Rim' }, { v: 'E', label: 'Specular Arcs' }, { v: 'F', label: 'Bevel Hairlines' }, { v: 'G', label: 'Prism Edge' }, { v: 'H', label: 'Bright Band' }, { v: 'I', label: 'Frost Bevel' }, { v: 'J', label: 'Everything Together' }, { v: 'Other', label: 'Describe in notes' }] },

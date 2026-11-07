@@ -396,5 +396,12 @@
 <script src="orion.js?v=2d3d132"></script>
 <script>S4.theme.restore('pocket-ledger-theme', { mode: 'system' });</script>
 <script src="demo.js"></script>
+<script>/* ?liquid: try the liquid glass mirror (explore/lib/liquid-mirror.js, Liquid Glass Lab 5) on the nav bar and the top app bar */
+if (/[?&]liquid\b/.test(location.search)) document.write('<script src="../explore/lib/liquid-mirror.js?v=272e7fc"><\/script>');</script>
+<script>if (window.LiquidMirror) (function () {
+  var main = document.querySelector('.s4-content'), q = new URLSearchParams(location.search), o = { bend: +(q.get('liquid') || 1.2), edge: q.get('edge') || 'lens', frost: +(q.get('frost') || 8), rimTint: +(q.get('rim') || 0.5) };
+  LiquidMirror.attach(document.querySelector('.s4-nav-bar'), Object.assign({ source: main, edges: 'top' }, o));
+  LiquidMirror.attach(document.querySelector('.s4-top-app-bar'), Object.assign({ source: main, edges: 'bottom' }, o));
+})();</script>
 </body>
 </html>

@@ -19,7 +19,7 @@ something, so the next session can pick up cold.
 - **Motion labs get the scrubber** (`explore/lib/scrub.js`: a blue bar to freeze an animation and drag through it, so the owner can send screenshots of exact moments); the demo has it at `demo/index.html?scrub`.
 - **Pause for approval** at the points named in `docs/NEXT.md`; otherwise keep going without asking.
 - Keep replies short and plain; lead with links and what needs a decision. Subagents are fine for parallel work.
-- Recorded decisions live in `docs/decisions/` (0001 audit, 0002 repo, 0003 tokens, 0004 glass, 0005 phase 6 review, 0006 liquid glass, 0007 icons, 0008 owner critique, 0009 style lab, 0010 critique round 2, 0011 style lab 2, 0012 liquid glass webkit, 0013 glass edge and no shadow, 0014 calmer glass color, 0015 items on glass, 0016 thinner frost line, 0017 no shadows, 0018 menu emerges). Don't reopen a
+- Recorded decisions live in `docs/decisions/` (0001 audit, 0002 repo, 0003 tokens, 0004 glass, 0005 phase 6 review, 0006 liquid glass, 0007 icons, 0008 owner critique, 0009 style lab, 0010 critique round 2, 0011 style lab 2, 0012 liquid glass webkit, 0013 glass edge and no shadow, 0014 calmer glass color, 0015 items on glass, 0016 thinner frost line, 0017 no shadows, 0018 menu emerges, 0019 liquid glass mirror). Don't reopen a
   decision without the owner; add a new numbered record for new ones.
 
 ## Git and publishing

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Liquid Glass Lab 5: Phone</title>
+<link rel="stylesheet" href="../components/orion.css?v=669eff6">
+<style>
+/* lab scenery: colorful "photos" so the bend at the glass edge is easy to see (labs may use raw colors; the system never does) */
+.trip{display:flex;flex-direction:column;justify-content:flex-end;min-height:180px;padding:16px;border-radius:var(--md-sys-shape-corner-extra-large);color:#fff;text-shadow:0 1px 3px rgb(0 0 0 / .45)}
+.trip b{font:600 22px/28px var(--md-ref-typeface-plain)}
+.trip span{font:400 14px/20px var(--md-ref-typeface-plain);opacity:.9}
+.p1{background:radial-gradient(circle at 75% 25%,#ffd36e 0 14%,transparent 15%),linear-gradient(180deg,#ff7e5f 0%,#feb47b 45%,#3a1c71 46%,#0b1d3a 100%)}
+.p2{background:repeating-linear-gradient(115deg,#0f5132 0 18px,#198754 18px 36px),#198754}
+.p3{background:radial-gradient(circle at 30% 70%,#00d2ff 0 20%,transparent 21%),radial-gradient(circle at 70% 30%,#ff00cc 0 18%,transparent 19%),linear-gradient(135deg,#1a1a2e,#3a0ca3)}
+.p4{background:linear-gradient(90deg,#f94144 0 14%,#f3722c 0 28%,#f9c74f 0 42%,#90be6d 0 56%,#43aa8b 0 70%,#577590 0 84%,#9b5de5 0)}
+.p5{background:conic-gradient(from 30deg,#ff006e,#fb5607,#ffbe0b,#3a86ff,#8338ec,#ff006e)}
+.p6{background:repeating-linear-gradient(0deg,#111 0 2px,#fafafa 2px 14px)}
+.ttl{padding:8px 4px 0}
+</style>
+</head>
+<body>
+<div class="s4-app">
+  <div class="s4-app-body">
+    <header class="s4-top-app-bar">
+      <div class="s4-app-bar-title-group"><h1 class="s4-app-bar-title">Trips</h1></div>
+      <div class="s4-app-bar-actions">
+        <button class="s4-icon-button" type="button" aria-label="Search"><span class="s4-icon" data-icon="search"></span></button>
+        <button class="s4-icon-button" type="button" aria-label="More Options"><span class="s4-icon" data-icon="more-vert"></span></button>
+      </div>
+    </header>
+    <main class="s4-content">
+      <section class="s4-view" data-view="trips" data-title="Trips">
+        <div class="s4-stack">
+          <div class="trip p1"><b>Sunset Coast</b><span>Oct 12–16 · 4 nights</span></div>
+          <div class="trip p2"><b>Pine Ridge</b><span>Nov 2–4 · Cabin</span></div>
+          <ul class="s4-list" data-style="segmented">
+            <li class="s4-list-subheader">Coming Up</li>
+            <li><a class="s4-list-item" href="#"><span class="s4-list-leading"><span class="s4-avatar">LS</span></span><span class="s4-list-content"><span class="s4-list-headline">Lisbon</span><span class="s4-list-supporting">Flight TP 214 · 08:40</span></span><span class="s4-list-trailing"><span class="s4-status" data-tone="success">Booked</span></span></a></li>
+            <li><a class="s4-list-item" href="#"><span class="s4-list-leading"><span class="s4-avatar">KY</span></span><span class="s4-list-content"><span class="s4-list-headline">Kyoto</span><span class="s4-list-supporting">Ryokan · 3 nights</span></span><span class="s4-list-trailing"><span class="s4-status" data-tone="warning">Pending</span></span></a></li>
+            <li><a class="s4-list-item" href="#"><span class="s4-list-leading"><span class="s4-avatar">RK</span></span><span class="s4-list-content"><span class="s4-list-headline">Reykjavík</span><span class="s4-list-supporting">Northern lights tour</span></span><span class="s4-list-trailing"><span class="s4-status">Idea</span></span></a></li>
+          </ul>
+          <div class="trip p3"><b>Neon Nights</b><span>Tokyo · Dec 1–8</span></div>
+          <div class="trip p4"><b>Color Run</b><span>Saturday · 10 km</span></div>
+          <p class="s4-body-large ttl">Text scrolling under the glass bends at its edge too. The quick brown fox jumps over the lazy dog, 0123456789.</p>
+          <div class="trip p5"><b>Festival</b><span>Summer · 3 days</span></div>
+          <div class="trip p6"><b>Stripes</b><span>Fine lines show the bend best</span></div>
+          <div class="trip p1"><b>Sunset Coast Again</b><span>Next year</span></div>
+        </div>
+        <div class="s4-toolbar-dock" data-position="bottom">
+          <div class="s4-toolbar" role="toolbar" aria-label="Trip Actions">
+            <button class="s4-icon-button" type="button" aria-label="Calendar"><span class="s4-icon" data-icon="calendar"></span></button>
+            <button class="s4-icon-button" type="button" aria-label="Budget"><span class="s4-icon" data-icon="wallet"></span></button>
+            <button class="s4-icon-button" type="button" aria-label="Share"><span class="s4-icon" data-icon="share"></span></button>
+            <button class="s4-icon-button" type="button" aria-label="Edit"><span class="s4-icon" data-icon="edit"></span></button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <nav class="s4-nav-bar" aria-label="Main">
+    <a class="s4-nav-item" href="#" aria-current="page"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="dashboard"></span></span><span class="s4-nav-label">Trips</span></a>
+    <a class="s4-nav-item" href="#"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="calendar"></span></span><span class="s4-nav-label">Plans</span></a>
+    <a class="s4-nav-item" href="#"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="wallet"></span></span><span class="s4-nav-label">Budget</span></a>
+    <a class="s4-nav-item" href="#"><span class="s4-nav-indicator"><span class="s4-icon" data-icon="settings"></span></span><span class="s4-nav-label">Settings</span></a>
+  </nav>
+</div>
+<script src="../components/assets/icons.js?v=d322e35"></script>
+<script src="../components/orion.js?v=2d3d132"></script>
+<script src="lib/liquid-mirror.js?v=272e7fc"></script>
+<script>
+/* ?bend=0..1.8, &mode=blur (today's glass, no mirror), &frost=4..30, &edge=soft|lens, &rim=0..1 (rim tint), &theme=light|dark */
+const q = new URLSearchParams(location.search), bend = q.has('bend') ? +q.get('bend') : 1, frost = q.has('frost') ? +q.get('frost') : 12, edge = q.get('edge') || 'soft', rimTint = q.has('rim') ? +q.get('rim') : 1;
+S4.theme({ mode: q.get('theme') || 'dark' });
+document.querySelectorAll('a[href="#"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));
+const main = document.querySelector('.s4-content');
+const mirrors = q.get('mode') === 'blur' ? [] : [
+  LiquidMirror.attach(document.querySelector('.s4-nav-bar'), { source: main, edges: 'top', bend, frost, edge, rimTint }),
+  LiquidMirror.attach(document.querySelector('.s4-top-app-bar'), { source: main, edges: 'bottom', bend, frost, edge, rimTint }),
+  LiquidMirror.attach(document.querySelector('.s4-toolbar'), { source: main, edges: 'all', bend, frost, edge, rimTint })
+];
+/* the lab page asks for a status report (filter support, render cost) */
+addEventListener('message', e => { if (e.data === 'lm-status') parent.postMessage({ lm: LiquidMirror.status(), ua: navigator.userAgent }, '*'); else if (e.data && e.data.theme) S4.theme({ mode: e.data.theme }); });
+/* start a little scrolled, so the glass is over color from the first look */
+requestAnimationFrame(() => scrollTo(0, 120));
+</script>
+</body>
+</html>

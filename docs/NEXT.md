@@ -137,6 +137,8 @@ labs could load `components/assets/` instead of their own copies.
 
 ## Session log
 
+- 2026-11-07 (liquid 5): liquid glass via a mirror + SVG filter (iPhone-safe in theory), Lab 5 and `demo?liquid` published (0019). Next: owner's iPhone check and pick.
+
 - 2026-11-07 (QA): motion bug pass (container transform blur timing for WebKit, menu/dialog interruption, FAB fold, snackbar scale, tooltips), skill/docs wording. Next: owner's iPhone check, then 1.0.0.
 
 - 2026-11-07 (late): Liquid Glass Lab 4 (WebGL glass over real DOM via snapshot) published for the owner's iPhone check.
@@ -196,6 +198,13 @@ NOTE: demo/ keeps its own copy of orion.css/orion.js; `npm run build` now regene
 **Safari finding (2026-11-07):** clip-path does not clip backdrop-filter in WebKit. `emerge` (menus) now animates the box instead. The **container transform for dialogs and sheets still uses clip-path over glass** and very likely has the same problem on iPhone (the owner reported it earlier as choppy). Next: the same fix there (animate the box, or keep the surface solid and unblurred while it moves and only turn on glass after landing, which it already tries), then ask the owner to check.
 
 **Scrubber (2026-11-07):** `explore/lib/scrub.js` is one slim bar: Freeze and a slider. Tap Freeze, open a menu (it stops at 0%), drag or tap the bar to any moment and screenshot. It sits above a bottom nav if the page has one and does its own hit-testing, so open menus and modal dialogs neither close nor ignore it. The owner found earlier versions glitchy, then too complicated: keep it this simple. Add the script to any new motion lab.
+
+## Liquid glass, again (2026-11-07, [0019](decisions/0019-liquid-glass-mirror.md))
+The owner asked to bring back the Liquid Glass Lab look. New approach that should run on iPhone: a mirror (live copy of the content
+behind) inside each glass bar with the lab's SVG lens filter applied as `filter` (WebKit supports that; not `backdrop-filter: url()`).
+**[Lab 5](../explore/liquid5.html)** (A today, B soft, C lens, D extra) + `demo/index.html?liquid`. **Waiting on the owner's iPhone
+check and pick.** If adopted: move `explore/lib/liquid-mirror.js` into `components/glass/` as `S4.glass.liquid` for the top app bar,
+nav bar and toolbars, tokens for bend/frost/rim, docs + skill, blur as fallback; menus/dialogs/sheets keep blur.
 
 ## QA pass on motion (2026-11-07, later): done, needs the owner's iPhone look
 Dialogs and sheets: the container transform no longer has the blur on while `clip-path` moves (blur on only after landing, under a solid color, then fades to glass; closing settles to solid first). Menu re-tap left the button's z-index creeping (fixed); menu layer inside glass bars corrected; FAB label fold, snackbar scale, tooltip over open menu fixed; docs/skill wording (emerge, rise). See CHANGELOG "Fixed (QA pass on motion)". Chromium only. **Next:** owner checks on the iPhone: FAB to sheet, Delete All Data dialog, row to detail, the three demo menus. Still open from below: interrupting a dialog in its first ~400ms jumps to full size before collapsing (edge case); pruning the extra menu styles.
